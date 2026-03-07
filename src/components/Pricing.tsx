@@ -234,6 +234,7 @@ const Pricing = () => {
           );
         })}
       </div>
+      </div>
 
       {/* Dots indicator (mobile) */}
       <div className="flex md:hidden justify-center gap-2 mt-6">
