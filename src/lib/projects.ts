@@ -34,7 +34,7 @@ export const projects: Project[] = [
   },
   {
     url: 'https://hairappcreationation.lovable.app',
-    urlDisplay: 'hairstudio.app',
+    urlDisplay: 'Hair Studio Creation',
     badge: 'demo',
     category: 'Salon de Coiffure',
     color: 'coral',
@@ -49,7 +49,7 @@ export const projects: Project[] = [
   },
   {
     url: 'https://saveurs-web-atelier.lovable.app',
-    urlDisplay: 'saveurs-atelier.app',
+    urlDisplay: 'Saveurs Web Atelier',
     badge: 'demo',
     category: 'Restauration',
     color: 'gold',
@@ -64,7 +64,7 @@ export const projects: Project[] = [
   },
   {
     url: 'https://prestige-clean-app.lovable.app',
-    urlDisplay: 'prestige-clean.app',
+    urlDisplay: 'Prestige Clean',
     badge: 'demo',
     category: 'Pressing Premium',
     color: 'sky',
@@ -79,7 +79,7 @@ export const projects: Project[] = [
   },
   {
     url: 'https://the-sharp-way.lovable.app',
-    urlDisplay: 'the-sharp-way.app',
+    urlDisplay: 'The Sharp Way',
     badge: 'demo',
     category: 'Barbershop',
     color: 'gold',
@@ -94,7 +94,7 @@ export const projects: Project[] = [
   },
   {
     url: 'https://luxe-nail-sparkle.lovable.app',
-    urlDisplay: 'luxe-nail.app',
+    urlDisplay: 'Luxe Nail Sparkle',
     badge: 'demo',
     category: 'Nail Studio',
     color: 'coral',
@@ -109,7 +109,7 @@ export const projects: Project[] = [
   },
   {
     url: 'https://newdonstudio.lovable.app',
-    urlDisplay: 'newdonstudio.app',
+    urlDisplay: 'NewDon Studio',
     badge: 'demo',
     category: 'Barbershop — Wien',
     color: 'violet',
