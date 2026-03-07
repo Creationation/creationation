@@ -11,6 +11,7 @@ export interface Project {
   name: string;
   desc: Record<Lang, string>;
   tags: string[];
+  screenshot: string;
   featured?: boolean;
 }
 
