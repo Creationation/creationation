@@ -131,16 +131,14 @@ const Portfolio = () => {
                         {proj.urlDisplay}
                       </span>
                     </div>
-                    <div className="p-4 flex flex-col gap-2" style={{ minHeight: proj.featured ? 210 : 150 }}>
-                      <div className="rounded h-[7px]" style={{ width: '55%', background: 'rgba(0,0,0,0.05)' }} />
-                      <div className="rounded h-[7px]" style={{ width: '75%', background: 'rgba(0,0,0,0.05)' }} />
-                      <div className="rounded h-[7px]" style={{ width: '40%', background: 'rgba(0,0,0,0.05)' }} />
-                      <div className="mt-2 h-11 rounded-[10px]" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.03)' }} />
-                      {proj.featured && (
-                        <div className="flex gap-2 mt-1.5">
-                          {[1, 2, 3].map((n) => <div key={n} className="w-11 h-11 rounded-[10px] shrink-0" style={{ background: 'rgba(0,0,0,0.03)' }} />)}
-                        </div>
-                      )}
+                    <div className="overflow-hidden" style={{ minHeight: proj.featured ? 210 : 150 }}>
+                      <img
+                        src={proj.screenshot}
+                        alt={proj.name}
+                        className="w-full h-full object-cover object-top"
+                        loading="lazy"
+                        style={{ minHeight: proj.featured ? 210 : 150 }}
+                      />
                     </div>
                   </div>
                 </div>

@@ -11,6 +11,7 @@ export interface Project {
   name: string;
   desc: Record<Lang, string>;
   tags: string[];
+  screenshot: string;
   featured?: boolean;
 }
 
@@ -28,6 +29,7 @@ export const projects: Project[] = [
       de: 'Komplette SaaS-Plattform für UGC-Creator — Pitches, Scripts, Verträge, CRM, Instagram-Integration. 500+ aktive Creator.',
     },
     tags: ['SaaS', 'CRM', 'Instagram API', '500+ users', 'React / Supabase'],
+    screenshot: '/projects/ugcpanel.png',
     featured: true,
   },
   {
@@ -43,6 +45,7 @@ export const projects: Project[] = [
       de: 'Elegante App für Friseursalon — Buchung, Galerie, Treueprogramm.',
     },
     tags: ['Coiffure Femme', 'Réservation', 'Mobile-First'],
+    screenshot: '/projects/hairstudio.png',
   },
   {
     url: 'https://saveurs-web-atelier.lovable.app',
@@ -57,6 +60,7 @@ export const projects: Project[] = [
       de: 'Komplettes digitales Restaurant — interaktives Menü, Online-Bestellung, integrierte Lieferung.',
     },
     tags: ['Restaurant', 'Commande en ligne', 'Livraison'],
+    screenshot: '/projects/saveurs.png',
   },
   {
     url: 'https://prestige-clean-app.lovable.app',
@@ -71,6 +75,7 @@ export const projects: Project[] = [
       de: 'Premium-Reinigungs-App — Buchung, Echtzeit-Tracking, automatische Benachrichtigungen.',
     },
     tags: ['Dry Cleaning', 'Suivi temps réel', 'Notifications'],
+    screenshot: '/projects/prestige-clean.png',
   },
   {
     url: 'https://the-sharp-way.lovable.app',
@@ -85,6 +90,7 @@ export const projects: Project[] = [
       de: 'Raffinierte maskuline digitale Identität — sofortige Buchung, Galerie, Premium-Ambiente.',
     },
     tags: ['Barbershop', 'Réservation', 'Design Masculin'],
+    screenshot: '/projects/the-sharp-way.png',
   },
   {
     url: 'https://luxe-nail-sparkle.lovable.app',
@@ -99,6 +105,7 @@ export const projects: Project[] = [
       de: 'Luxus-Nagelstudio-Erlebnis — Designkatalog, Online-Buchung, Treueprogramm.',
     },
     tags: ['Nail Art', 'Catalogue', 'Fidélisation'],
+    screenshot: '/projects/luxe-nail.png',
   },
   {
     url: 'https://newdonstudio.lovable.app',
@@ -113,6 +120,7 @@ export const projects: Project[] = [
       de: 'Digitaler Barbershop in Wien — starke lokale Identität, reibungslose Buchung, moderne Ästhetik.',
     },
     tags: ['Vienne, AT', 'Barbershop', 'Identité Locale'],
+    screenshot: '/projects/newdonstudio.png',
   },
   {
     url: 'https://davizgi.app',
@@ -127,5 +135,6 @@ export const projects: Project[] = [
       de: 'Premium-Barbershop in Opwijk, Flandern — zweisprachige App, Online-Buchung, Kundenbindung.',
     },
     tags: ['Opwijk, BE', 'Bilingue NL/FR', 'Barbershop'],
+    screenshot: '/projects/davizgi.png',
   },
 ];
