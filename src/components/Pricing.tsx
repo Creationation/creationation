@@ -110,7 +110,7 @@ const Pricing = () => {
           return (
             <div
               key={i}
-              ref={i === 0 ? ref : undefined}
+              className="rv group relative overflow-hidden flex flex-col snap-center shrink-0 transition-all duration-500"
               className="rv group relative overflow-hidden flex flex-col snap-center shrink-0 transition-all duration-500"
               style={{
                 width: 'min(340px, 82vw)',
