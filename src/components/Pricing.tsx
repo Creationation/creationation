@@ -86,6 +86,7 @@ const Pricing = () => {
       </div>
 
       {/* Swipeable container */}
+      <div ref={ref}>
       <div
         ref={scrollRef}
         className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-7 md:px-16 pb-4"
