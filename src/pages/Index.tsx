@@ -21,6 +21,7 @@ const Index = () => {
       <Process />
       <TechStrip />
       <Testimonial />
+      <Pricing />
       <CtaSection />
       <Footer />
     </>
