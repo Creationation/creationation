@@ -74,7 +74,7 @@ const Hero = () => {
           { num: '8+', label: h.stat1[lang] },
           { num: '500+', label: h.stat2[lang] },
           { num: '5', label: h.stat3[lang] },
-          { num: '<14j', label: h.stat4[lang] },
+          { num: h.stat4Num[lang], label: h.stat4[lang] },
         ].map((s) => (
           <div key={s.num} className="flex items-center gap-3.5" style={{
             padding: '18px 26px', borderRadius: 'var(--r-lg)',
