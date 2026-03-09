@@ -22,6 +22,7 @@ const t = {
     stat2: { fr: 'Utilisateurs actifs', en: 'Active users', de: 'Aktive Nutzer' },
     stat3: { fr: 'Secteurs', en: 'Industries', de: 'Branchen' },
     stat4: { fr: 'Livraison', en: 'Delivery', de: 'Lieferung' },
+    stat4Num: { fr: '<14j', en: '<14d', de: '<14T' },
   },
   services: {
     tag: { fr: "Ce qu'on fait", en: 'What we do', de: 'Was wir machen' },
