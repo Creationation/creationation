@@ -93,7 +93,8 @@ const Pricing = () => {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch',
+          overscrollBehaviorX: 'contain',
+          touchAction: 'pan-y pinch-zoom',
         }}
       >
         <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; }`}</style>
