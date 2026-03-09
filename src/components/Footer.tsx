@@ -21,6 +21,7 @@ const Footer = () => {
               { label: t.nav.portfolio[lang], id: 'portfolio' },
               { label: t.nav.process[lang], id: 'process' },
               { label: t.nav.services[lang], id: 'services' },
+              { label: t.nav.pricing[lang], id: 'pricing' },
               { label: t.footer.contact[lang], id: 'contact' },
             ].map((l) => (
               <li key={l.id}>
