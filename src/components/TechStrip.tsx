@@ -1,4 +1,4 @@
-const techs = ['React', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Next.js', 'Figma', 'Vercel', 'PWA', 'Lovable', 'Mobile-First'];
+const techs = ['React', 'TypeScript', 'Python', 'Node.js', 'C++', 'Figma', 'Swift', 'Kotlin', 'Rust', 'Go', 'Java', 'PostgreSQL'];
 
 const TechStrip = () => (
   <div className="relative z-[1] overflow-hidden py-7" style={{ borderTop: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)' }}>
