@@ -75,6 +75,10 @@ const AdminProspects = () => {
     if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
+      // Fetch existing google_place_ids to filter duplicates
+      const { data: existing } = await supabase.from('prospects').select('google_place_id');
+      const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
+
       const allResults: SearchResult[] = [];
       for (const type of types) {
         const { data, error } = await supabase.functions.invoke('prospect-search', {
@@ -82,12 +86,16 @@ const AdminProspects = () => {
         });
         if (error) throw new Error(error.message);
         const results = (data.results || []) as SearchResult[];
-        // Deduplicate by google_place_id
-        results.forEach(r => { if (!allResults.find(e => e.google_place_id === r.google_place_id)) allResults.push(r); });
+        results.forEach(r => {
+          if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
+            allResults.push(r);
+          }
+        });
       }
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      toast.success(allResults.length + ' resultats trouves');
+      const skipped = existingIds.size > 0 ? ' (doublons deja sauvegardes exclus)' : '';
+      toast.success(allResults.length + ' resultats trouves' + skipped);
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
