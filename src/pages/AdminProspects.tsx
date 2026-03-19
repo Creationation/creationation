@@ -220,18 +220,20 @@ const AdminProspects = () => {
           <button onClick={async () => { await supabase.auth.signOut(); navigate('/admin/login'); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-light)' }}><LogOut size={18}/></button>
         </div>
 
-        <div className='flex gap-4 mb-6'>
+        <div className='flex flex-wrap gap-3 mb-6'>
           {[
             { label:'Total', value:stats.total, icon:Target },
             { label:'Sans site', value:stats.noWebsite, icon:GlobeLock },
-            { label:'Emailes', value:stats.emailed, icon:Mail },
+            { label:'Avec site', value:stats.withWebsite, icon:Globe },
+            { label:'Ont un email', value:stats.withEmail, icon:Mail },
+            { label:'Emailes', value:stats.emailed, icon:Send },
             { label:'Convertis', value:stats.converted, icon:Star },
           ].map(s => (
-            <div key={s.label} style={{ flex:1, padding:'16px 20px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', display:'flex', alignItems:'center', gap:12 }}>
-              <s.icon size={18} style={{ color:'var(--teal)' }}/>
+            <div key={s.label} style={{ flex:'1 1 140px', padding:'14px 16px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', display:'flex', alignItems:'center', gap:10 }}>
+              <s.icon size={16} style={{ color:'var(--teal)' }}/>
               <div>
-                <div style={{ fontFamily:'var(--font-h)', fontSize:20, color:'var(--charcoal)' }}>{s.value}</div>
-                <div style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1 }}>{s.label}</div>
+                <div style={{ fontFamily:'var(--font-h)', fontSize:18, color:'var(--charcoal)' }}>{s.value}</div>
+                <div style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1 }}>{s.label}</div>
               </div>
             </div>
           ))}
