@@ -404,7 +404,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-md mx-4 overflow-hidden"
+        className="max-w-[calc(100vw-48px)] sm:max-w-md mx-auto overflow-hidden"
         style={{
           background: 'var(--cream)',
           border: '1px solid var(--glass-border)',
@@ -413,16 +413,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           boxShadow: '0 24px 80px rgba(0,0,0,0.12)',
         }}
       >
-        <div style={{ padding: '32px 28px 28px' }}>
-          {/* Step indicator */}
-          <span style={{
-            fontFamily: 'var(--font-m)',
-            fontSize: 11,
-            color: 'var(--text-light)',
-            letterSpacing: 1,
-          }}>
-            {step + 1} / {TOTAL_STEPS}
-          </span>
+        <div style={{ padding: '28px 24px 24px' }}>
 
           {/* Step title */}
           <h2
