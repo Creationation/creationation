@@ -2,7 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import { useCountUp } from '@/hooks/useCountUp';
 
-const Hero = () => {
+const Hero = ({ onContact }: { onContact?: () => void }) => {
   const { lang } = useLang();
   const h = t.hero;
 
@@ -79,8 +79,8 @@ const Hero = () => {
         >
           {h.btn1[lang]}
         </a>
-        <a
-          href="#contact"
+        <button
+          onClick={() => onContact?.()}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 10,
             padding: '16px 36px',
@@ -100,7 +100,7 @@ const Hero = () => {
           }}
         >
           {h.btn2[lang]}
-        </a>
+        </button>
       </div>
 
       {/* Stats */}
