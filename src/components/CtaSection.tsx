@@ -19,13 +19,13 @@ const CtaSection = ({ onContact }: { onContact?: () => void }) => {
           {c.sub[lang]}
         </p>
         <div className="rv relative">
-          <a
-            href="mailto:contact@creationation.app"
+          <button
+            onClick={() => onContact?.()}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '20px 48px', background: 'var(--teal)', color: '#fff',
               fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 600,
-              border: 'none', borderRadius: 'var(--pill)', textDecoration: 'none',
+              border: 'none', borderRadius: 'var(--pill)', cursor: 'pointer',
               transition: 'all 0.4s cubic-bezier(.23,1,.32,1)', boxShadow: '0 4px 24px var(--teal-glow)',
             }}
             onMouseEnter={(e) => {
@@ -40,7 +40,7 @@ const CtaSection = ({ onContact }: { onContact?: () => void }) => {
             }}
           >
             {c.btn[lang]}
-          </a>
+          </button>
         </div>
       </div>
     </section>
