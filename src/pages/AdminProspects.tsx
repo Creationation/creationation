@@ -227,7 +227,7 @@ const AdminProspects = () => {
                           <span style={{ fontWeight:600, color:'var(--charcoal)', fontFamily:'var(--font-b)' }}>{p.business_name}</span>
                           <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background:SC[p.status]+'18', color:SC[p.status], fontSize:11, fontWeight:600 }}>{SL[p.status]}</span>
                         </div>
-                        <p style={{ fontSize:12, color:'var(--text-mid)', margin:'2px 0', fontFamily:'var(--font-b)' }}>{p.email || 'Pas d'email'}</p>
+                        <p style={{ fontSize:12, color:'var(--text-mid)', margin:'2px 0', fontFamily:'var(--font-b)' }}>{p.email || 'Pas d\'email'}</p>
                         <p style={{ fontSize:12, color:'var(--text-light)', margin:0, fontFamily:'var(--font-b)' }}>{p.city} - {p.has_website ? 'Site OK' : 'Sans site'} - {p.email_count}x</p>
                       </div>
                     </div>
