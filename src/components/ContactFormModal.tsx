@@ -99,7 +99,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
     switch (step) {
       case 0: return form.name.trim().length > 0;
       case 1: return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
-      case 2: return form.project_type.length > 0;
+      case 2: return form.project_types.length > 0;
       case 3: return true;
       case 4: return form.message.trim().length > 0;
       default: return false;
