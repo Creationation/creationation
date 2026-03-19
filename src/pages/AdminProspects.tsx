@@ -398,6 +398,17 @@ const AdminProspects = () => {
                 <RefreshCw size={14}/>
               </button>
             </div>
+            {/* AI Email Finder bar */}
+            <div style={{ padding:'12px 20px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
+                <Sparkles size={14} style={{ color:'#d4a55a', verticalAlign:'middle', marginRight:6 }}/>
+                {stats.withEmail} / {stats.total} prospects ont un email
+              </span>
+              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'8px 16px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingEmails?0.7:1 }}>
+                {findingEmails ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
+                {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA (tous)'}
+              </button>
+            </div>
             {selectedIds.size > 0 && (
               <div style={{ padding:'12px 20px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
