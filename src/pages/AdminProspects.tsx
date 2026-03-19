@@ -580,7 +580,10 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
           </div>
         )}
       </td>
-      <td className='px-4 py-3' style={{ color:'var(--text-mid)', fontSize:13 }}>{p.city || '—'}</td>
+      <td className='px-4 py-3' style={{ color:'var(--text-mid)', fontSize:13 }}>
+        <div>{p.city || '—'}</div>
+        <span style={{ fontSize:10, color:'var(--text-light)', fontWeight:600 }}>{LANG_LABELS[p.language || COUNTRY_LANG[p.country || ''] || 'en'] || p.language}</span>
+      </td>
       <td className='px-4 py-3'>
         {p.has_website
           ? <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'var(--text-light)' }}><Globe size={12}/> A un site</span>
