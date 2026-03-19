@@ -435,7 +435,51 @@ const AdminProspects = () => {
   );
 };
 
-const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus }: {
+const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectAll, onDelete, onUpdateEmail, onUpdateStatus }: {
+  prospects: Prospect[]; selectedIds: Set<string>;
+  onToggleSelect: (id: string) => void; onToggleSelectAll: () => void;
+  onDelete: (id: string) => void; onUpdateEmail: (id: string, email: string) => void;
+  onUpdateStatus: (id: string, status: ProspectStatus) => void;
+}) => (
+  <div style={{ background:'var(--glass-bg-strong)', backdropFilter:'blur(20px)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', overflow:'hidden' }}>
+    <div className='hidden md:block overflow-x-auto'>
+      <table className='w-full' style={{ fontFamily:'var(--font-b)', fontSize:14, borderCollapse:'collapse' }}>
+        <thead>
+          <tr style={{ borderBottom:'1px solid var(--glass-border)' }}>
+            <th className='px-4 py-3' style={{ width:40 }}>
+              <button onClick={onToggleSelectAll} style={{ background:'none', border:'none', cursor:'pointer' }}>
+                {prospects.every(p => selectedIds.has(p.id)) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
+              </button>
+            </th>
+            {['Commerce','Contact','Email','Ville','Site','Statut','Envois',''].map(h => (
+              <th key={h} className='text-left px-4 py-3' style={{ fontSize:11, textTransform:'uppercase', letterSpacing:1, color:'var(--text-light)', fontWeight:600 }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>{prospects.map(p => <ProspectRow key={p.id} prospect={p} selected={selectedIds.has(p.id)} onToggle={() => onToggleSelect(p.id)} onDelete={() => onDelete(p.id)} onUpdateEmail={email => onUpdateEmail(p.id, email)} onUpdateStatus={status => onUpdateStatus(p.id, status)} />)}</tbody>
+      </table>
+    </div>
+    <div className='md:hidden flex flex-col'>
+      {prospects.map(p => (
+        <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
+          <button onClick={() => onToggleSelect(p.id)} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
+            {selectedIds.has(p.id) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
+          </button>
+          <div style={{ flex:1 }}>
+            <div className='flex items-center gap-2 mb-1'>
+              <span style={{ fontWeight:600, color:'var(--charcoal)', fontFamily:'var(--font-b)' }}>{p.business_name}</span>
+              <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background:SC[p.status]+'18', color:SC[p.status], fontSize:11, fontWeight:600 }}>{SL[p.status]}</span>
+            </div>
+            <p style={{ fontSize:12, color:'var(--text-mid)', margin:'2px 0', fontFamily:'var(--font-b)' }}>{p.email || 'Pas d\'email'}</p>
+            <p style={{ fontSize:12, color:'var(--text-light)', margin:0, fontFamily:'var(--font-b)' }}>{p.city} - {p.has_website ? 'Site OK' : 'Sans site'} - {p.email_count}x</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+
   prospect: Prospect; selected: boolean;
   onToggle: () => void; onDelete: () => void;
   onUpdateEmail: (email: string) => void;
