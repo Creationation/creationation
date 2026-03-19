@@ -2,12 +2,36 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail } from 'lucide-react';
+import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles } from 'lucide-react';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
-type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; };
+type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; };
 type SearchResult = { google_place_id: string; business_name: string; address: string; phone: string | null; has_website: boolean; website_url: string | null; rating: number | null; review_count: number; types: string[]; city: string; country: string; business_type: string; };
 type GeneratedEmail = { prospectId: string; subject: string; body: string; loading?: boolean; error?: string; };
+
+const COUNTRY_LANG: Record<string, string> = {
+  'France': 'fr', 'Belgique': 'fr', 'Suisse': 'fr', 'Luxembourg': 'fr',
+  'Canada': 'fr', 'Maroc': 'fr', 'Tunisie': 'fr', 'Algerie': 'fr',
+  'Senegal': 'fr', "Cote d'Ivoire": 'fr', 'Cameroun': 'fr', 'RD Congo': 'fr',
+  'Allemagne': 'de', 'Autriche': 'de',
+  'Espagne': 'es', 'Mexique': 'es', 'Argentine': 'es', 'Colombie': 'es', 'Chili': 'es', 'Perou': 'es',
+  'Italie': 'it', 'Portugal': 'pt', 'Bresil': 'pt',
+  'Pays-Bas': 'nl', 'Turquie': 'tr', 'Pologne': 'pl',
+  'Republique tcheque': 'cs', 'Suede': 'sv', 'Norvege': 'no',
+  'Danemark': 'da', 'Finlande': 'fi', 'Grece': 'el', 'Roumanie': 'ro', 'Croatie': 'hr',
+  'Japon': 'ja', 'Coree du Sud': 'ko', 'Chine': 'zh',
+  'Thailande': 'th', 'Vietnam': 'vi', 'Indonesie': 'id',
+  'Philippines': 'en', 'Malaisie': 'en', 'Emirats arabes unis': 'ar',
+  'Israel': 'he', 'Egypte': 'ar', 'Nigeria': 'en', 'Inde': 'en',
+  'Afrique du Sud': 'en', 'Etats-Unis': 'en', 'Royaume-Uni': 'en',
+  'Irlande': 'en', 'Australie': 'en', 'Nouvelle-Zelande': 'en',
+};
+const LANG_LABELS: Record<string, string> = {
+  fr: '🇫🇷 FR', en: '🇬🇧 EN', de: '🇩🇪 DE', es: '🇪🇸 ES', it: '🇮🇹 IT', pt: '🇵🇹 PT',
+  nl: '🇳🇱 NL', ar: '🇸🇦 AR', tr: '🇹🇷 TR', pl: '🇵🇱 PL', cs: '🇨🇿 CS', sv: '🇸🇪 SV',
+  no: '🇳🇴 NO', da: '🇩🇰 DA', fi: '🇫🇮 FI', el: '🇬🇷 EL', ro: '🇷🇴 RO', hr: '🇭🇷 HR',
+  ja: '🇯🇵 JA', ko: '🇰🇷 KO', zh: '🇨🇳 ZH', th: '🇹🇭 TH', vi: '🇻🇳 VI', id: '🇮🇩 ID', he: '🇮🇱 HE',
+};
 
 const SC: Record<ProspectStatus, string> = { new: '#0d8a6f', emailed: '#4da6d9', replied: '#d4a55a', converted: '#7c5cbf', rejected: '#e8735a' };
 const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emaile', replied: 'A repondu', converted: 'Converti', rejected: 'Rejete' };
@@ -44,6 +68,7 @@ const AdminProspects = () => {
   const [generatedEmails, setGeneratedEmails] = useState<GeneratedEmail[]>([]);
   const [generatingAll, setGeneratingAll] = useState(false);
   const [sending, setSending] = useState(false);
+  const [findingEmails, setFindingEmails] = useState(false);
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
 
   const fetchProspects = useCallback(async () => {
@@ -100,6 +125,7 @@ const AdminProspects = () => {
           has_website: r.has_website, website_url: r.website_url, city: r.city,
           country: r.country, business_type: r.business_type,
           google_place_id: r.google_place_id, source: 'google_maps',
+          language: COUNTRY_LANG[r.country] || 'en',
         }));
         const { error: insertError } = await supabase.from('prospects').insert(rows);
         if (insertError && insertError.code !== '23505') {
@@ -166,13 +192,40 @@ const AdminProspects = () => {
     const results: GeneratedEmail[] = [];
     for (const prospect of selected) {
       try {
-        const { data, error } = await supabase.functions.invoke('generate-prospect-email', { body: { prospect, lang: 'fr' } });
+        const lang = prospect.language || COUNTRY_LANG[prospect.country || ''] || 'fr';
+        const { data, error } = await supabase.functions.invoke('generate-prospect-email', { body: { prospect, lang } });
         if (error || !data?.subject) throw new Error(error?.message || 'Erreur generation');
         results.push({ prospectId: prospect.id, subject: data.subject, body: data.body });
       } catch (e: any) { results.push({ prospectId: prospect.id, subject: '', body: '', error: e.message }); }
       setGeneratedEmails([...results, ...selected.slice(results.length).map(p => ({ prospectId: p.id, subject: '', body: '', loading: true }))]);
     }
     setGeneratedEmails(results); setGeneratingAll(false);
+  };
+
+  const findEmails = async () => {
+    const targets = selectedIds.size > 0
+      ? prospects.filter(p => selectedIds.has(p.id) && !p.email)
+      : prospects.filter(p => !p.email);
+    if (!targets.length) { toast.info('Tous les prospects selectionnes ont deja un email'); return; }
+    setFindingEmails(true);
+    toast.info(`Recherche IA d'emails pour ${targets.length} prospect(s)...`);
+    try {
+      const { data, error } = await supabase.functions.invoke('find-prospect-email', {
+        body: { prospects: targets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address, phone: p.phone, website_url: p.website_url })) }
+      });
+      if (error) throw new Error(error.message);
+      const results = data.results || [];
+      let found = 0;
+      for (const r of results) {
+        if (r.email) {
+          await supabase.from('prospects').update({ email: r.email }).eq('id', r.id);
+          found++;
+        }
+      }
+      toast.success(`${found} email(s) trouves sur ${targets.length} prospects`);
+      fetchProspects();
+    } catch (e: any) { toast.error(e.message || 'Erreur recherche emails'); }
+    finally { setFindingEmails(false); }
   };
 
   const handleSendBulk = async () => {
@@ -345,6 +398,17 @@ const AdminProspects = () => {
                 <RefreshCw size={14}/>
               </button>
             </div>
+            {/* AI Email Finder bar */}
+            <div style={{ padding:'12px 20px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
+                <Sparkles size={14} style={{ color:'#d4a55a', verticalAlign:'middle', marginRight:6 }}/>
+                {stats.withEmail} / {stats.total} prospects ont un email
+              </span>
+              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'8px 16px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingEmails?0.7:1 }}>
+                {findingEmails ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
+                {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA (tous)'}
+              </button>
+            </div>
             {selectedIds.size > 0 && (
               <div style={{ padding:'12px 20px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
@@ -451,7 +515,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
                 {prospects.every(p => selectedIds.has(p.id)) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
               </button>
             </th>
-            {['Commerce','Contact','Email','Ville','Site','Statut','Envois',''].map(h => (
+            {['Commerce','Contact','Email','Ville / Langue','Site','Statut','Envois',''].map(h => (
               <th key={h} className='text-left px-4 py-3' style={{ fontSize:11, textTransform:'uppercase', letterSpacing:1, color:'var(--text-light)', fontWeight:600 }}>{h}</th>
             ))}
           </tr>
@@ -516,7 +580,10 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
           </div>
         )}
       </td>
-      <td className='px-4 py-3' style={{ color:'var(--text-mid)', fontSize:13 }}>{p.city || '—'}</td>
+      <td className='px-4 py-3' style={{ color:'var(--text-mid)', fontSize:13 }}>
+        <div>{p.city || '—'}</div>
+        <span style={{ fontSize:10, color:'var(--text-light)', fontWeight:600 }}>{LANG_LABELS[p.language || COUNTRY_LANG[p.country || ''] || 'en'] || p.language}</span>
+      </td>
       <td className='px-4 py-3'>
         {p.has_website
           ? <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'var(--text-light)' }}><Globe size={12}/> A un site</span>

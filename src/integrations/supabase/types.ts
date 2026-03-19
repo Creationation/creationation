@@ -193,6 +193,7 @@ export type Database = {
           google_place_id: string | null
           has_website: boolean | null
           id: string
+          language: string | null
           last_emailed_at: string | null
           notes: string | null
           phone: string | null
@@ -214,6 +215,7 @@ export type Database = {
           google_place_id?: string | null
           has_website?: boolean | null
           id?: string
+          language?: string | null
           last_emailed_at?: string | null
           notes?: string | null
           phone?: string | null
@@ -235,6 +237,7 @@ export type Database = {
           google_place_id?: string | null
           has_website?: boolean | null
           id?: string
+          language?: string | null
           last_emailed_at?: string | null
           notes?: string | null
           phone?: string | null
