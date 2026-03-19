@@ -119,41 +119,9 @@ const AdminProspects = () => {
     finally { setSearching(false); }
   };
 
-  const addFromSearch = async (result: SearchResult) => {
-    const { error } = await supabase.from('prospects').insert({
-      business_name: result.business_name, address: result.address, phone: result.phone,
-      has_website: result.has_website, website_url: result.website_url, city: result.city,
-      country: result.country, business_type: result.business_type, google_place_id: result.google_place_id, source: 'google_maps',
-    });
-    if (error) {
-      if (error.code === '23505') toast.error(result.business_name + ' existe deja');
-      else toast.error('Erreur ajout');
-    } else {
-      toast.success(result.business_name + ' ajoute');
-      setSearchResults(prev => prev ? prev.filter(r => r.google_place_id !== result.google_place_id) : prev);
-      fetchProspects();
-    }
-  };
-
   const addAllNoWebsite = async () => {
-    if (!searchResults) return;
-    const noWebsite = searchResults.filter(r => !r.has_website);
-    if (!noWebsite.length) { toast.info('Aucun sans site'); return; }
-    let added = 0;
-    let skipped = 0;
-    for (const r of noWebsite) {
-      const { error } = await supabase.from('prospects').insert({
-        business_name: r.business_name, address: r.address, phone: r.phone, has_website: r.has_website,
-        website_url: r.website_url, city: r.city, country: r.country, business_type: r.business_type,
-        google_place_id: r.google_place_id, source: 'google_maps',
-      });
-      if (error && error.code === '23505') skipped++;
-      else if (!error) added++;
-    }
-    toast.success(`${added} importes${skipped ? `, ${skipped} doublons ignores` : ''}`);
-    setSearchResults(prev => prev ? prev.filter(r => r.has_website) : prev);
-    fetchProspects();
-    if (added > 0) setTab('prospects');
+    toast.info('Tous les resultats sont deja sauvegardes automatiquement !');
+    setTab('prospects');
   };
 
   const handleManualAdd = async () => {
