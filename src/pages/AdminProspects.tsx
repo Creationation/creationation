@@ -2,12 +2,36 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail } from 'lucide-react';
+import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles } from 'lucide-react';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
-type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; };
+type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; };
 type SearchResult = { google_place_id: string; business_name: string; address: string; phone: string | null; has_website: boolean; website_url: string | null; rating: number | null; review_count: number; types: string[]; city: string; country: string; business_type: string; };
 type GeneratedEmail = { prospectId: string; subject: string; body: string; loading?: boolean; error?: string; };
+
+const COUNTRY_LANG: Record<string, string> = {
+  'France': 'fr', 'Belgique': 'fr', 'Suisse': 'fr', 'Luxembourg': 'fr',
+  'Canada': 'fr', 'Maroc': 'fr', 'Tunisie': 'fr', 'Algerie': 'fr',
+  'Senegal': 'fr', "Cote d'Ivoire": 'fr', 'Cameroun': 'fr', 'RD Congo': 'fr',
+  'Allemagne': 'de', 'Autriche': 'de',
+  'Espagne': 'es', 'Mexique': 'es', 'Argentine': 'es', 'Colombie': 'es', 'Chili': 'es', 'Perou': 'es',
+  'Italie': 'it', 'Portugal': 'pt', 'Bresil': 'pt',
+  'Pays-Bas': 'nl', 'Turquie': 'tr', 'Pologne': 'pl',
+  'Republique tcheque': 'cs', 'Suede': 'sv', 'Norvege': 'no',
+  'Danemark': 'da', 'Finlande': 'fi', 'Grece': 'el', 'Roumanie': 'ro', 'Croatie': 'hr',
+  'Japon': 'ja', 'Coree du Sud': 'ko', 'Chine': 'zh',
+  'Thailande': 'th', 'Vietnam': 'vi', 'Indonesie': 'id',
+  'Philippines': 'en', 'Malaisie': 'en', 'Emirats arabes unis': 'ar',
+  'Israel': 'he', 'Egypte': 'ar', 'Nigeria': 'en', 'Inde': 'en',
+  'Afrique du Sud': 'en', 'Etats-Unis': 'en', 'Royaume-Uni': 'en',
+  'Irlande': 'en', 'Australie': 'en', 'Nouvelle-Zelande': 'en',
+};
+const LANG_LABELS: Record<string, string> = {
+  fr: '🇫🇷 FR', en: '🇬🇧 EN', de: '🇩🇪 DE', es: '🇪🇸 ES', it: '🇮🇹 IT', pt: '🇵🇹 PT',
+  nl: '🇳🇱 NL', ar: '🇸🇦 AR', tr: '🇹🇷 TR', pl: '🇵🇱 PL', cs: '🇨🇿 CS', sv: '🇸🇪 SV',
+  no: '🇳🇴 NO', da: '🇩🇰 DA', fi: '🇫🇮 FI', el: '🇬🇷 EL', ro: '🇷🇴 RO', hr: '🇭🇷 HR',
+  ja: '🇯🇵 JA', ko: '🇰🇷 KO', zh: '🇨🇳 ZH', th: '🇹🇭 TH', vi: '🇻🇳 VI', id: '🇮🇩 ID', he: '🇮🇱 HE',
+};
 
 const SC: Record<ProspectStatus, string> = { new: '#0d8a6f', emailed: '#4da6d9', replied: '#d4a55a', converted: '#7c5cbf', rejected: '#e8735a' };
 const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emaile', replied: 'A repondu', converted: 'Converti', rejected: 'Rejete' };
