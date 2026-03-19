@@ -127,7 +127,7 @@ const AdminProspects = () => {
     if (!selectedIds.size) { toast.error('Selectionne au moins un prospect'); return; }
     const selected = prospects.filter(p => selectedIds.has(p.id));
     const noEmail = selected.filter(p => !p.email);
-    if (noEmail.length) { toast.error(noEmail.map(p => p.business_name).join(', ') + ' - pas d'email'); return; }
+    if (noEmail.length) { toast.error(noEmail.map(p => p.business_name).join(', ') + ' - pas d\'email'); return; }
     setGeneratedEmails(selected.map(p => ({ prospectId: p.id, subject: '', body: '', loading: true })));
     setShowEmailModal(true); setGeneratingAll(true);
     const results: GeneratedEmail[] = [];
@@ -227,7 +227,7 @@ const AdminProspects = () => {
                           <span style={{ fontWeight:600, color:'var(--charcoal)', fontFamily:'var(--font-b)' }}>{p.business_name}</span>
                           <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background:SC[p.status]+'18', color:SC[p.status], fontSize:11, fontWeight:600 }}>{SL[p.status]}</span>
                         </div>
-                        <p style={{ fontSize:12, color:'var(--text-mid)', margin:'2px 0', fontFamily:'var(--font-b)' }}>{p.email || 'Pas d'email'}</p>
+                        <p style={{ fontSize:12, color:'var(--text-mid)', margin:'2px 0', fontFamily:'var(--font-b)' }}>{p.email || 'Pas d\'email'}</p>
                         <p style={{ fontSize:12, color:'var(--text-light)', margin:0, fontFamily:'var(--font-b)' }}>{p.city} - {p.has_website ? 'Site OK' : 'Sans site'} - {p.email_count}x</p>
                       </div>
                     </div>
@@ -317,7 +317,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
           </div>
         ) : (
           <div className='flex items-center gap-2'>
-            <span style={{ fontSize:13, color:p.email?'var(--text-mid)':'var(--text-ghost)', fontStyle:p.email?'normal':'italic' }}>{p.email || 'Pas d'email'}</span>
+            <span style={{ fontSize:13, color:p.email?'var(--text-mid)':'var(--text-ghost)', fontStyle:p.email?'normal':'italic' }}>{p.email || 'Pas d\'email'}</span>
             <button onClick={() => setEditingEmail(true)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', opacity:0.6 }}><Pencil size={11}/></button>
           </div>
         )}
