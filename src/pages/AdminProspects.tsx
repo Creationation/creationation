@@ -67,18 +67,27 @@ const AdminProspects = () => {
     });
   }, [navigate, fetchProspects]);
 
+  const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
+
   const handleSearch = async () => {
-    const type = searchType === 'Autre' ? customType : searchType;
+    const types = searchTypes.includes('Autre') ? [...searchTypes.filter(t => t !== 'Autre'), ...(customType ? [customType] : [])] : searchTypes;
     const location = searchCity || searchCountry || searchContinent;
-    if (!location || !type) { toast.error('Remplis au moins une localisation et le type'); return; }
+    if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      const { data, error } = await supabase.functions.invoke('prospect-search', {
-        body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '' }
-      });
-      if (error) throw new Error(error.message);
-      setSearchResults(data.results || []);
-      toast.success(data.total + ' resultats trouves');
+      const allResults: SearchResult[] = [];
+      for (const type of types) {
+        const { data, error } = await supabase.functions.invoke('prospect-search', {
+          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults }
+        });
+        if (error) throw new Error(error.message);
+        const results = (data.results || []) as SearchResult[];
+        // Deduplicate by google_place_id
+        results.forEach(r => { if (!allResults.find(e => e.google_place_id === r.google_place_id)) allResults.push(r); });
+      }
+      allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
+      setSearchResults(allResults);
+      toast.success(allResults.length + ' resultats trouves');
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
