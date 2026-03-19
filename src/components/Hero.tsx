@@ -100,7 +100,7 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
           }}
         >
           {h.btn2[lang]}
-        </a>
+        </button>
       </div>
 
       {/* Stats */}

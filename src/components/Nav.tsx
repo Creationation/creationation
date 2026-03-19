@@ -140,7 +140,7 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
             </button>
           ))}
           <button
-            onClick={() => scrollTo('contact')}
+            onClick={() => { setMenuOpen(false); onContact ? onContact() : scrollTo('contact'); }}
             style={{
               marginTop: 12,
               padding: '14px 36px',
