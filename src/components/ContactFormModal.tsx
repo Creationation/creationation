@@ -71,6 +71,23 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         message: form.message.trim(),
       });
       if (error) throw error;
+
+      // Send confirmation email to prospect via Resend
+      supabase.functions.invoke('send-prospect-email', {
+        body: {
+          to: form.email.trim(),
+          toName: form.name.trim(),
+          subject: lang === 'de' ? 'Creationation — Wir haben Ihre Anfrage erhalten'
+            : lang === 'en' ? 'Creationation — We received your request'
+            : 'Creationation — Nous avons bien reçu votre demande',
+          body: lang === 'de'
+            ? 'Vielen Dank für Ihr Interesse! Wir haben Ihre Anfrage erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.\n\nMit freundlichen Grüßen,\nDas Creationation-Team'
+            : lang === 'en'
+            ? 'Thank you for your interest! We received your request and will get back to you within 24 hours.\n\nBest regards,\nThe Creationation Team'
+            : 'Merci pour votre intérêt ! Nous avons bien reçu votre demande et reviendrons vers vous sous 24h.\n\nÀ très vite,\nL\'équipe Creationation',
+        },
+      }).catch(console.error); // fire-and-forget
+
       toast.success(t.success[lang]);
       setForm({ name: '', email: '', phone: '', project_type: '', budget: '', message: '' });
       onOpenChange(false);
