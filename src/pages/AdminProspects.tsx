@@ -27,6 +27,8 @@ const AdminProspects = () => {
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [searchContinent, setSearchContinent] = useState('');
+  const [searchCountry, setSearchCountry] = useState('');
   const [searchCity, setSearchCity] = useState('');
   const [searchType, setSearchType] = useState('');
   const [customType, setCustomType] = useState('');
