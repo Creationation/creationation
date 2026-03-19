@@ -479,7 +479,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
   </div>
 );
 
-
+const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus }: {
   prospect: Prospect; selected: boolean;
   onToggle: () => void; onDelete: () => void;
   onUpdateEmail: (email: string) => void;
