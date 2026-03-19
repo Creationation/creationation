@@ -18,18 +18,20 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
   ];
 
   return (
-    <section className="relative z-[1] min-h-screen flex flex-col justify-center px-7 md:px-16 max-w-[1400px] mx-auto overflow-hidden" style={{ paddingTop: 160, paddingBottom: 100 }}>
+    <section className="relative z-[1] min-h-screen flex flex-col justify-center px-7 md:px-16 max-w-[1400px] mx-auto" style={{ paddingTop: 160, paddingBottom: 100 }}>
       {/* Background Video */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        style={{ opacity: 0.32, pointerEvents: 'none' }}
-        src="/videos/hero-bg.mp4"
-        preload="none"
-      />
+      <div className="absolute inset-0 z-0 overflow-hidden" style={{ borderRadius: 28 }}>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover"
+          style={{ opacity: 0.32, pointerEvents: 'none' }}
+          src="/videos/hero-bg.mp4"
+          preload="none"
+        />
+      </div>
       {/* Badge */}
       <div
         className="inline-flex items-center gap-2 w-fit mb-9"
