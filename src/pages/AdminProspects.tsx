@@ -192,7 +192,8 @@ const AdminProspects = () => {
     const results: GeneratedEmail[] = [];
     for (const prospect of selected) {
       try {
-        const { data, error } = await supabase.functions.invoke('generate-prospect-email', { body: { prospect, lang: 'fr' } });
+        const lang = prospect.language || COUNTRY_LANG[prospect.country || ''] || 'fr';
+        const { data, error } = await supabase.functions.invoke('generate-prospect-email', { body: { prospect, lang } });
         if (error || !data?.subject) throw new Error(error?.message || 'Erreur generation');
         results.push({ prospectId: prospect.id, subject: data.subject, body: data.body });
       } catch (e: any) { results.push({ prospectId: prospect.id, subject: '', body: '', error: e.message }); }
