@@ -192,12 +192,20 @@ const AdminProspects = () => {
     finally { setSending(false); }
   };
 
-  const filteredProspects = prospects.filter(p =>
-    p.business_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.city && p.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (p.email && p.email.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length };
+  const [websiteFilter, setWebsiteFilter] = useState<'all' | 'no_website' | 'has_website'>('all');
+
+  const filteredProspects = prospects.filter(p => {
+    const matchesQuery = p.business_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.city && p.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (p.email && p.email.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesWebsite = websiteFilter === 'all' || (websiteFilter === 'no_website' ? !p.has_website : p.has_website);
+    return matchesQuery && matchesWebsite;
+  });
+
+  const prospectsNoSite = filteredProspects.filter(p => !p.has_website);
+  const prospectsWithSite = filteredProspects.filter(p => p.has_website);
+
+  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length };
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)', padding:'24px' }}>
