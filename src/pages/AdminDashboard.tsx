@@ -94,7 +94,7 @@ const AdminDashboard = () => {
   const updateLeadStatus = async (leadId: string, status: string) => {
     const { error } = await supabase
       .from('leads')
-      .update({ status })
+      .update({ status: status as Lead['status'] })
       .eq('id', leadId);
     if (error) {
       toast.error('Erreur mise à jour');
