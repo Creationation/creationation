@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Blobs from '@/components/Blobs';
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
@@ -11,23 +12,27 @@ import FAQ from '@/components/FAQ';
 import Guarantees from '@/components/Guarantees';
 import CtaSection from '@/components/CtaSection';
 import Footer from '@/components/Footer';
+import ContactFormModal from '@/components/ContactFormModal';
 
 const Index = () => {
+  const [contactOpen, setContactOpen] = useState(false);
+
   return (
     <>
       <Blobs />
-      <Nav />
-      <Hero />
+      <Nav onContact={() => setContactOpen(true)} />
+      <Hero onContact={() => setContactOpen(true)} />
       <Services />
       <Portfolio />
       <Process />
       <TechStrip />
       <Testimonial />
-      <Pricing />
+      <Pricing onContact={() => setContactOpen(true)} />
       <FAQ />
       <Guarantees />
-      <CtaSection />
+      <CtaSection onContact={() => setContactOpen(true)} />
       <Footer />
+      <ContactFormModal open={contactOpen} onOpenChange={setContactOpen} />
     </>
   );
 };
