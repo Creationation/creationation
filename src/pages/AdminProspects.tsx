@@ -369,7 +369,9 @@ const AdminProspects = () => {
           onClose={() => setShowEmailModal(false)}
         />
       )}
+      </div>
     </div>
+  );
   );
 };
 
