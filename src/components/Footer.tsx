@@ -1,8 +1,11 @@
 import { useLang } from '@/hooks/useLang';
+import { useNavigate } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import t from '@/lib/translations';
 
 const Footer = () => {
   const { lang } = useLang();
+  const navigate = useNavigate();
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -14,7 +17,16 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
             <div style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--teal-deep)' }}>Creationation</div>
-            <div className="text-xs mt-0.5" style={{ color: 'var(--text-ghost)' }}>{t.footer.copy[lang]}</div>
+            <div className="text-xs mt-0.5 flex items-center gap-2" style={{ color: 'var(--text-ghost)' }}>
+              {t.footer.copy[lang]}
+              <button
+                onClick={() => navigate('/admin/login')}
+                className="bg-transparent border-none cursor-pointer p-1 opacity-30 hover:opacity-70 transition-opacity duration-300"
+                title="Admin"
+              >
+                <Settings size={12} style={{ color: 'var(--text-ghost)' }} />
+              </button>
+            </div>
           </div>
           <ul className="flex gap-6 list-none">
             {[
