@@ -301,9 +301,9 @@ const AdminProspects = () => {
                         <div style={{ fontSize:12, color:'var(--text-light)', fontFamily:'var(--font-b)' }}>{r.address}</div>
                         {r.phone && <div style={{ fontSize:12, color:'var(--text-mid)', fontFamily:'var(--font-b)' }}>{r.phone}</div>}
                       </div>
-                      <button onClick={() => addFromSearch(r)} style={{ padding:'6px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, cursor:'pointer', color:'var(--teal)', fontWeight:600 }}>
-                        <Plus size={12} style={{ marginRight:4, verticalAlign:'middle' }}/> Ajouter
-                      </button>
+                      <span style={{ padding:'6px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600 }}>
+                        <Check size={12} style={{ marginRight:4, verticalAlign:'middle' }}/> Sauvegarde
+                      </span>
                     </div>
                   ))}
                 </div>
