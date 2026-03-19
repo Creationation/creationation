@@ -7,7 +7,7 @@ import { Menu, X } from 'lucide-react';
 const langs: Lang[] = ['fr', 'en', 'de'];
 const labels: Record<Lang, string> = { fr: 'FR', en: 'EN', de: 'DE' };
 
-const Nav = () => {
+const Nav = ({ onContact }: { onContact?: () => void }) => {
   const { lang, setLang } = useLang();
   const n = t.nav;
   const [menuOpen, setMenuOpen] = useState(false);
