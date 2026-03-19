@@ -90,7 +90,7 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
         </button>
 
         <button
-          onClick={() => scrollTo('contact')}
+          onClick={() => onContact ? onContact() : scrollTo('contact')}
           className="hidden md:inline-flex"
           style={{
             padding: '10px 24px',
