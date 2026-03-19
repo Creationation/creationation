@@ -163,6 +163,18 @@ const AdminProspects = () => {
     fetchProspects(); toast.success('Supprime');
   };
 
+  const deleteSelected = async () => {
+    if (!selectedIds.size) return;
+    const count = selectedIds.size;
+    if (!confirm(`Supprimer ${count} prospect(s) ? Cette action est irreversible.`)) return;
+    for (const id of selectedIds) {
+      await supabase.from('prospects').delete().eq('id', id);
+    }
+    setSelectedIds(new Set());
+    fetchProspects();
+    toast.success(`${count} prospect(s) supprime(s)`);
+  };
+
   const updateEmail = async (id: string, email: string) => {
     await supabase.from('prospects').update({ email }).eq('id', id);
     toast.success('Email mis a jour'); fetchProspects();
