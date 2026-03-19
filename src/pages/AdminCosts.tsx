@@ -68,7 +68,8 @@ const AdminCosts = () => {
   // Projections
   const projections = [100, 500, 1000, 5000].map(n => {
     const searches = Math.ceil(n / 20);
-    const gCost = searches * GOOGLE_COST_TEXT_SEARCH + n * GOOGLE_COST_PLACE_DETAIL;
+    const noSite = Math.round(n * 0.4);
+    const gCost = searches * GOOGLE_COST_TEXT_SEARCH + n * GOOGLE_COST_WEBSITE_CHECK + noSite * GOOGLE_COST_PHONE_DETAIL;
     const aCost = n * AI_COST_PER_EMAIL_FIND + n * AI_COST_PER_EMAIL_GEN;
     return { n, google: gCost, ai: aCost, total: gCost + aCost };
   });
