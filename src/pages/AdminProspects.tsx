@@ -163,6 +163,18 @@ const AdminProspects = () => {
     fetchProspects(); toast.success('Supprime');
   };
 
+  const deleteSelected = async () => {
+    if (!selectedIds.size) return;
+    const count = selectedIds.size;
+    if (!confirm(`Supprimer ${count} prospect(s) ? Cette action est irreversible.`)) return;
+    for (const id of selectedIds) {
+      await supabase.from('prospects').delete().eq('id', id);
+    }
+    setSelectedIds(new Set());
+    fetchProspects();
+    toast.success(`${count} prospect(s) supprime(s)`);
+  };
+
   const updateEmail = async (id: string, email: string) => {
     await supabase.from('prospects').update({ email }).eq('id', id);
     toast.success('Email mis a jour'); fetchProspects();
@@ -414,6 +426,9 @@ const AdminProspects = () => {
                 <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
                 <div className='flex gap-2'>
                   <button onClick={() => setSelectedIds(new Set())} style={{ padding:'8px 14px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', cursor:'pointer' }}>Deselectionner</button>
+                  <button onClick={deleteSelected} style={{ padding:'8px 16px', background:'#e8735a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
+                    <Trash2 size={13}/> Supprimer ({selectedIds.size})
+                  </button>
                   <button onClick={openEmailModal} style={{ padding:'8px 16px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
                     <Mail size={13}/> Envoyer emails IA
                   </button>
