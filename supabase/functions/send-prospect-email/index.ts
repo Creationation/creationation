@@ -112,10 +112,11 @@ serve(async (req) => {
       <html>
       <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
       <body style="margin: 0; padding: 0; background: #f5f2ec; font-family: Georgia, serif;">
-        <div style="max-width: 600px; margin: 0 auto;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 24px;">
+          <div style="border-radius: 28px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.08);">
           
           <!-- Header -->
-          <div style="background: #0d8a6f; padding: 32px 24px; text-align: center; border-radius: 0 0 0 0;">
+          <div style="background: #0d8a6f; padding: 36px 24px; text-align: center;">
             <p style="margin: 0 0 4px; font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; text-transform: uppercase;">DIGITAL PRODUCT STUDIO</p>
             <h1 style="margin: 0; font-size: 28px; color: #fff; font-family: Georgia, serif; letter-spacing: 1px;">CREATIONATION</h1>
           </div>
