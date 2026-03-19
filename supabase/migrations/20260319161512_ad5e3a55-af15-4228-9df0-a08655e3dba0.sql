@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS prospects_google_place_id_unique ON prospects (google_place_id) WHERE google_place_id IS NOT NULL;
