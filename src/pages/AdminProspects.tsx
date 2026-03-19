@@ -75,6 +75,10 @@ const AdminProspects = () => {
     if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
+      // Fetch existing google_place_ids to filter duplicates
+      const { data: existing } = await supabase.from('prospects').select('google_place_id');
+      const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
+
       const allResults: SearchResult[] = [];
       for (const type of types) {
         const { data, error } = await supabase.functions.invoke('prospect-search', {
@@ -82,12 +86,16 @@ const AdminProspects = () => {
         });
         if (error) throw new Error(error.message);
         const results = (data.results || []) as SearchResult[];
-        // Deduplicate by google_place_id
-        results.forEach(r => { if (!allResults.find(e => e.google_place_id === r.google_place_id)) allResults.push(r); });
+        results.forEach(r => {
+          if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
+            allResults.push(r);
+          }
+        });
       }
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      toast.success(allResults.length + ' resultats trouves');
+      const skipped = existingIds.size > 0 ? ' (doublons deja sauvegardes exclus)' : '';
+      toast.success(allResults.length + ' resultats trouves' + skipped);
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
@@ -98,21 +106,35 @@ const AdminProspects = () => {
       has_website: result.has_website, website_url: result.website_url, city: result.city,
       country: result.country, business_type: result.business_type, google_place_id: result.google_place_id, source: 'google_maps',
     });
-    if (error) toast.error('Erreur ajout');
-    else { toast.success(result.business_name + ' ajoute'); setSearchResults(prev => prev ? prev.filter(r => r.google_place_id !== result.google_place_id) : prev); fetchProspects(); }
+    if (error) {
+      if (error.code === '23505') toast.error(result.business_name + ' existe deja');
+      else toast.error('Erreur ajout');
+    } else {
+      toast.success(result.business_name + ' ajoute');
+      setSearchResults(prev => prev ? prev.filter(r => r.google_place_id !== result.google_place_id) : prev);
+      fetchProspects();
+    }
   };
 
   const addAllNoWebsite = async () => {
     if (!searchResults) return;
     const noWebsite = searchResults.filter(r => !r.has_website);
     if (!noWebsite.length) { toast.info('Aucun sans site'); return; }
-    const { error } = await supabase.from('prospects').insert(noWebsite.map(r => ({
-      business_name: r.business_name, address: r.address, phone: r.phone, has_website: r.has_website,
-      website_url: r.website_url, city: r.city, country: r.country, business_type: r.business_type,
-      google_place_id: r.google_place_id, source: 'google_maps',
-    })));
-    if (error) toast.error('Erreur import');
-    else { toast.success(noWebsite.length + ' prospects importes'); setSearchResults(prev => prev ? prev.filter(r => r.has_website) : prev); fetchProspects(); setTab('prospects'); }
+    let added = 0;
+    let skipped = 0;
+    for (const r of noWebsite) {
+      const { error } = await supabase.from('prospects').insert({
+        business_name: r.business_name, address: r.address, phone: r.phone, has_website: r.has_website,
+        website_url: r.website_url, city: r.city, country: r.country, business_type: r.business_type,
+        google_place_id: r.google_place_id, source: 'google_maps',
+      });
+      if (error && error.code === '23505') skipped++;
+      else if (!error) added++;
+    }
+    toast.success(`${added} importes${skipped ? `, ${skipped} doublons ignores` : ''}`);
+    setSearchResults(prev => prev ? prev.filter(r => r.has_website) : prev);
+    fetchProspects();
+    if (added > 0) setTab('prospects');
   };
 
   const handleManualAdd = async () => {
