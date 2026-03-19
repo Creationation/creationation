@@ -202,7 +202,7 @@ const Pricing = ({ onContact }: { onContact?: () => void }) => {
               </ul>
 
               <button
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => onContact ? onContact() : document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 className="w-full cursor-pointer border-none text-sm font-semibold transition-all duration-300"
                 style={{
                   padding: '14px 0',

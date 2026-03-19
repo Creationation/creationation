@@ -2,7 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
-const CtaSection = () => {
+const CtaSection = ({ onContact }: { onContact?: () => void }) => {
   const { lang } = useLang();
   const c = t.cta;
   const ref = useScrollReveal();
