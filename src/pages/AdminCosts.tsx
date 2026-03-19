@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { ChevronLeft, LogOut, DollarSign, Search, Mail, Sparkles, MapPin, TrendingUp } from 'lucide-react';
 
 const GOOGLE_COST_TEXT_SEARCH = 0.032;
-const GOOGLE_COST_PLACE_DETAIL = 0.020;
+const GOOGLE_COST_WEBSITE_CHECK = 0.017; // Basic SKU — website field only
+const GOOGLE_COST_PHONE_DETAIL = 0.020; // Contact SKU — phone (only for no-website)
 const AI_COST_PER_EMAIL_FIND = 0.0005;
 const AI_COST_PER_EMAIL_GEN = 0.001;
 
