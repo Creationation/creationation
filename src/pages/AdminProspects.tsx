@@ -70,6 +70,7 @@ const AdminProspects = () => {
   const [generatingAll, setGeneratingAll] = useState(false);
   const [sending, setSending] = useState(false);
   const [findingEmails, setFindingEmails] = useState(false);
+  const [findingInfo, setFindingInfo] = useState(false);
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
 
   const fetchProspects = useCallback(async () => {
