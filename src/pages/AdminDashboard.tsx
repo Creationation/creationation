@@ -147,6 +147,18 @@ const AdminDashboard = () => {
           >
             <Target size={14} /> Prospection
           </Link>
+          <Link
+            to="/admin/costs"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px', background: 'rgba(212,165,90,0.1)',
+              border: '1px solid rgba(212,165,90,0.3)', borderRadius: 'var(--pill)',
+              fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600,
+              color: '#d4a55a', textDecoration: 'none',
+            }}
+          >
+            <DollarSign size={14} /> Coûts
+          </Link>
         </div>
         <button
           onClick={handleLogout}
