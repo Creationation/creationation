@@ -8,48 +8,60 @@ const corsHeaders = {
 const labels = {
   fr: {
     subject: 'Creationation — Nous avons bien reçu votre demande',
+    confirmed: 'Votre demande est confirmée ✓',
     greeting: 'Bonjour',
-    intro: 'Merci pour votre intérêt ! Nous avons bien reçu votre demande et reviendrons vers vous sous 24h.',
+    intro: 'nous avons bien reçu votre demande et reviendrons vers vous sous 24h.',
     recapTitle: 'Récapitulatif de votre demande',
-    name: 'Nom',
-    email: 'Email',
-    phone: 'Téléphone',
-    projectType: 'Type de projet',
-    budget: 'Budget',
-    message: 'Message',
-    notProvided: 'Non renseigné',
-    closing: 'À très vite,',
-    team: "L'équipe Creationation",
+    name: 'NOM',
+    email: 'EMAIL',
+    phone: 'TÉLÉPHONE',
+    projectType: 'PROJET',
+    budget: 'BUDGET',
+    message: 'MESSAGE',
+    notProvided: '—',
+    note: 'Nous reviendrons vers vous très rapidement. En attendant, n\'hésitez pas à nous contacter.',
+    whatsapp: 'WhatsApp',
+    emailBtn: 'E-Mail',
+    contact: 'Une question ? Contactez-nous à tout moment',
+    footer: 'Creationation · Digital Product Studio · Avec passion ♡',
   },
   en: {
     subject: 'Creationation — We received your request',
+    confirmed: 'Your request is confirmed ✓',
     greeting: 'Hello',
-    intro: 'Thank you for your interest! We received your request and will get back to you within 24 hours.',
+    intro: 'we received your request and will get back to you within 24 hours.',
     recapTitle: 'Your request summary',
-    name: 'Name',
-    email: 'Email',
-    phone: 'Phone',
-    projectType: 'Project type',
-    budget: 'Budget',
-    message: 'Message',
-    notProvided: 'Not provided',
-    closing: 'Best regards,',
-    team: 'The Creationation Team',
+    name: 'NAME',
+    email: 'EMAIL',
+    phone: 'PHONE',
+    projectType: 'PROJECT',
+    budget: 'BUDGET',
+    message: 'MESSAGE',
+    notProvided: '—',
+    note: 'We\'ll get back to you very soon. In the meantime, feel free to reach out.',
+    whatsapp: 'WhatsApp',
+    emailBtn: 'E-Mail',
+    contact: 'Any questions? Contact us anytime',
+    footer: 'Creationation · Digital Product Studio · With passion ♡',
   },
   de: {
     subject: 'Creationation — Wir haben Ihre Anfrage erhalten',
+    confirmed: 'Ihre Anfrage ist bestätigt ✓',
     greeting: 'Hallo',
-    intro: 'Vielen Dank für Ihr Interesse! Wir haben Ihre Anfrage erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.',
+    intro: 'wir haben Ihre Anfrage erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.',
     recapTitle: 'Zusammenfassung Ihrer Anfrage',
-    name: 'Name',
-    email: 'E-Mail',
-    phone: 'Telefon',
-    projectType: 'Projekttyp',
-    budget: 'Budget',
-    message: 'Nachricht',
-    notProvided: 'Nicht angegeben',
-    closing: 'Mit freundlichen Grüßen,',
-    team: 'Das Creationation-Team',
+    name: 'NAME',
+    email: 'E-MAIL',
+    phone: 'TELEFON',
+    projectType: 'PROJEKT',
+    budget: 'BUDGET',
+    message: 'NACHRICHT',
+    notProvided: '—',
+    note: 'Wir melden uns sehr bald bei Ihnen. In der Zwischenzeit können Sie uns jederzeit kontaktieren.',
+    whatsapp: 'WhatsApp',
+    emailBtn: 'E-Mail',
+    contact: 'Fragen? Kontaktieren Sie uns jederzeit',
+    footer: 'Creationation · Digital Product Studio · Mit Leidenschaft ♡',
   },
 };
 
@@ -79,45 +91,71 @@ serve(async (req) => {
     const l = labels[lang as keyof typeof labels] || labels.fr;
     const firstName = toName?.split(' ')[0] || '';
 
-    const recapRow = (label: string, value: string | null) => `
+    const recapRow = (label: string, value: string | null, isLast = false) => `
       <tr>
-        <td style="padding: 10px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #9b9590; font-family: monospace; width: 120px; vertical-align: top;">${label}</td>
-        <td style="padding: 10px 14px; font-size: 15px; color: #2a2722;">${value || l.notProvided}</td>
+        <td style="padding: 14px 20px; font-size: 11px; letter-spacing: 1.5px; color: #0d8a6f; font-family: 'Courier New', monospace; vertical-align: top; border-bottom: ${isLast ? 'none' : '1px solid #f0ece6'};">${label}</td>
+        <td style="padding: 14px 20px; font-size: 15px; color: #2a2722; font-weight: 600; text-align: right; vertical-align: top; font-family: Georgia, serif; border-bottom: ${isLast ? 'none' : '1px solid #f0ece6'};">${value || l.notProvided}</td>
       </tr>
     `;
 
-    const recapHtml = recap ? `
-      <div style="margin-top: 24px; background: #fff; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); overflow: hidden;">
-        <div style="padding: 14px 18px; background: #0d8a6f; color: #fff;">
-          <strong style="font-size: 13px; letter-spacing: 0.5px;">${l.recapTitle}</strong>
-        </div>
-        <table style="width: 100%; border-collapse: collapse;">
-          ${recapRow(l.name, recap.name)}
-          ${recapRow(l.email, recap.email)}
-          ${recapRow(l.phone, recap.phone)}
-          ${recapRow(l.projectType, recap.projectTypes)}
-          ${recapRow(l.budget, recap.budget)}
-          ${recapRow(l.message, recap.message?.replace(/\n/g, '<br/>'))}
-        </table>
-      </div>
-    ` : '';
+    const rows = recap ? [
+      recapRow(l.projectType, recap.projectTypes),
+      recapRow(l.name, recap.name),
+      recapRow(l.email, recap.email),
+      recapRow(l.phone, recap.phone),
+      recapRow(l.budget, `<span style="color: #0d8a6f;">${recap.budget || l.notProvided}</span>`),
+      recapRow(l.message, recap.message?.replace(/\n/g, '<br/>'), true),
+    ].join('') : '';
 
     const html = `
-      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px 24px; color: #2a2722;">
-        <div style="text-align: center; margin-bottom: 32px;">
-          <h1 style="font-size: 24px; color: #0d8a6f; margin: 0;">Creationation</h1>
-          <p style="font-size: 12px; color: #9b9590; margin-top: 4px;">Digital Product Studio</p>
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+      <body style="margin: 0; padding: 0; background: #f5f2ec; font-family: Georgia, serif;">
+        <div style="max-width: 600px; margin: 0 auto;">
+          
+          <!-- Header -->
+          <div style="background: #0d8a6f; padding: 32px 24px; text-align: center; border-radius: 0 0 0 0;">
+            <p style="margin: 0 0 4px; font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; text-transform: uppercase;">DIGITAL PRODUCT STUDIO</p>
+            <h1 style="margin: 0; font-size: 28px; color: #fff; font-family: Georgia, serif; letter-spacing: 1px;">CREATIONATION</h1>
+          </div>
+
+          <!-- Body -->
+          <div style="background: #fff; padding: 40px 32px;">
+            
+            <!-- Confirmed badge -->
+            <h2 style="margin: 0 0 8px; font-size: 22px; color: #2a2722; font-family: Georgia, serif; font-style: italic;">${l.confirmed}</h2>
+            <p style="margin: 0 0 28px; font-size: 15px; color: #9b9590; line-height: 1.6;">
+              ${firstName ? `${l.greeting} ${firstName}, ` : ''}${l.intro}
+            </p>
+
+            ${recap ? `
+            <!-- Recap card -->
+            <div style="background: #faf7f2; border-radius: 12px; border: 1px solid #f0ece6; overflow: hidden; margin-bottom: 28px;">
+              <table style="width: 100%; border-collapse: collapse;">
+                ${rows}
+              </table>
+            </div>
+            ` : ''}
+
+            <!-- Note -->
+            <p style="margin: 0 0 24px; font-size: 14px; color: #9b9590; text-align: center; line-height: 1.6;">${l.note}</p>
+
+            <!-- CTA Buttons -->
+            <div style="text-align: center; margin-bottom: 8px;">
+              <a href="https://wa.me/33612345678" style="display: inline-block; padding: 14px 32px; background: #25D366; color: #fff; text-decoration: none; border-radius: 50px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; margin: 0 6px 8px;">💬 ${l.whatsapp}</a>
+              <a href="mailto:info@ugcpanel.app" style="display: inline-block; padding: 14px 32px; background: #0d8a6f; color: #fff; text-decoration: none; border-radius: 50px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; margin: 0 6px 8px;">✉️ ${l.emailBtn}</a>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: #bbb; text-align: center;">${l.contact}</p>
+          </div>
+
+          <!-- Footer -->
+          <div style="padding: 24px; text-align: center;">
+            <p style="margin: 0; font-size: 12px; color: #9b9590;">${l.footer}</p>
+          </div>
         </div>
-        <div style="background: #faf7f2; border-radius: 16px; padding: 32px; border: 1px solid rgba(0,0,0,0.06);">
-          ${firstName ? `<p style="margin-top: 0;">${l.greeting} ${firstName},</p>` : ''}
-          <p style="line-height: 1.7; font-size: 15px; color: #2a2722;">${l.intro}</p>
-          ${recapHtml}
-          <p style="margin-top: 24px; margin-bottom: 0; line-height: 1.7; font-size: 15px;">${l.closing}<br/>${l.team}</p>
-        </div>
-        <div style="text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.06);">
-          <p style="font-size: 12px; color: #9b9590; margin: 0;">© 2026 Creationation. Digital Product Studio</p>
-        </div>
-      </div>
+      </body>
+      </html>
     `;
 
     const res = await fetch('https://api.resend.com/emails', {
@@ -127,7 +165,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Creationation <onboarding@resend.dev>',
+        from: 'Creationation <info@ugcpanel.app>',
         to: [to],
         subject: l.subject,
         html,
