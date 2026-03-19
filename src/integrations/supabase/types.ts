@@ -144,6 +144,107 @@ export type Database = {
         }
         Relationships: []
       }
+      prospect_emails: {
+        Row: {
+          body: string
+          id: string
+          prospect_id: string | null
+          sent_at: string | null
+          subject: string
+          user_id: string | null
+        }
+        Insert: {
+          body: string
+          id?: string
+          prospect_id?: string | null
+          sent_at?: string | null
+          subject: string
+          user_id?: string | null
+        }
+        Update: {
+          body?: string
+          id?: string
+          prospect_id?: string | null
+          sent_at?: string | null
+          subject?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prospect_emails_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prospects: {
+        Row: {
+          address: string | null
+          business_name: string
+          business_type: string | null
+          city: string | null
+          contact_name: string | null
+          country: string | null
+          created_at: string | null
+          email: string | null
+          email_count: number | null
+          google_place_id: string | null
+          has_website: boolean | null
+          id: string
+          last_emailed_at: string | null
+          notes: string | null
+          phone: string | null
+          source: string | null
+          status: Database["public"]["Enums"]["prospect_status"] | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_name: string
+          business_type?: string | null
+          city?: string | null
+          contact_name?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          email_count?: number | null
+          google_place_id?: string | null
+          has_website?: boolean | null
+          id?: string
+          last_emailed_at?: string | null
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["prospect_status"] | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_name?: string
+          business_type?: string | null
+          city?: string | null
+          contact_name?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          email_count?: number | null
+          google_place_id?: string | null
+          has_website?: boolean | null
+          id?: string
+          last_emailed_at?: string | null
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["prospect_status"] | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -178,6 +279,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       lead_status: "new" | "contacted" | "qualified" | "converted" | "lost"
+      prospect_status: "new" | "emailed" | "replied" | "converted" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -307,6 +409,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       lead_status: ["new", "contacted", "qualified", "converted", "lost"],
+      prospect_status: ["new", "emailed", "replied", "converted", "rejected"],
     },
   },
 } as const
