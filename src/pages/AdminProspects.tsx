@@ -96,20 +96,19 @@ const AdminProspects = () => {
 
   const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
-  const handleSearch = async () => {
+  const handleSearch = async (skipDetails = false) => {
     const types = searchTypes.includes('Autre') ? [...searchTypes.filter(t => t !== 'Autre'), ...(customType ? [customType] : [])] : searchTypes;
     const location = searchCity || searchCountry || searchContinent;
     if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      // Fetch existing google_place_ids to filter duplicates
       const { data: existing } = await supabase.from('prospects').select('google_place_id');
       const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
 
       const allResults: SearchResult[] = [];
       for (const type of types) {
         const { data, error } = await supabase.functions.invoke('prospect-search', {
-          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults, fetchPhone }
+          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults, fetchPhone, skipDetails }
         });
         if (error) throw new Error(error.message);
         const results = (data.results || []) as SearchResult[];
@@ -120,7 +119,6 @@ const AdminProspects = () => {
         });
       }
 
-      // Auto-save ALL results to DB to prevent future duplicates
       if (allResults.length > 0) {
         const rows = allResults.map(r => ({
           business_name: r.business_name, address: r.address, phone: r.phone,
@@ -141,10 +139,39 @@ const AdminProspects = () => {
 
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      const skipped = existingIds.size > 0 ? ' (doublons deja en base exclus)' : '';
-      toast.success(allResults.length + ' resultats trouves et sauvegardes' + skipped);
+      const mode = skipDetails ? ' (mode eco — sans Place Details)' : '';
+      const skipped = existingIds.size > 0 ? ' (doublons exclus)' : '';
+      toast.success(allResults.length + ' resultats trouves et sauvegardes' + mode + skipped);
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
+  };
+
+  const findProspectInfo = async () => {
+    const targets = selectedIds.size > 0
+      ? prospects.filter(p => selectedIds.has(p.id) && (!p.website_url || !p.phone))
+      : prospects.filter(p => !p.website_url || !p.phone);
+    if (!targets.length) { toast.info('Tous les prospects selectionnés ont déjà site + téléphone'); return; }
+    setFindingInfo(true);
+    toast.info(`Recherche IA site web + téléphone pour ${targets.length} prospect(s)...`);
+    try {
+      const { data, error } = await supabase.functions.invoke('find-prospect-info', {
+        body: { prospects: targets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address })) }
+      });
+      if (error) throw new Error(error.message);
+      const results = data.results || [];
+      let foundWeb = 0, foundPhone = 0;
+      for (const r of results) {
+        const updates: any = {};
+        if (r.website_url) { updates.website_url = r.website_url; updates.has_website = true; foundWeb++; }
+        if (r.phone) { updates.phone = r.phone; foundPhone++; }
+        if (Object.keys(updates).length) {
+          await supabase.from('prospects').update(updates).eq('id', r.id);
+        }
+      }
+      toast.success(`${foundWeb} site(s) et ${foundPhone} téléphone(s) trouvés sur ${targets.length} prospects`);
+      fetchProspects();
+    } catch (e: any) { toast.error(e.message || 'Erreur recherche info'); }
+    finally { setFindingInfo(false); }
   };
 
   const addAllNoWebsite = async () => {
