@@ -46,8 +46,10 @@ const AdminCosts = () => {
   // Cost estimates
   const textSearchCalls = Math.ceil(stats.prospectsBySource.google_maps / 20);
   const googleSearchCost = textSearchCalls * GOOGLE_COST_TEXT_SEARCH;
-  const googleDetailCost = stats.prospectsBySource.google_maps * GOOGLE_COST_PLACE_DETAIL;
-  const googleTotal = googleSearchCost + googleDetailCost;
+  const noWebsiteCount = stats.prospectsBySource.google_maps > 0 ? Math.round(stats.prospectsBySource.google_maps * 0.4) : 0; // ~40% typically have no website
+  const googleWebsiteCheckCost = stats.prospectsBySource.google_maps * GOOGLE_COST_WEBSITE_CHECK;
+  const googlePhoneCost = noWebsiteCount * GOOGLE_COST_PHONE_DETAIL;
+  const googleTotal = googleSearchCost + googleWebsiteCheckCost + googlePhoneCost;
   const aiEmailFindCost = stats.totalEmails * AI_COST_PER_EMAIL_FIND;
   const aiEmailGenCost = stats.emailsSent * AI_COST_PER_EMAIL_GEN;
   const aiTotal = aiEmailFindCost + aiEmailGenCost;
@@ -57,7 +59,8 @@ const AdminCosts = () => {
 
   const costRows = [
     { icon: Search, label: 'Google Text Search', detail: `${textSearchCalls} requêtes × $${GOOGLE_COST_TEXT_SEARCH}`, cost: googleSearchCost, color: '#4285F4' },
-    { icon: MapPin, label: 'Google Place Details', detail: `${stats.prospectsBySource.google_maps} appels × $${GOOGLE_COST_PLACE_DETAIL}`, cost: googleDetailCost, color: '#34A853' },
+    { icon: MapPin, label: 'Google Website Check', detail: `${stats.prospectsBySource.google_maps} appels × $${GOOGLE_COST_WEBSITE_CHECK} (Basic SKU)`, cost: googleWebsiteCheckCost, color: '#34A853' },
+    { icon: MapPin, label: 'Google Phone (sans site)', detail: `~${noWebsiteCount} appels × $${GOOGLE_COST_PHONE_DETAIL} (Contact SKU)`, cost: googlePhoneCost, color: '#FBBC04' },
     { icon: Sparkles, label: 'IA — Recherche emails', detail: `${stats.totalEmails} recherches × $${AI_COST_PER_EMAIL_FIND}`, cost: aiEmailFindCost, color: '#d4a55a' },
     { icon: Mail, label: 'IA — Génération emails', detail: `${stats.emailsSent} générations × $${AI_COST_PER_EMAIL_GEN}`, cost: aiEmailGenCost, color: '#0d8a6f' },
   ];
