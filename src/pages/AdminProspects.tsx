@@ -108,7 +108,7 @@ const AdminProspects = () => {
       const allResults: SearchResult[] = [];
       for (const type of types) {
         const { data, error } = await supabase.functions.invoke('prospect-search', {
-          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults }
+          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults, fetchPhone }
         });
         if (error) throw new Error(error.message);
         const results = (data.results || []) as SearchResult[];
