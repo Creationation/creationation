@@ -333,6 +333,11 @@ const AdminProspects = () => {
                 <option value='all'>Tous statuts</option>
                 {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
               </select>
+              <select value={websiteFilter} onChange={e => setWebsiteFilter(e.target.value as any)} style={{ padding:'10px 16px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                <option value='all'>Tous (site)</option>
+                <option value='no_website'>🔒 Sans site</option>
+                <option value='has_website'>🌐 Avec site</option>
+              </select>
               <button onClick={() => setShowManualAdd(true)} style={{ padding:'10px 16px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
                 <Plus size={14}/> Ajouter manuellement
               </button>
