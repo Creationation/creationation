@@ -115,7 +115,8 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
 
   const handleSubmit = async () => {
     const budgetStr = form.budgetCustom || `${form.budget}€`;
-    const parsed = contactSchema.safeParse({ ...form, budget: budgetStr });
+    const projectTypeStr = form.project_types.join(', ');
+    const parsed = contactSchema.safeParse({ ...form, project_type: projectTypeStr, budget: budgetStr });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message || 'Validation error');
       return;
@@ -126,7 +127,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim() || null,
-        project_type: form.project_type || null,
+        project_type: projectTypeStr || null,
         budget: budgetStr,
         message: form.message.trim(),
       });
@@ -136,14 +137,15 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         body: {
           to: form.email.trim(),
           toName: form.name.trim(),
-          subject: lang === 'de' ? 'Creationation — Wir haben Ihre Anfrage erhalten'
-            : lang === 'en' ? 'Creationation — We received your request'
-            : 'Creationation — Nous avons bien reçu votre demande',
-          body: lang === 'de'
-            ? 'Vielen Dank für Ihr Interesse! Wir haben Ihre Anfrage erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.\n\nMit freundlichen Grüßen,\nDas Creationation-Team'
-            : lang === 'en'
-            ? 'Thank you for your interest! We received your request and will get back to you within 24 hours.\n\nBest regards,\nThe Creationation Team'
-            : 'Merci pour votre intérêt ! Nous avons bien reçu votre demande et reviendrons vers vous sous 24h.\n\nÀ très vite,\nL\'équipe Creationation',
+          lang,
+          recap: {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim() || null,
+            projectTypes: projectTypeStr,
+            budget: budgetStr,
+            message: form.message.trim(),
+          },
         },
       }).catch(console.error);
 
