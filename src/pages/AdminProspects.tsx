@@ -459,6 +459,17 @@ const AdminProspects = () => {
                 {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA (tous)'}
               </button>
             </div>
+            {/* AI Info Finder bar */}
+            <div style={{ padding:'12px 20px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
+                <Globe size={14} style={{ color:'#7c5cbf', verticalAlign:'middle', marginRight:6 }}/>
+                {prospects.filter(p => p.website_url).length} / {prospects.length} ont un site — {prospects.filter(p => p.phone).length} / {prospects.length} ont un tel
+              </span>
+              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'8px 16px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingInfo?0.7:1 }}>
+                {findingInfo ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
+                {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA (tous)'}
+              </button>
+            </div>
             {selectedIds.size > 0 && (
               <div style={{ padding:'12px 20px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
