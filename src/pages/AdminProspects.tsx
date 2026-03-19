@@ -359,41 +359,30 @@ const AdminProspects = () => {
             {loading ? <div className='text-center py-20' style={{ color:'var(--text-light)', fontFamily:'var(--font-b)' }}>Chargement...</div>
             : filteredProspects.length === 0 ? <div className='text-center py-20' style={{ color:'var(--text-light)', fontFamily:'var(--font-b)' }}>Aucun prospect — utilise Chercher des prospects.</div>
             : (
-              <div style={{ background:'var(--glass-bg-strong)', backdropFilter:'blur(20px)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', overflow:'hidden' }}>
-                <div className='hidden md:block overflow-x-auto'>
-                  <table className='w-full' style={{ fontFamily:'var(--font-b)', fontSize:14, borderCollapse:'collapse' }}>
-                    <thead>
-                      <tr style={{ borderBottom:'1px solid var(--glass-border)' }}>
-                        <th className='px-4 py-3' style={{ width:40 }}>
-                          <button onClick={toggleSelectAll} style={{ background:'none', border:'none', cursor:'pointer' }}>
-                            {filteredProspects.every(p => selectedIds.has(p.id)) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
-                          </button>
-                        </th>
-                        {['Commerce','Contact','Email','Ville','Site','Statut','Envois',''].map(h => (
-                          <th key={h} className='text-left px-4 py-3' style={{ fontSize:11, textTransform:'uppercase', letterSpacing:1, color:'var(--text-light)', fontWeight:600 }}>{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>{filteredProspects.map(p => <ProspectRow key={p.id} prospect={p} selected={selectedIds.has(p.id)} onToggle={() => toggleSelect(p.id)} onDelete={() => deleteProspect(p.id)} onUpdateEmail={email => updateEmail(p.id, email)} onUpdateStatus={status => updateStatus(p.id, status)} />)}</tbody>
-                  </table>
-                </div>
-                <div className='md:hidden flex flex-col'>
-                  {filteredProspects.map(p => (
-                    <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
-                      <button onClick={() => toggleSelect(p.id)} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
-                        {selectedIds.has(p.id) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
-                      </button>
-                      <div style={{ flex:1 }}>
-                        <div className='flex items-center gap-2 mb-1'>
-                          <span style={{ fontWeight:600, color:'var(--charcoal)', fontFamily:'var(--font-b)' }}>{p.business_name}</span>
-                          <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background:SC[p.status]+'18', color:SC[p.status], fontSize:11, fontWeight:600 }}>{SL[p.status]}</span>
-                        </div>
-                        <p style={{ fontSize:12, color:'var(--text-mid)', margin:'2px 0', fontFamily:'var(--font-b)' }}>{p.email || 'Pas d\'email'}</p>
-                        <p style={{ fontSize:12, color:'var(--text-light)', margin:0, fontFamily:'var(--font-b)' }}>{p.city} - {p.has_website ? 'Site OK' : 'Sans site'} - {p.email_count}x</p>
-                      </div>
+              <div className='flex flex-col gap-6'>
+                {/* Section: Sans site internet */}
+                {prospectsNoSite.length > 0 && (
+                  <div>
+                    <div className='flex items-center gap-2 mb-3'>
+                      <GlobeLock size={16} style={{ color:'var(--teal)' }}/>
+                      <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:0 }}>Sans site internet</h3>
+                      <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'rgba(13,138,111,0.1)', color:'var(--teal)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{prospectsNoSite.length}</span>
                     </div>
-                  ))}
-                </div>
+                    <ProspectTable prospects={prospectsNoSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsNoSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} />
+                  </div>
+                )}
+
+                {/* Section: Avec site internet */}
+                {prospectsWithSite.length > 0 && (
+                  <div>
+                    <div className='flex items-center gap-2 mb-3'>
+                      <Globe size={16} style={{ color:'var(--text-light)' }}/>
+                      <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:0 }}>Avec site internet</h3>
+                      <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'var(--glass-bg)', color:'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{prospectsWithSite.length}</span>
+                    </div>
+                    <ProspectTable prospects={prospectsWithSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsWithSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} />
+                  </div>
+                )}
               </div>
             )}
           </div>
