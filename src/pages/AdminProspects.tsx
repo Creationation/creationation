@@ -68,13 +68,16 @@ const AdminProspects = () => {
 
   const handleSearch = async () => {
     const type = searchType === 'Autre' ? customType : searchType;
-    if (!searchCity || !type) { toast.error('Remplis la ville et le type'); return; }
+    const location = searchCity || searchCountry || searchContinent;
+    if (!location || !type) { toast.error('Remplis au moins une localisation et le type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      const { data, error } = await supabase.functions.invoke('prospect-search', { body: { city: searchCity, businessType: type } });
+      const { data, error } = await supabase.functions.invoke('prospect-search', {
+        body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '' }
+      });
       if (error) throw new Error(error.message);
       setSearchResults(data.results || []);
-      toast.success(data.total + ' resultats trouvés');
+      toast.success(data.total + ' resultats trouves');
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
