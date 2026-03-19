@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { city, businessType, country = '', maxResults = 20 } = await req.json();
+    const { city, businessType, country = '', maxResults = 20, fetchPhone = false } = await req.json();
     if (!businessType) {
       return new Response(JSON.stringify({ error: 'businessType is required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -83,7 +83,7 @@ serve(async (req) => {
 
     // Step 2: Call Place Details ONLY for prospects that look like they have no website
     // (Text Search doesn't tell us about websites, so we check all — but we only request
-    // the minimal 'website' field first to classify, then get phone only for no-website ones)
+    // the minimal 'website' field first to classify, then optionally get phone for no-website ones)
     const detailsPromises = basicResults.map(async (result) => {
       try {
         // Minimal call: just website field (Basic SKU = $0.017)
@@ -95,15 +95,16 @@ serve(async (req) => {
         if (d.website) {
           result.has_website = true;
           result.website_url = d.website;
-          // Has website — skip phone lookup to save money
           return result;
         }
 
-        // No website — get phone too (Contact SKU = $0.020)
-        const phoneUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${result.google_place_id}&fields=formatted_phone_number&key=${GOOGLE_MAPS_API_KEY}`;
-        const phoneRes = await fetch(phoneUrl);
-        const phoneData = await phoneRes.json();
-        result.phone = phoneData.result?.formatted_phone_number || null;
+        // No website — optionally get phone (Contact SKU = $0.020)
+        if (fetchPhone) {
+          const phoneUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${result.google_place_id}&fields=formatted_phone_number&key=${GOOGLE_MAPS_API_KEY}`;
+          const phoneRes = await fetch(phoneUrl);
+          const phoneData = await phoneRes.json();
+          result.phone = phoneData.result?.formatted_phone_number || null;
+        }
         return result;
       } catch {
         return result;
