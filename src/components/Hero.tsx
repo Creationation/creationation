@@ -79,8 +79,8 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
         >
           {h.btn1[lang]}
         </a>
-        <a
-          href="#contact"
+        <button
+          onClick={() => onContact?.()}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 10,
             padding: '16px 36px',
