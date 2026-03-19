@@ -372,7 +372,6 @@ const AdminProspects = () => {
       </div>
     </div>
   );
-  );
 };
 
 const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus }: {
