@@ -67,29 +67,59 @@ serve(async (req) => {
 
     const places = allPlaces.slice(0, maxResults);
 
-    const detailsPromises = places.map(async (place: any) => {
-      const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,website,rating,user_ratings_total,types&key=${GOOGLE_MAPS_API_KEY}`;
-      const detailRes = await fetch(detailUrl);
-      const detailData = await detailRes.json();
-      const d = detailData.result || {};
-      return {
-        google_place_id: place.place_id,
-        business_name: d.name || place.name,
-        address: d.formatted_address || place.formatted_address,
-        phone: d.formatted_phone_number || null,
-        has_website: !!d.website,
-        website_url: d.website || null,
-        rating: d.rating || null,
-        review_count: d.user_ratings_total || 0,
-        types: d.types || [],
-        city: city || country, country, business_type: businessType, source: 'google_maps',
-      };
+    // Step 1: Build basic results from Text Search (free — already paid for)
+    const basicResults = places.map((place: any) => ({
+      google_place_id: place.place_id,
+      business_name: place.name,
+      address: place.formatted_address,
+      phone: null as string | null,
+      has_website: false,
+      website_url: null as string | null,
+      rating: place.rating || null,
+      review_count: place.user_ratings_total || 0,
+      types: place.types || [],
+      city: city || country, country, business_type: businessType, source: 'google_maps',
+    }));
+
+    // Step 2: Call Place Details ONLY for prospects that look like they have no website
+    // (Text Search doesn't tell us about websites, so we check all — but we only request
+    // the minimal 'website' field first to classify, then get phone only for no-website ones)
+    const detailsPromises = basicResults.map(async (result) => {
+      try {
+        // Minimal call: just website field (Basic SKU = $0.017)
+        const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${result.google_place_id}&fields=website&key=${GOOGLE_MAPS_API_KEY}`;
+        const detailRes = await fetch(detailUrl);
+        const detailData = await detailRes.json();
+        const d = detailData.result || {};
+
+        if (d.website) {
+          result.has_website = true;
+          result.website_url = d.website;
+          // Has website — skip phone lookup to save money
+          return result;
+        }
+
+        // No website — get phone too (Contact SKU = $0.020)
+        const phoneUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${result.google_place_id}&fields=formatted_phone_number&key=${GOOGLE_MAPS_API_KEY}`;
+        const phoneRes = await fetch(phoneUrl);
+        const phoneData = await phoneRes.json();
+        result.phone = phoneData.result?.formatted_phone_number || null;
+        return result;
+      } catch {
+        return result;
+      }
     });
 
     const results = await Promise.all(detailsPromises);
     results.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
 
-    return new Response(JSON.stringify({ results, total: results.length }), {
+    const detailCalls = results.length;
+    const phoneCalls = results.filter(r => !r.has_website).length;
+
+    return new Response(JSON.stringify({ 
+      results, total: results.length,
+      costs: { textSearchCalls: pageCount, detailCalls, phoneCalls }
+    }), {
       status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
