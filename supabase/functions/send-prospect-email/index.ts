@@ -148,9 +148,10 @@ serve(async (req) => {
               <a href="mailto:info@ugcpanel.app" style="display: inline-block; padding: 14px 32px; background: #0d8a6f; color: #fff; text-decoration: none; border-radius: 50px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; margin: 0 6px 8px;">✉️ ${l.emailBtn}</a>
             </div>
             <p style="margin: 0; font-size: 12px; color: #bbb; text-align: center;">${l.contact}</p>
-          </div>
+           </div>
 
           <!-- Footer -->
+          </div><!-- close rounded wrapper -->
           <div style="padding: 24px; text-align: center;">
             <p style="margin: 0; font-size: 12px; color: #9b9590;">${l.footer}</p>
           </div>
