@@ -426,6 +426,9 @@ const AdminProspects = () => {
                 <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
                 <div className='flex gap-2'>
                   <button onClick={() => setSelectedIds(new Set())} style={{ padding:'8px 14px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', cursor:'pointer' }}>Deselectionner</button>
+                  <button onClick={deleteSelected} style={{ padding:'8px 16px', background:'#e8735a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
+                    <Trash2 size={13}/> Supprimer ({selectedIds.size})
+                  </button>
                   <button onClick={openEmailModal} style={{ padding:'8px 16px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
                     <Mail size={13}/> Envoyer emails IA
                   </button>
