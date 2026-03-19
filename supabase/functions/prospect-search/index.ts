@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { city, businessType, country = '', maxResults = 20, fetchPhone = false } = await req.json();
+    const { city, businessType, country = '', maxResults = 20, fetchPhone = false, skipDetails = false } = await req.json();
     if (!businessType) {
       return new Response(JSON.stringify({ error: 'businessType is required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -37,14 +37,12 @@ serve(async (req) => {
     let pageCount = 0;
     const maxPages = Math.ceil(maxResults / 20);
 
-    // Paginate through Google Places results
     do {
       const pageUrl = nextPageToken
         ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${nextPageToken}&key=${GOOGLE_MAPS_API_KEY}`
         : searchUrl;
       
       if (nextPageToken) {
-        // Google requires a short delay before using next_page_token
         await new Promise(r => setTimeout(r, 2000));
       }
 
@@ -67,7 +65,6 @@ serve(async (req) => {
 
     const places = allPlaces.slice(0, maxResults);
 
-    // Step 1: Build basic results from Text Search (free — already paid for)
     const basicResults = places.map((place: any) => ({
       google_place_id: place.place_id,
       business_name: place.name,
@@ -81,12 +78,20 @@ serve(async (req) => {
       city: city || country, country, business_type: businessType, source: 'google_maps',
     }));
 
-    // Step 2: Call Place Details ONLY for prospects that look like they have no website
-    // (Text Search doesn't tell us about websites, so we check all — but we only request
-    // the minimal 'website' field first to classify, then optionally get phone for no-website ones)
+    // skipDetails mode: only Text Search, no Place Details calls at all
+    if (skipDetails) {
+      basicResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
+      return new Response(JSON.stringify({ 
+        results: basicResults, total: basicResults.length,
+        costs: { textSearchCalls: pageCount, detailCalls: 0, phoneCalls: 0 }
+      }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Standard mode: Place Details for website check + optional phone
     const detailsPromises = basicResults.map(async (result) => {
       try {
-        // Minimal call: just website field (Basic SKU = $0.017)
         const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${result.google_place_id}&fields=website&key=${GOOGLE_MAPS_API_KEY}`;
         const detailRes = await fetch(detailUrl);
         const detailData = await detailRes.json();
@@ -98,7 +103,6 @@ serve(async (req) => {
           return result;
         }
 
-        // No website — optionally get phone (Contact SKU = $0.020)
         if (fetchPhone) {
           const phoneUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${result.google_place_id}&fields=formatted_phone_number&key=${GOOGLE_MAPS_API_KEY}`;
           const phoneRes = await fetch(phoneUrl);
@@ -115,7 +119,7 @@ serve(async (req) => {
     results.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
 
     const detailCalls = results.length;
-    const phoneCalls = results.filter(r => !r.has_website).length;
+    const phoneCalls = fetchPhone ? results.filter(r => !r.has_website).length : 0;
 
     return new Response(JSON.stringify({ 
       results, total: results.length,
