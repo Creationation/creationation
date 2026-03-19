@@ -105,18 +105,39 @@ const AdminProspects = () => {
       const { data: existing } = await supabase.from('prospects').select('google_place_id');
       const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
 
+      // When only a continent is selected (no country, no city), iterate over each country in that continent
+      const countries: string[] = (!searchCountry && !searchCity && searchContinent && CONTINENTS[searchContinent])
+        ? CONTINENTS[searchContinent]
+        : [searchCountry || ''];
+
       const allResults: SearchResult[] = [];
-      for (const type of types) {
-        const { data, error } = await supabase.functions.invoke('prospect-search', {
-          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults, fetchPhone, skipDetails }
-        });
-        if (error) throw new Error(error.message);
-        const results = (data.results || []) as SearchResult[];
-        results.forEach(r => {
-          if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
-            allResults.push(r);
+      let totalSearches = types.length * countries.length;
+      let completedSearches = 0;
+
+      for (const country of countries) {
+        for (const type of types) {
+          completedSearches++;
+          if (countries.length > 1) {
+            toast.info(`Recherche ${completedSearches}/${totalSearches}: ${type} en ${country}...`, { id: 'search-progress' });
           }
-        });
+          try {
+            const { data, error } = await supabase.functions.invoke('prospect-search', {
+              body: { city: searchCity || '', businessType: type, country: country, maxResults: Math.min(maxResults, countries.length > 1 ? 60 : maxResults), fetchPhone, skipDetails }
+            });
+            if (error) { console.warn(`Error for ${type} in ${country}:`, error.message); continue; }
+            const results = (data.results || []) as SearchResult[];
+            results.forEach(r => {
+              // Fix city/country from the actual search params
+              r.country = country || searchContinent || '';
+              r.city = searchCity || r.city || '';
+              if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
+                allResults.push(r);
+              }
+            });
+          } catch (e: any) {
+            console.warn(`Search failed for ${type} in ${country}:`, e.message);
+          }
+        }
       }
 
       if (allResults.length > 0) {
@@ -139,9 +160,9 @@ const AdminProspects = () => {
 
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      const mode = skipDetails ? ' (mode eco — sans Place Details)' : '';
-      const skipped = existingIds.size > 0 ? ' (doublons exclus)' : '';
-      toast.success(allResults.length + ' resultats trouves et sauvegardes' + mode + skipped);
+      const mode = skipDetails ? ' (mode éco)' : '';
+      const countriesInfo = countries.length > 1 ? ` dans ${countries.length} pays` : '';
+      toast.success(allResults.length + ' résultats trouvés et sauvegardés' + mode + countriesInfo, { id: 'search-progress' });
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
