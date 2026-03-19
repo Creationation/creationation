@@ -13,6 +13,15 @@ const SC: Record<ProspectStatus, string> = { new: '#0d8a6f', emailed: '#4da6d9',
 const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emaile', replied: 'A repondu', converted: 'Converti', rejected: 'Rejete' };
 const BT = ['Barbershop','Salon de coiffure','Nail studio','Restaurant','Cafe','Boulangerie','Boucherie','Epicerie','Fleuriste','Pharmacie','Medecin','Dentiste','Kinesitherapeute','Photographe','Coach sportif','Tatoueur','Pressing','Plombier','Electricien','Autre'];
 
+const CONTINENTS: Record<string, string[]> = {
+  'Europe': ['France','Belgique','Suisse','Allemagne','Espagne','Italie','Portugal','Pays-Bas','Autriche','Royaume-Uni','Irlande','Luxembourg','Pologne','Republique tcheque','Suede','Norvege','Danemark','Finlande','Grece','Roumanie','Croatie'],
+  'Amerique du Nord': ['Etats-Unis','Canada','Mexique'],
+  'Amerique du Sud': ['Bresil','Argentine','Colombie','Chili','Perou'],
+  'Afrique': ['Maroc','Tunisie','Algerie','Senegal','Cote d\'Ivoire','Cameroun','Afrique du Sud','Nigeria','Egypte','RD Congo'],
+  'Asie': ['Japon','Coree du Sud','Chine','Inde','Thailande','Vietnam','Indonesie','Philippines','Malaisie','Emirats arabes unis','Turquie','Israel'],
+  'Oceanie': ['Australie','Nouvelle-Zelande'],
+};
+
 const AdminProspects = () => {
   const navigate = useNavigate();
   const [prospects, setProspects] = useState<Prospect[]>([]);
