@@ -57,6 +57,7 @@ const AdminProspects = () => {
   const [searchTypes, setSearchTypes] = useState<string[]>([]);
   const [customType, setCustomType] = useState('');
   const [maxResults, setMaxResults] = useState(50);
+  const [fetchPhone, setFetchPhone] = useState(false);
   const [searching, setSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[] | null>(null);
   const [showManualAdd, setShowManualAdd] = useState(false);
