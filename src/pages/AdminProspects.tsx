@@ -515,7 +515,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
                 {prospects.every(p => selectedIds.has(p.id)) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
               </button>
             </th>
-            {['Commerce','Contact','Email','Ville','Site','Statut','Envois',''].map(h => (
+            {['Commerce','Contact','Email','Ville / Langue','Site','Statut','Envois',''].map(h => (
               <th key={h} className='text-left px-4 py-3' style={{ fontSize:11, textTransform:'uppercase', letterSpacing:1, color:'var(--text-light)', fontWeight:600 }}>{h}</th>
             ))}
           </tr>
