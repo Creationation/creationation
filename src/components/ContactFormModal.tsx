@@ -60,7 +60,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   const [animating, setAnimating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', project_type: '', budget: '2000', budgetCustom: '', message: '',
+    name: '', email: '', phone: '', project_types: [] as string[], budget: '2000', budgetCustom: '', message: '',
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -99,7 +99,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
     switch (step) {
       case 0: return form.name.trim().length > 0;
       case 1: return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
-      case 2: return form.project_type.length > 0;
+      case 2: return form.project_types.length > 0;
       case 3: return true;
       case 4: return form.message.trim().length > 0;
       default: return false;
@@ -115,7 +115,8 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
 
   const handleSubmit = async () => {
     const budgetStr = form.budgetCustom || `${form.budget}€`;
-    const parsed = contactSchema.safeParse({ ...form, budget: budgetStr });
+    const projectTypeStr = form.project_types.join(', ');
+    const parsed = contactSchema.safeParse({ ...form, project_type: projectTypeStr, budget: budgetStr });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message || 'Validation error');
       return;
@@ -126,7 +127,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim() || null,
-        project_type: form.project_type || null,
+        project_type: projectTypeStr || null,
         budget: budgetStr,
         message: form.message.trim(),
       });
@@ -136,19 +137,20 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         body: {
           to: form.email.trim(),
           toName: form.name.trim(),
-          subject: lang === 'de' ? 'Creationation — Wir haben Ihre Anfrage erhalten'
-            : lang === 'en' ? 'Creationation — We received your request'
-            : 'Creationation — Nous avons bien reçu votre demande',
-          body: lang === 'de'
-            ? 'Vielen Dank für Ihr Interesse! Wir haben Ihre Anfrage erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.\n\nMit freundlichen Grüßen,\nDas Creationation-Team'
-            : lang === 'en'
-            ? 'Thank you for your interest! We received your request and will get back to you within 24 hours.\n\nBest regards,\nThe Creationation Team'
-            : 'Merci pour votre intérêt ! Nous avons bien reçu votre demande et reviendrons vers vous sous 24h.\n\nÀ très vite,\nL\'équipe Creationation',
+          lang,
+          recap: {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim() || null,
+            projectTypes: projectTypeStr,
+            budget: budgetStr,
+            message: form.message.trim(),
+          },
         },
       }).catch(console.error);
 
       toast.success(tr.success[lang]);
-      setForm({ name: '', email: '', phone: '', project_type: '', budget: '2000', budgetCustom: '', message: '' });
+      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '' });
       onOpenChange(false);
     } catch {
       toast.error(tr.error[lang]);
@@ -253,32 +255,40 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
               {tr.projectType[lang]}
             </label>
             <div className="grid grid-cols-2 gap-2.5">
-              {tr.projectTypes[lang].map(pt => (
-                <button
-                  key={pt}
-                  type="button"
-                  onClick={() => setForm(f => ({ ...f, project_type: pt }))}
-                  style={{
-                    padding: '14px 16px',
-                    borderRadius: 'var(--r)',
-                    border: form.project_type === pt ? '2px solid var(--teal)' : '1.5px solid var(--glass-border)',
-                    background: form.project_type === pt ? 'rgba(13,138,111,0.08)' : 'rgba(255,255,255,0.4)',
-                    color: form.project_type === pt ? 'var(--teal)' : 'var(--text-mid)',
-                    fontFamily: 'var(--font-b)',
-                    fontSize: 13,
-                    fontWeight: form.project_type === pt ? 600 : 400,
-                    cursor: 'pointer',
-                    transition: 'all 0.25s ease',
-                    textAlign: 'left',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                  }}
-                >
-                  {form.project_type === pt && <Check size={14} style={{ color: 'var(--teal)' }} />}
-                  {pt}
-                </button>
-              ))}
+              {tr.projectTypes[lang].map(pt => {
+                const isSelected = form.project_types.includes(pt);
+                return (
+                  <button
+                    key={pt}
+                    type="button"
+                    onClick={() => setForm(f => ({
+                      ...f,
+                      project_types: isSelected
+                        ? f.project_types.filter(p => p !== pt)
+                        : [...f.project_types, pt],
+                    }))}
+                    style={{
+                      padding: '14px 16px',
+                      borderRadius: 'var(--r)',
+                      border: isSelected ? '2px solid var(--teal)' : '1.5px solid var(--glass-border)',
+                      background: isSelected ? 'rgba(13,138,111,0.08)' : 'rgba(255,255,255,0.4)',
+                      color: isSelected ? 'var(--teal)' : 'var(--text-mid)',
+                      fontFamily: 'var(--font-b)',
+                      fontSize: 13,
+                      fontWeight: isSelected ? 600 : 400,
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    {isSelected && <Check size={14} style={{ color: 'var(--teal)' }} />}
+                    {pt}
+                  </button>
+                );
+              })}
             </div>
           </div>
         );
