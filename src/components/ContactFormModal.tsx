@@ -150,7 +150,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       }).catch(console.error);
 
       toast.success(tr.success[lang]);
-      setForm({ name: '', email: '', phone: '', project_type: '', budget: '2000', budgetCustom: '', message: '' });
+      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '' });
       onOpenChange(false);
     } catch {
       toast.error(tr.error[lang]);
