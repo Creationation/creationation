@@ -228,7 +228,7 @@ const AdminProspects = () => {
     finally { setFindingEmails(false); }
   };
 
-
+  const handleSendBulk = async () => {
     const selected = prospects.filter(p => selectedIds.has(p.id));
     const emailsToSend = generatedEmails.filter(e => e.subject && e.body && !e.error && !e.loading).map(e => {
       const p = selected.find(pr => pr.id === e.prospectId)!;
