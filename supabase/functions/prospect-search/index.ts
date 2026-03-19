@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { city, businessType, country = '', maxResults = 20 } = await req.json();
+    const { city, businessType, country = '', maxResults = 20, fetchPhone = false } = await req.json();
     if (!businessType) {
       return new Response(JSON.stringify({ error: 'businessType is required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
