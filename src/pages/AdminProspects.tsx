@@ -30,8 +30,9 @@ const AdminProspects = () => {
   const [searchContinent, setSearchContinent] = useState('');
   const [searchCountry, setSearchCountry] = useState('');
   const [searchCity, setSearchCity] = useState('');
-  const [searchType, setSearchType] = useState('');
+  const [searchTypes, setSearchTypes] = useState<string[]>([]);
   const [customType, setCustomType] = useState('');
+  const [maxResults, setMaxResults] = useState(50);
   const [searching, setSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[] | null>(null);
   const [showManualAdd, setShowManualAdd] = useState(false);
