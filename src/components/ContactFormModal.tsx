@@ -449,8 +449,8 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 gap-3">
-            {step > 0 ? (
+          <div className="flex items-center justify-center mt-8 gap-3">
+            {step > 0 && (
               <button
                 type="button"
                 onClick={() => goTo(step - 1)}
@@ -474,7 +474,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
               >
                 <ArrowLeft size={14} /> {tr.prev[lang]}
               </button>
-            ) : <div />}
+            )}
 
             {step < TOTAL_STEPS - 1 ? (
               <button
