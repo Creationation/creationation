@@ -124,6 +124,7 @@ const AdminProspects = () => {
           has_website: r.has_website, website_url: r.website_url, city: r.city,
           country: r.country, business_type: r.business_type,
           google_place_id: r.google_place_id, source: 'google_maps',
+          language: COUNTRY_LANG[r.country] || 'en',
         }));
         const { error: insertError } = await supabase.from('prospects').insert(rows);
         if (insertError && insertError.code !== '23505') {
