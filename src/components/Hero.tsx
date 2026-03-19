@@ -2,7 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import { useCountUp } from '@/hooks/useCountUp';
 
-const Hero = () => {
+const Hero = ({ onContact }: { onContact?: () => void }) => {
   const { lang } = useLang();
   const h = t.hero;
 
