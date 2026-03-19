@@ -92,49 +92,36 @@ const AdminProspects = () => {
           }
         });
       }
+
+      // Auto-save ALL results to DB to prevent future duplicates
+      if (allResults.length > 0) {
+        const rows = allResults.map(r => ({
+          business_name: r.business_name, address: r.address, phone: r.phone,
+          has_website: r.has_website, website_url: r.website_url, city: r.city,
+          country: r.country, business_type: r.business_type,
+          google_place_id: r.google_place_id, source: 'google_maps',
+        }));
+        const { error: insertError } = await supabase.from('prospects').insert(rows);
+        if (insertError && insertError.code !== '23505') {
+          console.warn('Bulk insert error, trying one by one', insertError);
+          for (const row of rows) {
+            await supabase.from('prospects').insert(row);
+          }
+        }
+        fetchProspects();
+      }
+
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      const skipped = existingIds.size > 0 ? ' (doublons deja sauvegardes exclus)' : '';
-      toast.success(allResults.length + ' resultats trouves' + skipped);
+      const skipped = existingIds.size > 0 ? ' (doublons deja en base exclus)' : '';
+      toast.success(allResults.length + ' resultats trouves et sauvegardes' + skipped);
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
 
-  const addFromSearch = async (result: SearchResult) => {
-    const { error } = await supabase.from('prospects').insert({
-      business_name: result.business_name, address: result.address, phone: result.phone,
-      has_website: result.has_website, website_url: result.website_url, city: result.city,
-      country: result.country, business_type: result.business_type, google_place_id: result.google_place_id, source: 'google_maps',
-    });
-    if (error) {
-      if (error.code === '23505') toast.error(result.business_name + ' existe deja');
-      else toast.error('Erreur ajout');
-    } else {
-      toast.success(result.business_name + ' ajoute');
-      setSearchResults(prev => prev ? prev.filter(r => r.google_place_id !== result.google_place_id) : prev);
-      fetchProspects();
-    }
-  };
-
   const addAllNoWebsite = async () => {
-    if (!searchResults) return;
-    const noWebsite = searchResults.filter(r => !r.has_website);
-    if (!noWebsite.length) { toast.info('Aucun sans site'); return; }
-    let added = 0;
-    let skipped = 0;
-    for (const r of noWebsite) {
-      const { error } = await supabase.from('prospects').insert({
-        business_name: r.business_name, address: r.address, phone: r.phone, has_website: r.has_website,
-        website_url: r.website_url, city: r.city, country: r.country, business_type: r.business_type,
-        google_place_id: r.google_place_id, source: 'google_maps',
-      });
-      if (error && error.code === '23505') skipped++;
-      else if (!error) added++;
-    }
-    toast.success(`${added} importes${skipped ? `, ${skipped} doublons ignores` : ''}`);
-    setSearchResults(prev => prev ? prev.filter(r => r.has_website) : prev);
-    fetchProspects();
-    if (added > 0) setTab('prospects');
+    toast.info('Tous les resultats sont deja sauvegardes automatiquement !');
+    setTab('prospects');
   };
 
   const handleManualAdd = async () => {
@@ -314,9 +301,9 @@ const AdminProspects = () => {
                         <div style={{ fontSize:12, color:'var(--text-light)', fontFamily:'var(--font-b)' }}>{r.address}</div>
                         {r.phone && <div style={{ fontSize:12, color:'var(--text-mid)', fontFamily:'var(--font-b)' }}>{r.phone}</div>}
                       </div>
-                      <button onClick={() => addFromSearch(r)} style={{ padding:'6px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, cursor:'pointer', color:'var(--teal)', fontWeight:600 }}>
-                        <Plus size={12} style={{ marginRight:4, verticalAlign:'middle' }}/> Ajouter
-                      </button>
+                      <span style={{ padding:'6px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600 }}>
+                        <Check size={12} style={{ marginRight:4, verticalAlign:'middle' }}/> Sauvegarde
+                      </span>
                     </div>
                   ))}
                 </div>
