@@ -92,10 +92,29 @@ const AdminProspects = () => {
           }
         });
       }
+
+      // Auto-save ALL results to DB to prevent future duplicates
+      if (allResults.length > 0) {
+        const rows = allResults.map(r => ({
+          business_name: r.business_name, address: r.address, phone: r.phone,
+          has_website: r.has_website, website_url: r.website_url, city: r.city,
+          country: r.country, business_type: r.business_type,
+          google_place_id: r.google_place_id, source: 'google_maps',
+        }));
+        const { error: insertError } = await supabase.from('prospects').insert(rows);
+        if (insertError && insertError.code !== '23505') {
+          console.warn('Bulk insert error, trying one by one', insertError);
+          for (const row of rows) {
+            await supabase.from('prospects').insert(row);
+          }
+        }
+        fetchProspects();
+      }
+
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      const skipped = existingIds.size > 0 ? ' (doublons deja sauvegardes exclus)' : '';
-      toast.success(allResults.length + ' resultats trouves' + skipped);
+      const skipped = existingIds.size > 0 ? ' (doublons deja en base exclus)' : '';
+      toast.success(allResults.length + ' resultats trouves et sauvegardes' + skipped);
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
