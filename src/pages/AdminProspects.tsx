@@ -127,7 +127,7 @@ const AdminProspects = () => {
     if (!selectedIds.size) { toast.error('Selectionne au moins un prospect'); return; }
     const selected = prospects.filter(p => selectedIds.has(p.id));
     const noEmail = selected.filter(p => !p.email);
-    if (noEmail.length) { toast.error(noEmail.map(p => p.business_name).join(', ') + ' - pas d'email'); return; }
+    if (noEmail.length) { toast.error(noEmail.map(p => p.business_name).join(', ') + ' - pas d\'email'); return; }
     setGeneratedEmails(selected.map(p => ({ prospectId: p.id, subject: '', body: '', loading: true })));
     setShowEmailModal(true); setGeneratingAll(true);
     const results: GeneratedEmail[] = [];
