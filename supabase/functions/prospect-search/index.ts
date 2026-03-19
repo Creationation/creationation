@@ -16,14 +16,21 @@ serve(async (req) => {
   }
 
   try {
-    const { city, businessType, country = 'France', maxResults = 20 } = await req.json();
-    if (!city || !businessType) {
-      return new Response(JSON.stringify({ error: 'city and businessType are required' }), {
+    const { city, businessType, country = '', maxResults = 20 } = await req.json();
+    if (!businessType) {
+      return new Response(JSON.stringify({ error: 'businessType is required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const query = encodeURIComponent(`${businessType} ${city} ${country}`);
+    const locationParts = [city, country].filter(Boolean);
+    if (!locationParts.length) {
+      return new Response(JSON.stringify({ error: 'At least city or country is required' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const query = encodeURIComponent(`${businessType} ${locationParts.join(' ')}`);
     const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${GOOGLE_MAPS_API_KEY}`;
     const searchRes = await fetch(searchUrl);
     const searchData = await searchRes.json();

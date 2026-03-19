@@ -13,11 +13,22 @@ const SC: Record<ProspectStatus, string> = { new: '#0d8a6f', emailed: '#4da6d9',
 const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emaile', replied: 'A repondu', converted: 'Converti', rejected: 'Rejete' };
 const BT = ['Barbershop','Salon de coiffure','Nail studio','Restaurant','Cafe','Boulangerie','Boucherie','Epicerie','Fleuriste','Pharmacie','Medecin','Dentiste','Kinesitherapeute','Photographe','Coach sportif','Tatoueur','Pressing','Plombier','Electricien','Autre'];
 
+const CONTINENTS: Record<string, string[]> = {
+  'Europe': ['France','Belgique','Suisse','Allemagne','Espagne','Italie','Portugal','Pays-Bas','Autriche','Royaume-Uni','Irlande','Luxembourg','Pologne','Republique tcheque','Suede','Norvege','Danemark','Finlande','Grece','Roumanie','Croatie'],
+  'Amerique du Nord': ['Etats-Unis','Canada','Mexique'],
+  'Amerique du Sud': ['Bresil','Argentine','Colombie','Chili','Perou'],
+  'Afrique': ['Maroc','Tunisie','Algerie','Senegal','Cote d\'Ivoire','Cameroun','Afrique du Sud','Nigeria','Egypte','RD Congo'],
+  'Asie': ['Japon','Coree du Sud','Chine','Inde','Thailande','Vietnam','Indonesie','Philippines','Malaisie','Emirats arabes unis','Turquie','Israel'],
+  'Oceanie': ['Australie','Nouvelle-Zelande'],
+};
+
 const AdminProspects = () => {
   const navigate = useNavigate();
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [searchContinent, setSearchContinent] = useState('');
+  const [searchCountry, setSearchCountry] = useState('');
   const [searchCity, setSearchCity] = useState('');
   const [searchType, setSearchType] = useState('');
   const [customType, setCustomType] = useState('');
@@ -57,13 +68,16 @@ const AdminProspects = () => {
 
   const handleSearch = async () => {
     const type = searchType === 'Autre' ? customType : searchType;
-    if (!searchCity || !type) { toast.error('Remplis la ville et le type'); return; }
+    const location = searchCity || searchCountry || searchContinent;
+    if (!location || !type) { toast.error('Remplis au moins une localisation et le type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      const { data, error } = await supabase.functions.invoke('prospect-search', { body: { city: searchCity, businessType: type } });
+      const { data, error } = await supabase.functions.invoke('prospect-search', {
+        body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '' }
+      });
       if (error) throw new Error(error.message);
       setSearchResults(data.results || []);
-      toast.success(data.total + ' resultats trouvés');
+      toast.success(data.total + ' resultats trouves');
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
@@ -208,18 +222,31 @@ const AdminProspects = () => {
         {tab === 'search' && (
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
             <div style={{ padding:24, background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r-xl)' }}>
-              <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:'0 0 16px' }}>Recherche Google Maps</h3>
-              <div className='flex flex-col sm:flex-row gap-3'>
-                <input placeholder='Ville (ex: Lyon)' value={searchCity} onChange={e => setSearchCity(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />
-                <select value={searchType} onChange={e => setSearchType(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
-                  <option value=''>Type de commerce...</option>
-                  {BT.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-                {searchType === 'Autre' && <input placeholder='Type personnalise...' value={customType} onChange={e => setCustomType(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />}
-                <button onClick={handleSearch} disabled={searching} style={{ padding:'10px 20px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1 }}>
-                  {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
-                  {searching ? 'Recherche...' : 'Chercher'}
-                </button>
+              <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:'0 0 8px' }}>Recherche Google Maps — Mondiale</h3>
+              <p style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)', margin:'0 0 16px' }}>Choisis un continent, un pays, une ville — ou combine-les. Seul le type est obligatoire.</p>
+              <div className='flex flex-col gap-3'>
+                <div className='flex flex-col sm:flex-row gap-3'>
+                  <select value={searchContinent} onChange={e => { setSearchContinent(e.target.value); setSearchCountry(''); }} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                    <option value=''>🌍 Continent (optionnel)</option>
+                    {Object.keys(CONTINENTS).map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <select value={searchCountry} onChange={e => setSearchCountry(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                    <option value=''>🏳️ Pays (optionnel)</option>
+                    {(searchContinent ? CONTINENTS[searchContinent] || [] : Object.values(CONTINENTS).flat().sort()).map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <input placeholder='📍 Ville (optionnel, ex: Lyon)' value={searchCity} onChange={e => setSearchCity(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />
+                </div>
+                <div className='flex flex-col sm:flex-row gap-3'>
+                  <select value={searchType} onChange={e => setSearchType(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                    <option value=''>Type de commerce... *</option>
+                    {BT.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                  {searchType === 'Autre' && <input placeholder='Type personnalise...' value={customType} onChange={e => setCustomType(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />}
+                  <button onClick={handleSearch} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap' }}>
+                    {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
+                    {searching ? 'Recherche...' : 'Chercher'}
+                  </button>
+                </div>
               </div>
             </div>
 
