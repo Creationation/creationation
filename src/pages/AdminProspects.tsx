@@ -246,16 +246,28 @@ const AdminProspects = () => {
                   </select>
                   <input placeholder='📍 Ville (optionnel, ex: Lyon)' value={searchCity} onChange={e => setSearchCity(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />
                 </div>
-                <div className='flex flex-col sm:flex-row gap-3'>
-                  <select value={searchType} onChange={e => setSearchType(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
-                    <option value=''>Type de commerce... *</option>
-                    {BT.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                  {searchType === 'Autre' && <input placeholder='Type personnalise...' value={customType} onChange={e => setCustomType(e.target.value)} style={{ flex:1, padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />}
-                  <button onClick={handleSearch} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap' }}>
-                    {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
-                    {searching ? 'Recherche...' : 'Chercher'}
-                  </button>
+                <div className='flex flex-col gap-3'>
+                  <div>
+                    <label style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)', display:'block', marginBottom:8, textTransform:'uppercase', letterSpacing:1 }}>Types de commerce * (multi-selection)</label>
+                    <div className='flex flex-wrap gap-2'>
+                      {BT.map(t => (
+                        <button key={t} onClick={() => toggleSearchType(t)} style={{ padding:'6px 14px', borderRadius:'var(--pill)', border:'1px solid', borderColor:searchTypes.includes(t)?'var(--teal)':'var(--glass-border)', background:searchTypes.includes(t)?'rgba(13,138,111,0.12)':'var(--glass-bg)', color:searchTypes.includes(t)?'var(--teal)':'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:searchTypes.includes(t)?600:400, cursor:'pointer', transition:'all 0.2s' }}>
+                          {searchTypes.includes(t) ? '✓ ' : ''}{t}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {searchTypes.includes('Autre') && <input placeholder='Type personnalise...' value={customType} onChange={e => setCustomType(e.target.value)} style={{ padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none' }} />}
+                  <div className='flex items-center gap-3'>
+                    <div className='flex items-center gap-2' style={{ padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', flex:'0 0 auto' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)', whiteSpace:'nowrap' }}>Max resultats:</label>
+                      <input type='number' min={5} max={60} value={maxResults} onChange={e => setMaxResults(Number(e.target.value))} style={{ width:60, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', textAlign:'center' }} />
+                    </div>
+                    <button onClick={handleSearch} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
+                      {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
+                      {searching ? 'Recherche...' : 'Chercher'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
