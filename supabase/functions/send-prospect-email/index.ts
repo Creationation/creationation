@@ -132,7 +132,7 @@ serve(async (req) => {
 
             ${recap ? `
             <!-- Recap card -->
-            <div style="background: #faf7f2; border-radius: 12px; border: 1px solid #f0ece6; overflow: hidden; margin-bottom: 28px;">
+            <div style="background: #faf7f2; border-radius: 20px; border: 1px solid #f0ece6; overflow: hidden; margin-bottom: 28px;">
               <table style="width: 100%; border-collapse: collapse;">
                 ${rows}
               </table>
