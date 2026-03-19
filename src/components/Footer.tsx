@@ -5,6 +5,7 @@ import t from '@/lib/translations';
 
 const Footer = () => {
   const { lang } = useLang();
+  const navigate = useNavigate();
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
