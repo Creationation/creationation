@@ -70,6 +70,7 @@ const AdminProspects = () => {
   const [generatingAll, setGeneratingAll] = useState(false);
   const [sending, setSending] = useState(false);
   const [findingEmails, setFindingEmails] = useState(false);
+  const [findingInfo, setFindingInfo] = useState(false);
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
 
   const fetchProspects = useCallback(async () => {
@@ -95,20 +96,19 @@ const AdminProspects = () => {
 
   const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
-  const handleSearch = async () => {
+  const handleSearch = async (skipDetails = false) => {
     const types = searchTypes.includes('Autre') ? [...searchTypes.filter(t => t !== 'Autre'), ...(customType ? [customType] : [])] : searchTypes;
     const location = searchCity || searchCountry || searchContinent;
     if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      // Fetch existing google_place_ids to filter duplicates
       const { data: existing } = await supabase.from('prospects').select('google_place_id');
       const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
 
       const allResults: SearchResult[] = [];
       for (const type of types) {
         const { data, error } = await supabase.functions.invoke('prospect-search', {
-          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults, fetchPhone }
+          body: { city: searchCity || '', businessType: type, country: searchCountry || searchContinent || '', maxResults, fetchPhone, skipDetails }
         });
         if (error) throw new Error(error.message);
         const results = (data.results || []) as SearchResult[];
@@ -119,7 +119,6 @@ const AdminProspects = () => {
         });
       }
 
-      // Auto-save ALL results to DB to prevent future duplicates
       if (allResults.length > 0) {
         const rows = allResults.map(r => ({
           business_name: r.business_name, address: r.address, phone: r.phone,
@@ -140,10 +139,39 @@ const AdminProspects = () => {
 
       allResults.sort((a, b) => (a.has_website ? 1 : 0) - (b.has_website ? 1 : 0));
       setSearchResults(allResults);
-      const skipped = existingIds.size > 0 ? ' (doublons deja en base exclus)' : '';
-      toast.success(allResults.length + ' resultats trouves et sauvegardes' + skipped);
+      const mode = skipDetails ? ' (mode eco — sans Place Details)' : '';
+      const skipped = existingIds.size > 0 ? ' (doublons exclus)' : '';
+      toast.success(allResults.length + ' resultats trouves et sauvegardes' + mode + skipped);
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
+  };
+
+  const findProspectInfo = async () => {
+    const targets = selectedIds.size > 0
+      ? prospects.filter(p => selectedIds.has(p.id) && (!p.website_url || !p.phone))
+      : prospects.filter(p => !p.website_url || !p.phone);
+    if (!targets.length) { toast.info('Tous les prospects selectionnés ont déjà site + téléphone'); return; }
+    setFindingInfo(true);
+    toast.info(`Recherche IA site web + téléphone pour ${targets.length} prospect(s)...`);
+    try {
+      const { data, error } = await supabase.functions.invoke('find-prospect-info', {
+        body: { prospects: targets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address })) }
+      });
+      if (error) throw new Error(error.message);
+      const results = data.results || [];
+      let foundWeb = 0, foundPhone = 0;
+      for (const r of results) {
+        const updates: any = {};
+        if (r.website_url) { updates.website_url = r.website_url; updates.has_website = true; foundWeb++; }
+        if (r.phone) { updates.phone = r.phone; foundPhone++; }
+        if (Object.keys(updates).length) {
+          await supabase.from('prospects').update(updates).eq('id', r.id);
+        }
+      }
+      toast.success(`${foundWeb} site(s) et ${foundPhone} téléphone(s) trouvés sur ${targets.length} prospects`);
+      fetchProspects();
+    } catch (e: any) { toast.error(e.message || 'Erreur recherche info'); }
+    finally { setFindingInfo(false); }
   };
 
   const addAllNoWebsite = async () => {
@@ -352,9 +380,14 @@ const AdminProspects = () => {
                       <Phone size={13}/> {fetchPhone ? '✓ Avec téléphone' : 'Sans téléphone'}
                       <span style={{ fontSize:10, opacity:0.7 }}>{fetchPhone ? '(+$0.02/prospect)' : '(économique)'}</span>
                     </button>
-                    <button onClick={handleSearch} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
+                    <button onClick={() => handleSearch(false)} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
                       {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
-                      {searching ? 'Recherche...' : 'Chercher'}
+                      {searching ? 'Recherche...' : 'Chercher (standard)'}
+                    </button>
+                    <button onClick={() => handleSearch(true)} disabled={searching} style={{ padding:'10px 24px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
+                      {searching ? <Loader2 size={14} className='animate-spin'/> : <Sparkles size={14}/>}
+                      {searching ? 'Recherche...' : 'Chercher éco (IA)'}
+                      <span style={{ fontSize:10, opacity:0.8 }}>~$1.60/1000</span>
                     </button>
                   </div>
                 </div>
@@ -424,6 +457,17 @@ const AdminProspects = () => {
               <button onClick={findEmails} disabled={findingEmails} style={{ padding:'8px 16px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingEmails?0.7:1 }}>
                 {findingEmails ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
                 {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA (tous)'}
+              </button>
+            </div>
+            {/* AI Info Finder bar */}
+            <div style={{ padding:'12px 20px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
+                <Globe size={14} style={{ color:'#7c5cbf', verticalAlign:'middle', marginRight:6 }}/>
+                {prospects.filter(p => p.website_url).length} / {prospects.length} ont un site — {prospects.filter(p => p.phone).length} / {prospects.length} ont un tel
+              </span>
+              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'8px 16px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingInfo?0.7:1 }}>
+                {findingInfo ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
+                {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA (tous)'}
               </button>
             </div>
             {selectedIds.size > 0 && (
