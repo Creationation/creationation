@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
-import { LogOut, RefreshCw, Search, Filter } from 'lucide-react';
+import { LogOut, RefreshCw, Search, Filter, Target } from 'lucide-react';
 
 type Lead = {
   id: string;
@@ -131,9 +131,23 @@ const AdminDashboard = () => {
           borderBottom: '1px solid var(--glass-border)',
         }}
       >
-        <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)' }}>
-          Creationation CRM
-        </h1>
+        <div className="flex items-center gap-4">
+          <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)' }}>
+            Creationation CRM
+          </h1>
+          <Link
+            to="/admin/prospects"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px', background: 'rgba(13,138,111,0.1)',
+              border: '1px solid rgba(13,138,111,0.3)', borderRadius: 'var(--pill)',
+              fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600,
+              color: 'var(--teal)', textDecoration: 'none',
+            }}
+          >
+            <Target size={14} /> Prospection
+          </Link>
+        </div>
         <button
           onClick={handleLogout}
           className="flex items-center gap-2 cursor-pointer"
