@@ -32,16 +32,40 @@ serve(async (req) => {
 
     const query = encodeURIComponent(`${businessType} ${locationParts.join(' ')}`);
     const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${GOOGLE_MAPS_API_KEY}`;
-    const searchRes = await fetch(searchUrl);
-    const searchData = await searchRes.json();
+    let allPlaces: any[] = [];
+    let nextPageToken: string | null = null;
+    let pageCount = 0;
+    const maxPages = Math.ceil(maxResults / 20);
 
-    if (searchData.status !== 'OK' && searchData.status !== 'ZERO_RESULTS') {
-      return new Response(JSON.stringify({ error: `Google Places error: ${searchData.status}` }), {
-        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    // Paginate through Google Places results
+    do {
+      const pageUrl = nextPageToken
+        ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${nextPageToken}&key=${GOOGLE_MAPS_API_KEY}`
+        : searchUrl;
+      
+      if (nextPageToken) {
+        // Google requires a short delay before using next_page_token
+        await new Promise(r => setTimeout(r, 2000));
+      }
 
-    const places = (searchData.results || []).slice(0, maxResults);
+      const searchRes = await fetch(pageUrl);
+      const searchData = await searchRes.json();
+
+      if (searchData.status !== 'OK' && searchData.status !== 'ZERO_RESULTS') {
+        if (allPlaces.length === 0) {
+          return new Response(JSON.stringify({ error: `Google Places error: ${searchData.status}` }), {
+            status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        break;
+      }
+
+      allPlaces = allPlaces.concat(searchData.results || []);
+      nextPageToken = searchData.next_page_token || null;
+      pageCount++;
+    } while (nextPageToken && allPlaces.length < maxResults && pageCount < maxPages);
+
+    const places = allPlaces.slice(0, maxResults);
 
     const detailsPromises = places.map(async (place: any) => {
       const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,website,rating,user_ratings_total,types&key=${GOOGLE_MAPS_API_KEY}`;
@@ -58,7 +82,7 @@ serve(async (req) => {
         rating: d.rating || null,
         review_count: d.user_ratings_total || 0,
         types: d.types || [],
-        city, country, business_type: businessType, source: 'google_maps',
+        city: city || country, country, business_type: businessType, source: 'google_maps',
       };
     });
 
