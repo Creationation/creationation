@@ -18,11 +18,11 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
   ];
 
   return (
-    <section className="relative z-[1] min-h-screen flex flex-col justify-center px-7 md:px-16 max-w-[1400px] mx-auto" style={{ paddingTop: 160, paddingBottom: 100 }}>
-      {/* Video hero area */}
-      <div className="relative" style={{ marginBottom: 48 }}>
+    <section className="relative z-[1] min-h-screen flex flex-col justify-center" style={{ paddingTop: 160, paddingBottom: 100 }}>
+      {/* Video hero area - full width */}
+      <div className="relative px-4 md:px-8" style={{ marginBottom: 48 }}>
         {/* Background Video */}
-        <div className="absolute inset-0 z-0 overflow-hidden" style={{ borderRadius: 28 }}>
+        <div className="absolute inset-0 z-0 overflow-hidden mx-4 md:mx-8" style={{ borderRadius: 28 }}>
           <video
             autoPlay
             muted
@@ -35,7 +35,7 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
           />
         </div>
 
-        <div className="relative z-[1]" style={{ padding: '40px 0 48px' }}>
+        <div className="relative z-[1] max-w-[1400px] mx-auto px-7 md:px-16" style={{ padding: '40px 28px 48px' }}>
           {/* Badge */}
           <div
             className="inline-flex items-center gap-2 w-fit mb-9"
@@ -123,7 +123,7 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
       </div>
 
       {/* Stats - outside video area */}
-      <div className="flex gap-3 flex-wrap" style={{ opacity: 0, animation: 'fadeUp 0.8s ease 0.8s forwards' }}>
+      <div className="flex gap-3 flex-wrap max-w-[1400px] mx-auto px-7 md:px-16 w-full" style={{ opacity: 0, animation: 'fadeUp 0.8s ease 0.8s forwards' }}>
         {stats.map((s, i) => (
           <div key={i} className="flex items-center gap-3.5" style={{
             padding: '18px 26px', borderRadius: 'var(--r-lg)',
