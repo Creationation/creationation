@@ -20,13 +20,13 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
   return (
     <section className="relative z-[1] min-h-screen flex flex-col justify-center px-7 md:px-16 max-w-[1400px] mx-auto" style={{ paddingTop: 160, paddingBottom: 100 }}>
       {/* Background Video */}
-      <div className="absolute z-0 overflow-hidden bottom-[440px] md:!bottom-[260px] -top-[20px] -left-[28px] -right-[44px] md:-left-[64px] md:-right-[88px]" style={{ borderRadius: 28 }}>
+      <div className="absolute z-0 overflow-hidden bottom-[440px] md:!bottom-[260px] -top-[20px] -left-[28px] -right-[56px] md:-left-[64px] md:-right-[104px]" style={{ borderRadius: 28 }}>
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="w-full h-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover scale-[1.06] md:scale-[1.03]"
           style={{ opacity: 0.32, pointerEvents: 'none' }}
           src="/videos/hero-bg.mp4"
           preload="none"
