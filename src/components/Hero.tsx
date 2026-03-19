@@ -123,7 +123,7 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
       </div>
 
       {/* Stats - outside video area */}
-      <div className="flex gap-3 flex-wrap" style={{ opacity: 0, animation: 'fadeUp 0.8s ease 0.8s forwards' }}>
+      <div className="flex gap-3 flex-wrap max-w-[1400px] mx-auto px-7 md:px-16 w-full" style={{ opacity: 0, animation: 'fadeUp 0.8s ease 0.8s forwards' }}>
         {stats.map((s, i) => (
           <div key={i} className="flex items-center gap-3.5" style={{
             padding: '18px 26px', borderRadius: 'var(--r-lg)',
