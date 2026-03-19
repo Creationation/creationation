@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
-import { LogOut, RefreshCw, Search, Filter, Target } from 'lucide-react';
+import { LogOut, RefreshCw, Search, Filter, Target, DollarSign } from 'lucide-react';
 
 type Lead = {
   id: string;
@@ -146,6 +146,18 @@ const AdminDashboard = () => {
             }}
           >
             <Target size={14} /> Prospection
+          </Link>
+          <Link
+            to="/admin/costs"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px', background: 'rgba(212,165,90,0.1)',
+              border: '1px solid rgba(212,165,90,0.3)', borderRadius: 'var(--pill)',
+              fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600,
+              color: '#d4a55a', textDecoration: 'none',
+            }}
+          >
+            <DollarSign size={14} /> Coûts
           </Link>
         </div>
         <button
