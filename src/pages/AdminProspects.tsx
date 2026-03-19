@@ -202,7 +202,33 @@ const AdminProspects = () => {
     setGeneratedEmails(results); setGeneratingAll(false);
   };
 
-  const handleSendBulk = async () => {
+  const findEmails = async () => {
+    const targets = selectedIds.size > 0
+      ? prospects.filter(p => selectedIds.has(p.id) && !p.email)
+      : prospects.filter(p => !p.email);
+    if (!targets.length) { toast.info('Tous les prospects selectionnes ont deja un email'); return; }
+    setFindingEmails(true);
+    toast.info(`Recherche IA d'emails pour ${targets.length} prospect(s)...`);
+    try {
+      const { data, error } = await supabase.functions.invoke('find-prospect-email', {
+        body: { prospects: targets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address, phone: p.phone, website_url: p.website_url })) }
+      });
+      if (error) throw new Error(error.message);
+      const results = data.results || [];
+      let found = 0;
+      for (const r of results) {
+        if (r.email) {
+          await supabase.from('prospects').update({ email: r.email }).eq('id', r.id);
+          found++;
+        }
+      }
+      toast.success(`${found} email(s) trouves sur ${targets.length} prospects`);
+      fetchProspects();
+    } catch (e: any) { toast.error(e.message || 'Erreur recherche emails'); }
+    finally { setFindingEmails(false); }
+  };
+
+
     const selected = prospects.filter(p => selectedIds.has(p.id));
     const emailsToSend = generatedEmails.filter(e => e.subject && e.body && !e.error && !e.loading).map(e => {
       const p = selected.find(pr => pr.id === e.prospectId)!;
