@@ -413,43 +413,16 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           boxShadow: '0 24px 80px rgba(0,0,0,0.12)',
         }}
       >
-        {/* Progress bar */}
-        <div style={{ height: 3, background: 'var(--glass-border)' }}>
-          <div style={{
-            height: '100%',
-            width: `${((step + 1) / TOTAL_STEPS) * 100}%`,
-            background: 'var(--teal)',
-            borderRadius: 'var(--pill)',
-            transition: 'width 0.4s cubic-bezier(.23,1,.32,1)',
-          }} />
-        </div>
-
         <div style={{ padding: '32px 28px 28px' }}>
           {/* Step indicator */}
-          <div className="flex items-center justify-between mb-2">
-            <span style={{
-              fontFamily: 'var(--font-m)',
-              fontSize: 11,
-              color: 'var(--text-light)',
-              letterSpacing: 1,
-            }}>
-              {step + 1} / {TOTAL_STEPS}
-            </span>
-            <div className="flex gap-1.5">
-              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: i === step ? 20 : 6,
-                    height: 6,
-                    borderRadius: 'var(--pill)',
-                    background: i <= step ? 'var(--teal)' : 'var(--glass-border)',
-                    transition: 'all 0.3s ease',
-                  }}
-                />
-              ))}
-            </div>
-          </div>
+          <span style={{
+            fontFamily: 'var(--font-m)',
+            fontSize: 11,
+            color: 'var(--text-light)',
+            letterSpacing: 1,
+          }}>
+            {step + 1} / {TOTAL_STEPS}
+          </span>
 
           {/* Step title */}
           <h2
@@ -476,8 +449,8 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 gap-3">
-            {step > 0 ? (
+          <div className="flex items-center justify-center mt-8 gap-3">
+            {step > 0 && (
               <button
                 type="button"
                 onClick={() => goTo(step - 1)}
@@ -501,7 +474,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
               >
                 <ArrowLeft size={14} /> {tr.prev[lang]}
               </button>
-            ) : <div />}
+            )}
 
             {step < TOTAL_STEPS - 1 ? (
               <button
