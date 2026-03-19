@@ -24,7 +24,7 @@ const plans = [
   },
 ] as const;
 
-const Pricing = () => {
+const Pricing = ({ onContact }: { onContact?: () => void }) => {
   const { lang } = useLang();
   const p = t.pricing;
   const ref = useScrollReveal();
