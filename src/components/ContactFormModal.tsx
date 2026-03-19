@@ -255,32 +255,40 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
               {tr.projectType[lang]}
             </label>
             <div className="grid grid-cols-2 gap-2.5">
-              {tr.projectTypes[lang].map(pt => (
-                <button
-                  key={pt}
-                  type="button"
-                  onClick={() => setForm(f => ({ ...f, project_type: pt }))}
-                  style={{
-                    padding: '14px 16px',
-                    borderRadius: 'var(--r)',
-                    border: form.project_type === pt ? '2px solid var(--teal)' : '1.5px solid var(--glass-border)',
-                    background: form.project_type === pt ? 'rgba(13,138,111,0.08)' : 'rgba(255,255,255,0.4)',
-                    color: form.project_type === pt ? 'var(--teal)' : 'var(--text-mid)',
-                    fontFamily: 'var(--font-b)',
-                    fontSize: 13,
-                    fontWeight: form.project_type === pt ? 600 : 400,
-                    cursor: 'pointer',
-                    transition: 'all 0.25s ease',
-                    textAlign: 'left',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                  }}
-                >
-                  {form.project_type === pt && <Check size={14} style={{ color: 'var(--teal)' }} />}
-                  {pt}
-                </button>
-              ))}
+              {tr.projectTypes[lang].map(pt => {
+                const isSelected = form.project_types.includes(pt);
+                return (
+                  <button
+                    key={pt}
+                    type="button"
+                    onClick={() => setForm(f => ({
+                      ...f,
+                      project_types: isSelected
+                        ? f.project_types.filter(p => p !== pt)
+                        : [...f.project_types, pt],
+                    }))}
+                    style={{
+                      padding: '14px 16px',
+                      borderRadius: 'var(--r)',
+                      border: isSelected ? '2px solid var(--teal)' : '1.5px solid var(--glass-border)',
+                      background: isSelected ? 'rgba(13,138,111,0.08)' : 'rgba(255,255,255,0.4)',
+                      color: isSelected ? 'var(--teal)' : 'var(--text-mid)',
+                      fontFamily: 'var(--font-b)',
+                      fontSize: 13,
+                      fontWeight: isSelected ? 600 : 400,
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    {isSelected && <Check size={14} style={{ color: 'var(--teal)' }} />}
+                    {pt}
+                  </button>
+                );
+              })}
             </div>
           </div>
         );
