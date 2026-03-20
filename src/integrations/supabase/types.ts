@@ -120,6 +120,39 @@ export type Database = {
         }
         Relationships: []
       }
+      operation_logs: {
+        Row: {
+          cost_eur: number
+          created_at: string
+          description: string
+          details: Json | null
+          id: string
+          operation_type: string
+          prospect_count: number | null
+          user_id: string
+        }
+        Insert: {
+          cost_eur?: number
+          created_at?: string
+          description: string
+          details?: Json | null
+          id?: string
+          operation_type: string
+          prospect_count?: number | null
+          user_id: string
+        }
+        Update: {
+          cost_eur?: number
+          created_at?: string
+          description?: string
+          details?: Json | null
+          id?: string
+          operation_type?: string
+          prospect_count?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
