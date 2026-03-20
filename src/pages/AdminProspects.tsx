@@ -311,6 +311,7 @@ const AdminProspects = () => {
         }
       }
       toast.success(`${found} email(s) trouves sur ${targets.length} prospects`);
+      if (userId) logOperation(userId, 'ai_email_find', `Recherche IA emails: ${targets.length} prospects`, targets.length * COST_EUR.AI_EMAIL_FIND, targets.length, { found });
       fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur recherche emails'); }
     finally { setFindingEmails(false); }
