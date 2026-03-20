@@ -215,6 +215,7 @@ const AdminProspects = () => {
         }
       }
       toast.success(`${foundWeb} site(s) et ${foundPhone} téléphone(s) trouvés sur ${targets.length} prospects`);
+      if (userId) logOperation(userId, 'ai_info_find', `Recherche IA site+tel: ${targets.length} prospects`, targets.length * COST_EUR.AI_INFO_FIND, targets.length, { foundWeb, foundPhone });
       fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur recherche info'); }
     finally { setFindingInfo(false); }
