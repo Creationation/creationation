@@ -329,6 +329,7 @@ const AdminProspects = () => {
       const { data, error } = await supabase.functions.invoke('send-bulk-prospect-emails', { body: { emails: emailsToSend, userId } });
       if (error) throw new Error(error.message);
       toast.success(data.sent + ' email(s) envoye(s)');
+      if (userId) logOperation(userId, 'email_send', `Envoi ${data.sent} email(s)`, (data.sent || 0) * COST_EUR.AI_EMAIL_GEN, data.sent || 0, { sent: data.sent, failed: data.failed });
       setShowEmailModal(false); setSelectedIds(new Set()); fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSending(false); }
