@@ -46,6 +46,25 @@ const CONTINENTS: Record<string, string[]> = {
   'Oceanie': ['Australie','Nouvelle-Zelande'],
 };
 
+// EUR cost constants
+const COST_EUR = {
+  GOOGLE_TEXT_SEARCH: 0.029,
+  GOOGLE_WEBSITE_CHECK: 0.016,
+  GOOGLE_PHONE_DETAIL: 0.018,
+  AI_EMAIL_FIND: 0.00046,
+  AI_EMAIL_GEN: 0.00092,
+  AI_INFO_FIND: 0.00046,
+};
+
+const logOperation = async (userId: string, type: string, description: string, costEur: number, prospectCount: number, details: Record<string, any> = {}) => {
+  try {
+    await supabase.from('operation_logs' as any).insert({
+      user_id: userId, operation_type: type, description, cost_eur: costEur,
+      prospect_count: prospectCount, details,
+    } as any);
+  } catch (e) { console.warn('Failed to log operation', e); }
+};
+
 const AdminProspects = () => {
   const navigate = useNavigate();
   const [prospects, setProspects] = useState<Prospect[]>([]);
