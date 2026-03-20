@@ -182,6 +182,12 @@ const AdminProspects = () => {
       const mode = skipDetails ? ' (mode éco)' : '';
       const countriesInfo = countries.length > 1 ? ` dans ${countries.length} pays` : '';
       toast.success(allResults.length + ' résultats trouvés et sauvegardés' + mode + countriesInfo, { id: 'search-progress' });
+      // Log operation
+      const searchCalls = Math.ceil(allResults.length / 20);
+      const gCost = skipDetails
+        ? searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH
+        : searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH + allResults.length * COST_EUR.GOOGLE_WEBSITE_CHECK + (fetchPhone ? Math.round(allResults.length * 0.4) * COST_EUR.GOOGLE_PHONE_DETAIL : 0);
+      if (userId) logOperation(userId, 'google_search', `Recherche ${skipDetails ? 'éco' : 'standard'}: ${types.join(', ')}${countriesInfo}`, gCost, allResults.length, { mode: skipDetails ? 'eco' : 'standard', types, countries, fetchPhone, resultCount: allResults.length });
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
