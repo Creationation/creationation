@@ -46,6 +46,25 @@ const CONTINENTS: Record<string, string[]> = {
   'Oceanie': ['Australie','Nouvelle-Zelande'],
 };
 
+// EUR cost constants
+const COST_EUR = {
+  GOOGLE_TEXT_SEARCH: 0.029,
+  GOOGLE_WEBSITE_CHECK: 0.016,
+  GOOGLE_PHONE_DETAIL: 0.018,
+  AI_EMAIL_FIND: 0.00046,
+  AI_EMAIL_GEN: 0.00092,
+  AI_INFO_FIND: 0.00046,
+};
+
+const logOperation = async (userId: string, type: string, description: string, costEur: number, prospectCount: number, details: Record<string, any> = {}) => {
+  try {
+    await supabase.from('operation_logs' as any).insert({
+      user_id: userId, operation_type: type, description, cost_eur: costEur,
+      prospect_count: prospectCount, details,
+    } as any);
+  } catch (e) { console.warn('Failed to log operation', e); }
+};
+
 const AdminProspects = () => {
   const navigate = useNavigate();
   const [prospects, setProspects] = useState<Prospect[]>([]);
@@ -163,6 +182,12 @@ const AdminProspects = () => {
       const mode = skipDetails ? ' (mode éco)' : '';
       const countriesInfo = countries.length > 1 ? ` dans ${countries.length} pays` : '';
       toast.success(allResults.length + ' résultats trouvés et sauvegardés' + mode + countriesInfo, { id: 'search-progress' });
+      // Log operation
+      const searchCalls = Math.ceil(allResults.length / 20);
+      const gCost = skipDetails
+        ? searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH
+        : searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH + allResults.length * COST_EUR.GOOGLE_WEBSITE_CHECK + (fetchPhone ? Math.round(allResults.length * 0.4) * COST_EUR.GOOGLE_PHONE_DETAIL : 0);
+      if (userId) logOperation(userId, 'google_search', `Recherche ${skipDetails ? 'éco' : 'standard'}: ${types.join(', ')}${countriesInfo}`, gCost, allResults.length, { mode: skipDetails ? 'eco' : 'standard', types, countries, fetchPhone, resultCount: allResults.length });
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
@@ -190,6 +215,7 @@ const AdminProspects = () => {
         }
       }
       toast.success(`${foundWeb} site(s) et ${foundPhone} téléphone(s) trouvés sur ${targets.length} prospects`);
+      if (userId) logOperation(userId, 'ai_info_find', `Recherche IA site+tel: ${targets.length} prospects`, targets.length * COST_EUR.AI_INFO_FIND, targets.length, { foundWeb, foundPhone });
       fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur recherche info'); }
     finally { setFindingInfo(false); }
@@ -285,6 +311,7 @@ const AdminProspects = () => {
         }
       }
       toast.success(`${found} email(s) trouves sur ${targets.length} prospects`);
+      if (userId) logOperation(userId, 'ai_email_find', `Recherche IA emails: ${targets.length} prospects`, targets.length * COST_EUR.AI_EMAIL_FIND, targets.length, { found });
       fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur recherche emails'); }
     finally { setFindingEmails(false); }
@@ -302,6 +329,7 @@ const AdminProspects = () => {
       const { data, error } = await supabase.functions.invoke('send-bulk-prospect-emails', { body: { emails: emailsToSend, userId } });
       if (error) throw new Error(error.message);
       toast.success(data.sent + ' email(s) envoye(s)');
+      if (userId) logOperation(userId, 'email_send', `Envoi ${data.sent} email(s)`, (data.sent || 0) * COST_EUR.AI_EMAIL_GEN, data.sent || 0, { sent: data.sent, failed: data.failed });
       setShowEmailModal(false); setSelectedIds(new Set()); fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSending(false); }
