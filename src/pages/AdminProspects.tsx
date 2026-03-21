@@ -148,9 +148,21 @@ const AdminProspects = () => {
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
-    let query = supabase.from('prospects').select('*').order('created_at', { ascending: false });
-    if (statusFilter !== 'all') query = query.eq('status', statusFilter as ProspectStatus);
-    const { data, error } = await query;
+    // Fetch ALL prospects beyond the 1000-row default limit
+    let allData: Prospect[] = [];
+    let from = 0;
+    const pageSize = 1000;
+    let keepGoing = true;
+    while (keepGoing) {
+      let query = supabase.from('prospects').select('*').order('created_at', { ascending: false }).range(from, from + pageSize - 1);
+      if (statusFilter !== 'all') query = query.eq('status', statusFilter as ProspectStatus);
+      const { data, error } = await query;
+      if (error) { toast.error('Erreur chargement'); keepGoing = false; break; }
+      allData = allData.concat((data as Prospect[]) || []);
+      if (!data || data.length < pageSize) keepGoing = false;
+      else from += pageSize;
+    }
+    const data = allData; const error = null;
     if (error) toast.error('Erreur chargement');
     else {
       const p = (data as Prospect[]) || [];
