@@ -313,6 +313,35 @@ const AdminProspects = () => {
     fetchProspects();
   };
 
+  const transferToClients = async () => {
+    const selected = prospects.filter(p => selectedIds.has(p.id));
+    if (!selected.length) { toast.error('Sélectionne au moins un prospect'); return; }
+    setTransferring(true);
+    let transferred = 0;
+    for (const p of selected) {
+      const { error } = await supabase.from('clients').insert({
+        prospect_id: p.id,
+        business_name: p.business_name,
+        contact_name: p.contact_name,
+        email: p.email,
+        phone: p.phone,
+        website_url: p.website_url,
+      });
+      if (!error) {
+        await supabase.from('prospects').update({ status: 'converted' as ProspectStatus }).eq('id', p.id);
+        transferred++;
+      }
+    }
+    setTransferring(false);
+    if (transferred > 0) {
+      toast.success(`${transferred} prospect(s) transféré(s) vers Clients`);
+      setSelectedIds(new Set());
+      fetchProspects();
+    } else {
+      toast.error('Erreur lors du transfert');
+    }
+  };
+
   const toggleSelect = (id: string) => setSelectedIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
 
   const toggleSelectAll = () => {
