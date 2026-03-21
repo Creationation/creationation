@@ -241,6 +241,28 @@ const AdminProjects = () => {
             <Search size={14} style={{ color: 'var(--text-light)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 13, flex: 1, background: 'transparent' }} />
           </div>
+          {/* Multi-select status */}
+          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', background: 'white' }}>
+            {STATUS_COLS.map(s => (
+              <button key={s.key} onClick={() => setFilterStatus(prev => prev.includes(s.key) ? prev.filter(x => x !== s.key) : [...prev, s.key])} style={{
+                padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
+                fontFamily: 'var(--font-b)', fontSize: 11, fontWeight: 600,
+                background: filterStatus.includes(s.key) ? `${s.color}20` : 'transparent',
+                color: filterStatus.includes(s.key) ? s.color : 'var(--text-light)',
+              }}>{s.label}</button>
+            ))}
+          </div>
+          {/* Multi-select priority */}
+          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', background: 'white' }}>
+            {(['urgent', 'high', 'medium', 'low'] as const).map(p => (
+              <button key={p} onClick={() => setFilterPriority(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p])} style={{
+                padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
+                fontFamily: 'var(--font-b)', fontSize: 11, fontWeight: 600,
+                background: filterPriority.includes(p) ? `${PRIORITY_COLORS[p]}20` : 'transparent',
+                color: filterPriority.includes(p) ? PRIORITY_COLORS[p] : 'var(--text-light)',
+              }}>{PRIORITY_LABELS[p]}</button>
+            ))}
+          </div>
           <select
             value={filterClient}
             onChange={e => setFilterClient(e.target.value)}
@@ -254,6 +276,13 @@ const AdminProjects = () => {
             <input type="checkbox" checked={onlyLate} onChange={e => setOnlyLate(e.target.checked)} className="hidden" />
             En retard
           </label>
+          {(filterStatus.length > 0 || filterPriority.length > 0 || filterClient || onlyLate) && (
+            <button onClick={() => { setFilterStatus([]); setFilterPriority([]); setFilterClient(''); setOnlyLate(false); }} style={{
+              padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)',
+              fontFamily: 'var(--font-b)', fontSize: 12, background: 'white', cursor: 'pointer', color: 'var(--text-light)',
+              display: 'flex', alignItems: 'center', gap: 4,
+            }}><X size={12} /> Réinitialiser</button>
+          )}
         </div>
 
         {loading ? (

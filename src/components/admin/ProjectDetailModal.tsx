@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package } from 'lucide-react';
+import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical } from 'lucide-react';
 import PortalMessagesAdmin from '@/components/admin/PortalMessagesAdmin';
 import { sendPortalNotification } from '@/lib/portalNotifications';
 
-type Task = { id: string; project_id: string; title: string; description: string | null; status: string; position: number; due_date: string | null; completed_at: string | null };
+type Task = { id: string; project_id: string; title: string; description: string | null; status: string; position: number; due_date: string | null; completed_at: string | null; assigned_to: string | null };
 type MilestoneT = { id: string; project_id: string; title: string; description: string | null; due_date: string | null; completed_at: string | null; position: number };
 type Note = { id: string; content: string; created_at: string; author_id: string | null };
 type FileT = { id: string; file_name: string; file_url: string; file_type: string | null; created_at: string };
@@ -31,10 +31,15 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
   const [clientName, setClientName] = useState('');
   const [newTask, setNewTask] = useState('');
+  const [newTaskDue, setNewTaskDue] = useState('');
   const [newNote, setNewNote] = useState('');
   const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs' | 'deliverables'>('tasks');
   const [showNewDeliverable, setShowNewDeliverable] = useState(false);
   const [newDeliverable, setNewDeliverable] = useState({ title: '', description: '' });
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     const { data: p } = await supabase.from('projects' as any).select('*').eq('id', projectId).single();
@@ -61,8 +66,6 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     await supabase.from('projects' as any).update({ status } as any).eq('id', projectId);
     fetchData();
     toast.success('Statut mis à jour');
-
-    // Send portal notification to client
     if (project?.client_id) {
       const statusLabel = STATUS_COLS.find(s => s.key === status)?.label || status;
       sendPortalNotification({
@@ -85,14 +88,44 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
 
   const addTask = async () => {
     if (!newTask.trim()) return;
-    await supabase.from('project_tasks' as any).insert({ project_id: projectId, title: newTask, position: tasks.length } as any);
+    await supabase.from('project_tasks' as any).insert({
+      project_id: projectId, title: newTask, position: tasks.length,
+      due_date: newTaskDue || null,
+    } as any);
     setNewTask('');
+    setNewTaskDue('');
     fetchData();
   };
 
   const deleteTask = async (id: string) => {
     await supabase.from('project_tasks' as any).delete().eq('id', id);
     fetchData();
+  };
+
+  const updateTaskDueDate = async (taskId: string, dueDate: string) => {
+    await supabase.from('project_tasks' as any).update({ due_date: dueDate || null } as any).eq('id', taskId);
+    fetchData();
+  };
+
+  const handleTaskDragStart = (taskId: string) => setDraggedTaskId(taskId);
+  const handleTaskDragOver = (e: React.DragEvent, targetTaskId: string) => {
+    e.preventDefault();
+    if (!draggedTaskId || draggedTaskId === targetTaskId) return;
+  };
+  const handleTaskDrop = async (targetTaskId: string) => {
+    if (!draggedTaskId || draggedTaskId === targetTaskId) return;
+    const oldIdx = tasks.findIndex(t => t.id === draggedTaskId);
+    const newIdx = tasks.findIndex(t => t.id === targetTaskId);
+    if (oldIdx === -1 || newIdx === -1) return;
+    const reordered = [...tasks];
+    const [moved] = reordered.splice(oldIdx, 1);
+    reordered.splice(newIdx, 0, moved);
+    setTasks(reordered);
+    setDraggedTaskId(null);
+    // Persist new positions
+    await Promise.all(reordered.map((t, i) =>
+      supabase.from('project_tasks' as any).update({ position: i } as any).eq('id', t.id)
+    ));
   };
 
   const toggleMilestone = async (m: MilestoneT) => {
@@ -110,6 +143,35 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     } as any);
     setNewNote('');
     fetchData();
+  };
+
+  // File upload
+  const uploadFiles = async (fileList: FileList | File[]) => {
+    setUploading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    for (const file of Array.from(fileList)) {
+      const filePath = `${projectId}/${Date.now()}_${file.name}`;
+      const { error: uploadErr } = await supabase.storage.from('project-files').upload(filePath, file);
+      if (uploadErr) { toast.error(`Erreur upload: ${file.name}`); continue; }
+      const { data: urlData } = supabase.storage.from('project-files').getPublicUrl(filePath);
+      await supabase.from('project_files' as any).insert({
+        project_id: projectId,
+        file_name: file.name,
+        file_url: urlData.publicUrl,
+        file_type: file.type || null,
+        uploaded_by: user?.id || null,
+      } as any);
+    }
+    setUploading(false);
+    setDragOver(false);
+    fetchData();
+    toast.success('Fichier(s) uploadé(s)');
+  };
+
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
   };
 
   const submitDeliverable = async () => {
@@ -201,16 +263,46 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           {tab === 'tasks' && (
             <div>
               {tasks.map(t => (
-                <div key={t.id} className="flex items-center gap-2 py-2" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                  <button onClick={() => toggleTask(t)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: t.status === 'done' ? 'var(--teal)' : 'var(--text-light)' }}>
+                <div key={t.id}
+                  draggable
+                  onDragStart={() => handleTaskDragStart(t.id)}
+                  onDragOver={(e) => handleTaskDragOver(e, t.id)}
+                  onDrop={() => handleTaskDrop(t.id)}
+                  className="flex items-center gap-2 py-2"
+                  style={{
+                    borderBottom: '1px solid rgba(0,0,0,0.04)',
+                    opacity: draggedTaskId === t.id ? 0.4 : 1,
+                    cursor: 'grab',
+                  }}
+                >
+                  <GripVertical size={12} style={{ color: 'var(--text-light)', opacity: 0.4, flexShrink: 0 }} />
+                  <button onClick={() => toggleTask(t)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: t.status === 'done' ? 'var(--teal)' : 'var(--text-light)', flexShrink: 0 }}>
                     {t.status === 'done' ? <CheckCircle2 size={18} /> : <Circle size={18} />}
                   </button>
-                  <span style={{
-                    flex: 1, fontFamily: 'var(--font-b)', fontSize: 13,
-                    color: t.status === 'done' ? 'var(--text-light)' : 'var(--charcoal)',
-                    textDecoration: t.status === 'done' ? 'line-through' : 'none',
-                  }}>{t.title}</span>
-                  <button onClick={() => deleteTask(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)', opacity: 0.5 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{
+                      fontFamily: 'var(--font-b)', fontSize: 13,
+                      color: t.status === 'done' ? 'var(--text-light)' : 'var(--charcoal)',
+                      textDecoration: t.status === 'done' ? 'line-through' : 'none',
+                    }}>{t.title}</span>
+                    {t.due_date && (
+                      <span style={{
+                        fontFamily: 'var(--font-b)', fontSize: 10, marginLeft: 8,
+                        color: new Date(t.due_date) < new Date() && t.status !== 'done' ? '#ef4444' : 'var(--text-light)',
+                      }}>
+                        📅 {new Date(t.due_date).toLocaleDateString('fr-FR')}
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="date"
+                    value={t.due_date || ''}
+                    onChange={e => updateTaskDueDate(t.id, e.target.value)}
+                    onClick={e => e.stopPropagation()}
+                    title="Date d'échéance"
+                    style={{ width: 28, height: 28, padding: 0, border: 'none', background: 'none', cursor: 'pointer', opacity: 0.4, flexShrink: 0 }}
+                  />
+                  <button onClick={() => deleteTask(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)', opacity: 0.5, flexShrink: 0 }}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -218,6 +310,8 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               <div className="flex gap-2 mt-3">
                 <input value={newTask} onChange={e => setNewTask(e.target.value)} placeholder="Ajouter une tâche..." onKeyDown={e => e.key === 'Enter' && addTask()}
                   style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none' }} />
+                <input type="date" value={newTaskDue} onChange={e => setNewTaskDue(e.target.value)} title="Date d'échéance"
+                  style={{ padding: '8px', borderRadius: 10, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 12, outline: 'none', width: 120 }} />
                 <button onClick={addTask} style={{ padding: '8px 14px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer' }}>
                   <Plus size={16} />
                 </button>
@@ -276,19 +370,44 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
 
           {tab === 'files' && (
             <div>
+              {/* Drag & drop upload zone */}
+              <div
+                onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={handleFileDrop}
+                onClick={() => fileInputRef.current?.click()}
+                style={{
+                  border: `2px dashed ${dragOver ? 'var(--teal)' : 'var(--glass-border)'}`,
+                  borderRadius: 14, padding: 24, textAlign: 'center', cursor: 'pointer',
+                  background: dragOver ? 'rgba(16,185,129,0.05)' : 'rgba(0,0,0,0.02)',
+                  marginBottom: 16, transition: 'all 0.2s',
+                }}
+              >
+                <Upload size={24} style={{ color: dragOver ? 'var(--teal)' : 'var(--text-light)', margin: '0 auto 8px' }} />
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: dragOver ? 'var(--teal)' : 'var(--text-light)' }}>
+                  {uploading ? 'Upload en cours...' : 'Glissez des fichiers ici ou cliquez pour sélectionner'}
+                </div>
+                <input ref={fileInputRef} type="file" multiple className="hidden" onChange={e => e.target.files && uploadFiles(e.target.files)} />
+              </div>
+
               {files.length ? (
                 <div className="grid grid-cols-2 gap-3">
-                  {files.map(f => (
-                    <a key={f.id} href={f.file_url} target="_blank" rel="noreferrer" style={{
-                      padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', display: 'block', textDecoration: 'none',
-                    }}>
-                      <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, color: 'var(--charcoal)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.file_name}</div>
-                      <div style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)', marginTop: 2 }}>{f.file_type || 'fichier'}</div>
-                    </a>
-                  ))}
+                  {files.map(f => {
+                    const isImage = f.file_type?.startsWith('image/');
+                    return (
+                      <a key={f.id} href={f.file_url} target="_blank" rel="noreferrer" style={{
+                        padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', display: 'block', textDecoration: 'none',
+                        overflow: 'hidden',
+                      }}>
+                        {isImage && <img src={f.file_url} alt={f.file_name} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />}
+                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, color: 'var(--charcoal)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.file_name}</div>
+                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)', marginTop: 2 }}>{f.file_type || 'fichier'}</div>
+                      </a>
+                    );
+                  })}
                 </div>
               ) : (
-                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', padding: 20 }}>Aucun fichier.</div>
+                !uploading && <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', padding: 20 }}>Aucun fichier.</div>
               )}
             </div>
           )}
