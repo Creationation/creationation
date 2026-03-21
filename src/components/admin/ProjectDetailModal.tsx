@@ -502,6 +502,26 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               </div>
             </div>
           )}
+
+          {tab === 'activity' && (
+            <div className="space-y-2" style={{ maxHeight: 400, overflowY: 'auto' }}>
+              {activityLog.length === 0 && (
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', padding: 20 }}>Aucune activité.</div>
+              )}
+              {activityLog.map((a, i) => {
+                const icons: Record<string, string> = { task_created: '📋', task_done: '✅', milestone_done: '🏁', note: '💬', file: '📎', deliverable: '📦', review: '👁️' };
+                return (
+                  <div key={i} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                    <span style={{ fontSize: 14, flexShrink: 0, marginTop: 2 }}>{icons[a.type] || '•'}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}>{a.title}</div>
+                      <div style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>{new Date(a.date).toLocaleString('fr-FR')}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
         </div>
       </div>
     </div>
