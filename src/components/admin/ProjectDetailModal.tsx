@@ -44,7 +44,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     const { data: n } = await supabase.from('project_notes' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: true });
     setNotes((n || []) as unknown as Note[]);
     const { data: f } = await supabase.from('project_files' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: false });
-    setFiles((f || []) as FileT[]);
+    setFiles((f || []) as unknown as FileT[]);
   }, [projectId]);
 
   useEffect(() => { fetch(); }, [fetch]);

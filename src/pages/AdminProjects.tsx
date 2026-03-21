@@ -154,7 +154,7 @@ const AdminProjects = () => {
 
   const fetchTemplates = useCallback(async () => {
     const { data } = await supabase.from('project_templates' as any).select('*');
-    setTemplates((data || []) as Template[]);
+    setTemplates((data || []) as unknown as Template[]);
   }, []);
 
   useEffect(() => {
