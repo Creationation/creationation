@@ -24,7 +24,11 @@ const PortalFiles = () => {
       setProjectFiles(data || []);
     }
     const { data: files } = await supabase.storage.from('client-uploads').list(client.id);
-    setClientFiles((files || []).map(f => ({ ...f, url: supabase.storage.from('client-uploads').getPublicUrl(`${client.id}/${f.name}`).data.publicUrl })));
+    const filesWithUrls = await Promise.all((files || []).map(async f => {
+      const { data } = await supabase.storage.from('client-uploads').createSignedUrl(`${client.id}/${f.name}`, 3600);
+      return { ...f, url: data?.signedUrl || '' };
+    }));
+    setClientFiles(filesWithUrls);
   }, [client]);
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
