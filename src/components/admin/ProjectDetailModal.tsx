@@ -63,6 +63,8 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     setFiles((f || []) as unknown as FileT[]);
     const { data: d } = await supabase.from('deliverable_reviews' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: false });
     setDeliverables((d || []) as unknown as Deliverable[]);
+    const { data: invData } = await supabase.from('invoices').select('id,invoice_number,status,total,amount_paid,issue_date,due_date').eq('project_id', projectId).order('issue_date', { ascending: false });
+    setProjectInvoices((invData || []) as InvoiceRow[]);
 
     // Build activity log from all data
     const log: any[] = [];
