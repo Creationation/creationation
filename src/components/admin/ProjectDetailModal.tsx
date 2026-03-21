@@ -61,6 +61,18 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     await supabase.from('projects' as any).update({ status } as any).eq('id', projectId);
     fetchData();
     toast.success('Statut mis à jour');
+
+    // Send portal notification to client
+    if (project?.client_id) {
+      const statusLabel = STATUS_COLS.find(s => s.key === status)?.label || status;
+      sendPortalNotification({
+        clientId: project.client_id,
+        type: 'project_update',
+        title: `Projet mis à jour`,
+        message: `Le statut de "${project.title}" est passé à "${statusLabel}"`,
+        link: '/portal/project',
+      });
+    }
   };
 
   const toggleTask = async (task: Task) => {
