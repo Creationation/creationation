@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Menu, X, Target, Users, Wallet, DollarSign, LayoutDashboard, LogOut, ExternalLink, FolderKanban, FileText } from 'lucide-react';
+import { Menu, X, Target, Users, Wallet, DollarSign, LayoutDashboard, LogOut, ExternalLink, FolderKanban, FileText, Mail } from 'lucide-react';
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, color: 'var(--charcoal)' },
   { to: '/admin/prospects', label: 'Prospection', icon: Target, color: 'var(--teal)' },
+  { to: '/admin/sequences', label: 'Séquences', icon: Mail, color: '#8B5CF6' },
   { to: '/admin/clients', label: 'Clients', icon: Users, color: 'var(--violet)' },
   { to: '/admin/projects', label: 'Projets', icon: FolderKanban, color: '#3B82F6' },
   { to: '/admin/invoices', label: 'Factures', icon: FileText, color: '#f59e0b' },
