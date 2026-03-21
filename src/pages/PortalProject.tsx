@@ -68,8 +68,15 @@ const PortalProject = () => {
   const requestRevision = async (id: string) => {
     const comment = reviewComment[id];
     if (!comment?.trim()) { toast.error('Veuillez ajouter un commentaire'); return; }
+    const review = reviews.find(r => r.id === id);
     await supabase.from('deliverable_reviews').update({ status: 'revision_requested', client_comment: comment, reviewed_at: new Date().toISOString() } as any).eq('id', id);
     setReviews(r => r.map(x => x.id === id ? { ...x, status: 'revision_requested', client_comment: comment } : x));
+    // Notify admin
+    await supabase.from('portal_notifications').insert({
+      client_id: client.id, type: 'deliverable_review',
+      title: `Révision demandée : ${review?.title || ''}`,
+      message: comment,
+    } as any);
     toast.success('Révision demandée');
   };
 

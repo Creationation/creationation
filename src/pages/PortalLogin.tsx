@@ -34,6 +34,12 @@ const PortalLogin = () => {
         await supabase.from('clients')
           .update({ portal_user_id: user.id, portal_last_login: new Date().toISOString() } as any)
           .eq('id', byEmail.id);
+        // Assign 'client' role if not already assigned
+        const { data: existingRole } = await supabase.from('user_roles')
+          .select('id').eq('user_id', user.id).eq('role', 'client').maybeSingle();
+        if (!existingRole) {
+          await supabase.from('user_roles').insert({ user_id: user.id, role: 'client' } as any);
+        }
         navigate('/portal');
       }
     });
