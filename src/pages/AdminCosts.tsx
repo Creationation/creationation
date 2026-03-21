@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { ChevronLeft, LogOut, DollarSign, Search, Mail, Sparkles, MapPin, TrendingUp, Clock, Globe, Phone, Info } from 'lucide-react';
+import { DollarSign, Search, Mail, Sparkles, MapPin, TrendingUp, Clock, Globe, Phone, Info } from 'lucide-react';
+import AdminHeader from '@/components/admin/AdminHeader';
 
 const COST_EUR = {
   GOOGLE_TEXT_SEARCH: 0.029,
