@@ -510,6 +510,75 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
             </div>
           )}
 
+
+          {tab === 'invoices' && (
+            <div>
+              {/* Summary */}
+              {projectInvoices.length > 0 && (() => {
+                const totalInvoiced = projectInvoices.reduce((s, i) => s + Number(i.total), 0);
+                const totalPaid = projectInvoices.reduce((s, i) => s + Number(i.amount_paid), 0);
+                const fmtE = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+                const budgetPct = project?.budget ? Math.round((totalInvoiced / Number(project.budget)) * 100) : null;
+                return (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>Facturé</p>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: 'var(--charcoal)' }}>{fmtE(totalInvoiced)}</p>
+                    </div>
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>Encaissé</p>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: 'var(--teal)' }}>{fmtE(totalPaid)}</p>
+                    </div>
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>Solde</p>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: totalInvoiced - totalPaid > 0 ? 'var(--coral)' : 'var(--teal)' }}>{fmtE(totalInvoiced - totalPaid)}</p>
+                    </div>
+                    {budgetPct !== null && (
+                      <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                        <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>vs Budget</p>
+                        <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: budgetPct > 100 ? 'var(--coral)' : 'var(--teal)' }}>{budgetPct}%</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+              {/* Invoice list */}
+              {projectInvoices.length === 0 ? (
+                <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', padding: 20 }}>Aucune facture liée à ce projet</p>
+              ) : (
+                <div className="space-y-2 mb-4">
+                  {projectInvoices.map(inv => {
+                    const statusCfg: Record<string, { label: string; color: string }> = {
+                      draft: { label: 'Brouillon', color: '#9ca3af' }, sent: { label: 'Envoyée', color: '#3b82f6' },
+                      viewed: { label: 'Vue', color: '#8b5cf6' }, paid: { label: 'Payée', color: '#10b981' },
+                      partially_paid: { label: 'Partiel', color: '#f59e0b' }, overdue: { label: 'En retard', color: '#ef4444' },
+                      cancelled: { label: 'Annulée', color: '#6b7280' }, refunded: { label: 'Remboursée', color: '#f97316' },
+                    };
+                    const s = statusCfg[inv.status] || { label: inv.status, color: '#999' };
+                    const fmtE = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+                    return (
+                      <div key={inv.id} className="flex items-center justify-between" style={{
+                        padding: '10px 14px', background: 'var(--glass-bg)', borderRadius: 10,
+                        border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13,
+                      }}>
+                        <span style={{ color: 'var(--teal)', fontFamily: 'var(--font-m)', fontSize: 12 }}>{inv.invoice_number}</span>
+                        <span style={{ color: 'var(--text-mid)' }}>{new Date(inv.issue_date).toLocaleDateString('fr-FR')}</span>
+                        <span style={{ fontWeight: 600, color: 'var(--charcoal)' }}>{fmtE(Number(inv.total))}</span>
+                        <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, background: `${s.color}18`, color: s.color }}>{s.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <button onClick={() => navigate(`/admin/invoices?clientId=${project?.client_id}&projectId=${projectId}`)} className="flex items-center gap-2" style={{
+                padding: '8px 16px', background: 'var(--teal)', color: '#fff', border: 'none',
+                borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              }}>
+                <Plus size={12} /> Créer une facture
+              </button>
+            </div>
+          )}
+
           {tab === 'activity' && (
             <div className="space-y-2" style={{ maxHeight: 400, overflowY: 'auto' }}>
               {activityLog.length === 0 && (
