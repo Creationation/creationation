@@ -38,11 +38,11 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
       setClientName((c as any)?.business_name || '');
     }
     const { data: t } = await supabase.from('project_tasks' as any).select('*').eq('project_id', projectId).order('position', { ascending: true });
-    setTasks((t || []) as Task[]);
+    setTasks((t || []) as unknown as Task[]);
     const { data: m } = await supabase.from('project_milestones' as any).select('*').eq('project_id', projectId).order('position', { ascending: true });
-    setMilestones((m || []) as MilestoneT[]);
+    setMilestones((m || []) as unknown as MilestoneT[]);
     const { data: n } = await supabase.from('project_notes' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: true });
-    setNotes((n || []) as Note[]);
+    setNotes((n || []) as unknown as Note[]);
     const { data: f } = await supabase.from('project_files' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: false });
     setFiles((f || []) as FileT[]);
   }, [projectId]);
