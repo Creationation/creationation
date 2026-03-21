@@ -736,6 +736,7 @@ const AdminProspects = () => {
                 <button onClick={fetchProspects} style={{ padding:'8px 12px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:16, cursor:'pointer', flexShrink:0 }}>
                   <RefreshCw size={14}/>
                 </button>
+              </div>
               {/* Advanced filters toggle + saved searches */}
               <div className='flex gap-2 items-center'>
                 <button onClick={() => setShowAdvancedFilters(!showAdvancedFilters)} style={{ padding:'6px 12px', borderRadius:100, border:'1px solid var(--glass-border)', background: showAdvancedFilters ? 'rgba(13,138,111,0.1)' : 'var(--glass-bg)', color: showAdvancedFilters ? 'var(--teal)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
