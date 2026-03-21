@@ -469,10 +469,13 @@ const AdminProspects = () => {
   };
 
   const openEmailModal = async () => {
-    if (!selectedIds.size) { toast.error('Selectionne au moins un prospect'); return; }
+    if (!selectedIds.size) { toast.error('Sélectionne au moins un prospect'); return; }
     const selected = prospects.filter(p => selectedIds.has(p.id));
     const noEmail = selected.filter(p => !p.email);
-    if (noEmail.length) { toast.error(noEmail.map(p => p.business_name).join(', ') + ' - pas d\'email'); return; }
+    if (noEmail.length) {
+      toast.error(`${noEmail.length} prospect(s) sélectionné(s) n'ont pas d'email. Utilise d'abord “Trouver emails IA”.`);
+      return;
+    }
     setGeneratedEmails(selected.map(p => ({ prospectId: p.id, subject: '', body: '', loading: true })));
     setShowEmailModal(true); setGeneratingAll(true);
     const results: GeneratedEmail[] = [];
@@ -489,15 +492,25 @@ const AdminProspects = () => {
   };
 
   const findEmails = async () => {
-    const targets = selectedIds.size > 0
-      ? prospects.filter(p => selectedIds.has(p.id) && !p.email)
-      : prospects.filter(p => !p.email);
-    if (!targets.length) { toast.info('Tous les prospects selectionnes ont deja un email'); return; }
+    if (!selectedIds.size) {
+      toast.error('Sélectionne les prospects à enrichir pour éviter des coûts inutiles.');
+      return;
+    }
+
+    const targets = prospects.filter(p => selectedIds.has(p.id) && !p.email);
+    if (!targets.length) { toast.info('Tous les prospects sélectionnés ont déjà un email'); return; }
+
+    const maxBatch = 50;
+    const limitedTargets = targets.slice(0, maxBatch);
+    if (targets.length > maxBatch) {
+      toast.info(`Recherche limitée aux ${maxBatch} premiers prospects sélectionnés pour protéger tes coûts.`);
+    }
+
     setFindingEmails(true);
-    toast.info(`Recherche IA d'emails pour ${targets.length} prospect(s)...`);
+    toast.info(`Recherche IA d'emails pour ${limitedTargets.length} prospect(s)...`);
     try {
       const { data, error } = await supabase.functions.invoke('find-prospect-email', {
-        body: { prospects: targets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address, phone: p.phone, website_url: p.website_url })) }
+        body: { prospects: limitedTargets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address, phone: p.phone, website_url: p.website_url })) }
       });
       if (error) throw new Error(error.message);
       const results = data.results || [];
@@ -508,8 +521,8 @@ const AdminProspects = () => {
           found++;
         }
       }
-      toast.success(`${found} email(s) trouves sur ${targets.length} prospects`);
-      if (userId) logOperation(userId, 'ai_email_find', `Recherche IA emails: ${targets.length} prospects`, targets.length * COST_EUR.AI_EMAIL_FIND, targets.length, { found });
+      toast.success(`${found} email(s) trouvés sur ${limitedTargets.length} prospects`);
+      if (userId) logOperation(userId, 'ai_email_find', `Recherche IA emails: ${limitedTargets.length} prospects`, limitedTargets.length * COST_EUR.AI_EMAIL_FIND, limitedTargets.length, { found });
       fetchProspects();
     } catch (e: any) { toast.error(e.message || 'Erreur recherche emails'); }
     finally { setFindingEmails(false); }
