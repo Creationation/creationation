@@ -14,6 +14,106 @@ export type Database = {
   }
   public: {
     Tables: {
+      client_payments: {
+        Row: {
+          amount: number
+          client_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          payment_date: string
+          payment_type: string | null
+        }
+        Insert: {
+          amount: number
+          client_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          payment_date?: string
+          payment_type?: string | null
+        }
+        Update: {
+          amount?: number
+          client_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          payment_date?: string
+          payment_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_payments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          business_name: string
+          contact_name: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          monthly_amount: number | null
+          notes: string | null
+          phone: string | null
+          plan: string | null
+          prospect_id: string | null
+          started_at: string | null
+          status: string | null
+          total_paid: number | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          business_name: string
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          monthly_amount?: number | null
+          notes?: string | null
+          phone?: string | null
+          plan?: string | null
+          prospect_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          total_paid?: number | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          business_name?: string
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          monthly_amount?: number | null
+          notes?: string | null
+          phone?: string | null
+          plan?: string | null
+          prospect_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          total_paid?: number | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_emails: {
         Row: {
           body: string

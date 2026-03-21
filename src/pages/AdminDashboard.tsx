@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
-import { LogOut, RefreshCw, Search, Filter, Target, DollarSign } from 'lucide-react';
+import { LogOut, RefreshCw, Search, Filter, Target, DollarSign, Users, Wallet } from 'lucide-react';
 
 type Lead = {
   id: string;
@@ -146,6 +146,30 @@ const AdminDashboard = () => {
             }}
           >
             <Target size={14} /> Prospection
+          </Link>
+          <Link
+            to="/admin/clients"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px', background: 'rgba(124,92,191,0.1)',
+              border: '1px solid rgba(124,92,191,0.3)', borderRadius: 'var(--pill)',
+              fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600,
+              color: 'var(--violet)', textDecoration: 'none',
+            }}
+          >
+            <Users size={14} /> Clients
+          </Link>
+          <Link
+            to="/admin/revenues"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px', background: 'rgba(77,166,217,0.1)',
+              border: '1px solid rgba(77,166,217,0.3)', borderRadius: 'var(--pill)',
+              fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600,
+              color: 'var(--sky)', textDecoration: 'none',
+            }}
+          >
+            <Wallet size={14} /> Revenus
           </Link>
           <Link
             to="/admin/costs"

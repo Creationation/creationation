@@ -1,0 +1,361 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { LogOut, Plus, Search, Pencil, Check, X, Target, DollarSign, Users, Wallet, ArrowRightLeft, Trash2 } from 'lucide-react';
+
+type Client = {
+  id: string;
+  prospect_id: string | null;
+  business_name: string;
+  contact_name: string | null;
+  email: string | null;
+  phone: string | null;
+  website_url: string | null;
+  plan: string;
+  status: string;
+  monthly_amount: number;
+  total_paid: number;
+  started_at: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type Prospect = {
+  id: string;
+  business_name: string;
+  contact_name: string | null;
+  email: string | null;
+  phone: string | null;
+  website_url: string | null;
+  status: string;
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  active: '#0d8a6f',
+  trial: '#4da6d9',
+  paused: '#d4a55a',
+  churned: '#e8735a',
+};
+const STATUS_LABELS: Record<string, string> = {
+  active: 'Actif',
+  trial: 'Essai',
+  paused: 'En pause',
+  churned: 'Perdu',
+};
+const PLAN_OPTIONS = ['basic', 'standard', 'premium', 'custom'];
+
+const AdminClients = () => {
+  const navigate = useNavigate();
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [showImport, setShowImport] = useState(false);
+  const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [selectedProspects, setSelectedProspects] = useState<string[]>([]);
+  const [showAdd, setShowAdd] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editData, setEditData] = useState<Partial<Client>>({});
+
+  const fetchClients = useCallback(async () => {
+    setLoading(true);
+    const { data } = await supabase.from('clients' as any).select('*').order('created_at', { ascending: false });
+    setClients((data as any[] || []) as Client[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { navigate('/admin/login'); return; }
+      const { data: roles } = await supabase.from('user_roles').select('role').eq('user_id', user.id);
+      if (!roles?.some(r => r.role === 'admin')) { navigate('/admin/login'); return; }
+      fetchClients();
+    })();
+  }, [navigate, fetchClients]);
+
+  const fetchConvertedProspects = async () => {
+    const { data } = await supabase.from('prospects').select('id,business_name,contact_name,email,phone,website_url,status').eq('status', 'converted');
+    // Filter out ones already imported
+    const existingIds = new Set(clients.filter(c => c.prospect_id).map(c => c.prospect_id));
+    setProspects((data || []).filter(p => !existingIds.has(p.id)) as Prospect[]);
+  };
+
+  const importProspects = async () => {
+    const toImport = prospects.filter(p => selectedProspects.includes(p.id));
+    if (!toImport.length) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    for (const p of toImport) {
+      await supabase.from('clients' as any).insert({
+        prospect_id: p.id,
+        business_name: p.business_name,
+        contact_name: p.contact_name,
+        email: p.email,
+        phone: p.phone,
+        website_url: p.website_url,
+        plan: 'basic',
+        status: 'active',
+        monthly_amount: 0,
+        total_paid: 0,
+      } as any);
+    }
+    toast.success(`${toImport.length} client(s) importé(s)`);
+    setShowImport(false);
+    setSelectedProspects([]);
+    fetchClients();
+  };
+
+  const updateClient = async (id: string, updates: Partial<Client>) => {
+    await supabase.from('clients' as any).update(updates as any).eq('id', id);
+    setEditId(null);
+    fetchClients();
+    toast.success('Client mis à jour');
+  };
+
+  const deleteClient = async (id: string) => {
+    if (!confirm('Supprimer ce client ?')) return;
+    await supabase.from('clients' as any).delete().eq('id', id);
+    fetchClients();
+    toast.success('Client supprimé');
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/admin/login');
+  };
+
+  const filtered = clients.filter(c =>
+    c.business_name.toLowerCase().includes(search.toLowerCase()) ||
+    (c.contact_name || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.email || '').toLowerCase().includes(search.toLowerCase())
+  );
+
+  const stats = {
+    total: clients.length,
+    active: clients.filter(c => c.status === 'active').length,
+    mrr: clients.filter(c => c.status === 'active').reduce((s, c) => s + (c.monthly_amount || 0), 0),
+    totalRevenue: clients.reduce((s, c) => s + (c.total_paid || 0), 0),
+  };
+
+  const f = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+  return (
+    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
+      <header className="flex items-center justify-between px-6 py-4" style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--glass-border)' }}>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Link to="/admin" style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)', textDecoration: 'none' }}>CRM</Link>
+          <Link to="/admin/prospects" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(13,138,111,0.1)', border: '1px solid rgba(13,138,111,0.3)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--teal)', textDecoration: 'none' }}><Target size={14} /> Prospection</Link>
+          <Link to="/admin/clients" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(124,92,191,0.15)', border: '1px solid rgba(124,92,191,0.4)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--violet)', textDecoration: 'none' }}><Users size={14} /> Clients</Link>
+          <Link to="/admin/revenues" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(77,166,217,0.1)', border: '1px solid rgba(77,166,217,0.3)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--sky)', textDecoration: 'none' }}><Wallet size={14} /> Revenus</Link>
+          <Link to="/admin/costs" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(212,165,90,0.1)', border: '1px solid rgba(212,165,90,0.3)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#d4a55a', textDecoration: 'none' }}><DollarSign size={14} /> Coûts</Link>
+        </div>
+        <button onClick={handleLogout} className="flex items-center gap-2 cursor-pointer" style={{ padding: '8px 16px', background: 'transparent', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}><LogOut size={14} /> Déconnexion</button>
+      </header>
+
+      <div className="p-6 max-w-7xl mx-auto space-y-6">
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: 'Total clients', value: stats.total, color: 'var(--violet)' },
+            { label: 'Actifs', value: stats.active, color: 'var(--teal)' },
+            { label: 'MRR', value: `${f(stats.mrr)} €`, color: 'var(--sky)' },
+            { label: 'Revenu total', value: `${f(stats.totalRevenue)} €`, color: '#d4a55a' },
+          ].map((s, i) => (
+            <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+              <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{s.label}</div>
+              <div style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: s.color }}>{s.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="flex items-center gap-2 flex-1 min-w-[200px]" style={{ background: 'white', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', padding: '8px 16px' }}>
+            <Search size={16} style={{ color: 'var(--muted-foreground)' }} />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un client..." style={{ border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 14, flex: 1, background: 'transparent' }} />
+          </div>
+          <button onClick={() => { setShowImport(true); fetchConvertedProspects(); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+            <ArrowRightLeft size={14} /> Importer prospects
+          </button>
+          <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--violet)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+            <Plus size={14} /> Ajouter manuellement
+          </button>
+        </div>
+
+        {/* Client list */}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Chargement...</div>
+        ) : filtered.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Aucun client trouvé. Importez des prospects convertis ou ajoutez un client manuellement.</div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map(c => (
+              <div key={c.id} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+                {editId === c.id ? (
+                  <EditRow client={c} editData={editData} setEditData={setEditData} onSave={() => updateClient(c.id, editData)} onCancel={() => setEditId(null)} />
+                ) : (
+                  <div className="flex flex-col md:flex-row md:items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)' }}>{c.business_name}</span>
+                        <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-b)', color: 'white', background: STATUS_COLORS[c.status] || '#999' }}>{STATUS_LABELS[c.status] || c.status}</span>
+                        <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--violet)', background: 'rgba(124,92,191,0.12)' }}>{c.plan}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1" style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>
+                        {c.contact_name && <span>{c.contact_name}</span>}
+                        {c.email && <span>{c.email}</span>}
+                        {c.phone && <span>{c.phone}</span>}
+                        {c.website_url && <span>{c.website_url}</span>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4" style={{ fontFamily: 'var(--font-b)', fontSize: 13 }}>
+                      <div className="text-center">
+                        <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Mensuel</div>
+                        <div style={{ color: 'var(--teal)', fontWeight: 700 }}>{f(c.monthly_amount)} €</div>
+                      </div>
+                      <div className="text-center">
+                        <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Total payé</div>
+                        <div style={{ color: '#d4a55a', fontWeight: 700 }}>{f(c.total_paid)} €</div>
+                      </div>
+                      <div className="text-center">
+                        <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Depuis</div>
+                        <div style={{ fontWeight: 600 }}>{new Date(c.started_at).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}</div>
+                      </div>
+                      <button onClick={() => { setEditId(c.id); setEditData({ plan: c.plan, status: c.status, monthly_amount: c.monthly_amount, total_paid: c.total_paid, notes: c.notes }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--teal)' }}><Pencil size={15} /></button>
+                      <button onClick={() => deleteClient(c.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)' }}><Trash2 size={15} /></button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Import modal */}
+      {showImport && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="rounded-3xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto" style={{ background: 'white' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20 }}>Importer des prospects convertis</h2>
+              <button onClick={() => setShowImport(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            {prospects.length === 0 ? (
+              <p style={{ fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--muted-foreground)' }}>Aucun prospect converti disponible à importer.</p>
+            ) : (
+              <>
+                <div className="space-y-2 mb-4">
+                  {prospects.map(p => (
+                    <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer" style={{ background: selectedProspects.includes(p.id) ? 'rgba(13,138,111,0.08)' : 'var(--warm)', border: `1px solid ${selectedProspects.includes(p.id) ? 'var(--teal)' : 'var(--glass-border)'}` }}>
+                      <input type="checkbox" checked={selectedProspects.includes(p.id)} onChange={() => setSelectedProspects(s => s.includes(p.id) ? s.filter(x => x !== p.id) : [...s, p.id])} />
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600 }}>{p.business_name}</div>
+                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{p.email || 'Pas d\'email'} · {p.contact_name || ''}</div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+                <button onClick={importProspects} disabled={!selectedProspects.length} style={{ width: '100%', padding: '10px 0', background: selectedProspects.length ? 'var(--teal)' : '#ccc', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: selectedProspects.length ? 'pointer' : 'default' }}>
+                  Importer {selectedProspects.length} prospect(s)
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Add manual modal */}
+      {showAdd && <AddClientModal onClose={() => setShowAdd(false)} onAdded={fetchClients} />}
+    </div>
+  );
+};
+
+const EditRow = ({ client, editData, setEditData, onSave, onCancel }: { client: Client; editData: Partial<Client>; setEditData: (d: Partial<Client>) => void; onSave: () => void; onCancel: () => void }) => (
+  <div className="space-y-3">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div>
+        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Plan</label>
+        <select value={editData.plan || ''} onChange={e => setEditData({ ...editData, plan: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+          {PLAN_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
+      </div>
+      <div>
+        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Statut</label>
+        <select value={editData.status || ''} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+          {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+        </select>
+      </div>
+      <div>
+        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>€/mois</label>
+        <input type="number" value={editData.monthly_amount || 0} onChange={e => setEditData({ ...editData, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }} />
+      </div>
+      <div>
+        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Total payé</label>
+        <input type="number" value={editData.total_paid || 0} onChange={e => setEditData({ ...editData, total_paid: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }} />
+      </div>
+    </div>
+    <div>
+      <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Notes</label>
+      <textarea value={editData.notes || ''} onChange={e => setEditData({ ...editData, notes: e.target.value })} rows={2} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, resize: 'vertical' }} />
+    </div>
+    <div className="flex gap-2">
+      <button onClick={onSave} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 16px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer' }}><Check size={14} /> Sauvegarder</button>
+      <button onClick={onCancel} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer' }}><X size={14} /></button>
+    </div>
+  </div>
+);
+
+const AddClientModal = ({ onClose, onAdded }: { onClose: () => void; onAdded: () => void }) => {
+  const [form, setForm] = useState({ business_name: '', contact_name: '', email: '', phone: '', website_url: '', plan: 'basic', monthly_amount: 0 });
+
+  const handleAdd = async () => {
+    if (!form.business_name.trim()) { toast.error('Nom requis'); return; }
+    await supabase.from('clients' as any).insert({ ...form, status: 'active', total_paid: 0 } as any);
+    toast.success('Client ajouté');
+    onAdded();
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+      <div className="rounded-3xl p-6 w-full max-w-md" style={{ background: 'white' }}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20 }}>Nouveau client</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
+        </div>
+        <div className="space-y-3">
+          {[
+            { key: 'business_name', label: 'Nom entreprise *', type: 'text' },
+            { key: 'contact_name', label: 'Contact', type: 'text' },
+            { key: 'email', label: 'Email', type: 'email' },
+            { key: 'phone', label: 'Téléphone', type: 'text' },
+            { key: 'website_url', label: 'Site web', type: 'url' },
+          ].map(f => (
+            <div key={f.key}>
+              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{f.label}</label>
+              <input type={f.type} value={(form as any)[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+            </div>
+          ))}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Plan</label>
+              <select value={form.plan} onChange={e => setForm({ ...form, plan: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+                {PLAN_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>€/mois</label>
+              <input type="number" value={form.monthly_amount} onChange={e => setForm({ ...form, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+            </div>
+          </div>
+          <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Ajouter le client</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminClients;
