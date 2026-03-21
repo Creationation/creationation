@@ -140,6 +140,10 @@ const AdminProspects = () => {
     setSearchChunks((data as any as SearchChunk[]) || []);
   }, []);
 
+  const fetchSavedSearches = useCallback(async () => {
+    const { data } = await supabase.from('saved_searches').select('id, name, filters');
+    setSavedSearches((data as any[]) || []);
+  }, []);
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -147,7 +151,12 @@ const AdminProspects = () => {
     if (statusFilter !== 'all') query = query.eq('status', statusFilter as ProspectStatus);
     const { data, error } = await query;
     if (error) toast.error('Erreur chargement');
-    else setProspects((data as Prospect[]) || []);
+    else {
+      const p = (data as Prospect[]) || [];
+      setProspects(p);
+      setAllSectors([...new Set(p.map(x => x.sector).filter(Boolean))] as string[]);
+      setAllTags([...new Set(p.flatMap(x => x.tags || []).filter(Boolean))] as string[]);
+    }
     setLoading(false);
   }, [statusFilter]);
 
@@ -157,10 +166,35 @@ const AdminProspects = () => {
       setUserId(user.id);
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else { fetchProspects(); fetchChunks(); }
+        else { fetchProspects(); fetchChunks(); fetchSavedSearches(); }
       });
     });
   }, [navigate, fetchProspects]);
+
+  const saveSearch = async () => {
+    const name = prompt('Nom de la recherche :');
+    if (!name) return;
+    setSavingSearch(true);
+    const filters = { statusFilter, websiteFilter, scoreMin, sectorFilter, tagFilter, sequenceFilter, lastInteractionDays, searchQuery };
+    await supabase.from('saved_searches').insert({ name, filters, result_count: filteredProspects.length } as any);
+    toast.success('Recherche sauvegardée');
+    fetchSavedSearches();
+    setSavingSearch(false);
+  };
+
+  const loadSearch = (search: { filters: any }) => {
+    const f = search.filters;
+    if (f.statusFilter) setStatusFilter(f.statusFilter);
+    if (f.websiteFilter) setWebsiteFilter(f.websiteFilter);
+    if (typeof f.scoreMin === 'number') setScoreMin(f.scoreMin);
+    if (f.sectorFilter) setSectorFilter(f.sectorFilter);
+    if (f.tagFilter) setTagFilter(f.tagFilter);
+    if (f.sequenceFilter) setSequenceFilter(f.sequenceFilter);
+    if (f.lastInteractionDays !== undefined) setLastInteractionDays(f.lastInteractionDays);
+    if (f.searchQuery !== undefined) setSearchQuery(f.searchQuery);
+    setShowAdvancedFilters(true);
+    toast.success('Filtres chargés');
+  };
 
   const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
