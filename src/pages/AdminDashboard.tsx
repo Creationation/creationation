@@ -242,6 +242,14 @@ const AdminDashboard = () => {
               ))}
             </select>
           </div>
+          <div className="flex items-center gap-2" style={{ padding: '10px 16px', background: 'var(--glass-bg)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)' }}>
+            <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} style={{ background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--text)', cursor: 'pointer' }}>
+              <option value="all">Toute période</option>
+              <option value="7d">7 derniers jours</option>
+              <option value="30d">30 derniers jours</option>
+              <option value="90d">90 derniers jours</option>
+            </select>
+          </div>
           <button onClick={fetchLeads} className="flex items-center gap-2 cursor-pointer" style={{ padding: '10px 20px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
             <RefreshCw size={14} /> Actualiser
           </button>
