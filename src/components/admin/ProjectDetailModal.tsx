@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Check, Plus, Trash2, CheckCircle2, Circle, GripVertical, MessageSquare, FileUp, Milestone } from 'lucide-react';
+import { X, Check, Plus, Trash2, CheckCircle2, Circle, GripVertical, MessageSquare, FileUp, Milestone, MessagesSquare } from 'lucide-react';
+import PortalMessagesAdmin from '@/components/admin/PortalMessagesAdmin';
 
 type Task = { id: string; project_id: string; title: string; description: string | null; status: string; position: number; due_date: string | null; completed_at: string | null };
 type MilestoneT = { id: string; project_id: string; title: string; description: string | null; due_date: string | null; completed_at: string | null; position: number };
