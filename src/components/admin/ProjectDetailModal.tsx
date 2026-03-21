@@ -1,15 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical, Clock } from 'lucide-react';
+import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical, Clock, FileText } from 'lucide-react';
 import PortalMessagesAdmin from '@/components/admin/PortalMessagesAdmin';
 import { sendPortalNotification } from '@/lib/portalNotifications';
+import { useNavigate } from 'react-router-dom';
 
 type Task = { id: string; project_id: string; title: string; description: string | null; status: string; position: number; due_date: string | null; completed_at: string | null; assigned_to: string | null };
 type MilestoneT = { id: string; project_id: string; title: string; description: string | null; due_date: string | null; completed_at: string | null; position: number };
 type Note = { id: string; content: string; created_at: string; author_id: string | null };
 type FileT = { id: string; file_name: string; file_url: string; file_type: string | null; created_at: string };
 type Deliverable = { id: string; project_id: string; milestone_id: string | null; title: string; description: string | null; status: string; file_urls: any; client_comment: string | null; reviewed_at: string | null; created_at: string };
+type InvoiceRow = { id: string; invoice_number: string; status: string; total: number; amount_paid: number; issue_date: string; due_date: string };
 
 const STATUS_COLS = [
   { key: 'brief', label: 'Brief', color: '#8B5CF6' },
@@ -23,17 +25,19 @@ const PRIORITY_COLORS: Record<string, string> = { urgent: '#ef4444', high: '#f97
 const PRIORITY_LABELS: Record<string, string> = { urgent: 'Urgent', high: 'Haute', medium: 'Moyenne', low: 'Basse' };
 
 const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose: () => void }) => {
+  const navigate = useNavigate();
   const [project, setProject] = useState<any>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [milestones, setMilestones] = useState<MilestoneT[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [files, setFiles] = useState<FileT[]>([]);
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
+  const [projectInvoices, setProjectInvoices] = useState<InvoiceRow[]>([]);
   const [clientName, setClientName] = useState('');
   const [newTask, setNewTask] = useState('');
   const [newTaskDue, setNewTaskDue] = useState('');
   const [newNote, setNewNote] = useState('');
-  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs' | 'deliverables' | 'activity'>('tasks');
+  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs' | 'deliverables' | 'activity' | 'invoices'>('tasks');
   const [activityLog, setActivityLog] = useState<any[]>([]);
   const [showNewDeliverable, setShowNewDeliverable] = useState(false);
   const [newDeliverable, setNewDeliverable] = useState({ title: '', description: '' });
@@ -59,6 +63,8 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     setFiles((f || []) as unknown as FileT[]);
     const { data: d } = await supabase.from('deliverable_reviews' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: false });
     setDeliverables((d || []) as unknown as Deliverable[]);
+    const { data: invData } = await supabase.from('invoices').select('id,invoice_number,status,total,amount_paid,issue_date,due_date').eq('project_id', projectId).order('issue_date', { ascending: false });
+    setProjectInvoices((invData || []) as InvoiceRow[]);
 
     // Build activity log from all data
     const log: any[] = [];
@@ -270,6 +276,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               { key: 'notes' as const, label: 'Notes', icon: MessageSquare, count: notes.length },
               { key: 'files' as const, label: 'Fichiers', icon: FileUp, count: files.length },
               { key: 'clientmsgs' as const, label: 'Client', icon: MessagesSquare, count: 0 },
+              { key: 'invoices' as const, label: 'Facturation', icon: FileText, count: projectInvoices.length },
               { key: 'activity' as const, label: 'Activité', icon: Clock, count: activityLog.length },
             ]).map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
@@ -500,6 +507,75 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                   );
                 })}
               </div>
+            </div>
+          )}
+
+
+          {tab === 'invoices' && (
+            <div>
+              {/* Summary */}
+              {projectInvoices.length > 0 && (() => {
+                const totalInvoiced = projectInvoices.reduce((s, i) => s + Number(i.total), 0);
+                const totalPaid = projectInvoices.reduce((s, i) => s + Number(i.amount_paid), 0);
+                const fmtE = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+                const budgetPct = project?.budget ? Math.round((totalInvoiced / Number(project.budget)) * 100) : null;
+                return (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>Facturé</p>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: 'var(--charcoal)' }}>{fmtE(totalInvoiced)}</p>
+                    </div>
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>Encaissé</p>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: 'var(--teal)' }}>{fmtE(totalPaid)}</p>
+                    </div>
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>Solde</p>
+                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: totalInvoiced - totalPaid > 0 ? 'var(--coral)' : 'var(--teal)' }}>{fmtE(totalInvoiced - totalPaid)}</p>
+                    </div>
+                    {budgetPct !== null && (
+                      <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
+                        <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>vs Budget</p>
+                        <p style={{ fontFamily: 'var(--font-b)', fontSize: 16, fontWeight: 700, color: budgetPct > 100 ? 'var(--coral)' : 'var(--teal)' }}>{budgetPct}%</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+              {/* Invoice list */}
+              {projectInvoices.length === 0 ? (
+                <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', padding: 20 }}>Aucune facture liée à ce projet</p>
+              ) : (
+                <div className="space-y-2 mb-4">
+                  {projectInvoices.map(inv => {
+                    const statusCfg: Record<string, { label: string; color: string }> = {
+                      draft: { label: 'Brouillon', color: '#9ca3af' }, sent: { label: 'Envoyée', color: '#3b82f6' },
+                      viewed: { label: 'Vue', color: '#8b5cf6' }, paid: { label: 'Payée', color: '#10b981' },
+                      partially_paid: { label: 'Partiel', color: '#f59e0b' }, overdue: { label: 'En retard', color: '#ef4444' },
+                      cancelled: { label: 'Annulée', color: '#6b7280' }, refunded: { label: 'Remboursée', color: '#f97316' },
+                    };
+                    const s = statusCfg[inv.status] || { label: inv.status, color: '#999' };
+                    const fmtE = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+                    return (
+                      <div key={inv.id} className="flex items-center justify-between" style={{
+                        padding: '10px 14px', background: 'var(--glass-bg)', borderRadius: 10,
+                        border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13,
+                      }}>
+                        <span style={{ color: 'var(--teal)', fontFamily: 'var(--font-m)', fontSize: 12 }}>{inv.invoice_number}</span>
+                        <span style={{ color: 'var(--text-mid)' }}>{new Date(inv.issue_date).toLocaleDateString('fr-FR')}</span>
+                        <span style={{ fontWeight: 600, color: 'var(--charcoal)' }}>{fmtE(Number(inv.total))}</span>
+                        <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, background: `${s.color}18`, color: s.color }}>{s.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <button onClick={() => navigate(`/admin/invoices?clientId=${project?.client_id}&projectId=${projectId}`)} className="flex items-center gap-2" style={{
+                padding: '8px 16px', background: 'var(--teal)', color: '#fff', border: 'none',
+                borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              }}>
+                <Plus size={12} /> Créer une facture
+              </button>
             </div>
           )}
 

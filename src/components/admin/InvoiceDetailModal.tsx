@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Download, Copy, CreditCard, FileText } from 'lucide-react';
+import { X, Download, Copy, CreditCard, FileText, Clock, DollarSign, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import InvoicePDF from '@/components/admin/InvoicePDF';
 import { pdf } from '@react-pdf/renderer';
 
@@ -28,15 +28,48 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
   const [items, setItems] = useState<InvoiceItem[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [activityLog, setActivityLog] = useState<{ icon: any; label: string; date: string; color: string }[]>([]);
   const [showPayment, setShowPayment] = useState(false);
   const [payAmount, setPayAmount] = useState(Number(invoice.total) - Number(invoice.amount_paid));
   const [payMethod, setPayMethod] = useState('bank_transfer');
   const [payNotes, setPayNotes] = useState('');
 
   useEffect(() => {
-    supabase.from('invoice_items').select('*').eq('invoice_id', invoice.id).order('position').then(({ data }) => setItems(data || []));
-    supabase.from('payment_history').select('*').eq('invoice_id', invoice.id).order('payment_date', { ascending: false }).then(({ data }) => setPayments(data || []));
-  }, [invoice.id]);
+    const fetchDetails = async () => {
+      const [{ data: itemsData }, { data: paymentsData }] = await Promise.all([
+        supabase.from('invoice_items').select('*').eq('invoice_id', invoice.id).order('position'),
+        supabase.from('payment_history').select('*').eq('invoice_id', invoice.id).order('payment_date', { ascending: false }),
+      ]);
+      setItems(itemsData || []);
+      setPayments(paymentsData || []);
+
+      // Build activity log
+      const log: { icon: any; label: string; date: string; color: string }[] = [];
+      log.push({ icon: FileText, label: 'Facture créée', date: invoice.created_at, color: '#3b82f6' });
+      if (invoice.status === 'sent' || invoice.status === 'viewed' || invoice.status === 'paid' || invoice.status === 'overdue') {
+        log.push({ icon: DollarSign, label: 'Facture envoyée', date: invoice.updated_at || invoice.created_at, color: '#3b82f6' });
+      }
+      (paymentsData || []).forEach((p: any) => {
+        const fmtAmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(Number(p.amount));
+        log.push({ icon: CheckCircle, label: `Paiement reçu : ${fmtAmt} (${p.payment_method || 'N/A'})`, date: p.payment_date, color: '#10b981' });
+      });
+      if (invoice.status === 'overdue') {
+        log.push({ icon: AlertCircle, label: 'Facture passée en retard', date: invoice.due_date, color: '#ef4444' });
+      }
+      if (invoice.status === 'cancelled') {
+        log.push({ icon: XCircle, label: 'Facture annulée', date: invoice.updated_at || invoice.created_at, color: '#6b7280' });
+      }
+      if (invoice.paid_at) {
+        log.push({ icon: CheckCircle, label: 'Facture marquée comme payée', date: invoice.paid_at, color: '#10b981' });
+      }
+      if (invoice.reminder_sent_at) {
+        log.push({ icon: Clock, label: `Rappel envoyé (${invoice.reminder_count || 1}x)`, date: invoice.reminder_sent_at, color: '#f59e0b' });
+      }
+      log.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      setActivityLog(log);
+    };
+    fetchDetails();
+  }, [invoice]);
 
   const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
   const sc = STATUS_CONFIG[invoice.status] || { label: invoice.status, color: '#999' };
@@ -254,7 +287,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
           </div>
         </div>
         {payments.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Aucun paiement enregistré</p>
+          <p style={{ fontSize: 13, color: 'var(--text-light)', fontFamily: 'var(--font-b)', marginBottom: 16 }}>Aucun paiement enregistré</p>
         ) : (
           <div className="flex flex-col gap-2 mb-6">
             {payments.map(p => (
@@ -267,6 +300,37 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
                 <span style={{ color: 'var(--text-light)', fontSize: 12 }}>{p.payment_method || '—'}</span>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Activity log */}
+        <h3 style={{ fontFamily: 'var(--font-b)', fontSize: 15, fontWeight: 600, color: 'var(--charcoal)', marginBottom: 12 }}>
+          Activité
+        </h3>
+        {activityLog.length === 0 ? (
+          <p style={{ fontSize: 13, color: 'var(--text-light)', fontFamily: 'var(--font-b)', marginBottom: 16 }}>Aucune activité</p>
+        ) : (
+          <div className="flex flex-col gap-0 mb-6">
+            {activityLog.map((ev, i) => {
+              const Icon = ev.icon;
+              return (
+                <div key={i} className="flex items-start gap-3" style={{ position: 'relative', paddingBottom: 16, paddingLeft: 24 }}>
+                  {/* Vertical line */}
+                  {i < activityLog.length - 1 && (
+                    <div style={{ position: 'absolute', left: 11, top: 20, bottom: 0, width: 2, background: 'var(--glass-border)' }} />
+                  )}
+                  <div style={{ position: 'absolute', left: 2, top: 2, width: 20, height: 20, borderRadius: '50%', background: `${ev.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={10} style={{ color: ev.color }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}>{ev.label}</p>
+                    <p style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>
+                      {new Date(ev.date).toLocaleDateString('fr-FR')} à {new Date(ev.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 
