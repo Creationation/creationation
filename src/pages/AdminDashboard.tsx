@@ -106,7 +106,7 @@ const AdminDashboard = () => {
       if (!user) { navigate('/admin/login'); return; }
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else { fetchLeads(); fetchInvoiceKPIs(); }
+        else { fetchLeads(); fetchInvoiceKPIs(); fetchProspectKPIs(); }
       });
     });
   }, [navigate, fetchLeads, fetchInvoiceKPIs]);
