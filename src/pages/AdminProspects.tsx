@@ -924,8 +924,14 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
         </button>
       </td>
       <td className='px-4 py-3'>
-        <div style={{ fontWeight:600, color:'var(--charcoal)', fontSize:14 }}>{p.business_name}</div>
-        {p.business_type && <div style={{ fontSize:11, color:'var(--text-light)' }}>{p.business_type}</div>}
+        <div className='flex items-center gap-2'>
+          <div style={{ fontWeight:600, color:'var(--charcoal)', fontSize:14 }}>{p.business_name}</div>
+          {(p.score || 0) > 0 && <span style={{ padding:'1px 6px', borderRadius:'var(--pill)', fontSize:10, fontWeight:700, fontFamily:'var(--font-b)', background: (p.score || 0) > 60 ? 'rgba(16,185,129,0.15)' : (p.score || 0) > 30 ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)', color: (p.score || 0) > 60 ? '#10B981' : (p.score || 0) > 30 ? '#F59E0B' : '#EF4444' }}>{p.score}</span>}
+        </div>
+        <div className='flex items-center gap-1'>
+          {p.business_type && <span style={{ fontSize:11, color:'var(--text-light)' }}>{p.business_type}</span>}
+          {p.sector && p.sector !== p.business_type && <span style={{ fontSize:10, color:'var(--teal)', fontWeight:600 }}>• {p.sector}</span>}
+        </div>
       </td>
       <td className='px-4 py-3' style={{ color:'var(--text-mid)', fontSize:13 }}>
         {p.contact_name || '—'}
