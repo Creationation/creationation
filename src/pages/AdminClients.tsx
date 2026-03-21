@@ -62,6 +62,8 @@ const AdminClients = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Client>>({});
+  const [clientInvoices, setClientInvoices] = useState<Record<string, { total: number; paid: number; count: number }>>({});
+  const [expandedClient, setExpandedClient] = useState<string | null>(null);
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
