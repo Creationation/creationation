@@ -521,7 +521,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                 );
               })}
             </div>
-          )
+          )}
         </div>
       </div>
     </div>
