@@ -4,6 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
+import SectorsDashboard from '@/components/admin/SectorsDashboard';
+import ProspectDetailEnriched from '@/components/admin/ProspectDetailEnriched';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; score?: number; score_breakdown?: any; sector?: string | null; sequence_id?: string | null; sequence_step?: number; sequence_paused?: boolean; tags?: string[]; competitor_site_url?: string | null; competitor_audit?: any; };
