@@ -70,9 +70,10 @@ const AdminClients = () => {
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
-    const [{ data }, { data: inv }] = await Promise.all([
+    const [{ data }, { data: inv }, { data: projData }] = await Promise.all([
       supabase.from('clients' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('invoices').select('client_id,status,total,amount_paid'),
+      supabase.from('projects' as any).select('id,client_id,title,status,priority,deadline'),
     ]);
     setClients((data as any[] || []) as Client[]);
 
@@ -86,6 +87,14 @@ const AdminClients = () => {
       invMap[i.client_id].count++;
     });
     setClientInvoices(invMap);
+
+    // Group projects per client
+    const projMap: Record<string, any[]> = {};
+    ((projData as any[]) || []).forEach((p: any) => {
+      if (!projMap[p.client_id]) projMap[p.client_id] = [];
+      projMap[p.client_id].push(p);
+    });
+    setClientProjects(projMap);
 
     setLoading(false);
   }, []);
