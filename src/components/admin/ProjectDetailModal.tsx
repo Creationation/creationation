@@ -270,6 +270,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               { key: 'notes' as const, label: 'Notes', icon: MessageSquare, count: notes.length },
               { key: 'files' as const, label: 'Fichiers', icon: FileUp, count: files.length },
               { key: 'clientmsgs' as const, label: 'Client', icon: MessagesSquare, count: 0 },
+              { key: 'activity' as const, label: 'Activité', icon: Clock, count: activityLog.length },
             ]).map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', border: 'none',
