@@ -453,7 +453,10 @@ const AdminProspects = () => {
   const prospectsNoSite = filteredProspects.filter(p => !p.has_website);
   const prospectsWithSite = filteredProspects.filter(p => p.has_website);
 
-  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length };
+  const scoredProspects = prospects.filter(p => (p.score || 0) > 0);
+  const avgScore = scoredProspects.length > 0 ? Math.round(scoredProspects.reduce((s, p) => s + (p.score || 0), 0) / scoredProspects.length) : 0;
+  const inSequence = prospects.filter(p => p.sequence_id).length;
+  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length, avgScore, inSequence };
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
