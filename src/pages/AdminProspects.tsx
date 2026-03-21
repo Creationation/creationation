@@ -708,7 +708,7 @@ const AdminProspects = () => {
                       <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:0 }}>Avec site internet</h3>
                       <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'var(--glass-bg)', color:'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{prospectsWithSite.length}</span>
                     </div>
-                    <ProspectTable prospects={prospectsWithSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsWithSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} />
+                    <ProspectTable prospects={prospectsWithSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsWithSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} onViewDetail={setDetailProspect} />
                   </div>
                 )}
               </div>
