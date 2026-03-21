@@ -307,11 +307,16 @@ const AdminProspects = () => {
           google_place_id: r.google_place_id, source: 'google_maps',
           language: COUNTRY_LANG[r.country] || 'en',
         }));
-        const { error: insertError } = await supabase.from('prospects').insert(rows);
-        if (insertError && insertError.code !== '23505') {
-          console.warn('Bulk insert error, trying one by one', insertError);
-          for (const row of rows) {
-            await supabase.from('prospects').insert(row);
+        // Insert in batches of 500 to avoid Supabase row limits
+        const batchSize = 500;
+        for (let i = 0; i < rows.length; i += batchSize) {
+          const batch = rows.slice(i, i + batchSize);
+          const { error: insertError } = await supabase.from('prospects').insert(batch);
+          if (insertError && insertError.code !== '23505') {
+            console.warn(`Bulk insert error batch ${i / batchSize + 1}, trying one by one`, insertError);
+            for (const row of batch) {
+              await supabase.from('prospects').insert(row);
+            }
           }
         }
         fetchProspects();
