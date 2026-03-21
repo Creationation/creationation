@@ -67,8 +67,23 @@ const AdminClients = () => {
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from('clients' as any).select('*').order('created_at', { ascending: false });
+    const [{ data }, { data: inv }] = await Promise.all([
+      supabase.from('clients' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('invoices').select('client_id,status,total,amount_paid'),
+    ]);
     setClients((data as any[] || []) as Client[]);
+
+    // Aggregate invoices per client
+    const invMap: Record<string, { total: number; paid: number; count: number }> = {};
+    ((inv as any[]) || []).forEach((i: any) => {
+      if (['cancelled', 'draft'].includes(i.status)) return;
+      if (!invMap[i.client_id]) invMap[i.client_id] = { total: 0, paid: 0, count: 0 };
+      invMap[i.client_id].total += i.total;
+      invMap[i.client_id].paid += i.amount_paid;
+      invMap[i.client_id].count++;
+    });
+    setClientInvoices(invMap);
+
     setLoading(false);
   }, []);
 
