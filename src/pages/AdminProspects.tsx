@@ -2,12 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles } from 'lucide-react';
+import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward } from 'lucide-react';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; };
 type SearchResult = { google_place_id: string; business_name: string; address: string; phone: string | null; has_website: boolean; website_url: string | null; rating: number | null; review_count: number; types: string[]; city: string; country: string; business_type: string; };
 type GeneratedEmail = { prospectId: string; subject: string; body: string; loading?: boolean; error?: string; };
+type SearchChunk = { id: string; continent: string | null; country: string | null; city: string | null; business_type: string; results_count: number; mode: string; cost_eur: number; created_at: string; };
 
 const COUNTRY_LANG: Record<string, string> = {
   'France': 'fr', 'Belgique': 'fr', 'Suisse': 'fr', 'Luxembourg': 'fr',
@@ -91,6 +92,14 @@ const AdminProspects = () => {
   const [findingEmails, setFindingEmails] = useState(false);
   const [findingInfo, setFindingInfo] = useState(false);
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
+  const [searchChunks, setSearchChunks] = useState<SearchChunk[]>([]);
+  const [showChunkHistory, setShowChunkHistory] = useState(false);
+
+  const fetchChunks = useCallback(async () => {
+    const { data } = await supabase.from('search_chunks' as any).select('*').order('created_at', { ascending: false });
+    setSearchChunks((data as any as SearchChunk[]) || []);
+  }, []);
+
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -108,12 +117,18 @@ const AdminProspects = () => {
       setUserId(user.id);
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else fetchProspects();
+        else { fetchProspects(); fetchChunks(); }
       });
     });
   }, [navigate, fetchProspects]);
 
   const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
+
+  const isChunkDone = (country: string, city: string, type: string) => {
+    return searchChunks.some(c =>
+      (c.country || '') === country && (c.city || '') === city && c.business_type === type
+    );
+  };
 
   const handleSearch = async (skipDetails = false) => {
     const types = searchTypes.includes('Autre') ? [...searchTypes.filter(t => t !== 'Autre'), ...(customType ? [customType] : [])] : searchTypes;
@@ -124,18 +139,29 @@ const AdminProspects = () => {
       const { data: existing } = await supabase.from('prospects').select('google_place_id');
       const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
 
-      // When only a continent is selected (no country, no city), iterate over each country in that continent
       const countries: string[] = (!searchCountry && !searchCity && searchContinent && CONTINENTS[searchContinent])
         ? CONTINENTS[searchContinent]
         : [searchCountry || ''];
 
       const allResults: SearchResult[] = [];
+      let skippedChunks = 0;
       let totalSearches = types.length * countries.length;
       let completedSearches = 0;
 
       for (const country of countries) {
         for (const type of types) {
           completedSearches++;
+          // Skip already-searched chunks
+          if (isChunkDone(country, searchCity, type)) {
+            skippedChunks++;
+            if (countries.length > 1) {
+              toast.info(`⏭️ Déjà cherché: ${type} en ${country}${searchCity ? ' / ' + searchCity : ''} — ignoré (${completedSearches}/${totalSearches})`, { id: 'search-progress', duration: 1500 });
+            } else {
+              toast.info(`⏭️ Cette recherche a déjà été effectuée (${type} en ${country || 'tous'}${searchCity ? ' / ' + searchCity : ''}). Résultats déjà dans ta base.`, { duration: 3000 });
+            }
+            continue;
+          }
+
           if (countries.length > 1) {
             toast.info(`Recherche ${completedSearches}/${totalSearches}: ${type} en ${country}...`, { id: 'search-progress' });
           }
@@ -145,14 +171,32 @@ const AdminProspects = () => {
             });
             if (error) { console.warn(`Error for ${type} in ${country}:`, error.message); continue; }
             const results = (data.results || []) as SearchResult[];
+            let chunkCount = 0;
             results.forEach(r => {
-              // Fix city/country from the actual search params
               r.country = country || searchContinent || '';
               r.city = searchCity || r.city || '';
               if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
                 allResults.push(r);
+                chunkCount++;
               }
             });
+
+            // Save this chunk
+            const chunkCost = skipDetails
+              ? COST_EUR.GOOGLE_TEXT_SEARCH
+              : COST_EUR.GOOGLE_TEXT_SEARCH + chunkCount * COST_EUR.GOOGLE_WEBSITE_CHECK;
+            if (userId) {
+              await supabase.from('search_chunks' as any).insert({
+                user_id: userId,
+                continent: searchContinent || null,
+                country: country || null,
+                city: searchCity || null,
+                business_type: type,
+                results_count: chunkCount,
+                mode: skipDetails ? 'eco' : 'standard',
+                cost_eur: chunkCost,
+              } as any);
+            }
           } catch (e: any) {
             console.warn(`Search failed for ${type} in ${country}:`, e.message);
           }
@@ -181,13 +225,18 @@ const AdminProspects = () => {
       setSearchResults(allResults);
       const mode = skipDetails ? ' (mode éco)' : '';
       const countriesInfo = countries.length > 1 ? ` dans ${countries.length} pays` : '';
-      toast.success(allResults.length + ' résultats trouvés et sauvegardés' + mode + countriesInfo, { id: 'search-progress' });
-      // Log operation
-      const searchCalls = Math.ceil(allResults.length / 20);
+      const skippedInfo = skippedChunks > 0 ? ` (${skippedChunks} chunks déjà faits, ignorés)` : '';
+      if (skippedChunks === totalSearches) {
+        toast.warning('Toutes ces recherches ont déjà été effectuées ! Change de localisation ou de type pour trouver de nouveaux prospects.', { id: 'search-progress', duration: 5000 });
+      } else {
+        toast.success(allResults.length + ' nouveaux résultats' + mode + countriesInfo + skippedInfo, { id: 'search-progress' });
+      }
+      const actualSearches = totalSearches - skippedChunks;
       const gCost = skipDetails
-        ? searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH
-        : searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH + allResults.length * COST_EUR.GOOGLE_WEBSITE_CHECK + (fetchPhone ? Math.round(allResults.length * 0.4) * COST_EUR.GOOGLE_PHONE_DETAIL : 0);
-      if (userId) logOperation(userId, 'google_search', `Recherche ${skipDetails ? 'éco' : 'standard'}: ${types.join(', ')}${countriesInfo}`, gCost, allResults.length, { mode: skipDetails ? 'eco' : 'standard', types, countries, fetchPhone, resultCount: allResults.length });
+        ? actualSearches * COST_EUR.GOOGLE_TEXT_SEARCH
+        : actualSearches * COST_EUR.GOOGLE_TEXT_SEARCH + allResults.length * COST_EUR.GOOGLE_WEBSITE_CHECK + (fetchPhone ? Math.round(allResults.length * 0.4) * COST_EUR.GOOGLE_PHONE_DETAIL : 0);
+      if (userId && actualSearches > 0) logOperation(userId, 'google_search', `Recherche ${skipDetails ? 'éco' : 'standard'}: ${types.join(', ')}${countriesInfo}${skippedInfo}`, gCost, allResults.length, { mode: skipDetails ? 'eco' : 'standard', types, countries, fetchPhone, resultCount: allResults.length, skippedChunks });
+      fetchChunks();
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
@@ -471,6 +520,42 @@ const AdminProspects = () => {
                 </div>
               </div>
             )}
+
+            {/* Chunk History */}
+            <div style={{ background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r-xl)', padding:20 }}>
+              <button onClick={() => setShowChunkHistory(!showChunkHistory)} className='flex items-center justify-between w-full' style={{ background:'none', border:'none', cursor:'pointer', padding:0 }}>
+                <div className='flex items-center gap-2'>
+                  <History size={16} style={{ color:'var(--teal)' }}/>
+                  <h4 style={{ fontFamily:'var(--font-h)', fontSize:15, color:'var(--charcoal)', margin:0 }}>Historique des recherches</h4>
+                  <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'rgba(13,138,111,0.1)', color:'var(--teal)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{searchChunks.length} chunks</span>
+                </div>
+                <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)' }}>{showChunkHistory ? '▲ Masquer' : '▼ Voir'}</span>
+              </button>
+              {showChunkHistory && searchChunks.length > 0 && (
+                <div style={{ marginTop:16, display:'flex', flexDirection:'column', gap:6 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto', gap:8, padding:'8px 12px', fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1, fontWeight:600 }}>
+                    <span>Type</span><span>Pays</span><span>Ville</span><span>Résultats</span><span>Mode</span><span>Date</span>
+                  </div>
+                  {searchChunks.map(c => (
+                    <div key={c.id} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto', gap:8, padding:'8px 12px', background:'var(--glass-bg)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', alignItems:'center' }}>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--charcoal)', fontWeight:600 }}>{c.business_type}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.country || '—'}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.city || '—'}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600, textAlign:'center', minWidth:40 }}>{c.results_count}</span>
+                      <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background: c.mode === 'eco' ? 'rgba(212,165,90,0.15)' : 'rgba(13,138,111,0.1)', color: c.mode === 'eco' ? '#d4a55a' : 'var(--teal)', fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, textAlign:'center' }}>{c.mode === 'eco' ? '⚡ Éco' : '🔍 Std'}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', whiteSpace:'nowrap' }}>{new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
+                    </div>
+                  ))}
+                  <div style={{ padding:'10px 12px', background:'rgba(13,138,111,0.04)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', justifyContent:'space-between' }}>
+                    <span>Total: {searchChunks.reduce((s, c) => s + c.results_count, 0)} prospects trouvés en {searchChunks.length} recherches</span>
+                    <span style={{ color:'var(--teal)', fontWeight:600 }}>{searchChunks.reduce((s, c) => s + Number(c.cost_eur), 0).toFixed(3)}€</span>
+                  </div>
+                </div>
+              )}
+              {showChunkHistory && searchChunks.length === 0 && (
+                <p style={{ marginTop:12, fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-light)' }}>Aucune recherche effectuée pour le moment.</p>
+              )}
+            </div>
           </div>
         )}
 
