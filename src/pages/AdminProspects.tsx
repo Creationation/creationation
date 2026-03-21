@@ -593,26 +593,28 @@ const AdminProspects = () => {
 
         {tab === 'prospects' && (
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            <div className='flex flex-col sm:flex-row gap-3'>
-              <div className='flex items-center gap-2 flex-1' style={{ padding:'10px 16px', background:'var(--glass-bg)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)' }}>
-                <Search size={16} style={{ color:'var(--text-light)' }} />
-                <input placeholder='Rechercher...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex:1, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)' }} />
+            <div className='flex flex-col gap-2'>
+              <div className='flex items-center gap-2' style={{ padding:'8px 12px', background:'var(--glass-bg)', borderRadius:16, border:'1px solid var(--glass-border)' }}>
+                <Search size={14} style={{ color:'var(--text-light)', flexShrink:0 }} />
+                <input placeholder='Rechercher...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex:1, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:13, color:'var(--text)' }} />
               </div>
-              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ padding:'10px 16px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
-                <option value='all'>Tous statuts</option>
-                {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
-              </select>
-              <select value={websiteFilter} onChange={e => setWebsiteFilter(e.target.value as any)} style={{ padding:'10px 16px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
-                <option value='all'>Tous (site)</option>
-                <option value='no_website'>🔒 Sans site</option>
-                <option value='has_website'>🌐 Avec site</option>
-              </select>
-              <button onClick={() => setShowManualAdd(true)} style={{ padding:'10px 16px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                <Plus size={14}/> Ajouter manuellement
-              </button>
-              <button onClick={fetchProspects} style={{ padding:'10px 14px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', cursor:'pointer' }}>
-                <RefreshCw size={14}/>
-              </button>
+              <div className='flex gap-2'>
+                <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ flex:1, padding:'8px 10px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:16, fontFamily:'var(--font-b)', fontSize:12, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                  <option value='all'>Tous statuts</option>
+                  {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
+                </select>
+                <select value={websiteFilter} onChange={e => setWebsiteFilter(e.target.value as any)} style={{ flex:1, padding:'8px 10px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:16, fontFamily:'var(--font-b)', fontSize:12, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                  <option value='all'>Tous (site)</option>
+                  <option value='no_website'>🔒 Sans site</option>
+                  <option value='has_website'>🌐 Avec site</option>
+                </select>
+                <button onClick={() => setShowManualAdd(true)} style={{ padding:'8px 12px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:16, cursor:'pointer', flexShrink:0 }}>
+                  <Plus size={14}/>
+                </button>
+                <button onClick={fetchProspects} style={{ padding:'8px 12px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:16, cursor:'pointer', flexShrink:0 }}>
+                  <RefreshCw size={14}/>
+                </button>
+              </div>
             </div>
             {/* AI Email Finder bar */}
             <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
