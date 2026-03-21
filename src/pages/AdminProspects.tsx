@@ -520,6 +520,42 @@ const AdminProspects = () => {
                 </div>
               </div>
             )}
+
+            {/* Chunk History */}
+            <div style={{ background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r-xl)', padding:20 }}>
+              <button onClick={() => setShowChunkHistory(!showChunkHistory)} className='flex items-center justify-between w-full' style={{ background:'none', border:'none', cursor:'pointer', padding:0 }}>
+                <div className='flex items-center gap-2'>
+                  <History size={16} style={{ color:'var(--teal)' }}/>
+                  <h4 style={{ fontFamily:'var(--font-h)', fontSize:15, color:'var(--charcoal)', margin:0 }}>Historique des recherches</h4>
+                  <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'rgba(13,138,111,0.1)', color:'var(--teal)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{searchChunks.length} chunks</span>
+                </div>
+                <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)' }}>{showChunkHistory ? '▲ Masquer' : '▼ Voir'}</span>
+              </button>
+              {showChunkHistory && searchChunks.length > 0 && (
+                <div style={{ marginTop:16, display:'flex', flexDirection:'column', gap:6 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto', gap:8, padding:'8px 12px', fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1, fontWeight:600 }}>
+                    <span>Type</span><span>Pays</span><span>Ville</span><span>Résultats</span><span>Mode</span><span>Date</span>
+                  </div>
+                  {searchChunks.map(c => (
+                    <div key={c.id} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto', gap:8, padding:'8px 12px', background:'var(--glass-bg)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', alignItems:'center' }}>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--charcoal)', fontWeight:600 }}>{c.business_type}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.country || '—'}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.city || '—'}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600, textAlign:'center', minWidth:40 }}>{c.results_count}</span>
+                      <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background: c.mode === 'eco' ? 'rgba(212,165,90,0.15)' : 'rgba(13,138,111,0.1)', color: c.mode === 'eco' ? '#d4a55a' : 'var(--teal)', fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, textAlign:'center' }}>{c.mode === 'eco' ? '⚡ Éco' : '🔍 Std'}</span>
+                      <span style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', whiteSpace:'nowrap' }}>{new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
+                    </div>
+                  ))}
+                  <div style={{ padding:'10px 12px', background:'rgba(13,138,111,0.04)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', justifyContent:'space-between' }}>
+                    <span>Total: {searchChunks.reduce((s, c) => s + c.results_count, 0)} prospects trouvés en {searchChunks.length} recherches</span>
+                    <span style={{ color:'var(--teal)', fontWeight:600 }}>{searchChunks.reduce((s, c) => s + Number(c.cost_eur), 0).toFixed(3)}€</span>
+                  </div>
+                </div>
+              )}
+              {showChunkHistory && searchChunks.length === 0 && (
+                <p style={{ marginTop:12, fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-light)' }}>Aucune recherche effectuée pour le moment.</p>
+              )}
+            </div>
           </div>
         )}
 
