@@ -281,6 +281,45 @@ export type Database = {
         }
         Relationships: []
       }
+      search_chunks: {
+        Row: {
+          business_type: string
+          city: string | null
+          continent: string | null
+          cost_eur: number
+          country: string | null
+          created_at: string
+          id: string
+          mode: string
+          results_count: number
+          user_id: string
+        }
+        Insert: {
+          business_type: string
+          city?: string | null
+          continent?: string | null
+          cost_eur?: number
+          country?: string | null
+          created_at?: string
+          id?: string
+          mode?: string
+          results_count?: number
+          user_id: string
+        }
+        Update: {
+          business_type?: string
+          city?: string | null
+          continent?: string | null
+          cost_eur?: number
+          country?: string | null
+          created_at?: string
+          id?: string
+          mode?: string
+          results_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
