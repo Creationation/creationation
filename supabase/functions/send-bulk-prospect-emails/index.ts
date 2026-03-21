@@ -43,7 +43,7 @@ serve(async (req) => {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Creationation <info@ugcpanel.app>',
+          from: 'CreationNation <info@ugcpanel.app>',
           to: [email.to],
           subject: email.subject,
           html,
@@ -119,7 +119,7 @@ function buildEmailHtml(firstName: string, subject: string, body: string, prospe
         </div>
       </div>
       <div style="padding:24px;text-align:center;background:#f5f2ec;">
-        <p style="margin:0;font-size:12px;color:#9b9590;">Creationation · Digital Product Studio · Avec passion</p>
+        <p style="margin:0;font-size:12px;color:#9b9590;">CreationNation · Digital Product Studio · Avec passion</p>
         <p style="margin:8px 0 0;font-size:11px;color:#bbb;">Vous recevez cet email car nous pensons pouvoir vous aider à développer votre activité en ligne.</p>
         <p style="margin:8px 0 0;"><a href="${unsubscribeUrl}" style="font-size:11px;color:#bbb;text-decoration:underline;">Se désinscrire</a></p>
       </div>
