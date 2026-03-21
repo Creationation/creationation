@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProspects from "./pages/AdminProspects";
+import AdminProjects from "./pages/AdminProjects";
 import AdminCosts from "./pages/AdminCosts";
 import AdminClients from "./pages/AdminClients";
 import AdminRevenues from "./pages/AdminRevenues";
