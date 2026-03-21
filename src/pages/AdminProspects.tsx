@@ -521,6 +521,43 @@ const AdminProspects = () => {
               </div>
             )}
 
+            {/* Coverage Summary */}
+            {searchChunks.length > 0 && (
+              <div style={{ background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r-xl)', padding:20 }}>
+                <div className='flex items-center gap-2 mb-4'>
+                  <MapPin size={16} style={{ color:'var(--teal)' }}/>
+                  <h4 style={{ fontFamily:'var(--font-h)', fontSize:15, color:'var(--charcoal)', margin:0 }}>Couverture par continent</h4>
+                </div>
+                <div className='flex flex-col gap-3'>
+                  {Object.entries(CONTINENTS).map(([continent, countries]) => {
+                    const coveredCountries = new Set(searchChunks.filter(c => countries.includes(c.country || '')).map(c => c.country));
+                    const covered = coveredCountries.size;
+                    const total = countries.length;
+                    const pct = total > 0 ? Math.round((covered / total) * 100) : 0;
+                    const totalResults = searchChunks.filter(c => countries.includes(c.country || '')).reduce((s, c) => s + c.results_count, 0);
+                    if (covered === 0) return null;
+                    return (
+                      <div key={continent}>
+                        <div className='flex items-center justify-between mb-1'>
+                          <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--charcoal)', fontWeight:600 }}>{continent}</span>
+                          <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)' }}>{covered}/{total} pays · {totalResults} prospects</span>
+                        </div>
+                        <div style={{ height:8, background:'var(--glass-bg)', borderRadius:99, overflow:'hidden' }}>
+                          <div style={{ height:'100%', width:`${pct}%`, background: pct === 100 ? 'var(--teal)' : 'linear-gradient(90deg, var(--teal), #4da6d9)', borderRadius:99, transition:'width 0.5s ease' }}/>
+                        </div>
+                        <div className='flex flex-wrap gap-1 mt-1'>
+                          {countries.map(c => {
+                            const done = coveredCountries.has(c);
+                            return <span key={c} style={{ padding:'1px 6px', borderRadius:'var(--pill)', fontSize:10, fontFamily:'var(--font-b)', background: done ? 'rgba(13,138,111,0.12)' : 'transparent', color: done ? 'var(--teal)' : 'var(--text-ghost)', fontWeight: done ? 600 : 400 }}>{done ? '✓ ' : ''}{c}</span>;
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Chunk History */}
             <div style={{ background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r-xl)', padding:20 }}>
               <button onClick={() => setShowChunkHistory(!showChunkHistory)} className='flex items-center justify-between w-full' style={{ background:'none', border:'none', cursor:'pointer', padding:0 }}>
