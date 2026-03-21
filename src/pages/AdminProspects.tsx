@@ -693,7 +693,17 @@ const AdminProspects = () => {
                 {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA'}
               </button>
             </div>
-            {selectedIds.size > 0 && (
+            {/* AI Scoring bar */}
+            <div style={{ padding:'10px 14px', background:'rgba(59,130,246,0.08)', border:'1px solid rgba(59,130,246,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+                <Target size={13} style={{ color:'#3B82F6' }}/>
+                {prospects.filter(p => (p.score || 0) > 0).length} / {prospects.length} scorés — Moy. {prospects.length > 0 ? Math.round(prospects.reduce((s, p) => s + (p.score || 0), 0) / Math.max(1, prospects.filter(p => (p.score || 0) > 0).length)) : 0}
+              </span>
+              <button onClick={scoreProspects} disabled={scoring} style={{ padding:'6px 14px', background:'#3B82F6', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:scoring?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:scoring?0.7:1, whiteSpace:'nowrap' }}>
+                {scoring ? <Loader2 size={12} className='animate-spin'/> : <Target size={12}/>}
+                {scoring ? 'Scoring...' : selectedIds.size > 0 ? `Scorer IA (${selectedIds.size} sel.)` : 'Scorer tous IA'}
+              </button>
+            </div>
               <div style={{ padding:'10px 14px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', gap:8 }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--teal)', fontWeight:600, marginRight:'auto' }}>{selectedIds.size} prospect(s) sélectionné(s)</span>
                 <button onClick={() => setSelectedIds(new Set())} style={{ padding:'6px 12px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer' }}>Désélectionner</button>
