@@ -44,6 +44,12 @@ type InvoiceKPI = {
   dueThisMonthAmount: number;
 };
 
+type ProspectKPI = {
+  hotCount: number;
+  activeSequences: number;
+  responseRate: number;
+};
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [leads, setLeads] = useState<Lead[]>([]);
