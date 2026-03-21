@@ -6,7 +6,7 @@ import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw,
 import AdminHeader from '@/components/admin/AdminHeader';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
-type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; };
+type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; score?: number; score_breakdown?: any; sector?: string | null; sequence_id?: string | null; sequence_step?: number; sequence_paused?: boolean; tags?: string[]; competitor_site_url?: string | null; competitor_audit?: any; };
 type SearchResult = { google_place_id: string; business_name: string; address: string; phone: string | null; has_website: boolean; website_url: string | null; rating: number | null; review_count: number; types: string[]; city: string; country: string; business_type: string; };
 type GeneratedEmail = { prospectId: string; subject: string; body: string; loading?: boolean; error?: string; };
 type SearchChunk = { id: string; continent: string | null; country: string | null; city: string | null; business_type: string; results_count: number; mode: string; cost_eur: number; created_at: string; };
@@ -97,6 +97,30 @@ const AdminProspects = () => {
   const [showChunkHistory, setShowChunkHistory] = useState(false);
   const [detailProspect, setDetailProspect] = useState<Prospect | null>(null);
   const [transferring, setTransferring] = useState(false);
+  const [scoring, setScoring] = useState(false);
+
+  const scoreProspects = async () => {
+    const targets = selectedIds.size > 0
+      ? prospects.filter(p => selectedIds.has(p.id))
+      : prospects;
+    if (!targets.length) { toast.error('Aucun prospect à scorer'); return; }
+    setScoring(true);
+    try {
+      const batchSize = 20;
+      let scored = 0;
+      for (let i = 0; i < targets.length; i += batchSize) {
+        const batch = targets.slice(i, i + batchSize);
+        const { data, error } = await supabase.functions.invoke('score-prospect', {
+          body: { prospect_ids: batch.map(p => p.id) }
+        });
+        if (error) console.warn('Score batch error:', error);
+        else scored += (data?.results?.length || 0);
+      }
+      toast.success(`${scored} prospect(s) scoré(s)`);
+      fetchProspects();
+    } catch (e: any) { toast.error(e.message || 'Erreur scoring'); }
+    finally { setScoring(false); }
+  };
 
   const fetchChunks = useCallback(async () => {
     const { data } = await supabase.from('search_chunks' as any).select('*').order('created_at', { ascending: false });
@@ -429,7 +453,10 @@ const AdminProspects = () => {
   const prospectsNoSite = filteredProspects.filter(p => !p.has_website);
   const prospectsWithSite = filteredProspects.filter(p => p.has_website);
 
-  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length };
+  const scoredProspects = prospects.filter(p => (p.score || 0) > 0);
+  const avgScore = scoredProspects.length > 0 ? Math.round(scoredProspects.reduce((s, p) => s + (p.score || 0), 0) / scoredProspects.length) : 0;
+  const inSequence = prospects.filter(p => p.sequence_id).length;
+  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length, avgScore, inSequence };
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
@@ -669,6 +696,17 @@ const AdminProspects = () => {
                 {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA'}
               </button>
             </div>
+            {/* AI Scoring bar */}
+            <div style={{ padding:'10px 14px', background:'rgba(59,130,246,0.08)', border:'1px solid rgba(59,130,246,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+                <Target size={13} style={{ color:'#3B82F6' }}/>
+                {prospects.filter(p => (p.score || 0) > 0).length} / {prospects.length} scorés — Moy. {prospects.length > 0 ? Math.round(prospects.reduce((s, p) => s + (p.score || 0), 0) / Math.max(1, prospects.filter(p => (p.score || 0) > 0).length)) : 0}
+              </span>
+              <button onClick={scoreProspects} disabled={scoring} style={{ padding:'6px 14px', background:'#3B82F6', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:scoring?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:scoring?0.7:1, whiteSpace:'nowrap' }}>
+                {scoring ? <Loader2 size={12} className='animate-spin'/> : <Target size={12}/>}
+                {scoring ? 'Scoring...' : selectedIds.size > 0 ? `Scorer IA (${selectedIds.size} sel.)` : 'Scorer tous IA'}
+              </button>
+            </div>
             {selectedIds.size > 0 && (
               <div style={{ padding:'10px 14px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', gap:8 }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--teal)', fontWeight:600, marginRight:'auto' }}>{selectedIds.size} prospect(s) sélectionné(s)</span>
@@ -889,8 +927,14 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
         </button>
       </td>
       <td className='px-4 py-3'>
-        <div style={{ fontWeight:600, color:'var(--charcoal)', fontSize:14 }}>{p.business_name}</div>
-        {p.business_type && <div style={{ fontSize:11, color:'var(--text-light)' }}>{p.business_type}</div>}
+        <div className='flex items-center gap-2'>
+          <div style={{ fontWeight:600, color:'var(--charcoal)', fontSize:14 }}>{p.business_name}</div>
+          {(p.score || 0) > 0 && <span style={{ padding:'1px 6px', borderRadius:'var(--pill)', fontSize:10, fontWeight:700, fontFamily:'var(--font-b)', background: (p.score || 0) > 60 ? 'rgba(16,185,129,0.15)' : (p.score || 0) > 30 ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)', color: (p.score || 0) > 60 ? '#10B981' : (p.score || 0) > 30 ? '#F59E0B' : '#EF4444' }}>{p.score}</span>}
+        </div>
+        <div className='flex items-center gap-1'>
+          {p.business_type && <span style={{ fontSize:11, color:'var(--text-light)' }}>{p.business_type}</span>}
+          {p.sector && p.sector !== p.business_type && <span style={{ fontSize:10, color:'var(--teal)', fontWeight:600 }}>• {p.sector}</span>}
+        </div>
       </td>
       <td className='px-4 py-3' style={{ color:'var(--text-mid)', fontSize:13 }}>
         {p.contact_name || '—'}

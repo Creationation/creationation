@@ -114,6 +114,90 @@ export type Database = {
           },
         ]
       }
+      email_sequences: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          language: string | null
+          name: string
+          sector: string | null
+          steps: Json
+          total_converted: number | null
+          total_enrolled: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          language?: string | null
+          name: string
+          sector?: string | null
+          steps: Json
+          total_converted?: number | null
+          total_enrolled?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          language?: string | null
+          name?: string
+          sector?: string | null
+          steps?: Json
+          total_converted?: number | null
+          total_enrolled?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      email_tracking: {
+        Row: {
+          created_at: string | null
+          email_id: string | null
+          event_data: Json | null
+          event_type: Database["public"]["Enums"]["tracking_event"]
+          id: string
+          prospect_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_id?: string | null
+          event_data?: Json | null
+          event_type: Database["public"]["Enums"]["tracking_event"]
+          id?: string
+          prospect_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_id?: string | null
+          event_data?: Json | null
+          event_type?: Database["public"]["Enums"]["tracking_event"]
+          id?: string
+          prospect_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_tracking_email_id_fkey"
+            columns: ["email_id"]
+            isOneToOne: false
+            referencedRelation: "prospect_emails"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_tracking_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoice_items: {
         Row: {
           created_at: string | null
@@ -788,12 +872,37 @@ export type Database = {
           },
         ]
       }
+      prospect_tags: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       prospects: {
         Row: {
           address: string | null
           business_name: string
           business_type: string | null
           city: string | null
+          company_size: string | null
+          competitor_audit: Json | null
+          competitor_site_url: string | null
+          contact_count: number | null
           contact_name: string | null
           country: string | null
           created_at: string | null
@@ -803,11 +912,20 @@ export type Database = {
           has_website: boolean | null
           id: string
           language: string | null
+          last_contacted_at: string | null
           last_emailed_at: string | null
           notes: string | null
           phone: string | null
+          score: number | null
+          score_breakdown: Json | null
+          score_updated_at: string | null
+          sector: string | null
+          sequence_id: string | null
+          sequence_paused: boolean | null
+          sequence_step: number | null
           source: string | null
           status: Database["public"]["Enums"]["prospect_status"] | null
+          tags: string[] | null
           updated_at: string | null
           website_url: string | null
         }
@@ -816,6 +934,10 @@ export type Database = {
           business_name: string
           business_type?: string | null
           city?: string | null
+          company_size?: string | null
+          competitor_audit?: Json | null
+          competitor_site_url?: string | null
+          contact_count?: number | null
           contact_name?: string | null
           country?: string | null
           created_at?: string | null
@@ -825,11 +947,20 @@ export type Database = {
           has_website?: boolean | null
           id?: string
           language?: string | null
+          last_contacted_at?: string | null
           last_emailed_at?: string | null
           notes?: string | null
           phone?: string | null
+          score?: number | null
+          score_breakdown?: Json | null
+          score_updated_at?: string | null
+          sector?: string | null
+          sequence_id?: string | null
+          sequence_paused?: boolean | null
+          sequence_step?: number | null
           source?: string | null
           status?: Database["public"]["Enums"]["prospect_status"] | null
+          tags?: string[] | null
           updated_at?: string | null
           website_url?: string | null
         }
@@ -838,6 +969,10 @@ export type Database = {
           business_name?: string
           business_type?: string | null
           city?: string | null
+          company_size?: string | null
+          competitor_audit?: Json | null
+          competitor_site_url?: string | null
+          contact_count?: number | null
           contact_name?: string | null
           country?: string | null
           created_at?: string | null
@@ -847,15 +982,32 @@ export type Database = {
           has_website?: boolean | null
           id?: string
           language?: string | null
+          last_contacted_at?: string | null
           last_emailed_at?: string | null
           notes?: string | null
           phone?: string | null
+          score?: number | null
+          score_breakdown?: Json | null
+          score_updated_at?: string | null
+          sector?: string | null
+          sequence_id?: string | null
+          sequence_paused?: boolean | null
+          sequence_step?: number | null
           source?: string | null
           status?: Database["public"]["Enums"]["prospect_status"] | null
+          tags?: string[] | null
           updated_at?: string | null
           website_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "prospects_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "email_sequences"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recurring_invoices: {
         Row: {
@@ -933,6 +1085,33 @@ export type Database = {
           },
         ]
       }
+      saved_searches: {
+        Row: {
+          created_at: string | null
+          filters: Json
+          id: string
+          last_run_at: string | null
+          name: string
+          result_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          filters: Json
+          id?: string
+          last_run_at?: string | null
+          name: string
+          result_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          filters?: Json
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          result_count?: number | null
+        }
+        Relationships: []
+      }
       search_chunks: {
         Row: {
           business_type: string
@@ -969,6 +1148,48 @@ export type Database = {
           mode?: string
           results_count?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      sector_templates: {
+        Row: {
+          audit_criteria: Json | null
+          avg_deal_value: number | null
+          conversion_rate: number | null
+          created_at: string | null
+          email_templates: Json | null
+          icon: string | null
+          id: string
+          pitch_points: Json | null
+          sector: string
+          sector_label: string
+          updated_at: string | null
+        }
+        Insert: {
+          audit_criteria?: Json | null
+          avg_deal_value?: number | null
+          conversion_rate?: number | null
+          created_at?: string | null
+          email_templates?: Json | null
+          icon?: string | null
+          id?: string
+          pitch_points?: Json | null
+          sector: string
+          sector_label: string
+          updated_at?: string | null
+        }
+        Update: {
+          audit_criteria?: Json | null
+          avg_deal_value?: number | null
+          conversion_rate?: number | null
+          created_at?: string | null
+          email_templates?: Json | null
+          icon?: string | null
+          id?: string
+          pitch_points?: Json | null
+          sector?: string
+          sector_label?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -1027,6 +1248,13 @@ export type Database = {
       prospect_status: "new" | "emailed" | "replied" | "converted" | "rejected"
       recurring_frequency: "weekly" | "monthly" | "quarterly" | "yearly"
       task_status: "todo" | "in_progress" | "done"
+      tracking_event:
+        | "sent"
+        | "opened"
+        | "clicked"
+        | "replied"
+        | "bounced"
+        | "unsubscribed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1178,6 +1406,14 @@ export const Constants = {
       prospect_status: ["new", "emailed", "replied", "converted", "rejected"],
       recurring_frequency: ["weekly", "monthly", "quarterly", "yearly"],
       task_status: ["todo", "in_progress", "done"],
+      tracking_event: [
+        "sent",
+        "opened",
+        "clicked",
+        "replied",
+        "bounced",
+        "unsubscribed",
+      ],
     },
   },
 } as const
