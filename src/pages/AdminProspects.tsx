@@ -790,8 +790,8 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
     </div>
     <div className='md:hidden flex flex-col'>
       {prospects.map(p => (
-        <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
-          <button onClick={() => onToggleSelect(p.id)} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
+        <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', cursor:'pointer' }} onClick={() => onViewDetail(p)}>
+          <button onClick={(e) => { e.stopPropagation(); onToggleSelect(p.id); }} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
             {selectedIds.has(p.id) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
           </button>
           <div style={{ flex:1 }}>
