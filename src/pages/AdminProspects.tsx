@@ -763,11 +763,12 @@ const AdminProspects = () => {
   );
 };
 
-const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectAll, onDelete, onUpdateEmail, onUpdateStatus }: {
+const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectAll, onDelete, onUpdateEmail, onUpdateStatus, onViewDetail }: {
   prospects: Prospect[]; selectedIds: Set<string>;
   onToggleSelect: (id: string) => void; onToggleSelectAll: () => void;
   onDelete: (id: string) => void; onUpdateEmail: (id: string, email: string) => void;
   onUpdateStatus: (id: string, status: ProspectStatus) => void;
+  onViewDetail: (p: Prospect) => void;
 }) => (
   <div style={{ background:'var(--glass-bg-strong)', backdropFilter:'blur(20px)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', overflow:'hidden' }}>
     <div className='hidden md:block overflow-x-auto'>
