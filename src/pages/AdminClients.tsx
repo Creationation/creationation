@@ -250,9 +250,12 @@ const AdminClients = () => {
                       <span className="ml-auto">{expandedClient === c.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</span>
                     </button>
                     {expandedClient === c.id && (
-                      <div className="mt-2">
-                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                      <div className="mt-2 flex gap-2">
+                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--charcoal)' }}>
                           Voir les factures →
+                        </button>
+                        <button onClick={() => navigate(`/admin/invoices?clientId=${c.id}`)} style={{ padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                          + Nouvelle facture
                         </button>
                       </div>
                     )}
