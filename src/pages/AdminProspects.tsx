@@ -117,7 +117,7 @@ const AdminProspects = () => {
       setUserId(user.id);
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else fetchProspects();
+        else { fetchProspects(); fetchChunks(); }
       });
     });
   }, [navigate, fetchProspects]);
