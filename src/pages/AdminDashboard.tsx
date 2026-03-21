@@ -5,6 +5,8 @@ import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ProjectAlerts from '@/components/admin/ProjectAlerts';
+import ProjectKPIs from '@/components/admin/ProjectKPIs';
 import { RefreshCw, Search, Filter } from 'lucide-react';
 
 type Lead = {
@@ -126,7 +128,15 @@ const AdminDashboard = () => {
       <AdminHeader />
 
       <div className="p-6 max-w-[1400px] mx-auto">
-        {/* Stats */}
+        {/* Project Alerts */}
+        <ProjectAlerts />
+
+        {/* Project KPIs */}
+        <div className="mb-6">
+          <ProjectKPIs />
+        </div>
+
+        {/* Lead Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             { label: 'Total prospects', value: stats.total, color: 'var(--charcoal)' },
