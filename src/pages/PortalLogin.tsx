@@ -41,6 +41,19 @@ const PortalLogin = () => {
           await supabase.from('user_roles').insert({ user_id: user.id, role: 'client' } as any);
         }
         navigate('/portal');
+        return;
+      }
+
+      // Check if client exists but portal is disabled
+      const { data: disabledClient } = await supabase.from('clients')
+        .select('id')
+        .eq('email', user.email || '')
+        .eq('portal_enabled', false)
+        .maybeSingle();
+
+      if (disabledClient) {
+        setError('Votre accès au portail a été désactivé. Contactez CreationNation pour plus d\'informations.');
+        await supabase.auth.signOut();
       }
     });
   }, [navigate]);
