@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut } from 'lucide-react';
+import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
@@ -95,6 +95,8 @@ const AdminProspects = () => {
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
   const [searchChunks, setSearchChunks] = useState<SearchChunk[]>([]);
   const [showChunkHistory, setShowChunkHistory] = useState(false);
+  const [detailProspect, setDetailProspect] = useState<Prospect | null>(null);
+  const [transferring, setTransferring] = useState(false);
 
   const fetchChunks = useCallback(async () => {
     const { data } = await supabase.from('search_chunks' as any).select('*').order('created_at', { ascending: false });
@@ -309,6 +311,35 @@ const AdminProspects = () => {
   const updateStatus = async (id: string, status: ProspectStatus) => {
     await supabase.from('prospects').update({ status }).eq('id', id);
     fetchProspects();
+  };
+
+  const transferToClients = async () => {
+    const selected = prospects.filter(p => selectedIds.has(p.id));
+    if (!selected.length) { toast.error('Sélectionne au moins un prospect'); return; }
+    setTransferring(true);
+    let transferred = 0;
+    for (const p of selected) {
+      const { error } = await supabase.from('clients').insert({
+        prospect_id: p.id,
+        business_name: p.business_name,
+        contact_name: p.contact_name,
+        email: p.email,
+        phone: p.phone,
+        website_url: p.website_url,
+      });
+      if (!error) {
+        await supabase.from('prospects').update({ status: 'converted' as ProspectStatus }).eq('id', p.id);
+        transferred++;
+      }
+    }
+    setTransferring(false);
+    if (transferred > 0) {
+      toast.success(`${transferred} prospect(s) transféré(s) vers Clients`);
+      setSelectedIds(new Set());
+      fetchProspects();
+    } else {
+      toast.error('Erreur lors du transfert');
+    }
   };
 
   const toggleSelect = (id: string) => setSelectedIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
@@ -648,6 +679,9 @@ const AdminProspects = () => {
                 <button onClick={openEmailModal} style={{ padding:'6px 12px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
                   <Mail size={12}/> Emails IA
                 </button>
+                <button onClick={transferToClients} disabled={transferring} style={{ padding:'6px 12px', background:'var(--violet)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:transferring?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:transferring?0.7:1 }}>
+                  {transferring ? <Loader2 size={12} className='animate-spin'/> : <ArrowRightLeft size={12}/>} Vers Clients
+                </button>
               </div>
             )}
             {loading ? <div className='text-center py-20' style={{ color:'var(--text-light)', fontFamily:'var(--font-b)' }}>Chargement...</div>
@@ -662,7 +696,7 @@ const AdminProspects = () => {
                       <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:0 }}>Sans site internet</h3>
                       <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'rgba(13,138,111,0.1)', color:'var(--teal)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{prospectsNoSite.length}</span>
                     </div>
-                    <ProspectTable prospects={prospectsNoSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsNoSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} />
+                    <ProspectTable prospects={prospectsNoSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsNoSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} onViewDetail={setDetailProspect} />
                   </div>
                 )}
 
@@ -674,7 +708,7 @@ const AdminProspects = () => {
                       <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:0 }}>Avec site internet</h3>
                       <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'var(--glass-bg)', color:'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{prospectsWithSite.length}</span>
                     </div>
-                    <ProspectTable prospects={prospectsWithSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsWithSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} />
+                    <ProspectTable prospects={prospectsWithSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsWithSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} onViewDetail={setDetailProspect} />
                   </div>
                 )}
               </div>
@@ -725,15 +759,80 @@ const AdminProspects = () => {
           onClose={() => setShowEmailModal(false)}
         />
       )}
+
+      {/* Prospect Detail Modal */}
+      {detailProspect && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', backdropFilter:'blur(8px)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }} onClick={() => setDetailProspect(null)}>
+          <div onClick={e => e.stopPropagation()} style={{ width:'100%', maxWidth:520, background:'white', borderRadius:28, padding:0, maxHeight:'90vh', overflowY:'auto', boxShadow:'0 20px 60px rgba(0,0,0,0.2)' }}>
+            {/* Header */}
+            <div style={{ padding:'24px 24px 16px', borderBottom:'1px solid var(--glass-border)' }}>
+              <div className='flex items-center justify-between mb-2'>
+                <h2 style={{ fontFamily:'var(--font-h)', fontSize:20, color:'var(--charcoal)', margin:0 }}>{detailProspect.business_name}</h2>
+                <button onClick={() => setDetailProspect(null)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-light)', padding:4 }}><X size={20}/></button>
+              </div>
+              <div className='flex items-center gap-2'>
+                <span style={{ padding:'3px 10px', borderRadius:100, background:SC[detailProspect.status]+'18', color:SC[detailProspect.status], fontSize:12, fontWeight:600, fontFamily:'var(--font-b)' }}>{SL[detailProspect.status]}</span>
+                {detailProspect.business_type && <span style={{ padding:'3px 10px', borderRadius:100, background:'var(--glass-bg)', color:'var(--text-mid)', fontSize:12, fontFamily:'var(--font-b)' }}>{detailProspect.business_type}</span>}
+              </div>
+            </div>
+            {/* Info rows */}
+            <div style={{ padding:'16px 24px' }}>
+              {[
+                { label:'Contact', value:detailProspect.contact_name, icon:'👤' },
+                { label:'Email', value:detailProspect.email, icon:'📧' },
+                { label:'Téléphone', value:detailProspect.phone, icon:'📞' },
+                { label:'Ville', value:[detailProspect.city, detailProspect.country].filter(Boolean).join(', '), icon:'📍' },
+                { label:'Adresse', value:detailProspect.address, icon:'🏠' },
+                { label:'Site web', value:detailProspect.website_url, icon:'🌐' },
+                { label:'Langue', value:LANG_LABELS[detailProspect.language || COUNTRY_LANG[detailProspect.country || ''] || 'en'] || detailProspect.language, icon:'🗣️' },
+                { label:'Source', value:detailProspect.source, icon:'🔍' },
+                { label:'Emails envoyés', value:String(detailProspect.email_count || 0), icon:'📤' },
+                { label:'Dernier email', value:detailProspect.last_emailed_at ? new Date(detailProspect.last_emailed_at).toLocaleDateString('fr-FR') : null, icon:'📅' },
+                { label:'Créé le', value:detailProspect.created_at ? new Date(detailProspect.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }) : null, icon:'🕐' },
+              ].filter(r => r.value).map(r => (
+                <div key={r.label} style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'8px 0', borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
+                  <span style={{ fontSize:14, width:24, textAlign:'center', flexShrink:0 }}>{r.icon}</span>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, marginBottom:2 }}>{r.label}</div>
+                    <div style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--charcoal)', wordBreak:'break-word' }}>
+                      {r.label === 'Site web' && r.value ? <a href={r.value} target='_blank' rel='noopener noreferrer' style={{ color:'var(--teal)', textDecoration:'underline' }}>{r.value}</a> : r.value}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {detailProspect.notes && (
+                <div style={{ marginTop:12, padding:12, background:'rgba(212,165,90,0.08)', borderRadius:16, fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
+                  <strong style={{ fontSize:11, textTransform:'uppercase', letterSpacing:0.5, color:'var(--text-light)' }}>Notes</strong>
+                  <p style={{ margin:'6px 0 0' }}>{detailProspect.notes}</p>
+                </div>
+              )}
+            </div>
+            {/* Actions */}
+            <div style={{ padding:'16px 24px 24px', display:'flex', gap:8, flexWrap:'wrap' }}>
+              <button onClick={() => {
+                setSelectedIds(new Set([detailProspect.id]));
+                setDetailProspect(null);
+                transferToClients();
+              }} style={{ padding:'10px 18px', background:'var(--violet)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
+                <ArrowRightLeft size={14}/> Transférer vers Clients
+              </button>
+              <button onClick={() => setDetailProspect(null)} style={{ padding:'10px 18px', background:'var(--glass-bg)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:13, cursor:'pointer' }}>
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectAll, onDelete, onUpdateEmail, onUpdateStatus }: {
+const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectAll, onDelete, onUpdateEmail, onUpdateStatus, onViewDetail }: {
   prospects: Prospect[]; selectedIds: Set<string>;
   onToggleSelect: (id: string) => void; onToggleSelectAll: () => void;
   onDelete: (id: string) => void; onUpdateEmail: (id: string, email: string) => void;
   onUpdateStatus: (id: string, status: ProspectStatus) => void;
+  onViewDetail: (p: Prospect) => void;
 }) => (
   <div style={{ background:'var(--glass-bg-strong)', backdropFilter:'blur(20px)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', overflow:'hidden' }}>
     <div className='hidden md:block overflow-x-auto'>
@@ -750,13 +849,13 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
             ))}
           </tr>
         </thead>
-        <tbody>{prospects.map(p => <ProspectRow key={p.id} prospect={p} selected={selectedIds.has(p.id)} onToggle={() => onToggleSelect(p.id)} onDelete={() => onDelete(p.id)} onUpdateEmail={email => onUpdateEmail(p.id, email)} onUpdateStatus={status => onUpdateStatus(p.id, status)} />)}</tbody>
+        <tbody>{prospects.map(p => <ProspectRow key={p.id} prospect={p} selected={selectedIds.has(p.id)} onToggle={() => onToggleSelect(p.id)} onDelete={() => onDelete(p.id)} onUpdateEmail={email => onUpdateEmail(p.id, email)} onUpdateStatus={status => onUpdateStatus(p.id, status)} onViewDetail={() => onViewDetail(p)} />)}</tbody>
       </table>
     </div>
     <div className='md:hidden flex flex-col'>
       {prospects.map(p => (
-        <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
-          <button onClick={() => onToggleSelect(p.id)} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
+        <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', cursor:'pointer' }} onClick={() => onViewDetail(p)}>
+          <button onClick={(e) => { e.stopPropagation(); onToggleSelect(p.id); }} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
             {selectedIds.has(p.id) ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
           </button>
           <div style={{ flex:1 }}>
@@ -773,18 +872,19 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
   </div>
 );
 
-const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus }: {
+const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus, onViewDetail }: {
   prospect: Prospect; selected: boolean;
   onToggle: () => void; onDelete: () => void;
   onUpdateEmail: (email: string) => void;
   onUpdateStatus: (status: ProspectStatus) => void;
+  onViewDetail: () => void;
 }) => {
   const [editingEmail, setEditingEmail] = useState(false);
   const [emailVal, setEmailVal] = useState(p.email || '');
   return (
-    <tr style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', background:selected?'rgba(13,138,111,0.04)':'transparent' }}>
+    <tr style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', background:selected?'rgba(13,138,111,0.04)':'transparent', cursor:'pointer' }} onClick={onViewDetail}>
       <td className='px-4 py-3'>
-        <button onClick={onToggle} style={{ background:'none', border:'none', cursor:'pointer' }}>
+        <button onClick={(e) => { e.stopPropagation(); onToggle(); }} style={{ background:'none', border:'none', cursor:'pointer' }}>
           {selected ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
         </button>
       </td>
@@ -806,7 +906,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
         ) : (
           <div className='flex items-center gap-2'>
             <span style={{ fontSize:13, color:p.email?'var(--text-mid)':'var(--text-ghost)', fontStyle:p.email?'normal':'italic' }}>{p.email || 'Pas d\'email'}</span>
-            <button onClick={() => setEditingEmail(true)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', opacity:0.6 }}><Pencil size={11}/></button>
+            <button onClick={(e) => { e.stopPropagation(); setEditingEmail(true); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', opacity:0.6 }}><Pencil size={11}/></button>
           </div>
         )}
       </td>
@@ -820,13 +920,13 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
           : <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'var(--teal)', fontWeight:600 }}><GlobeLock size={12}/> Aucun site</span>}
       </td>
       <td className='px-4 py-3'>
-        <select value={p.status} onChange={e => onUpdateStatus(e.target.value as ProspectStatus)} style={{ padding:'4px 8px', borderRadius:'var(--pill)', border:'none', background:SC[p.status]+'18', color:SC[p.status], fontWeight:600, fontSize:12, fontFamily:'var(--font-m)', cursor:'pointer' }}>
+        <select value={p.status} onClick={e => e.stopPropagation()} onChange={e => { e.stopPropagation(); onUpdateStatus(e.target.value as ProspectStatus); }} style={{ padding:'4px 8px', borderRadius:'var(--pill)', border:'none', background:SC[p.status]+'18', color:SC[p.status], fontWeight:600, fontSize:12, fontFamily:'var(--font-m)', cursor:'pointer' }}>
           {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
         </select>
       </td>
       <td className='px-4 py-3' style={{ fontSize:12, color:'var(--text-light)' }}>{p.email_count}x</td>
       <td className='px-4 py-3'>
-        <button onClick={onDelete} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)' }}><Trash2 size={14}/></button>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)' }}><Trash2 size={14}/></button>
       </td>
     </tr>
   );
