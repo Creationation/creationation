@@ -5,6 +5,8 @@ import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ProjectAlerts from '@/components/admin/ProjectAlerts';
+import ProjectKPIs from '@/components/admin/ProjectKPIs';
 import { RefreshCw, Search, Filter } from 'lucide-react';
 
 type Lead = {
