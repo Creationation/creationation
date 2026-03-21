@@ -126,12 +126,12 @@ const AdminProjects = () => {
   const fetchProjects = useCallback(async () => {
     setLoading(true);
     const { data: projData } = await supabase.from('projects' as any).select('*').order('created_at', { ascending: false });
-    const projs = (projData || []) as any[];
+    const projs = (projData || []) as unknown as any[];
 
     // fetch client names
     const { data: cData } = await supabase.from('clients' as any).select('id, business_name');
-    const clientMap = new Map((cData || []).map((c: any) => [c.id, c.business_name]));
-    setClients((cData || []) as Client[]);
+    const clientMap = new Map(((cData || []) as unknown as any[]).map((c: any) => [c.id, c.business_name]));
+    setClients((cData || []) as unknown as Client[]);
 
     // fetch task counts per project
     const { data: taskData } = await supabase.from('project_tasks' as any).select('project_id, status');
