@@ -32,6 +32,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
   const [notes, setNotes] = useState<Note[]>([]);
   const [files, setFiles] = useState<FileT[]>([]);
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
+  const [projectInvoices, setProjectInvoices] = useState<InvoiceRow[]>([]);
   const [clientName, setClientName] = useState('');
   const [newTask, setNewTask] = useState('');
   const [newTaskDue, setNewTaskDue] = useState('');
