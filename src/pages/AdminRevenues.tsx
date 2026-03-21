@@ -23,6 +23,16 @@ type Payment = {
   client_name?: string;
 };
 
+type Invoice = {
+  id: string;
+  client_id: string;
+  status: string;
+  total: number;
+  amount_paid: number;
+  paid_at: string | null;
+  issue_date: string;
+};
+
 const TYPE_LABELS: Record<string, string> = { monthly: 'Mensuel', one_time: 'Unique', setup: 'Setup', refund: 'Remboursement' };
 const TYPE_COLORS: Record<string, string> = { monthly: '#0d8a6f', one_time: '#4da6d9', setup: '#7c5cbf', refund: '#e8735a' };
 
@@ -30,6 +40,8 @@ const AdminRevenues = () => {
   const navigate = useNavigate();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [recurringTotal, setRecurringTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [filterType, setFilterType] = useState('all');
@@ -37,13 +49,25 @@ const AdminRevenues = () => {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [{ data: p }, { data: c }] = await Promise.all([
+    const [{ data: p }, { data: c }, { data: inv }, { data: rec }] = await Promise.all([
       supabase.from('client_payments' as any).select('*').order('payment_date', { ascending: false }),
       supabase.from('clients' as any).select('id,business_name,monthly_amount,status'),
+      supabase.from('invoices').select('id,client_id,status,total,amount_paid,paid_at,issue_date'),
+      supabase.from('recurring_invoices').select('amount,is_active,frequency'),
     ]);
     const clientMap = new Map((c as any[] || []).map((cl: any) => [cl.id, cl.business_name]));
     setPayments(((p as any[]) || []).map((pay: any) => ({ ...pay, client_name: clientMap.get(pay.client_id) || 'Inconnu' })));
     setClients((c as any[] || []) as Client[]);
+    setInvoices((inv as any[] || []) as Invoice[]);
+
+    // Calculate MRR from recurring invoices
+    const activeRecurring = (rec as any[] || []).filter((r: any) => r.is_active);
+    const monthlyTotal = activeRecurring.reduce((s: number, r: any) => {
+      const multiplier: Record<string, number> = { weekly: 4.33, monthly: 1, quarterly: 1 / 3, yearly: 1 / 12 };
+      return s + r.amount * (multiplier[r.frequency] || 1);
+    }, 0);
+    setRecurringTotal(monthlyTotal);
+
     setLoading(false);
   }, []);
 
@@ -70,24 +94,41 @@ const AdminRevenues = () => {
     return true;
   });
 
-  const totalReceived = filtered.filter(p => p.payment_type !== 'refund').reduce((s, p) => s + p.amount, 0);
+  // Revenue from paid invoices
+  const invoiceRevenue = invoices.filter(i => ['paid', 'partially_paid'].includes(i.status)).reduce((s, i) => s + i.amount_paid, 0);
+  // Legacy payments revenue
+  const legacyReceived = filtered.filter(p => p.payment_type !== 'refund').reduce((s, p) => s + p.amount, 0);
   const totalRefunds = filtered.filter(p => p.payment_type === 'refund').reduce((s, p) => s + p.amount, 0);
-  const net = totalReceived - totalRefunds;
-  const mrr = clients.filter(c => c.status === 'active').reduce((s, c) => s + (c.monthly_amount || 0), 0);
 
-  // Upcoming: active clients that haven't paid this month
+  // Combined net = invoice revenue + legacy - refunds
+  const net = invoiceRevenue + legacyReceived - totalRefunds;
+
+  // MRR: prefer recurring_invoices, fallback to client monthly_amount
+  const mrrFromRecurring = recurringTotal;
+  const mrrFromClients = clients.filter(c => c.status === 'active').reduce((s, c) => s + (c.monthly_amount || 0), 0);
+  const mrr = mrrFromRecurring > 0 ? mrrFromRecurring : mrrFromClients;
+
   const currentMonth = new Date().toISOString().slice(0, 7);
   const paidThisMonth = new Set(payments.filter(p => p.payment_date.startsWith(currentMonth) && p.payment_type === 'monthly').map(p => p.client_id));
   const upcoming = clients.filter(c => c.status === 'active' && c.monthly_amount > 0 && !paidThisMonth.has(c.id));
 
+  // Invoices pending this month
+  const invoicesDueThisMonth = invoices.filter(i => ['sent', 'viewed'].includes(i.status));
+  const invoicePending = invoicesDueThisMonth.reduce((s, i) => s + (i.total - i.amount_paid), 0);
+
   const f = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
-  // Group by month for chart-like display
+  // Group by month for chart
   const months = new Map<string, number>();
   payments.forEach(p => {
     const m = p.payment_date.slice(0, 7);
     const val = p.payment_type === 'refund' ? -p.amount : p.amount;
     months.set(m, (months.get(m) || 0) + val);
+  });
+  // Add invoice payments to chart
+  invoices.filter(i => i.paid_at).forEach(i => {
+    const m = i.paid_at!.slice(0, 7);
+    months.set(m, (months.get(m) || 0) + i.amount_paid);
   });
   const sortedMonths = [...months.entries()].sort((a, b) => a[0].localeCompare(b[0])).slice(-12);
   const maxMonth = Math.max(...sortedMonths.map(([, v]) => Math.abs(v)), 1);
@@ -98,21 +139,22 @@ const AdminRevenues = () => {
 
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
             { label: 'Revenus nets', value: `${f(net)} €`, color: 'var(--teal)' },
-            { label: 'MRR actuel', value: `${f(mrr)} €`, color: 'var(--sky)' },
+            { label: 'MRR (récurrents)', value: `${f(mrr)} €`, color: 'var(--sky)' },
+            { label: 'Factures en attente', value: `${f(invoicePending)} €`, color: '#d4a55a' },
             { label: 'Remboursements', value: `${f(totalRefunds)} €`, color: 'var(--coral)' },
-            { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: '#d4a55a' },
+            { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: 'var(--violet)' },
           ].map((s, i) => (
             <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
               <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{s.label}</div>
-              <div style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: s.color }}>{s.value}</div>
+              <div style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: s.color }}>{s.value}</div>
             </div>
           ))}
         </div>
 
-        {/* Revenue chart (bar) */}
+        {/* Revenue chart */}
         {sortedMonths.length > 0 && (
           <div className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
             <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 12 }}>Revenus par mois</h3>
@@ -193,17 +235,13 @@ const AddPaymentModal = ({ clients, onClose, onAdded }: { clients: Client[]; onC
   const handleAdd = async () => {
     if (!form.client_id) { toast.error('Sélectionne un client'); return; }
     if (!form.amount) { toast.error('Montant requis'); return; }
-
     await supabase.from('client_payments' as any).insert(form as any);
-
-    // Update total_paid on client
     if (form.payment_type !== 'refund') {
       const { data: client } = await supabase.from('clients' as any).select('total_paid').eq('id', form.client_id).single();
       if (client) {
         await supabase.from('clients' as any).update({ total_paid: ((client as any).total_paid || 0) + form.amount } as any).eq('id', form.client_id);
       }
     }
-
     toast.success('Paiement ajouté');
     onAdded();
     onClose();

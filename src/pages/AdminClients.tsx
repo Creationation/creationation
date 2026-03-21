@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw } from 'lucide-react';
+import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
 
 type Client = {
@@ -62,11 +62,28 @@ const AdminClients = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Client>>({});
+  const [clientInvoices, setClientInvoices] = useState<Record<string, { total: number; paid: number; count: number }>>({});
+  const [expandedClient, setExpandedClient] = useState<string | null>(null);
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from('clients' as any).select('*').order('created_at', { ascending: false });
+    const [{ data }, { data: inv }] = await Promise.all([
+      supabase.from('clients' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('invoices').select('client_id,status,total,amount_paid'),
+    ]);
     setClients((data as any[] || []) as Client[]);
+
+    // Aggregate invoices per client
+    const invMap: Record<string, { total: number; paid: number; count: number }> = {};
+    ((inv as any[]) || []).forEach((i: any) => {
+      if (['cancelled', 'draft'].includes(i.status)) return;
+      if (!invMap[i.client_id]) invMap[i.client_id] = { total: 0, paid: 0, count: 0 };
+      invMap[i.client_id].total += i.total;
+      invMap[i.client_id].paid += i.amount_paid;
+      invMap[i.client_id].count++;
+    });
+    setClientInvoices(invMap);
+
     setLoading(false);
   }, []);
 
@@ -205,6 +222,28 @@ const AdminClients = () => {
                       <PortalInviteButton client={c} onRefresh={fetchClients} />
                       <button onClick={() => deleteClient(c.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)' }}><Trash2 size={15} /></button>
                     </div>
+                  </div>
+                )}
+                {/* Invoice summary row */}
+                {clientInvoices[c.id] && editId !== c.id && (
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--glass-border)' }}>
+                    <button onClick={() => setExpandedClient(expandedClient === c.id ? null : c.id)} className="flex items-center gap-2 w-full" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)' }}>
+                      <FileText size={13} />
+                      <span>{clientInvoices[c.id].count} facture{clientInvoices[c.id].count > 1 ? 's' : ''}</span>
+                      <span style={{ color: 'var(--teal)', fontWeight: 600 }}>Facturé : {f(clientInvoices[c.id].total)} €</span>
+                      <span style={{ color: '#d4a55a', fontWeight: 600 }}>Encaissé : {f(clientInvoices[c.id].paid)} €</span>
+                      {clientInvoices[c.id].total - clientInvoices[c.id].paid > 0 && (
+                        <span style={{ color: 'var(--coral)', fontWeight: 600 }}>Solde : {f(clientInvoices[c.id].total - clientInvoices[c.id].paid)} €</span>
+                      )}
+                      <span className="ml-auto">{expandedClient === c.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</span>
+                    </button>
+                    {expandedClient === c.id && (
+                      <div className="mt-2">
+                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                          Voir les factures →
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
