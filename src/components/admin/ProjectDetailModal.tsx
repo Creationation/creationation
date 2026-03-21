@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical } from 'lucide-react';
+import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical, Clock } from 'lucide-react';
 import PortalMessagesAdmin from '@/components/admin/PortalMessagesAdmin';
 import { sendPortalNotification } from '@/lib/portalNotifications';
 
