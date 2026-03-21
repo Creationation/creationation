@@ -97,6 +97,19 @@ const AdminClients = () => {
     });
     setClientProjects(projMap);
 
+    // Fetch prospect source info for clients with prospect_id
+    const clientsWithProspect = ((data as any[]) || []).filter((c: any) => c.prospect_id);
+    if (clientsWithProspect.length > 0) {
+      const prospectIds = clientsWithProspect.map((c: any) => c.prospect_id);
+      const { data: prospData } = await supabase.from('prospects').select('id,score,source').in('id', prospectIds);
+      const srcMap: Record<string, { score: number; source: string }> = {};
+      ((prospData as any[]) || []).forEach((p: any) => {
+        const client = clientsWithProspect.find((c: any) => c.prospect_id === p.id);
+        if (client) srcMap[client.id] = { score: p.score || 0, source: p.source || 'prospection' };
+      });
+      setProspectSources(srcMap);
+    }
+
     setLoading(false);
   }, []);
 
