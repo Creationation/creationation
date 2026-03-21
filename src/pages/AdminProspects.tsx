@@ -517,7 +517,12 @@ const AdminProspects = () => {
   const scoredProspects = prospects.filter(p => (p.score || 0) > 0);
   const avgScore = scoredProspects.length > 0 ? Math.round(scoredProspects.reduce((s, p) => s + (p.score || 0), 0) / scoredProspects.length) : 0;
   const inSequence = prospects.filter(p => p.sequence_id).length;
-  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length, avgScore, inSequence };
+  const replied = prospects.filter(p => p.status === 'replied').length;
+  const emailedTotal = prospects.filter(p => p.email_count > 0).length;
+  const responseRate = emailedTotal > 0 ? Math.round((replied / emailedTotal) * 100) : 0;
+  const now = new Date();
+  const convertedThisMonth = prospects.filter(p => p.status === 'converted' && p.last_emailed_at && new Date(p.last_emailed_at).getMonth() === now.getMonth() && new Date(p.last_emailed_at).getFullYear() === now.getFullYear()).length;
+  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: emailedTotal, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length, avgScore, inSequence, responseRate, convertedThisMonth };
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
@@ -525,14 +530,14 @@ const AdminProspects = () => {
       <div style={{ maxWidth:1200, margin:'0 auto', padding:'16px' }}>
 
         {/* Stats — compact grid on mobile */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8, marginBottom:16 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(110px, 1fr))', gap:8, marginBottom:16 }}>
           {[
             { label:'Total', value:stats.total, icon:Target },
+            { label:'Score moyen', value:stats.avgScore, icon:Star },
+            { label:'Taux réponse', value:`${stats.responseRate}%`, icon:Reply },
+            { label:'Convertis (mois)', value:stats.convertedThisMonth, icon:ArrowRightLeft },
+            { label:'En séquence', value:stats.inSequence, icon:Send },
             { label:'Sans site', value:stats.noWebsite, icon:GlobeLock },
-            { label:'Avec site', value:stats.withWebsite, icon:Globe },
-            { label:'Ont email', value:stats.withEmail, icon:Mail },
-            { label:'Emailés', value:stats.emailed, icon:Send },
-            { label:'Convertis', value:stats.converted, icon:Star },
           ].map(s => (
             <div key={s.label} style={{ padding:'10px 12px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:16, display:'flex', alignItems:'center', gap:8 }}>
               <s.icon size={14} style={{ color:'var(--teal)', flexShrink:0 }}/>
