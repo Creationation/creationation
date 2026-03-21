@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward } from 'lucide-react';
+import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut } from 'lucide-react';
+import AdminHeader from '@/components/admin/AdminHeader';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; };
