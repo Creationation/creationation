@@ -533,17 +533,18 @@ const AdminProspects = () => {
               </button>
               {showChunkHistory && searchChunks.length > 0 && (
                 <div style={{ marginTop:16, display:'flex', flexDirection:'column', gap:6 }}>
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto', gap:8, padding:'8px 12px', fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1, fontWeight:600 }}>
-                    <span>Type</span><span>Pays</span><span>Ville</span><span>Résultats</span><span>Mode</span><span>Date</span>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto auto', gap:8, padding:'8px 12px', fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1, fontWeight:600 }}>
+                    <span>Type</span><span>Pays</span><span>Ville</span><span>Résultats</span><span>Mode</span><span>Date</span><span></span>
                   </div>
                   {searchChunks.map(c => (
-                    <div key={c.id} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto', gap:8, padding:'8px 12px', background:'var(--glass-bg)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', alignItems:'center' }}>
+                    <div key={c.id} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto auto', gap:8, padding:'8px 12px', background:'var(--glass-bg)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)', alignItems:'center' }}>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--charcoal)', fontWeight:600 }}>{c.business_type}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.country || '—'}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.city || '—'}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600, textAlign:'center', minWidth:40 }}>{c.results_count}</span>
                       <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background: c.mode === 'eco' ? 'rgba(212,165,90,0.15)' : 'rgba(13,138,111,0.1)', color: c.mode === 'eco' ? '#d4a55a' : 'var(--teal)', fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, textAlign:'center' }}>{c.mode === 'eco' ? '⚡ Éco' : '🔍 Std'}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', whiteSpace:'nowrap' }}>{new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
+                      <button onClick={async () => { await supabase.from('search_chunks' as any).delete().eq('id', c.id); fetchChunks(); toast.success('Chunk réinitialisé — tu peux relancer cette recherche'); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', padding:4 }} title='Supprimer ce chunk pour relancer la recherche'><RefreshCw size={13}/></button>
                     </div>
                   ))}
                   <div style={{ padding:'10px 12px', background:'rgba(13,138,111,0.04)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', justifyContent:'space-between' }}>
