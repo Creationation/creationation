@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut } from 'lucide-react';
