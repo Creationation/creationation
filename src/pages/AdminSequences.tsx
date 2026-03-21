@@ -254,9 +254,12 @@ const AdminSequences = () => {
 
                 <div className="flex flex-col gap-4">
                   {form.steps.map((step, idx) => (
-                    <div key={idx} style={{ padding: 16, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r)', position: 'relative' }}>
-                      <div className="flex items-center gap-3 mb-3">
-                        <GripVertical size={14} style={{ color: 'var(--text-ghost)' }} />
+                      <div key={idx} style={{ padding: 16, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r)', position: 'relative', borderLeft: `3px solid ${STEP_TYPES[step.type]?.color || '#6B7280'}` }}>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="flex flex-col gap-1">
+                            <button onClick={() => moveStep(idx, 'up')} disabled={idx === 0} style={{ background: 'none', border: 'none', cursor: idx === 0 ? 'default' : 'pointer', color: idx === 0 ? 'var(--glass-border)' : 'var(--text-mid)', padding: 0 }}><ArrowUp size={12} /></button>
+                            <button onClick={() => moveStep(idx, 'down')} disabled={idx === form.steps.length - 1} style={{ background: 'none', border: 'none', cursor: idx === form.steps.length - 1 ? 'default' : 'pointer', color: idx === form.steps.length - 1 ? 'var(--glass-border)' : 'var(--text-mid)', padding: 0 }}><ArrowDown size={12} /></button>
+                          </div>
                         <span style={{ fontFamily: 'var(--font-h)', fontSize: 14, color: 'var(--charcoal)' }}>Étape {step.step_number}</span>
                         <select value={step.type} onChange={e => updateStep(idx, 'type', e.target.value)} style={{ padding: '4px 10px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', background: (STEP_TYPES[step.type]?.color || '#6B7280') + '18', color: STEP_TYPES[step.type]?.color || '#6B7280', fontFamily: 'var(--font-b)', fontSize: 11, fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
                           {Object.entries(STEP_TYPES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
