@@ -615,39 +615,37 @@ const AdminProspects = () => {
               </button>
             </div>
             {/* AI Email Finder bar */}
-            <div style={{ padding:'12px 20px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
-                <Sparkles size={14} style={{ color:'#d4a55a', verticalAlign:'middle', marginRight:6 }}/>
-                {stats.withEmail} / {stats.total} prospects ont un email
+            <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+                <Sparkles size={13} style={{ color:'#d4a55a' }}/>
+                {stats.withEmail} / {stats.total} ont un email
               </span>
-              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'8px 16px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingEmails?0.7:1 }}>
-                {findingEmails ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
-                {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA (tous)'}
+              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'6px 14px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingEmails?0.7:1, whiteSpace:'nowrap' }}>
+                {findingEmails ? <Loader2 size={12} className='animate-spin'/> : <Sparkles size={12}/>}
+                {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA'}
               </button>
             </div>
             {/* AI Info Finder bar */}
-            <div style={{ padding:'12px 20px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
-                <Globe size={14} style={{ color:'#7c5cbf', verticalAlign:'middle', marginRight:6 }}/>
+            <div style={{ padding:'10px 14px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+                <Globe size={13} style={{ color:'#7c5cbf' }}/>
                 {prospects.filter(p => p.website_url).length} / {prospects.length} ont un site — {prospects.filter(p => p.phone).length} / {prospects.length} ont un tel
               </span>
-              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'8px 16px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingInfo?0.7:1 }}>
-                {findingInfo ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
-                {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA (tous)'}
+              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'6px 14px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingInfo?0.7:1, whiteSpace:'nowrap' }}>
+                {findingInfo ? <Loader2 size={12} className='animate-spin'/> : <Sparkles size={12}/>}
+                {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA'}
               </button>
             </div>
             {selectedIds.size > 0 && (
-              <div style={{ padding:'12px 20px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
-                <div className='flex gap-2'>
-                  <button onClick={() => setSelectedIds(new Set())} style={{ padding:'8px 14px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', cursor:'pointer' }}>Deselectionner</button>
-                  <button onClick={deleteSelected} style={{ padding:'8px 16px', background:'#e8735a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                    <Trash2 size={13}/> Supprimer ({selectedIds.size})
-                  </button>
-                  <button onClick={openEmailModal} style={{ padding:'8px 16px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                    <Mail size={13}/> Envoyer emails IA
-                  </button>
-                </div>
+              <div style={{ padding:'10px 14px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', gap:8 }}>
+                <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--teal)', fontWeight:600, marginRight:'auto' }}>{selectedIds.size} prospect(s) sélectionné(s)</span>
+                <button onClick={() => setSelectedIds(new Set())} style={{ padding:'6px 12px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer' }}>Désélectionner</button>
+                <button onClick={deleteSelected} style={{ padding:'6px 12px', background:'#e8735a', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                  <Trash2 size={12}/> Supprimer ({selectedIds.size})
+                </button>
+                <button onClick={openEmailModal} style={{ padding:'6px 12px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                  <Mail size={12}/> Emails IA
+                </button>
               </div>
             )}
             {loading ? <div className='text-center py-20' style={{ color:'var(--text-light)', fontFamily:'var(--font-b)' }}>Chargement...</div>
