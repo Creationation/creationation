@@ -934,6 +934,7 @@ const AdminProspects = () => {
             setDetailProspect(null);
             transferToClients();
           }}
+          onRefresh={() => { fetchProspects(); }}
         />
       )}
 
