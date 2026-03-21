@@ -59,6 +59,28 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     setFiles((f || []) as unknown as FileT[]);
     const { data: d } = await supabase.from('deliverable_reviews' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: false });
     setDeliverables((d || []) as unknown as Deliverable[]);
+
+    // Build activity log from all data
+    const log: any[] = [];
+    ((t || []) as any[]).forEach(task => {
+      log.push({ type: 'task_created', title: `Tâche créée : ${task.title}`, date: task.created_at });
+      if (task.completed_at) log.push({ type: 'task_done', title: `Tâche terminée : ${task.title}`, date: task.completed_at });
+    });
+    ((m || []) as any[]).forEach(ms => {
+      if (ms.completed_at) log.push({ type: 'milestone_done', title: `Jalon complété : ${ms.title}`, date: ms.completed_at });
+    });
+    ((n || []) as any[]).forEach(note => {
+      log.push({ type: 'note', title: `Note ajoutée`, date: note.created_at });
+    });
+    ((f || []) as any[]).forEach(file => {
+      log.push({ type: 'file', title: `Fichier uploadé : ${file.file_name}`, date: file.created_at });
+    });
+    ((d || []) as any[]).forEach(del => {
+      log.push({ type: 'deliverable', title: `Livrable soumis : ${(del as any).title}`, date: (del as any).created_at });
+      if ((del as any).reviewed_at) log.push({ type: 'review', title: `Livrable reviewé : ${(del as any).title}`, date: (del as any).reviewed_at });
+    });
+    log.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    setActivityLog(log);
   }, [projectId]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
