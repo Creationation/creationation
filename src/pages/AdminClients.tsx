@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp, FolderKanban } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ProjectDetailModal from '@/components/admin/ProjectDetailModal';
 
 type Client = {
   id: string;
