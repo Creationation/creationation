@@ -72,8 +72,8 @@ const PortalMessages = () => {
       const path = `${selectedProject.id}/${Date.now()}_${file.name}`;
       const { error } = await supabase.storage.from('client-uploads').upload(path, file);
       if (error) { toast.error(`Erreur upload: ${file.name}`); continue; }
-      const { data } = supabase.storage.from('client-uploads').getPublicUrl(path);
-      attachments.push({ name: file.name, url: data.publicUrl, type: file.type });
+      const { data } = await supabase.storage.from('client-uploads').createSignedUrl(path, 86400 * 30); // 30 days
+      attachments.push({ name: file.name, url: data?.signedUrl || '', type: file.type });
     }
     setUploading(false);
     if (attachments.length) {

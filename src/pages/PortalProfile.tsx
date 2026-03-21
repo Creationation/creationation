@@ -41,9 +41,10 @@ const PortalProfile = () => {
     const path = `${client.id}/avatar_${Date.now()}.${file.name.split('.').pop()}`;
     const { error } = await supabase.storage.from('client-uploads').upload(path, file);
     if (error) { toast.error('Erreur upload'); setUploadingAvatar(false); return; }
-    const { data } = supabase.storage.from('client-uploads').getPublicUrl(path);
-    await supabase.from('clients').update({ avatar_url: data.publicUrl } as any).eq('id', client.id);
-    setAvatarUrl(data.publicUrl);
+    const { data } = await supabase.storage.from('client-uploads').createSignedUrl(path, 86400 * 365); // 1 year
+    const avatarFullUrl = data?.signedUrl || '';
+    await supabase.from('clients').update({ avatar_url: avatarFullUrl } as any).eq('id', client.id);
+    setAvatarUrl(avatarFullUrl);
     setUploadingAvatar(false);
     toast.success('Avatar mis à jour');
   };
