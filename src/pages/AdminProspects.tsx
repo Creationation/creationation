@@ -819,7 +819,6 @@ const AdminProspects = () => {
 
       {/* Sectors Dashboard */}
       {showSectors && <SectorsDashboard onClose={() => setShowSectors(false)} />}
-      )}
     </div>
   );
 };
