@@ -3,8 +3,9 @@ import { useOutletContext } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Upload, Download, FileIcon, Image as ImageIcon } from 'lucide-react';
+import { sendPortalNotification } from '@/lib/portalNotifications';
 
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_SIZE = 10 * 1024 * 1024;
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/svg+xml', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/zip'];
 
 const PortalFiles = () => {
@@ -16,14 +17,12 @@ const PortalFiles = () => {
 
   const fetchFiles = useCallback(async () => {
     if (!client?.id) return;
-    // Project files
     const { data: projects } = await supabase.from('projects').select('id').eq('client_id', client.id);
     const pids = (projects || []).map(p => p.id);
     if (pids.length) {
       const { data } = await supabase.from('project_files').select('*').in('project_id', pids).order('created_at', { ascending: false });
       setProjectFiles(data || []);
     }
-    // Client uploads
     const { data: files } = await supabase.storage.from('client-uploads').list(client.id);
     setClientFiles((files || []).map(f => ({ ...f, url: supabase.storage.from('client-uploads').getPublicUrl(`${client.id}/${f.name}`).data.publicUrl })));
   }, [client]);
@@ -38,7 +37,20 @@ const PortalFiles = () => {
       const path = `${client.id}/${Date.now()}_${file.name}`;
       const { error } = await supabase.storage.from('client-uploads').upload(path, file);
       if (error) toast.error(`Erreur upload : ${file.name}`);
-      else toast.success(`${file.name} uploadé`);
+      else {
+        toast.success(`${file.name} uploadé`);
+        // Notify admin (uses client_id as notification target — admin sees via admin panel)
+        // We create a general notification visible to admin side
+        try {
+          await supabase.from('portal_notifications').insert({
+            client_id: client.id,
+            type: 'general',
+            title: 'Nouveau fichier uploadé',
+            message: file.name,
+            link: '/portal/files',
+          } as any);
+        } catch {}
+      }
     }
     setUploading(false);
     fetchFiles();
@@ -56,7 +68,6 @@ const PortalFiles = () => {
     <div className="space-y-6">
       <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)' }}>Fichiers</h1>
 
-      {/* Upload zone */}
       <div
         onDragOver={e => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -77,7 +88,6 @@ const PortalFiles = () => {
         </p>
       </div>
 
-      {/* Client uploads */}
       {clientFiles.length > 0 && (
         <div>
           <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', margin: '0 0 12px' }}>Mes fichiers</h3>
@@ -101,7 +111,6 @@ const PortalFiles = () => {
         </div>
       )}
 
-      {/* Project files */}
       {projectFiles.length > 0 && (
         <div>
           <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', margin: '0 0 12px' }}>Fichiers du projet</h3>

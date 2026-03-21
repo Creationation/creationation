@@ -453,6 +453,7 @@ const PortalInviteButton = ({ client, onRefresh }: { client: Client; onRefresh: 
         portal_enabled: true,
         portal_invited_at: new Date().toISOString(),
       } as any).eq('id', client.id);
+      // Note: client role will be assigned automatically when the user first logs in via PortalLogin auto-link
       toast.success(`Invitation envoyée à ${client.email}`);
       onRefresh();
     } catch (e: any) {
