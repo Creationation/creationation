@@ -38,7 +38,7 @@ Je me permets de revenir vers vous suite à notre précédent échange. Avez-vou
 N'hésitez pas si vous avez des questions, nous sommes là pour vous accompagner.
 
 Cordialement,
-L'équipe Creationation`,
+L'équipe CreationNation`,
   },
   {
     label: 'Proposition commerciale',
