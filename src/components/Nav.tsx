@@ -42,7 +42,7 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
         }}
       >
         <span style={{ fontFamily: 'var(--font-h)', fontSize: 18, color: 'var(--teal-deep)', letterSpacing: -0.3 }}>
-          Creationation
+          CreationNation
         </span>
         <ul className="hidden md:flex gap-6 list-none">
           {links.map((l) => (

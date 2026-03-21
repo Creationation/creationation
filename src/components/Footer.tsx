@@ -16,7 +16,7 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto px-7 md:px-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
-            <div style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--teal-deep)' }}>Creationation</div>
+            <div style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--teal-deep)' }}>CreationNation</div>
             <div className="text-xs mt-0.5 flex items-center gap-2" style={{ color: 'var(--text-ghost)' }}>
               {t.footer.copy[lang]}
               <button
