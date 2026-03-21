@@ -7,7 +7,7 @@ const corsHeaders = {
 
 const labels = {
   fr: {
-    subject: 'Creationation — Nous avons bien reçu votre demande',
+    subject: 'CreationNation — Nous avons bien reçu votre demande',
     confirmed: 'Votre demande est confirmée ✓',
     greeting: 'Bonjour',
     intro: 'nous avons bien reçu votre demande et reviendrons vers vous sous 24h.',
@@ -23,10 +23,10 @@ const labels = {
     whatsapp: 'WhatsApp',
     emailBtn: 'E-Mail',
     contact: 'Une question ? Contactez-nous à tout moment',
-    footer: 'Creationation · Digital Product Studio · Avec passion ♡',
+    footer: 'CreationNation · Digital Product Studio · Avec passion ♡',
   },
   en: {
-    subject: 'Creationation — We received your request',
+    subject: 'CreationNation — We received your request',
     confirmed: 'Your request is confirmed ✓',
     greeting: 'Hello',
     intro: 'we received your request and will get back to you within 24 hours.',
@@ -42,10 +42,10 @@ const labels = {
     whatsapp: 'WhatsApp',
     emailBtn: 'E-Mail',
     contact: 'Any questions? Contact us anytime',
-    footer: 'Creationation · Digital Product Studio · With passion ♡',
+    footer: 'CreationNation · Digital Product Studio · With passion ♡',
   },
   de: {
-    subject: 'Creationation — Wir haben Ihre Anfrage erhalten',
+    subject: 'CreationNation — Wir haben Ihre Anfrage erhalten',
     confirmed: 'Ihre Anfrage ist bestätigt ✓',
     greeting: 'Hallo',
     intro: 'wir haben Ihre Anfrage erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.',
@@ -61,7 +61,7 @@ const labels = {
     whatsapp: 'WhatsApp',
     emailBtn: 'E-Mail',
     contact: 'Fragen? Kontaktieren Sie uns jederzeit',
-    footer: 'Creationation · Digital Product Studio · Mit Leidenschaft ♡',
+    footer: 'CreationNation · Digital Product Studio · Mit Leidenschaft ♡',
   },
 };
 
@@ -118,7 +118,7 @@ serve(async (req) => {
           <!-- Header -->
           <div style="background: #0d8a6f; padding: 36px 24px; text-align: center;">
             <p style="margin: 0 0 4px; font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; text-transform: uppercase;">DIGITAL PRODUCT STUDIO</p>
-            <h1 style="margin: 0; font-size: 28px; color: #fff; font-family: Georgia, serif; letter-spacing: 1px;">CREATIONATION</h1>
+            <h1 style="margin: 0; font-size: 28px; color: #fff; font-family: Georgia, serif; letter-spacing: 1px;">CREATIONNATION</h1>
           </div>
 
           <!-- Body -->
@@ -167,7 +167,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Creationation <info@ugcpanel.app>',
+        from: 'CreationNation <info@ugcpanel.app>',
         to: [to],
         subject: l.subject,
         html,

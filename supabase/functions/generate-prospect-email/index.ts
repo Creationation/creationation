@@ -91,7 +91,7 @@ serve(async (req) => {
       ? `They have a website (${prospect.website_url}) that could be improved — you can mention a redesign.`
       : `They do NOT have a website or mobile app. This is your main angle.`;
 
-    const prompt = `You are Diego Renard, founder of Creationation — a premium web & mobile app creation agency.
+    const prompt = `You are Diego Renard, founder of CreationNation — a premium web & mobile app creation agency.
 You are writing a personalized cold email to contact a local business.
 
 PROSPECT:
@@ -104,7 +104,7 @@ PROSPECT:
 - Notes: ${prospect.notes || 'none'}
 - Website: ${websiteNote}
 
-CREATIONATION:
+CREATIONNATION:
 - Showcase websites from 290€
 - Custom web/mobile apps from 900€
 - Delivery: 7 to 14 days

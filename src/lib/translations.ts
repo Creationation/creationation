@@ -156,7 +156,7 @@ const t = {
     g4d: { fr: 'Équipe disponible tous les jours par chat', en: 'Team available every day via chat', de: 'Team täglich per Chat erreichbar' },
   },
   footer: {
-    copy: { fr: '© 2026 Creationation. Digital Product Studio', en: '© 2026 Creationation. Digital Product Studio', de: '© 2026 Creationation. Digital Product Studio' },
+    copy: { fr: '© 2026 CreationNation. Digital Product Studio', en: '© 2026 CreationNation. Digital Product Studio', de: '© 2026 CreationNation. Digital Product Studio' },
     contact: { fr: 'Contact', en: 'Contact', de: 'Kontakt' },
   },
 } as const;

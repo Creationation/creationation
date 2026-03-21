@@ -65,7 +65,7 @@ const AdminLogin = () => {
             textAlign: 'center',
           }}
         >
-          Creationation
+          CreationNation
         </h1>
         <p
           style={{
