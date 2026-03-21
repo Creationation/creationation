@@ -594,7 +594,7 @@ const AdminProspects = () => {
                   <div className='flex items-center gap-3 flex-wrap'>
                     <div className='flex items-center gap-2' style={{ padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', flex:'0 0 auto' }}>
                       <label style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)', whiteSpace:'nowrap' }}>Max resultats:</label>
-                      <input type='number' min={5} max={60} value={maxResults} onChange={e => setMaxResults(Number(e.target.value))} style={{ width:60, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', textAlign:'center' }} />
+                      <input type='number' min={5} max={500} value={maxResults} onChange={e => setMaxResults(Number(e.target.value))} style={{ width:60, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', textAlign:'center' }} />
                     </div>
                     <button onClick={() => setFetchPhone(!fetchPhone)} style={{ padding:'10px 14px', background: fetchPhone ? 'rgba(13,138,111,0.12)' : 'var(--glass-bg)', border:'1px solid', borderColor: fetchPhone ? 'var(--teal)' : 'var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, fontWeight: fetchPhone ? 600 : 400, cursor:'pointer', display:'flex', alignItems:'center', gap:6, color: fetchPhone ? 'var(--teal)' : 'var(--text-mid)', flex:'0 0 auto' }}>
                       <Phone size={13}/> {fetchPhone ? '✓ Avec téléphone' : 'Sans téléphone'}
