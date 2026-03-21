@@ -98,7 +98,8 @@ serve(async (req) => {
   }
 });
 
-function buildEmailHtml(firstName: string, subject: string, body: string): string {
+function buildEmailHtml(firstName: string, subject: string, body: string, prospectId?: string): string {
+  const unsubscribeUrl = `mailto:info@ugcpanel.app?subject=Unsubscribe&body=ID:${prospectId || 'unknown'}`;
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
@@ -119,7 +120,8 @@ function buildEmailHtml(firstName: string, subject: string, body: string): strin
       </div>
       <div style="padding:24px;text-align:center;background:#f5f2ec;">
         <p style="margin:0;font-size:12px;color:#9b9590;">Creationation · Digital Product Studio · Avec passion</p>
-        <p style="margin:8px 0 0;font-size:11px;color:#bbb;">Vous recevez cet email car nous pensons pouvoir vous aider a developper votre activite en ligne.</p>
+        <p style="margin:8px 0 0;font-size:11px;color:#bbb;">Vous recevez cet email car nous pensons pouvoir vous aider à développer votre activité en ligne.</p>
+        <p style="margin:8px 0 0;"><a href="${unsubscribeUrl}" style="font-size:11px;color:#bbb;text-decoration:underline;">Se désinscrire</a></p>
       </div>
     </div>
   </div>
