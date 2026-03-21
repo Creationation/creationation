@@ -243,9 +243,14 @@ const AdminProspects = () => {
       let skippedChunks = 0;
       let totalSearches = types.length * countries.length;
       let completedSearches = 0;
+      // For continent searches, limit per-chunk results to spread across countries
+      const perChunkMax = countries.length > 1 ? Math.max(5, Math.ceil(maxResults / (types.length * countries.length))) : maxResults;
+      let globalLimitReached = false;
 
       for (const country of countries) {
+        if (globalLimitReached) break;
         for (const type of types) {
+          if (globalLimitReached) break;
           completedSearches++;
           // Skip already-searched chunks
           if (isChunkDone(country, searchCity, type)) {
@@ -259,23 +264,24 @@ const AdminProspects = () => {
           }
 
           if (countries.length > 1) {
-            toast.info(`Recherche ${completedSearches}/${totalSearches}: ${type} en ${country}...`, { id: 'search-progress' });
+            toast.info(`Recherche ${completedSearches}/${totalSearches}: ${type} en ${country}... (${allResults.length}/${maxResults} trouvés)`, { id: 'search-progress' });
           }
           try {
             const { data, error } = await supabase.functions.invoke('prospect-search', {
-              body: { city: searchCity || '', businessType: type, country: country, maxResults, fetchPhone, skipDetails }
+              body: { city: searchCity || '', businessType: type, country: country, maxResults: perChunkMax, fetchPhone, skipDetails }
             });
             if (error) { console.warn(`Error for ${type} in ${country}:`, error.message); continue; }
             const results = (data.results || []) as SearchResult[];
             let chunkCount = 0;
-            results.forEach(r => {
+            for (const r of results) {
+              if (allResults.length >= maxResults) { globalLimitReached = true; break; }
               r.country = country || searchContinent || '';
               r.city = searchCity || r.city || '';
               if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
                 allResults.push(r);
                 chunkCount++;
               }
-            });
+            }
 
             // Save this chunk
             const chunkCost = skipDetails
@@ -297,6 +303,10 @@ const AdminProspects = () => {
             console.warn(`Search failed for ${type} in ${country}:`, e.message);
           }
         }
+      }
+
+      if (globalLimitReached) {
+        toast.success(`✅ Limite de ${maxResults} résultats atteinte — recherche stoppée pour économiser les coûts API.`);
       }
 
       if (allResults.length > 0) {
