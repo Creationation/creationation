@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical } from 'lucide-react';
+import { X, Check, Plus, Trash2, CheckCircle2, Circle, MessageSquare, FileUp, Milestone, MessagesSquare, Package, Calendar, Upload, GripVertical, Clock } from 'lucide-react';
 import PortalMessagesAdmin from '@/components/admin/PortalMessagesAdmin';
 import { sendPortalNotification } from '@/lib/portalNotifications';
 
@@ -33,7 +33,8 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
   const [newTask, setNewTask] = useState('');
   const [newTaskDue, setNewTaskDue] = useState('');
   const [newNote, setNewNote] = useState('');
-  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs' | 'deliverables'>('tasks');
+  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs' | 'deliverables' | 'activity'>('tasks');
+  const [activityLog, setActivityLog] = useState<any[]>([]);
   const [showNewDeliverable, setShowNewDeliverable] = useState(false);
   const [newDeliverable, setNewDeliverable] = useState({ title: '', description: '' });
   const [uploading, setUploading] = useState(false);
@@ -58,6 +59,28 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
     setFiles((f || []) as unknown as FileT[]);
     const { data: d } = await supabase.from('deliverable_reviews' as any).select('*').eq('project_id', projectId).order('created_at', { ascending: false });
     setDeliverables((d || []) as unknown as Deliverable[]);
+
+    // Build activity log from all data
+    const log: any[] = [];
+    ((t || []) as any[]).forEach(task => {
+      log.push({ type: 'task_created', title: `Tâche créée : ${task.title}`, date: task.created_at });
+      if (task.completed_at) log.push({ type: 'task_done', title: `Tâche terminée : ${task.title}`, date: task.completed_at });
+    });
+    ((m || []) as any[]).forEach(ms => {
+      if (ms.completed_at) log.push({ type: 'milestone_done', title: `Jalon complété : ${ms.title}`, date: ms.completed_at });
+    });
+    ((n || []) as any[]).forEach(note => {
+      log.push({ type: 'note', title: `Note ajoutée`, date: note.created_at });
+    });
+    ((f || []) as any[]).forEach(file => {
+      log.push({ type: 'file', title: `Fichier uploadé : ${file.file_name}`, date: file.created_at });
+    });
+    ((d || []) as any[]).forEach(del => {
+      log.push({ type: 'deliverable', title: `Livrable soumis : ${(del as any).title}`, date: (del as any).created_at });
+      if ((del as any).reviewed_at) log.push({ type: 'review', title: `Livrable reviewé : ${(del as any).title}`, date: (del as any).reviewed_at });
+    });
+    log.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    setActivityLog(log);
   }, [projectId]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
@@ -247,6 +270,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               { key: 'notes' as const, label: 'Notes', icon: MessageSquare, count: notes.length },
               { key: 'files' as const, label: 'Fichiers', icon: FileUp, count: files.length },
               { key: 'clientmsgs' as const, label: 'Client', icon: MessagesSquare, count: 0 },
+              { key: 'activity' as const, label: 'Activité', icon: Clock, count: activityLog.length },
             ]).map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', border: 'none',
@@ -476,6 +500,26 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {tab === 'activity' && (
+            <div className="space-y-2" style={{ maxHeight: 400, overflowY: 'auto' }}>
+              {activityLog.length === 0 && (
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', padding: 20 }}>Aucune activité.</div>
+              )}
+              {activityLog.map((a, i) => {
+                const icons: Record<string, string> = { task_created: '📋', task_done: '✅', milestone_done: '🏁', note: '💬', file: '📎', deliverable: '📦', review: '👁️' };
+                return (
+                  <div key={i} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                    <span style={{ fontSize: 14, flexShrink: 0, marginTop: 2 }}>{icons[a.type] || '•'}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}>{a.title}</div>
+                      <div style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>{new Date(a.date).toLocaleString('fr-FR')}</div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

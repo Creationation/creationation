@@ -165,6 +165,15 @@ const AdminProjects = () => {
       if (!roles?.some(r => r.role === 'admin')) { navigate('/admin/login'); return; }
       fetchProjects();
       fetchTemplates();
+      // Auto-open new project modal if query param present
+      const params = new URLSearchParams(window.location.search);
+      const newForClient = params.get('newForClient');
+      if (newForClient) {
+        setShowNew(true);
+        // Will be picked up by NewProjectModal via defaultClientId
+        (window as any).__newProjectClientId = newForClient;
+        window.history.replaceState({}, '', window.location.pathname);
+      }
     })();
   }, [navigate, fetchProjects, fetchTemplates]);
 
@@ -419,11 +428,15 @@ const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardCl
 
 // ─── New project modal ───
 const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: Client[]; templates: Template[]; onClose: () => void; onCreated: () => void }) => {
+  const defaultClientId = (window as any).__newProjectClientId || '';
   const [form, setForm] = useState({
-    client_id: '', title: '', description: '', project_type: '', template_id: '',
+    client_id: defaultClientId, title: '', description: '', project_type: '', template_id: '',
     priority: 'medium', budget: '', start_date: '', deadline: '',
   });
   const [saving, setSaving] = useState(false);
+
+  // Cleanup
+  useEffect(() => { return () => { delete (window as any).__newProjectClientId; }; }, []);
 
   const handleCreate = async () => {
     if (!form.client_id || !form.title.trim()) { toast.error('Client et titre requis'); return; }

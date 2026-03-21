@@ -345,18 +345,20 @@ const AdminProspects = () => {
     if (!selected.length) { toast.error('Sélectionne au moins un prospect'); return; }
     setTransferring(true);
     let transferred = 0;
+    const newClientIds: string[] = [];
     for (const p of selected) {
-      const { error } = await supabase.from('clients').insert({
+      const { data: newClient, error } = await supabase.from('clients').insert({
         prospect_id: p.id,
         business_name: p.business_name,
         contact_name: p.contact_name,
         email: p.email,
         phone: p.phone,
         website_url: p.website_url,
-      });
-      if (!error) {
+      }).select('id').single();
+      if (!error && newClient) {
         await supabase.from('prospects').update({ status: 'converted' as ProspectStatus }).eq('id', p.id);
         transferred++;
+        newClientIds.push(newClient.id);
       }
     }
     setTransferring(false);
@@ -364,6 +366,13 @@ const AdminProspects = () => {
       toast.success(`${transferred} prospect(s) transféré(s) vers Clients`);
       setSelectedIds(new Set());
       fetchProspects();
+      // Offer to create a project for the first converted client
+      if (newClientIds.length === 1) {
+        const name = selected[0].business_name;
+        if (confirm(`Créer un projet pour "${name}" ?`)) {
+          navigate(`/admin/projects?newForClient=${newClientIds[0]}`);
+        }
+      }
     } else {
       toast.error('Erreur lors du transfert');
     }

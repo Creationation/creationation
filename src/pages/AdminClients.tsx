@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp, FolderKanban } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ProjectDetailModal from '@/components/admin/ProjectDetailModal';
 
 type Client = {
   id: string;
@@ -64,12 +65,15 @@ const AdminClients = () => {
   const [editData, setEditData] = useState<Partial<Client>>({});
   const [clientInvoices, setClientInvoices] = useState<Record<string, { total: number; paid: number; count: number }>>({});
   const [expandedClient, setExpandedClient] = useState<string | null>(null);
+  const [clientProjects, setClientProjects] = useState<Record<string, any[]>>({});
+  const [projectDetailId, setProjectDetailId] = useState<string | null>(null);
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
-    const [{ data }, { data: inv }] = await Promise.all([
+    const [{ data }, { data: inv }, { data: projData }] = await Promise.all([
       supabase.from('clients' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('invoices').select('client_id,status,total,amount_paid'),
+      supabase.from('projects' as any).select('id,client_id,title,status,priority,deadline'),
     ]);
     setClients((data as any[] || []) as Client[]);
 
@@ -83,6 +87,14 @@ const AdminClients = () => {
       invMap[i.client_id].count++;
     });
     setClientInvoices(invMap);
+
+    // Group projects per client
+    const projMap: Record<string, any[]> = {};
+    ((projData as any[]) || []).forEach((p: any) => {
+      if (!projMap[p.client_id]) projMap[p.client_id] = [];
+      projMap[p.client_id].push(p);
+    });
+    setClientProjects(projMap);
 
     setLoading(false);
   }, []);
@@ -246,6 +258,36 @@ const AdminClients = () => {
                     )}
                   </div>
                 )}
+                {/* Projects section */}
+                {editId !== c.id && (
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--glass-border)' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <FolderKanban size={13} style={{ color: 'var(--text-mid)' }} />
+                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)' }}>
+                        {(clientProjects[c.id] || []).length} projet{(clientProjects[c.id] || []).length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    {(clientProjects[c.id] || []).length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {(clientProjects[c.id] || []).map((p: any) => {
+                          const statusCol = { brief: '#8B5CF6', maquette: '#F59E0B', development: '#3B82F6', review: '#F97316', delivered: '#10B981', maintenance: '#6B7280' }[p.status as string] || '#999';
+                          return (
+                            <button key={p.id} onClick={() => setProjectDetailId(p.id)} style={{
+                              display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 99,
+                              border: `1px solid ${statusCol}30`, background: `${statusCol}08`,
+                              fontFamily: 'var(--font-b)', fontSize: 12, cursor: 'pointer', color: 'var(--charcoal)',
+                            }}>
+                              <span style={{ width: 8, height: 8, borderRadius: '50%', background: statusCol }} />
+                              {p.title}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>Aucun projet</span>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -285,6 +327,7 @@ const AdminClients = () => {
       )}
 
       {showAdd && <AddClientModal onClose={() => setShowAdd(false)} onAdded={fetchClients} />}
+      {projectDetailId && <ProjectDetailModal projectId={projectDetailId} onClose={() => { setProjectDetailId(null); fetchClients(); }} />}
     </div>
   );
 };
