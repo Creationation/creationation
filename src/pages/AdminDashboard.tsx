@@ -122,11 +122,20 @@ const AdminDashboard = () => {
     }
   };
 
-  const filteredLeads = leads.filter(l =>
-    l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    l.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (l.phone && l.phone.includes(searchQuery))
-  );
+  const filteredLeads = leads.filter(l => {
+    const matchSearch = l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      l.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (l.phone && l.phone.includes(searchQuery));
+    if (!matchSearch) return false;
+    if (dateFilter !== 'all') {
+      const d = new Date(l.created_at);
+      const now = new Date();
+      if (dateFilter === '7d' && now.getTime() - d.getTime() > 7 * 86400000) return false;
+      if (dateFilter === '30d' && now.getTime() - d.getTime() > 30 * 86400000) return false;
+      if (dateFilter === '90d' && now.getTime() - d.getTime() > 90 * 86400000) return false;
+    }
+    return true;
+  });
 
   const stats = {
     total: leads.length,
