@@ -503,7 +503,12 @@ const AdminProspects = () => {
       (p.city && p.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (p.email && p.email.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesWebsite = websiteFilter === 'all' || (websiteFilter === 'no_website' ? !p.has_website : p.has_website);
-    return matchesQuery && matchesWebsite;
+    const matchesScore = (p.score || 0) >= scoreMin;
+    const matchesSector = sectorFilter.length === 0 || (p.sector && sectorFilter.includes(p.sector));
+    const matchesTags = tagFilter.length === 0 || (p.tags && p.tags.some(t => tagFilter.includes(t)));
+    const matchesSequence = sequenceFilter === 'all' || (sequenceFilter === 'in_sequence' ? !!p.sequence_id : !p.sequence_id);
+    const matchesInteraction = !lastInteractionDays || (p.last_emailed_at && ((Date.now() - new Date(p.last_emailed_at).getTime()) / 86400000) <= lastInteractionDays);
+    return matchesQuery && matchesWebsite && matchesScore && matchesSector && matchesTags && matchesSequence && matchesInteraction;
   });
 
   const prospectsNoSite = filteredProspects.filter(p => !p.has_website);
