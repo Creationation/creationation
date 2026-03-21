@@ -42,6 +42,17 @@ const PortalMessagesAdmin = ({ projectId, clientId }: { projectId: string; clien
       project_id: projectId, sender_id: userId, sender_type: 'team', content: newMsg.trim(),
     } as any);
     setNewMsg('');
+
+    // Notify client
+    if (clientId) {
+      sendPortalNotification({
+        clientId,
+        type: 'message',
+        title: 'Nouveau message',
+        message: newMsg.trim().substring(0, 100),
+        link: '/portal/messages',
+      });
+    }
   };
 
   return (
