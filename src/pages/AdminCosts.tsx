@@ -96,20 +96,9 @@ const AdminCosts = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--cream)', padding: '24px' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        <div className='flex items-center justify-between mb-6'>
-          <div className='flex items-center gap-4'>
-            <Link to='/admin' style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-b)', fontSize: 13 }}>
-              <ChevronLeft size={16} /> Dashboard
-            </Link>
-            <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: 0 }}>
-              <DollarSign size={22} style={{ verticalAlign: 'middle', marginRight: 8, color: 'var(--teal)' }} />
-              Suivi des Coûts
-            </h1>
-          </div>
-          <button onClick={async () => { await supabase.auth.signOut(); navigate('/admin/login'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)' }}><LogOut size={18} /></button>
-        </div>
+    <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
+      <AdminHeader />
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px' }}>
 
         {loading ? (
           <div className='text-center py-20' style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Chargement...</div>

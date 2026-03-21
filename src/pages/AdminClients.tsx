@@ -145,16 +145,7 @@ const AdminClients = () => {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-      <header className="flex items-center justify-between px-6 py-4" style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--glass-border)' }}>
-        <div className="flex items-center gap-3 flex-wrap">
-          <Link to="/admin" style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)', textDecoration: 'none' }}>CRM</Link>
-          <Link to="/admin/prospects" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(13,138,111,0.1)', border: '1px solid rgba(13,138,111,0.3)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--teal)', textDecoration: 'none' }}><Target size={14} /> Prospection</Link>
-          <Link to="/admin/clients" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(124,92,191,0.15)', border: '1px solid rgba(124,92,191,0.4)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--violet)', textDecoration: 'none' }}><Users size={14} /> Clients</Link>
-          <Link to="/admin/revenues" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(77,166,217,0.1)', border: '1px solid rgba(77,166,217,0.3)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--sky)', textDecoration: 'none' }}><Wallet size={14} /> Revenus</Link>
-          <Link to="/admin/costs" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', background: 'rgba(212,165,90,0.1)', border: '1px solid rgba(212,165,90,0.3)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#d4a55a', textDecoration: 'none' }}><DollarSign size={14} /> Coûts</Link>
-        </div>
-        <button onClick={handleLogout} className="flex items-center gap-2 cursor-pointer" style={{ padding: '8px 16px', background: 'transparent', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}><LogOut size={14} /> Déconnexion</button>
-      </header>
+      <AdminHeader />
 
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         {/* Stats */}
