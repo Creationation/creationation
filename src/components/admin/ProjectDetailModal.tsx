@@ -11,6 +11,7 @@ type MilestoneT = { id: string; project_id: string; title: string; description: 
 type Note = { id: string; content: string; created_at: string; author_id: string | null };
 type FileT = { id: string; file_name: string; file_url: string; file_type: string | null; created_at: string };
 type Deliverable = { id: string; project_id: string; milestone_id: string | null; title: string; description: string | null; status: string; file_urls: any; client_comment: string | null; reviewed_at: string | null; created_at: string };
+type InvoiceRow = { id: string; invoice_number: string; status: string; total: number; amount_paid: number; issue_date: string; due_date: string };
 
 const STATUS_COLS = [
   { key: 'brief', label: 'Brief', color: '#8B5CF6' },
