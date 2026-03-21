@@ -67,6 +67,7 @@ const AdminClients = () => {
   const [expandedClient, setExpandedClient] = useState<string | null>(null);
   const [clientProjects, setClientProjects] = useState<Record<string, any[]>>({});
   const [projectDetailId, setProjectDetailId] = useState<string | null>(null);
+  const [prospectSources, setProspectSources] = useState<Record<string, { score: number; source: string }>>({});
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
@@ -95,6 +96,19 @@ const AdminClients = () => {
       projMap[p.client_id].push(p);
     });
     setClientProjects(projMap);
+
+    // Fetch prospect source info for clients with prospect_id
+    const clientsWithProspect = ((data as any[]) || []).filter((c: any) => c.prospect_id);
+    if (clientsWithProspect.length > 0) {
+      const prospectIds = clientsWithProspect.map((c: any) => c.prospect_id);
+      const { data: prospData } = await supabase.from('prospects').select('id,score,source').in('id', prospectIds);
+      const srcMap: Record<string, { score: number; source: string }> = {};
+      ((prospData as any[]) || []).forEach((p: any) => {
+        const client = clientsWithProspect.find((c: any) => c.prospect_id === p.id);
+        if (client) srcMap[client.id] = { score: p.score || 0, source: p.source || 'prospection' };
+      });
+      setProspectSources(srcMap);
+    }
 
     setLoading(false);
   }, []);
@@ -214,6 +228,11 @@ const AdminClients = () => {
                         <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-b)', color: 'white', background: STATUS_COLORS[c.status] || '#999' }}>{STATUS_LABELS[c.status] || c.status}</span>
                         <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--violet)', background: 'rgba(124,92,191,0.12)' }}>{c.plan}</span>
                         {c.portal_enabled && <span style={{ padding: '2px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--teal)', background: 'rgba(13,138,111,0.1)' }}>🌐 Portail</span>}
+                        {prospectSources[c.id] && (
+                          <span style={{ padding: '2px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: '#d4a55a', background: 'rgba(212,165,90,0.12)' }}>
+                            🎯 Prospection · Score {prospectSources[c.id].score}
+                          </span>
+                        )}
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1" style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>
                         {c.contact_name && <span>{c.contact_name}</span>}

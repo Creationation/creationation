@@ -7,7 +7,7 @@ import SendEmailModal from '@/components/admin/SendEmailModal';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectAlerts from '@/components/admin/ProjectAlerts';
 import ProjectKPIs from '@/components/admin/ProjectKPIs';
-import { RefreshCw, Search, Filter, FileText, AlertCircle } from 'lucide-react';
+import { RefreshCw, Search, Filter, FileText, AlertCircle, Flame, Zap, MessageSquare } from 'lucide-react';
 
 type Lead = {
   id: string;
@@ -44,6 +44,12 @@ type InvoiceKPI = {
   dueThisMonthAmount: number;
 };
 
+type ProspectKPI = {
+  hotCount: number;
+  activeSequences: number;
+  responseRate: number;
+};
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -53,6 +59,7 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [invoiceKPI, setInvoiceKPI] = useState<InvoiceKPI>({ overdueCount: 0, overdueAmount: 0, dueThisMonthAmount: 0 });
+  const [prospectKPI, setProspectKPI] = useState<ProspectKPI>({ hotCount: 0, activeSequences: 0, responseRate: 0 });
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -83,15 +90,26 @@ const AdminDashboard = () => {
     });
   }, []);
 
+  const fetchProspectKPIs = useCallback(async () => {
+    const { data: prospects } = await supabase.from('prospects').select('score,status,sequence_id,email_count');
+    if (!prospects) return;
+    const hot = (prospects as any[]).filter(p => (p.score || 0) > 70).length;
+    const inSeq = (prospects as any[]).filter(p => p.sequence_id).length;
+    const emailed = (prospects as any[]).filter(p => (p.email_count || 0) > 0);
+    const replied = (prospects as any[]).filter(p => p.status === 'replied').length;
+    const rate = emailed.length > 0 ? Math.round((replied / emailed.length) * 100) : 0;
+    setProspectKPI({ hotCount: hot, activeSequences: inSeq, responseRate: rate });
+  }, []);
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { navigate('/admin/login'); return; }
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else { fetchLeads(); fetchInvoiceKPIs(); }
+        else { fetchLeads(); fetchInvoiceKPIs(); fetchProspectKPIs(); }
       });
     });
-  }, [navigate, fetchLeads, fetchInvoiceKPIs]);
+  }, [navigate, fetchLeads, fetchInvoiceKPIs, fetchProspectKPIs]);
 
   const updateLeadStatus = async (leadId: string, status: string) => {
     const { error } = await supabase.from('leads').update({ status: status as Lead['status'] }).eq('id', leadId);
@@ -147,6 +165,35 @@ const AdminDashboard = () => {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Prospect KPI cards */}
+        {(prospectKPI.hotCount > 0 || prospectKPI.activeSequences > 0 || prospectKPI.responseRate > 0) && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+            {prospectKPI.hotCount > 0 && (
+              <div onClick={() => navigate('/admin/prospects')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(239,115,90,0.06)', border: '1px solid rgba(239,115,90,0.15)', borderRadius: 14 }}>
+                <Flame size={18} color="#e8735a" />
+                <div>
+                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#e8735a' }}>{prospectKPI.hotCount} prospect{prospectKPI.hotCount > 1 ? 's' : ''} chaud{prospectKPI.hotCount > 1 ? 's' : ''}</div>
+                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Score &gt; 70</div>
+                </div>
+              </div>
+            )}
+            <div onClick={() => navigate('/admin/sequences')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(13,138,111,0.06)', border: '1px solid rgba(13,138,111,0.15)', borderRadius: 14 }}>
+              <Zap size={18} color="#0d8a6f" />
+              <div>
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#0d8a6f' }}>{prospectKPI.activeSequences} en séquence</div>
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Séquences actives</div>
+              </div>
+            </div>
+            <div onClick={() => navigate('/admin/prospects')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(77,166,217,0.06)', border: '1px solid rgba(77,166,217,0.15)', borderRadius: 14 }}>
+              <MessageSquare size={18} color="#4da6d9" />
+              <div>
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#4da6d9' }}>Taux de réponse : {prospectKPI.responseRate}%</div>
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Prospects emailés</div>
+              </div>
+            </div>
           </div>
         )}
 
