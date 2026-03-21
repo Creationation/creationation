@@ -294,7 +294,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           )}
 
           {tab === 'clientmsgs' && (
-            <PortalMessagesAdmin projectId={projectId} />
+            <PortalMessagesAdmin projectId={projectId} clientId={project?.client_id} />
           )}
 
           {tab === 'deliverables' && (
