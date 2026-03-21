@@ -33,6 +33,7 @@ const Hero = ({ onContact }: { onContact?: () => void }) => {
           style={{ opacity: 0.32, pointerEvents: 'none' }}
           src="/videos/hero-bg.mp4"
           preload="none"
+          onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.background = 'linear-gradient(135deg, rgba(13,138,111,0.08) 0%, rgba(77,166,217,0.06) 100%)'; e.currentTarget.style.display = 'none'; }}
         />
       </div>
       {/* Badge */}

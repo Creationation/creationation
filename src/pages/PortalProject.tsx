@@ -325,8 +325,8 @@ const PortalProject = () => {
                 Envoyer mon avis
               </button>
             </div>
-            <a href="https://g.page/r/CreationNation/review" target="_blank" rel="noreferrer" style={{
-              display: 'inline-block', marginTop: 16,
+            <a href="https://search.google.com/local/writereview?placeid=PLACEHOLDER" target="_blank" rel="noreferrer" style={{
+              display: 'none',
               fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', textDecoration: 'underline',
             }}>
               ⭐ Laisser un avis Google
