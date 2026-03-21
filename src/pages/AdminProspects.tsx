@@ -736,7 +736,68 @@ const AdminProspects = () => {
                 <button onClick={fetchProspects} style={{ padding:'8px 12px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:16, cursor:'pointer', flexShrink:0 }}>
                   <RefreshCw size={14}/>
                 </button>
+              {/* Advanced filters toggle + saved searches */}
+              <div className='flex gap-2 items-center'>
+                <button onClick={() => setShowAdvancedFilters(!showAdvancedFilters)} style={{ padding:'6px 12px', borderRadius:100, border:'1px solid var(--glass-border)', background: showAdvancedFilters ? 'rgba(13,138,111,0.1)' : 'var(--glass-bg)', color: showAdvancedFilters ? 'var(--teal)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                  <Target size={11}/> Filtres avancés {showAdvancedFilters ? '▲' : '▼'}
+                </button>
+                <button onClick={saveSearch} disabled={savingSearch} style={{ padding:'6px 12px', borderRadius:100, border:'1px solid var(--glass-border)', background:'var(--glass-bg)', color:'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer' }}>
+                  💾 Sauvegarder
+                </button>
+                {savedSearches.length > 0 && (
+                  <select onChange={e => { const s = savedSearches.find(x => x.id === e.target.value); if (s) loadSearch(s); }} defaultValue='' style={{ padding:'6px 10px', borderRadius:100, border:'1px solid var(--glass-border)', background:'var(--glass-bg)', fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer', outline:'none' }}>
+                    <option value='' disabled>📂 Recherches sauvées</option>
+                    {savedSearches.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                )}
               </div>
+              {showAdvancedFilters && (
+                <div style={{ padding:12, background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:16, display:'flex', flexDirection:'column', gap:10 }}>
+                  <div className='flex items-center gap-3 flex-wrap'>
+                    <div style={{ flex:'1 1 200px' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Score minimum: {scoreMin}</label>
+                      <input type='range' min={0} max={100} value={scoreMin} onChange={e => setScoreMin(Number(e.target.value))} style={{ width:'100%', accentColor:'var(--teal)' }} />
+                    </div>
+                    <div style={{ flex:'1 1 150px' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Séquence</label>
+                      <select value={sequenceFilter} onChange={e => setSequenceFilter(e.target.value as any)} style={{ width:'100%', padding:'6px 8px', background:'white', border:'1px solid var(--glass-border)', borderRadius:8, fontFamily:'var(--font-b)', fontSize:12, outline:'none' }}>
+                        <option value='all'>Toutes</option>
+                        <option value='in_sequence'>En séquence</option>
+                        <option value='not_in_sequence'>Hors séquence</option>
+                      </select>
+                    </div>
+                    <div style={{ flex:'1 1 150px' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Dernière interaction (jours)</label>
+                      <select value={lastInteractionDays ?? ''} onChange={e => setLastInteractionDays(e.target.value ? Number(e.target.value) : null)} style={{ width:'100%', padding:'6px 8px', background:'white', border:'1px solid var(--glass-border)', borderRadius:8, fontFamily:'var(--font-b)', fontSize:12, outline:'none' }}>
+                        <option value=''>Toutes</option>
+                        <option value='7'>7 jours</option>
+                        <option value='30'>30 jours</option>
+                        <option value='90'>90 jours</option>
+                      </select>
+                    </div>
+                  </div>
+                  {allSectors.length > 0 && (
+                    <div>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Secteurs</label>
+                      <div className='flex flex-wrap gap-1'>
+                        {allSectors.map(s => (
+                          <button key={s} onClick={() => setSectorFilter(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])} style={{ padding:'3px 10px', borderRadius:100, border:'1px solid', borderColor: sectorFilter.includes(s) ? 'var(--teal)' : 'var(--glass-border)', background: sectorFilter.includes(s) ? 'rgba(13,138,111,0.1)' : 'transparent', color: sectorFilter.includes(s) ? 'var(--teal)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer' }}>{s}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {allTags.length > 0 && (
+                    <div>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Tags</label>
+                      <div className='flex flex-wrap gap-1'>
+                        {allTags.map(t => (
+                          <button key={t} onClick={() => setTagFilter(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} style={{ padding:'3px 10px', borderRadius:100, border:'1px solid', borderColor: tagFilter.includes(t) ? 'var(--violet)' : 'var(--glass-border)', background: tagFilter.includes(t) ? 'rgba(124,92,191,0.1)' : 'transparent', color: tagFilter.includes(t) ? 'var(--violet)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer' }}>{t}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             {/* AI Email Finder bar */}
             <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
