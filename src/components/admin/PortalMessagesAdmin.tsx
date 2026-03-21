@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
+import { sendPortalNotification } from '@/lib/portalNotifications';
 
-const PortalMessagesAdmin = ({ projectId }: { projectId: string }) => {
+const PortalMessagesAdmin = ({ projectId, clientId }: { projectId: string; clientId?: string }) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMsg, setNewMsg] = useState('');
   const [userId, setUserId] = useState('');
@@ -41,6 +42,17 @@ const PortalMessagesAdmin = ({ projectId }: { projectId: string }) => {
       project_id: projectId, sender_id: userId, sender_type: 'team', content: newMsg.trim(),
     } as any);
     setNewMsg('');
+
+    // Notify client
+    if (clientId) {
+      sendPortalNotification({
+        clientId,
+        type: 'message',
+        title: 'Nouveau message',
+        message: newMsg.trim().substring(0, 100),
+        link: '/portal/messages',
+      });
+    }
   };
 
   return (

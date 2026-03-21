@@ -62,6 +62,22 @@ const PortalLayout = () => {
 
   useEffect(() => { fetchClient(); }, [fetchClient]);
 
+  // Realtime notifications
+  useEffect(() => {
+    if (!client?.id) return;
+    const channel = supabase.channel(`portal-notifs-${client.id}`)
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'portal_notifications',
+        filter: `client_id=eq.${client.id}`,
+      }, (payload: any) => {
+        const n = payload.new;
+        setNotifs(prev => [n, ...prev]);
+        setUnreadNotifs(c => c + 1);
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [client?.id]);
+
   const markRead = async (id: string) => {
     await supabase.from('portal_notifications').update({ is_read: true } as any).eq('id', id);
     setNotifs(n => n.filter(x => x.id !== id));

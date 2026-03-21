@@ -11,16 +11,30 @@ const PortalLogin = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        supabase.from('clients')
-          .select('id')
-          .eq('portal_user_id', user.id)
-          .eq('portal_enabled', true)
-          .single()
-          .then(({ data }) => {
-            if (data) navigate('/portal');
-          });
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return;
+
+      // First check if already linked
+      const { data: linked } = await supabase.from('clients')
+        .select('id')
+        .eq('portal_user_id', user.id)
+        .eq('portal_enabled', true)
+        .single();
+      if (linked) { navigate('/portal'); return; }
+
+      // Auto-link: match by email if portal_user_id is not set yet
+      const { data: byEmail } = await supabase.from('clients')
+        .select('id')
+        .eq('email', user.email || '')
+        .eq('portal_enabled', true)
+        .is('portal_user_id', null)
+        .single();
+
+      if (byEmail) {
+        await supabase.from('clients')
+          .update({ portal_user_id: user.id, portal_last_login: new Date().toISOString() } as any)
+          .eq('id', byEmail.id);
+        navigate('/portal');
       }
     });
   }, [navigate]);
