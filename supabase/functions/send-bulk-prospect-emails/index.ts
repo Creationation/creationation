@@ -57,12 +57,22 @@ serve(async (req) => {
         continue;
       }
 
-      await supabase.from('prospect_emails').insert({
+      const { data: emailRow } = await supabase.from('prospect_emails').insert({
         prospect_id: email.prospectId,
         user_id: userId,
         subject: email.subject,
         body: email.body,
-      });
+      }).select('id').single();
+
+      // Track sent event
+      if (emailRow) {
+        await supabase.from('email_tracking').insert({
+          prospect_id: email.prospectId,
+          email_id: emailRow.id,
+          event_type: 'sent',
+          event_data: { resend_id: resendData.id },
+        });
+      }
 
       const { data: curr } = await supabase.from('prospects').select('email_count').eq('id', email.prospectId).single();
       await supabase.from('prospects').update({
