@@ -428,11 +428,15 @@ const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardCl
 
 // ─── New project modal ───
 const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: Client[]; templates: Template[]; onClose: () => void; onCreated: () => void }) => {
+  const defaultClientId = (window as any).__newProjectClientId || '';
   const [form, setForm] = useState({
-    client_id: '', title: '', description: '', project_type: '', template_id: '',
+    client_id: defaultClientId, title: '', description: '', project_type: '', template_id: '',
     priority: 'medium', budget: '', start_date: '', deadline: '',
   });
   const [saving, setSaving] = useState(false);
+
+  // Cleanup
+  useEffect(() => { return () => { delete (window as any).__newProjectClientId; }; }, []);
 
   const handleCreate = async () => {
     if (!form.client_id || !form.title.trim()) { toast.error('Client et titre requis'); return; }
