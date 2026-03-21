@@ -223,8 +223,17 @@ const AdminProspects = () => {
     if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      const { data: existing } = await supabase.from('prospects').select('google_place_id');
-      const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
+      // Fetch ALL existing google_place_ids (paginated to bypass 1000 limit)
+      let allExisting: any[] = [];
+      let exFrom = 0;
+      let exKeep = true;
+      while (exKeep) {
+        const { data: exPage } = await supabase.from('prospects').select('google_place_id').range(exFrom, exFrom + 999);
+        allExisting = allExisting.concat(exPage || []);
+        if (!exPage || exPage.length < 1000) exKeep = false;
+        else exFrom += 1000;
+      }
+      const existingIds = new Set(allExisting.map(p => p.google_place_id).filter(Boolean));
 
       const countries: string[] = (!searchCountry && !searchCity && searchContinent && CONTINENTS[searchContinent])
         ? CONTINENTS[searchContinent]
