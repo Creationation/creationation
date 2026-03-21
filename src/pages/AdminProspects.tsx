@@ -425,12 +425,12 @@ const AdminProspects = () => {
           ))}
         </div>
 
-        <div className='flex gap-2 mb-6'>
-          <button onClick={() => setTab('prospects')} style={{ padding:'10px 20px', borderRadius:'var(--pill)', border:'none', fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, cursor:'pointer', background:tab==='prospects'?'var(--teal)':'var(--glass-bg)', color:tab==='prospects'?'#fff':'var(--text-mid)' }}>
-            Mes prospects
+        <div className='flex gap-2 mb-4'>
+          <button onClick={() => setTab('prospects')} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:tab==='prospects'?'var(--teal)':'var(--glass-bg)', color:tab==='prospects'?'#fff':'var(--text-mid)' }}>
+            Prospects
           </button>
-          <button onClick={() => setTab('search')} style={{ padding:'10px 20px', borderRadius:'var(--pill)', border:'none', fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, cursor:'pointer', background:tab==='search'?'var(--teal)':'var(--glass-bg)', color:tab==='search'?'#fff':'var(--text-mid)' }}>
-            <Search size={13} style={{ marginRight:6, verticalAlign:'middle' }}/> Chercher des prospects
+          <button onClick={() => setTab('search')} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:tab==='search'?'var(--teal)':'var(--glass-bg)', color:tab==='search'?'#fff':'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+            <Search size={12}/> Chercher
           </button>
         </div>
 
