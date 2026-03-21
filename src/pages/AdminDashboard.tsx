@@ -128,7 +128,15 @@ const AdminDashboard = () => {
       <AdminHeader />
 
       <div className="p-6 max-w-[1400px] mx-auto">
-        {/* Stats */}
+        {/* Project Alerts */}
+        <ProjectAlerts />
+
+        {/* Project KPIs */}
+        <div className="mb-6">
+          <ProjectKPIs />
+        </div>
+
+        {/* Lead Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             { label: 'Total prospects', value: stats.total, color: 'var(--charcoal)' },
