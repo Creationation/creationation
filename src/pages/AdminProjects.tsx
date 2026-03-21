@@ -133,6 +133,7 @@ const AdminProjects = () => {
     const clientMap = new Map(((cData || []) as unknown as any[]).map((c: any) => [c.id, c.business_name]));
     setClients((cData || []) as unknown as Client[]);
 
+
     // fetch task counts per project
     const { data: taskData } = await supabase.from('project_tasks' as any).select('project_id, status');
     const taskCounts: Record<string, { total: number; done: number }> = {};
