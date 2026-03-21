@@ -135,7 +135,7 @@ const AdminProjects = () => {
 
 
     // fetch task counts per project
-    const { data: taskData } = await supabase.from('project_tasks' as any).select('project_id, status');
+    const { data: taskData } = await supabase.from('project_tasks' as any).select('project_id, status') as unknown as { data: any[] };
     const taskCounts: Record<string, { total: number; done: number }> = {};
     (taskData || []).forEach((t: any) => {
       if (!taskCounts[t.project_id]) taskCounts[t.project_id] = { total: 0, done: 0 };
