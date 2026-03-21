@@ -224,6 +224,28 @@ const AdminClients = () => {
                     </div>
                   </div>
                 )}
+                {/* Invoice summary row */}
+                {clientInvoices[c.id] && editId !== c.id && (
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--glass-border)' }}>
+                    <button onClick={() => setExpandedClient(expandedClient === c.id ? null : c.id)} className="flex items-center gap-2 w-full" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)' }}>
+                      <FileText size={13} />
+                      <span>{clientInvoices[c.id].count} facture{clientInvoices[c.id].count > 1 ? 's' : ''}</span>
+                      <span style={{ color: 'var(--teal)', fontWeight: 600 }}>Facturé : {f(clientInvoices[c.id].total)} €</span>
+                      <span style={{ color: '#d4a55a', fontWeight: 600 }}>Encaissé : {f(clientInvoices[c.id].paid)} €</span>
+                      {clientInvoices[c.id].total - clientInvoices[c.id].paid > 0 && (
+                        <span style={{ color: 'var(--coral)', fontWeight: 600 }}>Solde : {f(clientInvoices[c.id].total - clientInvoices[c.id].paid)} €</span>
+                      )}
+                      <span className="ml-auto">{expandedClient === c.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</span>
+                    </button>
+                    {expandedClient === c.id && (
+                      <div className="mt-2">
+                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                          Voir les factures →
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
