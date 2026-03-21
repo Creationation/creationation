@@ -493,6 +493,9 @@ const AdminProspects = () => {
           <button onClick={() => setTab('search')} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:tab==='search'?'var(--teal)':'var(--glass-bg)', color:tab==='search'?'#fff':'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
             <Search size={12}/> Chercher
           </button>
+          <button onClick={() => setShowSectors(true)} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:'var(--glass-bg)', color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+            📊 Secteurs
+          </button>
         </div>
 
         {tab === 'search' && (
