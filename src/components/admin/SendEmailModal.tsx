@@ -30,7 +30,7 @@ L'équipe CreationNation`,
   },
   {
     label: 'Suivi',
-    subject: 'Creationation — Où en êtes-vous ?',
+    subject: 'CreationNation — Où en êtes-vous ?',
     body: `Bonjour {name},
 
 Je me permets de revenir vers vous suite à notre précédent échange. Avez-vous eu le temps de réfléchir à votre projet ?
