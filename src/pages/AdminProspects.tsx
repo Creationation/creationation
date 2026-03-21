@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye } from 'lucide-react';
+import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye, Reply } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
 import SectorsDashboard from '@/components/admin/SectorsDashboard';
 import ProspectDetailEnriched from '@/components/admin/ProspectDetailEnriched';
@@ -101,6 +101,16 @@ const AdminProspects = () => {
   const [transferring, setTransferring] = useState(false);
   const [scoring, setScoring] = useState(false);
   const [showSectors, setShowSectors] = useState(false);
+  const [scoreMin, setScoreMin] = useState(0);
+  const [sectorFilter, setSectorFilter] = useState<string[]>([]);
+  const [tagFilter, setTagFilter] = useState<string[]>([]);
+  const [sequenceFilter, setSequenceFilter] = useState<'all' | 'in_sequence' | 'not_in_sequence'>('all');
+  const [lastInteractionDays, setLastInteractionDays] = useState<number | null>(null);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [savedSearches, setSavedSearches] = useState<{ id: string; name: string; filters: any }[]>([]);
+  const [savingSearch, setSavingSearch] = useState(false);
+  const [allSectors, setAllSectors] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
 
   const scoreProspects = async () => {
     const targets = selectedIds.size > 0
@@ -130,6 +140,10 @@ const AdminProspects = () => {
     setSearchChunks((data as any as SearchChunk[]) || []);
   }, []);
 
+  const fetchSavedSearches = useCallback(async () => {
+    const { data } = await supabase.from('saved_searches').select('id, name, filters');
+    setSavedSearches((data as any[]) || []);
+  }, []);
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -137,7 +151,12 @@ const AdminProspects = () => {
     if (statusFilter !== 'all') query = query.eq('status', statusFilter as ProspectStatus);
     const { data, error } = await query;
     if (error) toast.error('Erreur chargement');
-    else setProspects((data as Prospect[]) || []);
+    else {
+      const p = (data as Prospect[]) || [];
+      setProspects(p);
+      setAllSectors([...new Set(p.map(x => x.sector).filter(Boolean))] as string[]);
+      setAllTags([...new Set(p.flatMap(x => x.tags || []).filter(Boolean))] as string[]);
+    }
     setLoading(false);
   }, [statusFilter]);
 
@@ -147,10 +166,35 @@ const AdminProspects = () => {
       setUserId(user.id);
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else { fetchProspects(); fetchChunks(); }
+        else { fetchProspects(); fetchChunks(); fetchSavedSearches(); }
       });
     });
   }, [navigate, fetchProspects]);
+
+  const saveSearch = async () => {
+    const name = prompt('Nom de la recherche :');
+    if (!name) return;
+    setSavingSearch(true);
+    const filters = { statusFilter, websiteFilter, scoreMin, sectorFilter, tagFilter, sequenceFilter, lastInteractionDays, searchQuery };
+    await supabase.from('saved_searches').insert({ name, filters, result_count: filteredProspects.length } as any);
+    toast.success('Recherche sauvegardée');
+    fetchSavedSearches();
+    setSavingSearch(false);
+  };
+
+  const loadSearch = (search: { filters: any }) => {
+    const f = search.filters;
+    if (f.statusFilter) setStatusFilter(f.statusFilter);
+    if (f.websiteFilter) setWebsiteFilter(f.websiteFilter);
+    if (typeof f.scoreMin === 'number') setScoreMin(f.scoreMin);
+    if (f.sectorFilter) setSectorFilter(f.sectorFilter);
+    if (f.tagFilter) setTagFilter(f.tagFilter);
+    if (f.sequenceFilter) setSequenceFilter(f.sequenceFilter);
+    if (f.lastInteractionDays !== undefined) setLastInteractionDays(f.lastInteractionDays);
+    if (f.searchQuery !== undefined) setSearchQuery(f.searchQuery);
+    setShowAdvancedFilters(true);
+    toast.success('Filtres chargés');
+  };
 
   const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
@@ -459,7 +503,12 @@ const AdminProspects = () => {
       (p.city && p.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (p.email && p.email.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesWebsite = websiteFilter === 'all' || (websiteFilter === 'no_website' ? !p.has_website : p.has_website);
-    return matchesQuery && matchesWebsite;
+    const matchesScore = (p.score || 0) >= scoreMin;
+    const matchesSector = sectorFilter.length === 0 || (p.sector && sectorFilter.includes(p.sector));
+    const matchesTags = tagFilter.length === 0 || (p.tags && p.tags.some(t => tagFilter.includes(t)));
+    const matchesSequence = sequenceFilter === 'all' || (sequenceFilter === 'in_sequence' ? !!p.sequence_id : !p.sequence_id);
+    const matchesInteraction = !lastInteractionDays || (p.last_emailed_at && ((Date.now() - new Date(p.last_emailed_at).getTime()) / 86400000) <= lastInteractionDays);
+    return matchesQuery && matchesWebsite && matchesScore && matchesSector && matchesTags && matchesSequence && matchesInteraction;
   });
 
   const prospectsNoSite = filteredProspects.filter(p => !p.has_website);
@@ -468,7 +517,12 @@ const AdminProspects = () => {
   const scoredProspects = prospects.filter(p => (p.score || 0) > 0);
   const avgScore = scoredProspects.length > 0 ? Math.round(scoredProspects.reduce((s, p) => s + (p.score || 0), 0) / scoredProspects.length) : 0;
   const inSequence = prospects.filter(p => p.sequence_id).length;
-  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length, avgScore, inSequence };
+  const replied = prospects.filter(p => p.status === 'replied').length;
+  const emailedTotal = prospects.filter(p => p.email_count > 0).length;
+  const responseRate = emailedTotal > 0 ? Math.round((replied / emailedTotal) * 100) : 0;
+  const now = new Date();
+  const convertedThisMonth = prospects.filter(p => p.status === 'converted' && p.last_emailed_at && new Date(p.last_emailed_at).getMonth() === now.getMonth() && new Date(p.last_emailed_at).getFullYear() === now.getFullYear()).length;
+  const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: emailedTotal, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length, avgScore, inSequence, responseRate, convertedThisMonth };
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
@@ -476,14 +530,14 @@ const AdminProspects = () => {
       <div style={{ maxWidth:1200, margin:'0 auto', padding:'16px' }}>
 
         {/* Stats — compact grid on mobile */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8, marginBottom:16 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(110px, 1fr))', gap:8, marginBottom:16 }}>
           {[
             { label:'Total', value:stats.total, icon:Target },
+            { label:'Score moyen', value:stats.avgScore, icon:Star },
+            { label:'Taux réponse', value:`${stats.responseRate}%`, icon:Reply },
+            { label:'Convertis (mois)', value:stats.convertedThisMonth, icon:ArrowRightLeft },
+            { label:'En séquence', value:stats.inSequence, icon:Send },
             { label:'Sans site', value:stats.noWebsite, icon:GlobeLock },
-            { label:'Avec site', value:stats.withWebsite, icon:Globe },
-            { label:'Ont email', value:stats.withEmail, icon:Mail },
-            { label:'Emailés', value:stats.emailed, icon:Send },
-            { label:'Convertis', value:stats.converted, icon:Star },
           ].map(s => (
             <div key={s.label} style={{ padding:'10px 12px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:16, display:'flex', alignItems:'center', gap:8 }}>
               <s.icon size={14} style={{ color:'var(--teal)', flexShrink:0 }}/>
@@ -688,6 +742,68 @@ const AdminProspects = () => {
                   <RefreshCw size={14}/>
                 </button>
               </div>
+              {/* Advanced filters toggle + saved searches */}
+              <div className='flex gap-2 items-center'>
+                <button onClick={() => setShowAdvancedFilters(!showAdvancedFilters)} style={{ padding:'6px 12px', borderRadius:100, border:'1px solid var(--glass-border)', background: showAdvancedFilters ? 'rgba(13,138,111,0.1)' : 'var(--glass-bg)', color: showAdvancedFilters ? 'var(--teal)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                  <Target size={11}/> Filtres avancés {showAdvancedFilters ? '▲' : '▼'}
+                </button>
+                <button onClick={saveSearch} disabled={savingSearch} style={{ padding:'6px 12px', borderRadius:100, border:'1px solid var(--glass-border)', background:'var(--glass-bg)', color:'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer' }}>
+                  💾 Sauvegarder
+                </button>
+                {savedSearches.length > 0 && (
+                  <select onChange={e => { const s = savedSearches.find(x => x.id === e.target.value); if (s) loadSearch(s); }} defaultValue='' style={{ padding:'6px 10px', borderRadius:100, border:'1px solid var(--glass-border)', background:'var(--glass-bg)', fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer', outline:'none' }}>
+                    <option value='' disabled>📂 Recherches sauvées</option>
+                    {savedSearches.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                )}
+              </div>
+              {showAdvancedFilters && (
+                <div style={{ padding:12, background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:16, display:'flex', flexDirection:'column', gap:10 }}>
+                  <div className='flex items-center gap-3 flex-wrap'>
+                    <div style={{ flex:'1 1 200px' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Score minimum: {scoreMin}</label>
+                      <input type='range' min={0} max={100} value={scoreMin} onChange={e => setScoreMin(Number(e.target.value))} style={{ width:'100%', accentColor:'var(--teal)' }} />
+                    </div>
+                    <div style={{ flex:'1 1 150px' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Séquence</label>
+                      <select value={sequenceFilter} onChange={e => setSequenceFilter(e.target.value as any)} style={{ width:'100%', padding:'6px 8px', background:'white', border:'1px solid var(--glass-border)', borderRadius:8, fontFamily:'var(--font-b)', fontSize:12, outline:'none' }}>
+                        <option value='all'>Toutes</option>
+                        <option value='in_sequence'>En séquence</option>
+                        <option value='not_in_sequence'>Hors séquence</option>
+                      </select>
+                    </div>
+                    <div style={{ flex:'1 1 150px' }}>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Dernière interaction (jours)</label>
+                      <select value={lastInteractionDays ?? ''} onChange={e => setLastInteractionDays(e.target.value ? Number(e.target.value) : null)} style={{ width:'100%', padding:'6px 8px', background:'white', border:'1px solid var(--glass-border)', borderRadius:8, fontFamily:'var(--font-b)', fontSize:12, outline:'none' }}>
+                        <option value=''>Toutes</option>
+                        <option value='7'>7 jours</option>
+                        <option value='30'>30 jours</option>
+                        <option value='90'>90 jours</option>
+                      </select>
+                    </div>
+                  </div>
+                  {allSectors.length > 0 && (
+                    <div>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Secteurs</label>
+                      <div className='flex flex-wrap gap-1'>
+                        {allSectors.map(s => (
+                          <button key={s} onClick={() => setSectorFilter(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])} style={{ padding:'3px 10px', borderRadius:100, border:'1px solid', borderColor: sectorFilter.includes(s) ? 'var(--teal)' : 'var(--glass-border)', background: sectorFilter.includes(s) ? 'rgba(13,138,111,0.1)' : 'transparent', color: sectorFilter.includes(s) ? 'var(--teal)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer' }}>{s}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {allTags.length > 0 && (
+                    <div>
+                      <label style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Tags</label>
+                      <div className='flex flex-wrap gap-1'>
+                        {allTags.map(t => (
+                          <button key={t} onClick={() => setTagFilter(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} style={{ padding:'3px 10px', borderRadius:100, border:'1px solid', borderColor: tagFilter.includes(t) ? 'var(--violet)' : 'var(--glass-border)', background: tagFilter.includes(t) ? 'rgba(124,92,191,0.1)' : 'transparent', color: tagFilter.includes(t) ? 'var(--violet)' : 'var(--text-mid)', fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer' }}>{t}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             {/* AI Email Finder bar */}
             <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
@@ -823,6 +939,7 @@ const AdminProspects = () => {
             setDetailProspect(null);
             transferToClients();
           }}
+          onRefresh={() => { fetchProspects(); }}
         />
       )}
 

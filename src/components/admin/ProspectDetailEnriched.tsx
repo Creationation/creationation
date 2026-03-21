@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { X, ArrowRightLeft, Shield, Mail, Eye, MousePointerClick, Reply, AlertTriangle, Ban } from 'lucide-react';
+import { X, ArrowRightLeft, Mail, Eye, MousePointerClick, Reply, AlertTriangle, Ban, Target, Plus, Loader2, Send, FileText } from 'lucide-react';
+import { toast } from 'sonner';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = {
@@ -26,17 +27,31 @@ const TRACKING_ICONS: Record<string, { icon: typeof Mail; color: string; label: 
 };
 
 type TrackingEvent = { id: string; event_type: string; created_at: string; event_data: any };
+type ProspectEmail = { id: string; subject: string; body: string; sent_at: string };
 
 interface Props {
   prospect: Prospect;
   onClose: () => void;
   onTransfer: () => void;
+  onRefresh?: () => void;
 }
 
-const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
-  const [tab, setTab] = useState<'info' | 'score' | 'audit' | 'tracking'>('info');
+const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Props) => {
+  const [tab, setTab] = useState<'info' | 'score' | 'audit' | 'tracking' | 'notes'>('info');
   const [tracking, setTracking] = useState<TrackingEvent[]>([]);
   const [loadingTracking, setLoadingTracking] = useState(false);
+  const [emails, setEmails] = useState<ProspectEmail[]>([]);
+  const [rescoring, setRescoring] = useState(false);
+  // Inline editing
+  const [editSector, setEditSector] = useState(prospect.sector || '');
+  const [editTags, setEditTags] = useState((prospect.tags || []).join(', '));
+  const [savingField, setSavingField] = useState(false);
+  // Notes
+  const [noteText, setNoteText] = useState('');
+  const [notes, setNotes] = useState(prospect.notes || '');
+  // Audit URL
+  const [auditUrl, setAuditUrl] = useState(prospect.competitor_site_url || '');
+  const [auditing, setAuditing] = useState(false);
 
   const fetchTracking = useCallback(async () => {
     setLoadingTracking(true);
@@ -46,6 +61,13 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
       .eq('prospect_id', prospect.id)
       .order('created_at', { ascending: false });
     setTracking((data as TrackingEvent[]) || []);
+    // Also fetch emails
+    const { data: emailData } = await supabase
+      .from('prospect_emails')
+      .select('id, subject, body, sent_at')
+      .eq('prospect_id', prospect.id)
+      .order('sent_at', { ascending: false });
+    setEmails((emailData as ProspectEmail[]) || []);
     setLoadingTracking(false);
   }, [prospect.id]);
 
@@ -57,6 +79,51 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
   const scoreBreakdown = prospect.score_breakdown as any;
   const hasScore = (prospect.score || 0) > 0;
   const hasAudit = !!audit;
+
+  const handleRescore = async () => {
+    setRescoring(true);
+    try {
+      const { error } = await supabase.functions.invoke('score-prospect', {
+        body: { prospect_ids: [prospect.id] }
+      });
+      if (error) throw error;
+      toast.success('Score mis à jour');
+      onRefresh?.();
+    } catch { toast.error('Erreur scoring'); }
+    finally { setRescoring(false); }
+  };
+
+  const handleSaveSector = async () => {
+    setSavingField(true);
+    const tagsArr = editTags.split(',').map(t => t.trim()).filter(Boolean);
+    await supabase.from('prospects').update({ sector: editSector || null, tags: tagsArr.length ? tagsArr : null } as any).eq('id', prospect.id);
+    toast.success('Secteur / tags mis à jour');
+    setSavingField(false);
+    onRefresh?.();
+  };
+
+  const handleSaveNotes = async () => {
+    const fullNotes = notes ? `${notes}\n\n---\n${new Date().toLocaleDateString('fr-FR')} : ${noteText}` : noteText;
+    await supabase.from('prospects').update({ notes: fullNotes } as any).eq('id', prospect.id);
+    setNotes(fullNotes);
+    setNoteText('');
+    toast.success('Note ajoutée');
+  };
+
+  const handleLaunchAudit = async () => {
+    if (!auditUrl) return;
+    setAuditing(true);
+    try {
+      await supabase.from('prospects').update({ competitor_site_url: auditUrl } as any).eq('id', prospect.id);
+      const { error } = await supabase.functions.invoke('audit-competitor-site', {
+        body: { prospect_id: prospect.id, url: auditUrl }
+      });
+      if (error) throw error;
+      toast.success('Audit lancé');
+      onRefresh?.();
+    } catch { toast.error('Erreur audit'); }
+    finally { setAuditing(false); }
+  };
 
   const tabBtn = (key: string, label: string, active: boolean) => (
     <button
@@ -84,15 +151,17 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
             <span style={{ padding: '3px 10px', borderRadius: 100, background: SC[prospect.status] + '18', color: SC[prospect.status], fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-b)' }}>{SL[prospect.status]}</span>
             {prospect.business_type && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'var(--glass-bg)', color: 'var(--text-mid)', fontSize: 12, fontFamily: 'var(--font-b)' }}>{prospect.business_type}</span>}
             {hasScore && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'rgba(13,138,111,0.1)', color: 'var(--teal)', fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-b)' }}>Score: {prospect.score}/100</span>}
+            {prospect.sequence_id && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'rgba(59,130,246,0.1)', color: '#3B82F6', fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-b)' }}>Étape {(prospect.sequence_step || 0) + 1}</span>}
           </div>
         </div>
 
         {/* Tabs */}
         <div className="flex gap-2 flex-wrap" style={{ padding: '12px 24px 0' }}>
-          {tabBtn('info', 'Infos', tab === 'info')}
-          {hasScore && tabBtn('score', 'Score', tab === 'score')}
-          {hasAudit && tabBtn('audit', 'Audit', tab === 'audit')}
-          {tabBtn('tracking', 'Tracking', tab === 'tracking')}
+          {tabBtn('info', 'Profil', tab === 'info')}
+          {tabBtn('score', 'Score', tab === 'score')}
+          {tabBtn('audit', 'Audit', tab === 'audit')}
+          {tabBtn('tracking', 'Emails', tab === 'tracking')}
+          {tabBtn('notes', 'Notes', tab === 'notes')}
         </div>
 
         {/* Content */}
@@ -105,7 +174,6 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
                 { label: 'Téléphone', value: prospect.phone, icon: '📞' },
                 { label: 'Ville', value: [prospect.city, prospect.country].filter(Boolean).join(', '), icon: '📍' },
                 { label: 'Site web', value: prospect.website_url, icon: '🌐', isLink: true },
-                { label: 'Secteur', value: prospect.sector, icon: '🏷️' },
                 { label: 'Emails envoyés', value: String(prospect.email_count || 0), icon: '📤' },
                 { label: 'Dernier email', value: prospect.last_emailed_at ? new Date(prospect.last_emailed_at).toLocaleDateString('fr-FR') : null, icon: '📅' },
                 { label: 'Créé le', value: prospect.created_at ? new Date(prospect.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : null, icon: '🕐' },
@@ -120,22 +188,27 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
                   </div>
                 </div>
               ))}
-              {prospect.notes && (
-                <div style={{ marginTop: 12, padding: 12, background: 'rgba(212,165,90,0.08)', borderRadius: 16, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)' }}>
-                  <strong style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--text-light)' }}>Notes</strong>
-                  <p style={{ margin: '6px 0 0' }}>{prospect.notes}</p>
+              {/* Inline sector & tags editing */}
+              <div style={{ marginTop: 16, padding: 12, background: 'var(--glass-bg)', borderRadius: 16 }}>
+                <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Secteur & Tags</div>
+                <div className='flex flex-col gap-2'>
+                  <input value={editSector} onChange={e => setEditSector(e.target.value)} placeholder='Secteur (ex: restaurant)' style={{ padding: '8px 12px', border: '1px solid var(--glass-border)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none' }} />
+                  <input value={editTags} onChange={e => setEditTags(e.target.value)} placeholder='Tags (séparés par virgule)' style={{ padding: '8px 12px', border: '1px solid var(--glass-border)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none' }} />
+                  <button onClick={handleSaveSector} disabled={savingField} style={{ padding: '6px 12px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 100, fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer', alignSelf: 'flex-start' }}>
+                    {savingField ? 'Enregistrement...' : 'Enregistrer'}
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           )}
 
-          {tab === 'score' && hasScore && scoreBreakdown && (
+          {tab === 'score' && (
             <div className="flex flex-col gap-3">
               <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                <div style={{ fontFamily: 'var(--font-h)', fontSize: 48, color: 'var(--teal)' }}>{prospect.score}</div>
+                <div style={{ fontFamily: 'var(--font-h)', fontSize: 48, color: 'var(--teal)' }}>{prospect.score || 0}</div>
                 <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Score global / 100</div>
               </div>
-              {Object.entries(scoreBreakdown).map(([key, value]) => {
+              {hasScore && scoreBreakdown && Object.entries(scoreBreakdown).map(([key, value]) => {
                 const numVal = typeof value === 'number' ? value : 0;
                 return (
                   <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', background: 'var(--glass-bg)', borderRadius: 12 }}>
@@ -149,87 +222,135 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer }: Props) => {
                   </div>
                 );
               })}
+              <button onClick={handleRescore} disabled={rescoring} style={{ marginTop: 8, padding: '10px 18px', background: '#3B82F6', color: '#fff', border: 'none', borderRadius: 100, fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: rescoring ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6, alignSelf: 'center', opacity: rescoring ? 0.7 : 1 }}>
+                {rescoring ? <Loader2 size={14} className='animate-spin' /> : <Target size={14} />} Rescorer
+              </button>
             </div>
           )}
 
-          {tab === 'audit' && hasAudit && (
+          {tab === 'audit' && (
             <div className="flex flex-col gap-4">
-              {/* Score global audit */}
-              <div style={{ textAlign: 'center', padding: 16, background: 'var(--glass-bg)', borderRadius: 16 }}>
-                <div style={{ fontFamily: 'var(--font-h)', fontSize: 40, color: (audit.score || 0) >= 60 ? '#d4a55a' : '#e8735a' }}>{audit.score || '?'}/100</div>
-                <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Score du site concurrent</div>
-              </div>
-
-              {/* Sub-scores */}
-              {['design_score', 'mobile_score', 'performance_score', 'seo_score', 'content_score'].map(key => {
-                const val = audit[key] || 0;
-                const label = key.replace('_score', '').replace(/_/g, ' ');
-                return (
-                  <div key={key} className="flex items-center gap-3" style={{ padding: '6px 0' }}>
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)', flex: 1, textTransform: 'capitalize' }}>{label}</span>
-                    <div style={{ width: 80, height: 6, background: 'var(--glass-border)', borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{ width: `${(val / 20) * 100}%`, height: '100%', background: val >= 14 ? 'var(--teal)' : val >= 10 ? '#d4a55a' : '#e8735a', borderRadius: 3 }} />
-                    </div>
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, width: 36, textAlign: 'right' }}>{val}/20</span>
+              {hasAudit ? (
+                <>
+                  <div style={{ textAlign: 'center', padding: 16, background: 'var(--glass-bg)', borderRadius: 16 }}>
+                    <div style={{ fontFamily: 'var(--font-h)', fontSize: 40, color: (audit.score || 0) >= 60 ? '#d4a55a' : '#e8735a' }}>{audit.score || '?'}/100</div>
+                    <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Score du site concurrent</div>
                   </div>
-                );
-              })}
-
-              {/* Weaknesses */}
-              {audit.weaknesses?.length > 0 && (
-                <div>
-                  <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: '#e8735a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>⚠️ Points faibles</h4>
-                  {audit.weaknesses.map((w: string, i: number) => (
-                    <div key={i} style={{ padding: '6px 12px', background: 'rgba(232,115,90,0.06)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 4 }}>• {w}</div>
-                  ))}
-                </div>
-              )}
-
-              {/* Pitch arguments */}
-              {audit.pitch_arguments?.length > 0 && (
-                <div>
-                  <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>💡 Arguments de vente</h4>
-                  {audit.pitch_arguments.map((a: string, i: number) => (
-                    <div key={i} style={{ padding: '6px 12px', background: 'rgba(13,138,111,0.06)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 4 }}>✓ {a}</div>
-                  ))}
-                </div>
-              )}
-
-              {audit.summary && (
-                <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', fontStyle: 'italic' }}>
-                  {audit.summary}
+                  {['design_score', 'mobile_score', 'performance_score', 'seo_score', 'content_score'].map(key => {
+                    const val = audit[key] || 0;
+                    const label = key.replace('_score', '').replace(/_/g, ' ');
+                    return (
+                      <div key={key} className="flex items-center gap-3" style={{ padding: '6px 0' }}>
+                        <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)', flex: 1, textTransform: 'capitalize' }}>{label}</span>
+                        <div style={{ width: 80, height: 6, background: 'var(--glass-border)', borderRadius: 3, overflow: 'hidden' }}>
+                          <div style={{ width: `${(val / 20) * 100}%`, height: '100%', background: val >= 14 ? 'var(--teal)' : val >= 10 ? '#d4a55a' : '#e8735a', borderRadius: 3 }} />
+                        </div>
+                        <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, width: 36, textAlign: 'right' }}>{val}/20</span>
+                      </div>
+                    );
+                  })}
+                  {audit.weaknesses?.length > 0 && (
+                    <div>
+                      <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: '#e8735a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>⚠️ Points faibles</h4>
+                      {audit.weaknesses.map((w: string, i: number) => (
+                        <div key={i} style={{ padding: '6px 12px', background: 'rgba(232,115,90,0.06)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 4 }}>• {w}</div>
+                      ))}
+                    </div>
+                  )}
+                  {audit.pitch_arguments?.length > 0 && (
+                    <div>
+                      <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>💡 Arguments de vente</h4>
+                      {audit.pitch_arguments.map((a: string, i: number) => (
+                        <div key={i} onClick={() => { navigator.clipboard.writeText(a); toast.success('Copié !'); }} style={{ padding: '6px 12px', background: 'rgba(13,138,111,0.06)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 4, cursor: 'pointer' }} title='Cliquer pour copier'>✓ {a}</div>
+                      ))}
+                    </div>
+                  )}
+                  {audit.summary && (
+                    <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 12, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', fontStyle: 'italic' }}>
+                      {audit.summary}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div style={{ textAlign: 'center', padding: 24 }}>
+                  <FileText size={32} style={{ color: 'var(--text-ghost)', margin: '0 auto 12px' }} />
+                  <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', marginBottom: 16 }}>Aucun audit. Entrez l'URL du site concurrent pour lancer l'audit.</p>
+                  <input value={auditUrl} onChange={e => setAuditUrl(e.target.value)} placeholder='https://concurrent.com' style={{ width: '100%', padding: '10px 14px', border: '1px solid var(--glass-border)', borderRadius: 12, fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+                  <button onClick={handleLaunchAudit} disabled={auditing || !auditUrl} style={{ padding: '10px 20px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 100, fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: auditing ? 'not-allowed' : 'pointer', opacity: auditing ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 6, margin: '0 auto' }}>
+                    {auditing ? <Loader2 size={14} className='animate-spin' /> : <Target size={14} />} Lancer l'audit
+                  </button>
                 </div>
               )}
             </div>
           )}
 
           {tab === 'tracking' && (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {loadingTracking ? (
                 <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Chargement...</div>
-              ) : tracking.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-light)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
-                  <Mail size={24} style={{ opacity: 0.3, margin: '0 auto 8px' }} />
-                  Aucun événement de tracking
+              ) : (
+                <>
+                  {/* Email history */}
+                  {emails.length > 0 && (
+                    <div>
+                      <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>📧 Emails envoyés</h4>
+                      {emails.map(em => (
+                        <div key={em.id} style={{ padding: '10px 12px', background: 'var(--glass-bg)', borderRadius: 12, marginBottom: 6 }}>
+                          <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{em.subject}</div>
+                          <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>
+                            {new Date(em.sent_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {/* Tracking events */}
+                  <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>📊 Événements de tracking</h4>
+                  {tracking.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: 24, color: 'var(--text-light)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+                      <Mail size={24} style={{ opacity: 0.3, margin: '0 auto 8px' }} />
+                      Aucun événement
+                    </div>
+                  ) : (
+                    tracking.map(ev => {
+                      const cfg = TRACKING_ICONS[ev.event_type] || { icon: Mail, color: 'var(--text-light)', label: ev.event_type };
+                      const Icon = cfg.icon;
+                      return (
+                        <div key={ev.id} className="flex items-center gap-3" style={{ padding: '10px 12px', background: 'var(--glass-bg)', borderRadius: 12 }}>
+                          <div style={{ width: 32, height: 32, borderRadius: '50%', background: cfg.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <Icon size={14} style={{ color: cfg.color }} />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{cfg.label}</div>
+                            <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>
+                              {new Date(ev.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {tab === 'notes' && (
+            <div className="flex flex-col gap-3">
+              <div>
+                <textarea value={noteText} onChange={e => setNoteText(e.target.value)} placeholder='Ajouter une note...' rows={3} style={{ width: '100%', padding: '10px 14px', border: '1px solid var(--glass-border)', borderRadius: 12, fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
+                <button onClick={handleSaveNotes} disabled={!noteText.trim()} style={{ marginTop: 6, padding: '8px 16px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 100, fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: noteText.trim() ? 'pointer' : 'not-allowed', opacity: noteText.trim() ? 1 : 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Plus size={12} /> Ajouter
+                </button>
+              </div>
+              {notes ? (
+                <div style={{ padding: 12, background: 'var(--glass-bg)', borderRadius: 16, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                  {notes}
                 </div>
               ) : (
-                tracking.map(ev => {
-                  const cfg = TRACKING_ICONS[ev.event_type] || { icon: Mail, color: 'var(--text-light)', label: ev.event_type };
-                  const Icon = cfg.icon;
-                  return (
-                    <div key={ev.id} className="flex items-center gap-3" style={{ padding: '10px 12px', background: 'var(--glass-bg)', borderRadius: 12 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: cfg.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <Icon size={14} style={{ color: cfg.color }} />
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{cfg.label}</div>
-                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>
-                          {new Date(ev.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
+                <div style={{ textAlign: 'center', padding: 24, color: 'var(--text-light)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+                  Aucune note pour ce prospect.
+                </div>
               )}
             </div>
           )}
