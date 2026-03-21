@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      client_feedback: {
+        Row: {
+          client_id: string
+          comment: string | null
+          id: string
+          project_id: string
+          rating: number
+          submitted_at: string | null
+        }
+        Insert: {
+          client_id: string
+          comment?: string | null
+          id?: string
+          project_id: string
+          rating: number
+          submitted_at?: string | null
+        }
+        Update: {
+          client_id?: string
+          comment?: string | null
+          id?: string
+          project_id?: string
+          rating?: number
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_feedback_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_feedback_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_payments: {
         Row: {
           amount: number
@@ -54,7 +96,10 @@ export type Database = {
       }
       clients: {
         Row: {
+          avatar_url: string | null
           business_name: string
+          company_address: string | null
+          company_vat: string | null
           contact_name: string | null
           created_at: string | null
           email: string | null
@@ -63,6 +108,11 @@ export type Database = {
           notes: string | null
           phone: string | null
           plan: string | null
+          portal_enabled: boolean | null
+          portal_invited_at: string | null
+          portal_last_login: string | null
+          portal_user_id: string | null
+          preferred_language: string | null
           prospect_id: string | null
           started_at: string | null
           status: string | null
@@ -71,7 +121,10 @@ export type Database = {
           website_url: string | null
         }
         Insert: {
+          avatar_url?: string | null
           business_name: string
+          company_address?: string | null
+          company_vat?: string | null
           contact_name?: string | null
           created_at?: string | null
           email?: string | null
@@ -80,6 +133,11 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           plan?: string | null
+          portal_enabled?: boolean | null
+          portal_invited_at?: string | null
+          portal_last_login?: string | null
+          portal_user_id?: string | null
+          preferred_language?: string | null
           prospect_id?: string | null
           started_at?: string | null
           status?: string | null
@@ -88,7 +146,10 @@ export type Database = {
           website_url?: string | null
         }
         Update: {
+          avatar_url?: string | null
           business_name?: string
+          company_address?: string | null
+          company_vat?: string | null
           contact_name?: string | null
           created_at?: string | null
           email?: string | null
@@ -97,6 +158,11 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           plan?: string | null
+          portal_enabled?: boolean | null
+          portal_invited_at?: string | null
+          portal_last_login?: string | null
+          portal_user_id?: string | null
+          preferred_language?: string | null
           prospect_id?: string | null
           started_at?: string | null
           status?: string | null
@@ -110,6 +176,63 @@ export type Database = {
             columns: ["prospect_id"]
             isOneToOne: false
             referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deliverable_reviews: {
+        Row: {
+          client_comment: string | null
+          created_at: string | null
+          description: string | null
+          file_urls: Json | null
+          id: string
+          milestone_id: string | null
+          project_id: string
+          reviewed_at: string | null
+          status: Database["public"]["Enums"]["review_status"]
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          client_comment?: string | null
+          created_at?: string | null
+          description?: string | null
+          file_urls?: Json | null
+          id?: string
+          milestone_id?: string | null
+          project_id: string
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["review_status"]
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          client_comment?: string | null
+          created_at?: string | null
+          description?: string | null
+          file_urls?: Json | null
+          id?: string
+          milestone_id?: string | null
+          project_id?: string
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["review_status"]
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deliverable_reviews_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliverable_reviews_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
@@ -541,6 +664,91 @@ export type Database = {
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portal_messages: {
+        Row: {
+          attachments: Json | null
+          content: string
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          project_id: string
+          read_at: string | null
+          sender_id: string
+          sender_type: Database["public"]["Enums"]["message_sender_type"]
+        }
+        Insert: {
+          attachments?: Json | null
+          content: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          project_id: string
+          read_at?: string | null
+          sender_id: string
+          sender_type: Database["public"]["Enums"]["message_sender_type"]
+        }
+        Update: {
+          attachments?: Json | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          project_id?: string
+          read_at?: string | null
+          sender_id?: string
+          sender_type?: Database["public"]["Enums"]["message_sender_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_messages_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portal_notifications: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          link: string | null
+          message: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          message?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          message?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_notifications_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
         ]
@@ -1226,7 +1434,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "client"
       invoice_status:
         | "draft"
         | "sent"
@@ -1237,6 +1445,14 @@ export type Database = {
         | "cancelled"
         | "refunded"
       lead_status: "new" | "contacted" | "qualified" | "converted" | "lost"
+      message_sender_type: "client" | "team"
+      notification_type:
+        | "project_update"
+        | "message"
+        | "invoice"
+        | "deliverable_review"
+        | "milestone_completed"
+        | "general"
       project_priority: "low" | "medium" | "high" | "urgent"
       project_status:
         | "brief"
@@ -1247,6 +1463,7 @@ export type Database = {
         | "maintenance"
       prospect_status: "new" | "emailed" | "replied" | "converted" | "rejected"
       recurring_frequency: "weekly" | "monthly" | "quarterly" | "yearly"
+      review_status: "pending" | "approved" | "revision_requested"
       task_status: "todo" | "in_progress" | "done"
       tracking_event:
         | "sent"
@@ -1382,7 +1599,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "client"],
       invoice_status: [
         "draft",
         "sent",
@@ -1394,6 +1611,15 @@ export const Constants = {
         "refunded",
       ],
       lead_status: ["new", "contacted", "qualified", "converted", "lost"],
+      message_sender_type: ["client", "team"],
+      notification_type: [
+        "project_update",
+        "message",
+        "invoice",
+        "deliverable_review",
+        "milestone_completed",
+        "general",
+      ],
       project_priority: ["low", "medium", "high", "urgent"],
       project_status: [
         "brief",
@@ -1405,6 +1631,7 @@ export const Constants = {
       ],
       prospect_status: ["new", "emailed", "replied", "converted", "rejected"],
       recurring_frequency: ["weekly", "monthly", "quarterly", "yearly"],
+      review_status: ["pending", "approved", "revision_requested"],
       task_status: ["todo", "in_progress", "done"],
       tracking_event: [
         "sent",
