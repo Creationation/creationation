@@ -704,6 +704,7 @@ const AdminProspects = () => {
                 {scoring ? 'Scoring...' : selectedIds.size > 0 ? `Scorer IA (${selectedIds.size} sel.)` : 'Scorer tous IA'}
               </button>
             </div>
+            {selectedIds.size > 0 && (
               <div style={{ padding:'10px 14px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', gap:8 }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--teal)', fontWeight:600, marginRight:'auto' }}>{selectedIds.size} prospect(s) sélectionné(s)</span>
                 <button onClick={() => setSelectedIds(new Set())} style={{ padding:'6px 12px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer' }}>Désélectionner</button>
