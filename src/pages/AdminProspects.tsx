@@ -696,7 +696,7 @@ const AdminProspects = () => {
                       <h3 style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', margin:0 }}>Sans site internet</h3>
                       <span style={{ padding:'2px 10px', borderRadius:'var(--pill)', background:'rgba(13,138,111,0.1)', color:'var(--teal)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600 }}>{prospectsNoSite.length}</span>
                     </div>
-                    <ProspectTable prospects={prospectsNoSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsNoSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} />
+                    <ProspectTable prospects={prospectsNoSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsNoSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} onViewDetail={setDetailProspect} />
                   </div>
                 )}
 
