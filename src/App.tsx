@@ -8,6 +8,7 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
+import AdminRoute from "./components/admin/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProspects from "./pages/AdminProspects";
 import AdminSequences from "./pages/AdminSequences";
@@ -46,14 +47,14 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/prospects" element={<AdminProspects />} />
-              <Route path="/admin/sequences" element={<AdminSequences />} />
-              <Route path="/admin/projects" element={<AdminProjects />} />
-              <Route path="/admin/clients" element={<AdminClients />} />
-              <Route path="/admin/invoices" element={<AdminInvoices />} />
-              <Route path="/admin/revenues" element={<AdminRevenues />} />
-              <Route path="/admin/costs" element={<AdminCosts />} />
+              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+              <Route path="/admin/prospects" element={<AdminRoute><AdminProspects /></AdminRoute>} />
+              <Route path="/admin/sequences" element={<AdminRoute><AdminSequences /></AdminRoute>} />
+              <Route path="/admin/projects" element={<AdminRoute><AdminProjects /></AdminRoute>} />
+              <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
+              <Route path="/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
+              <Route path="/admin/revenues" element={<AdminRoute><AdminRevenues /></AdminRoute>} />
+              <Route path="/admin/costs" element={<AdminRoute><AdminCosts /></AdminRoute>} />
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>
