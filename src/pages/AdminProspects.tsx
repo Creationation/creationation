@@ -92,6 +92,14 @@ const AdminProspects = () => {
   const [findingEmails, setFindingEmails] = useState(false);
   const [findingInfo, setFindingInfo] = useState(false);
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
+  const [searchChunks, setSearchChunks] = useState<SearchChunk[]>([]);
+  const [showChunkHistory, setShowChunkHistory] = useState(false);
+
+  const fetchChunks = useCallback(async () => {
+    const { data } = await supabase.from('search_chunks' as any).select('*').order('created_at', { ascending: false });
+    setSearchChunks((data as any as SearchChunk[]) || []);
+  }, []);
+
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
