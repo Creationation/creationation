@@ -403,22 +403,23 @@ const AdminProspects = () => {
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
       <AdminHeader />
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'24px' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'16px' }}>
 
-        <div className='flex flex-wrap gap-3 mb-6'>
+        {/* Stats — compact grid on mobile */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8, marginBottom:16 }}>
           {[
             { label:'Total', value:stats.total, icon:Target },
             { label:'Sans site', value:stats.noWebsite, icon:GlobeLock },
             { label:'Avec site', value:stats.withWebsite, icon:Globe },
-            { label:'Ont un email', value:stats.withEmail, icon:Mail },
-            { label:'Emailes', value:stats.emailed, icon:Send },
+            { label:'Ont email', value:stats.withEmail, icon:Mail },
+            { label:'Emailés', value:stats.emailed, icon:Send },
             { label:'Convertis', value:stats.converted, icon:Star },
           ].map(s => (
-            <div key={s.label} style={{ flex:'1 1 140px', padding:'14px 16px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', display:'flex', alignItems:'center', gap:10 }}>
-              <s.icon size={16} style={{ color:'var(--teal)' }}/>
-              <div>
-                <div style={{ fontFamily:'var(--font-h)', fontSize:18, color:'var(--charcoal)' }}>{s.value}</div>
-                <div style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1 }}>{s.label}</div>
+            <div key={s.label} style={{ padding:'10px 12px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:16, display:'flex', alignItems:'center', gap:8 }}>
+              <s.icon size={14} style={{ color:'var(--teal)', flexShrink:0 }}/>
+              <div style={{ minWidth:0 }}>
+                <div style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', lineHeight:1.1 }}>{s.value}</div>
+                <div style={{ fontFamily:'var(--font-b)', fontSize:9, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.label}</div>
               </div>
             </div>
           ))}
