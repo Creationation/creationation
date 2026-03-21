@@ -124,6 +124,12 @@ const AdminProspects = () => {
 
   const toggleSearchType = (t: string) => setSearchTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
+  const isChunkDone = (country: string, city: string, type: string) => {
+    return searchChunks.some(c =>
+      (c.country || '') === country && (c.city || '') === city && c.business_type === type
+    );
+  };
+
   const handleSearch = async (skipDetails = false) => {
     const types = searchTypes.includes('Autre') ? [...searchTypes.filter(t => t !== 'Autre'), ...(customType ? [customType] : [])] : searchTypes;
     const location = searchCity || searchCountry || searchContinent;
@@ -133,18 +139,29 @@ const AdminProspects = () => {
       const { data: existing } = await supabase.from('prospects').select('google_place_id');
       const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
 
-      // When only a continent is selected (no country, no city), iterate over each country in that continent
       const countries: string[] = (!searchCountry && !searchCity && searchContinent && CONTINENTS[searchContinent])
         ? CONTINENTS[searchContinent]
         : [searchCountry || ''];
 
       const allResults: SearchResult[] = [];
+      let skippedChunks = 0;
       let totalSearches = types.length * countries.length;
       let completedSearches = 0;
 
       for (const country of countries) {
         for (const type of types) {
           completedSearches++;
+          // Skip already-searched chunks
+          if (isChunkDone(country, searchCity, type)) {
+            skippedChunks++;
+            if (countries.length > 1) {
+              toast.info(`⏭️ Déjà cherché: ${type} en ${country}${searchCity ? ' / ' + searchCity : ''} — ignoré (${completedSearches}/${totalSearches})`, { id: 'search-progress', duration: 1500 });
+            } else {
+              toast.info(`⏭️ Cette recherche a déjà été effectuée (${type} en ${country || 'tous'}${searchCity ? ' / ' + searchCity : ''}). Résultats déjà dans ta base.`, { duration: 3000 });
+            }
+            continue;
+          }
+
           if (countries.length > 1) {
             toast.info(`Recherche ${completedSearches}/${totalSearches}: ${type} en ${country}...`, { id: 'search-progress' });
           }
@@ -154,14 +171,32 @@ const AdminProspects = () => {
             });
             if (error) { console.warn(`Error for ${type} in ${country}:`, error.message); continue; }
             const results = (data.results || []) as SearchResult[];
+            let chunkCount = 0;
             results.forEach(r => {
-              // Fix city/country from the actual search params
               r.country = country || searchContinent || '';
               r.city = searchCity || r.city || '';
               if (!allResults.find(e => e.google_place_id === r.google_place_id) && !existingIds.has(r.google_place_id)) {
                 allResults.push(r);
+                chunkCount++;
               }
             });
+
+            // Save this chunk
+            const chunkCost = skipDetails
+              ? COST_EUR.GOOGLE_TEXT_SEARCH
+              : COST_EUR.GOOGLE_TEXT_SEARCH + chunkCount * COST_EUR.GOOGLE_WEBSITE_CHECK;
+            if (userId) {
+              await supabase.from('search_chunks' as any).insert({
+                user_id: userId,
+                continent: searchContinent || null,
+                country: country || null,
+                city: searchCity || null,
+                business_type: type,
+                results_count: chunkCount,
+                mode: skipDetails ? 'eco' : 'standard',
+                cost_eur: chunkCost,
+              } as any);
+            }
           } catch (e: any) {
             console.warn(`Search failed for ${type} in ${country}:`, e.message);
           }
@@ -190,13 +225,18 @@ const AdminProspects = () => {
       setSearchResults(allResults);
       const mode = skipDetails ? ' (mode éco)' : '';
       const countriesInfo = countries.length > 1 ? ` dans ${countries.length} pays` : '';
-      toast.success(allResults.length + ' résultats trouvés et sauvegardés' + mode + countriesInfo, { id: 'search-progress' });
-      // Log operation
-      const searchCalls = Math.ceil(allResults.length / 20);
+      const skippedInfo = skippedChunks > 0 ? ` (${skippedChunks} chunks déjà faits, ignorés)` : '';
+      if (skippedChunks === totalSearches) {
+        toast.warning('Toutes ces recherches ont déjà été effectuées ! Change de localisation ou de type pour trouver de nouveaux prospects.', { id: 'search-progress', duration: 5000 });
+      } else {
+        toast.success(allResults.length + ' nouveaux résultats' + mode + countriesInfo + skippedInfo, { id: 'search-progress' });
+      }
+      const actualSearches = totalSearches - skippedChunks;
       const gCost = skipDetails
-        ? searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH
-        : searchCalls * COST_EUR.GOOGLE_TEXT_SEARCH + allResults.length * COST_EUR.GOOGLE_WEBSITE_CHECK + (fetchPhone ? Math.round(allResults.length * 0.4) * COST_EUR.GOOGLE_PHONE_DETAIL : 0);
-      if (userId) logOperation(userId, 'google_search', `Recherche ${skipDetails ? 'éco' : 'standard'}: ${types.join(', ')}${countriesInfo}`, gCost, allResults.length, { mode: skipDetails ? 'eco' : 'standard', types, countries, fetchPhone, resultCount: allResults.length });
+        ? actualSearches * COST_EUR.GOOGLE_TEXT_SEARCH
+        : actualSearches * COST_EUR.GOOGLE_TEXT_SEARCH + allResults.length * COST_EUR.GOOGLE_WEBSITE_CHECK + (fetchPhone ? Math.round(allResults.length * 0.4) * COST_EUR.GOOGLE_PHONE_DETAIL : 0);
+      if (userId && actualSearches > 0) logOperation(userId, 'google_search', `Recherche ${skipDetails ? 'éco' : 'standard'}: ${types.join(', ')}${countriesInfo}${skippedInfo}`, gCost, allResults.length, { mode: skipDetails ? 'eco' : 'standard', types, countries, fetchPhone, resultCount: allResults.length, skippedChunks });
+      fetchChunks();
     } catch (e: any) { toast.error(e.message || 'Erreur'); }
     finally { setSearching(false); }
   };
