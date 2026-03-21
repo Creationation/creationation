@@ -785,7 +785,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
             ))}
           </tr>
         </thead>
-        <tbody>{prospects.map(p => <ProspectRow key={p.id} prospect={p} selected={selectedIds.has(p.id)} onToggle={() => onToggleSelect(p.id)} onDelete={() => onDelete(p.id)} onUpdateEmail={email => onUpdateEmail(p.id, email)} onUpdateStatus={status => onUpdateStatus(p.id, status)} />)}</tbody>
+        <tbody>{prospects.map(p => <ProspectRow key={p.id} prospect={p} selected={selectedIds.has(p.id)} onToggle={() => onToggleSelect(p.id)} onDelete={() => onDelete(p.id)} onUpdateEmail={email => onUpdateEmail(p.id, email)} onUpdateStatus={status => onUpdateStatus(p.id, status)} onViewDetail={() => onViewDetail(p)} />)}</tbody>
       </table>
     </div>
     <div className='md:hidden flex flex-col'>
