@@ -155,11 +155,12 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           {/* Tabs */}
           <div className="flex gap-1 mb-4 border-b" style={{ borderColor: 'var(--glass-border)' }}>
             {([
-              { key: 'tasks', label: 'Tâches', icon: Check, count: tasks.length },
-              { key: 'milestones', label: 'Jalons', icon: Milestone, count: milestones.length },
-              { key: 'notes', label: 'Notes', icon: MessageSquare, count: notes.length },
-              { key: 'files', label: 'Fichiers', icon: FileUp, count: files.length },
-            ] as const).map(t => (
+              { key: 'tasks' as const, label: 'Tâches', icon: Check, count: tasks.length },
+              { key: 'milestones' as const, label: 'Jalons', icon: Milestone, count: milestones.length },
+              { key: 'notes' as const, label: 'Notes', icon: MessageSquare, count: notes.length },
+              { key: 'files' as const, label: 'Fichiers', icon: FileUp, count: files.length },
+              { key: 'clientmsgs' as const, label: 'Client', icon: MessagesSquare, count: 0 },
+            ]).map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', border: 'none',
                 borderBottom: tab === t.key ? '2px solid var(--teal)' : '2px solid transparent',
