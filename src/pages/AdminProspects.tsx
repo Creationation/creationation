@@ -403,33 +403,34 @@ const AdminProspects = () => {
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
       <AdminHeader />
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'24px' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'16px' }}>
 
-        <div className='flex flex-wrap gap-3 mb-6'>
+        {/* Stats — compact grid on mobile */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8, marginBottom:16 }}>
           {[
             { label:'Total', value:stats.total, icon:Target },
             { label:'Sans site', value:stats.noWebsite, icon:GlobeLock },
             { label:'Avec site', value:stats.withWebsite, icon:Globe },
-            { label:'Ont un email', value:stats.withEmail, icon:Mail },
-            { label:'Emailes', value:stats.emailed, icon:Send },
+            { label:'Ont email', value:stats.withEmail, icon:Mail },
+            { label:'Emailés', value:stats.emailed, icon:Send },
             { label:'Convertis', value:stats.converted, icon:Star },
           ].map(s => (
-            <div key={s.label} style={{ flex:'1 1 140px', padding:'14px 16px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', display:'flex', alignItems:'center', gap:10 }}>
-              <s.icon size={16} style={{ color:'var(--teal)' }}/>
-              <div>
-                <div style={{ fontFamily:'var(--font-h)', fontSize:18, color:'var(--charcoal)' }}>{s.value}</div>
-                <div style={{ fontFamily:'var(--font-b)', fontSize:10, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:1 }}>{s.label}</div>
+            <div key={s.label} style={{ padding:'10px 12px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:16, display:'flex', alignItems:'center', gap:8 }}>
+              <s.icon size={14} style={{ color:'var(--teal)', flexShrink:0 }}/>
+              <div style={{ minWidth:0 }}>
+                <div style={{ fontFamily:'var(--font-h)', fontSize:16, color:'var(--charcoal)', lineHeight:1.1 }}>{s.value}</div>
+                <div style={{ fontFamily:'var(--font-b)', fontSize:9, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.label}</div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className='flex gap-2 mb-6'>
-          <button onClick={() => setTab('prospects')} style={{ padding:'10px 20px', borderRadius:'var(--pill)', border:'none', fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, cursor:'pointer', background:tab==='prospects'?'var(--teal)':'var(--glass-bg)', color:tab==='prospects'?'#fff':'var(--text-mid)' }}>
-            Mes prospects
+        <div className='flex gap-2 mb-4'>
+          <button onClick={() => setTab('prospects')} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:tab==='prospects'?'var(--teal)':'var(--glass-bg)', color:tab==='prospects'?'#fff':'var(--text-mid)' }}>
+            Prospects
           </button>
-          <button onClick={() => setTab('search')} style={{ padding:'10px 20px', borderRadius:'var(--pill)', border:'none', fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, cursor:'pointer', background:tab==='search'?'var(--teal)':'var(--glass-bg)', color:tab==='search'?'#fff':'var(--text-mid)' }}>
-            <Search size={13} style={{ marginRight:6, verticalAlign:'middle' }}/> Chercher des prospects
+          <button onClick={() => setTab('search')} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:tab==='search'?'var(--teal)':'var(--glass-bg)', color:tab==='search'?'#fff':'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+            <Search size={12}/> Chercher
           </button>
         </div>
 
@@ -592,61 +593,61 @@ const AdminProspects = () => {
 
         {tab === 'prospects' && (
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            <div className='flex flex-col sm:flex-row gap-3'>
-              <div className='flex items-center gap-2 flex-1' style={{ padding:'10px 16px', background:'var(--glass-bg)', borderRadius:'var(--r)', border:'1px solid var(--glass-border)' }}>
-                <Search size={16} style={{ color:'var(--text-light)' }} />
-                <input placeholder='Rechercher...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex:1, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)' }} />
+            <div className='flex flex-col gap-2'>
+              <div className='flex items-center gap-2' style={{ padding:'8px 12px', background:'var(--glass-bg)', borderRadius:16, border:'1px solid var(--glass-border)' }}>
+                <Search size={14} style={{ color:'var(--text-light)', flexShrink:0 }} />
+                <input placeholder='Rechercher...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex:1, background:'transparent', border:'none', outline:'none', fontFamily:'var(--font-b)', fontSize:13, color:'var(--text)' }} />
               </div>
-              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ padding:'10px 16px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
-                <option value='all'>Tous statuts</option>
-                {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
-              </select>
-              <select value={websiteFilter} onChange={e => setWebsiteFilter(e.target.value as any)} style={{ padding:'10px 16px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', cursor:'pointer', outline:'none' }}>
-                <option value='all'>Tous (site)</option>
-                <option value='no_website'>🔒 Sans site</option>
-                <option value='has_website'>🌐 Avec site</option>
-              </select>
-              <button onClick={() => setShowManualAdd(true)} style={{ padding:'10px 16px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                <Plus size={14}/> Ajouter manuellement
-              </button>
-              <button onClick={fetchProspects} style={{ padding:'10px 14px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', cursor:'pointer' }}>
-                <RefreshCw size={14}/>
-              </button>
+              <div className='flex gap-2'>
+                <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ flex:1, padding:'8px 10px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:16, fontFamily:'var(--font-b)', fontSize:12, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                  <option value='all'>Tous statuts</option>
+                  {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
+                </select>
+                <select value={websiteFilter} onChange={e => setWebsiteFilter(e.target.value as any)} style={{ flex:1, padding:'8px 10px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:16, fontFamily:'var(--font-b)', fontSize:12, color:'var(--text)', cursor:'pointer', outline:'none' }}>
+                  <option value='all'>Tous (site)</option>
+                  <option value='no_website'>🔒 Sans site</option>
+                  <option value='has_website'>🌐 Avec site</option>
+                </select>
+                <button onClick={() => setShowManualAdd(true)} style={{ padding:'8px 12px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:16, cursor:'pointer', flexShrink:0 }}>
+                  <Plus size={14}/>
+                </button>
+                <button onClick={fetchProspects} style={{ padding:'8px 12px', background:'var(--glass-bg-strong)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:16, cursor:'pointer', flexShrink:0 }}>
+                  <RefreshCw size={14}/>
+                </button>
+              </div>
             </div>
             {/* AI Email Finder bar */}
-            <div style={{ padding:'12px 20px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
-                <Sparkles size={14} style={{ color:'#d4a55a', verticalAlign:'middle', marginRight:6 }}/>
-                {stats.withEmail} / {stats.total} prospects ont un email
+            <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+                <Sparkles size={13} style={{ color:'#d4a55a' }}/>
+                {stats.withEmail} / {stats.total} ont un email
               </span>
-              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'8px 16px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingEmails?0.7:1 }}>
-                {findingEmails ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
-                {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA (tous)'}
+              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'6px 14px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingEmails?0.7:1, whiteSpace:'nowrap' }}>
+                {findingEmails ? <Loader2 size={12} className='animate-spin'/> : <Sparkles size={12}/>}
+                {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA'}
               </button>
             </div>
             {/* AI Info Finder bar */}
-            <div style={{ padding:'12px 20px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
-                <Globe size={14} style={{ color:'#7c5cbf', verticalAlign:'middle', marginRight:6 }}/>
+            <div style={{ padding:'10px 14px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+              <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+                <Globe size={13} style={{ color:'#7c5cbf' }}/>
                 {prospects.filter(p => p.website_url).length} / {prospects.length} ont un site — {prospects.filter(p => p.phone).length} / {prospects.length} ont un tel
               </span>
-              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'8px 16px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:findingInfo?0.7:1 }}>
-                {findingInfo ? <Loader2 size={13} className='animate-spin'/> : <Sparkles size={13}/>}
-                {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA (tous)'}
+              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'6px 14px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingInfo?0.7:1, whiteSpace:'nowrap' }}>
+                {findingInfo ? <Loader2 size={12} className='animate-spin'/> : <Sparkles size={12}/>}
+                {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA'}
               </button>
             </div>
             {selectedIds.size > 0 && (
-              <div style={{ padding:'12px 20px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:'var(--r)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <span style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--teal)', fontWeight:600 }}>{selectedIds.size} prospect(s) selectionne(s)</span>
-                <div className='flex gap-2'>
-                  <button onClick={() => setSelectedIds(new Set())} style={{ padding:'8px 14px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', cursor:'pointer' }}>Deselectionner</button>
-                  <button onClick={deleteSelected} style={{ padding:'8px 16px', background:'#e8735a', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                    <Trash2 size={13}/> Supprimer ({selectedIds.size})
-                  </button>
-                  <button onClick={openEmailModal} style={{ padding:'8px 16px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                    <Mail size={13}/> Envoyer emails IA
-                  </button>
-                </div>
+              <div style={{ padding:'10px 14px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', gap:8 }}>
+                <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--teal)', fontWeight:600, marginRight:'auto' }}>{selectedIds.size} prospect(s) sélectionné(s)</span>
+                <button onClick={() => setSelectedIds(new Set())} style={{ padding:'6px 12px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer' }}>Désélectionner</button>
+                <button onClick={deleteSelected} style={{ padding:'6px 12px', background:'#e8735a', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                  <Trash2 size={12}/> Supprimer ({selectedIds.size})
+                </button>
+                <button onClick={openEmailModal} style={{ padding:'6px 12px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                  <Mail size={12}/> Emails IA
+                </button>
               </div>
             )}
             {loading ? <div className='text-center py-20' style={{ color:'var(--text-light)', fontFamily:'var(--font-b)' }}>Chargement...</div>
