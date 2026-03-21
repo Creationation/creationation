@@ -842,7 +842,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
         ) : (
           <div className='flex items-center gap-2'>
             <span style={{ fontSize:13, color:p.email?'var(--text-mid)':'var(--text-ghost)', fontStyle:p.email?'normal':'italic' }}>{p.email || 'Pas d\'email'}</span>
-            <button onClick={() => setEditingEmail(true)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', opacity:0.6 }}><Pencil size={11}/></button>
+            <button onClick={(e) => { e.stopPropagation(); setEditingEmail(true); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', opacity:0.6 }}><Pencil size={11}/></button>
           </div>
         )}
       </td>
