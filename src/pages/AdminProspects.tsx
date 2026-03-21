@@ -944,7 +944,7 @@ const AdminProspects = () => {
       )}
 
       {/* Sectors Dashboard */}
-      {showSectors && <SectorsDashboard onClose={() => setShowSectors(false)} />}
+      {showSectors && <SectorsDashboard onClose={() => setShowSectors(false)} onFilterBySector={(sector) => { setSectorFilter([sector]); setShowAdvancedFilters(true); setTab('prospects'); }} />}
     </div>
   );
 };

@@ -13,7 +13,7 @@ type SectorStat = {
   icon?: string;
 };
 
-const SectorsDashboard = ({ onClose }: { onClose: () => void }) => {
+const SectorsDashboard = ({ onClose, onFilterBySector }: { onClose: () => void; onFilterBySector?: (sector: string) => void }) => {
   const [stats, setStats] = useState<SectorStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -106,7 +106,7 @@ const SectorsDashboard = ({ onClose }: { onClose: () => void }) => {
                 return (
                   <div key={s.sector} style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 16, overflow: 'hidden' }}>
                     <button
-                      onClick={() => setExpanded(isExpanded ? null : s.sector)}
+                      onClick={() => { if (onFilterBySector) { onFilterBySector(s.sector); onClose(); } else { setExpanded(isExpanded ? null : s.sector); } }}
                       className="w-full flex items-center gap-3 cursor-pointer"
                       style={{ padding: '12px 16px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer' }}
                     >
