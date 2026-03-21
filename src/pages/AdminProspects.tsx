@@ -100,6 +100,7 @@ const AdminProspects = () => {
   const [detailProspect, setDetailProspect] = useState<Prospect | null>(null);
   const [transferring, setTransferring] = useState(false);
   const [scoring, setScoring] = useState(false);
+  const [showSectors, setShowSectors] = useState(false);
 
   const scoreProspects = async () => {
     const targets = selectedIds.size > 0
