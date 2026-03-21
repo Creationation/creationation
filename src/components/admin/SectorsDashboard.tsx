@@ -13,7 +13,7 @@ type SectorStat = {
   icon?: string;
 };
 
-const SectorsDashboard = ({ onClose }: { onClose: () => void }) => {
+const SectorsDashboard = ({ onClose, onFilterBySector }: { onClose: () => void; onFilterBySector?: (sector: string) => void }) => {
   const [stats, setStats] = useState<SectorStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
