@@ -358,10 +358,22 @@ const AdminProspects = () => {
       : prospects.filter(p => !p.website_url || !p.phone);
     if (!targets.length) { toast.info('Tous les prospects selectionnés ont déjà site + téléphone'); return; }
     setFindingInfo(true);
-    toast.info(`Recherche IA site web + téléphone pour ${targets.length} prospect(s)...`);
+    toast.info(`Vérification Google Maps du site web + téléphone pour ${targets.length} prospect(s)...`);
     try {
       const { data, error } = await supabase.functions.invoke('find-prospect-info', {
-        body: { prospects: targets.map(p => ({ id: p.id, business_name: p.business_name, business_type: p.business_type, city: p.city, country: p.country, address: p.address })) }
+        body: {
+          prospects: targets.map(p => ({
+            id: p.id,
+            google_place_id: p.google_place_id,
+            business_name: p.business_name,
+            business_type: p.business_type,
+            city: p.city,
+            country: p.country,
+            address: p.address,
+            website_url: p.website_url,
+            phone: p.phone,
+          }))
+        }
       });
       if (error) throw new Error(error.message);
       const results = data.results || [];
@@ -374,10 +386,10 @@ const AdminProspects = () => {
           await supabase.from('prospects').update(updates).eq('id', r.id);
         }
       }
-      toast.success(`${foundWeb} site(s) et ${foundPhone} téléphone(s) trouvés sur ${targets.length} prospects`);
-      if (userId) logOperation(userId, 'ai_info_find', `Recherche IA site+tel: ${targets.length} prospects`, targets.length * COST_EUR.AI_INFO_FIND, targets.length, { foundWeb, foundPhone });
+      toast.success(`${foundWeb} site(s) et ${foundPhone} téléphone(s) vérifiés sur ${targets.length} prospects`);
+      if (userId) logOperation(userId, 'ai_info_find', `Vérification Google Maps site+tel: ${targets.length} prospects`, targets.length * COST_EUR.AI_INFO_FIND, targets.length, { foundWeb, foundPhone });
       fetchProspects();
-    } catch (e: any) { toast.error(e.message || 'Erreur recherche info'); }
+    } catch (e: any) { toast.error(e.message || 'Erreur vérification site/téléphone'); }
     finally { setFindingInfo(false); }
   };
 
