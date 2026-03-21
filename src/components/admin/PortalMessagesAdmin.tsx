@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
+import { sendPortalNotification } from '@/lib/portalNotifications';
 
-const PortalMessagesAdmin = ({ projectId }: { projectId: string }) => {
+const PortalMessagesAdmin = ({ projectId, clientId }: { projectId: string; clientId?: string }) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMsg, setNewMsg] = useState('');
   const [userId, setUserId] = useState('');
