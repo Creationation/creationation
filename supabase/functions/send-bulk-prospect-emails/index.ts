@@ -37,7 +37,7 @@ serve(async (req) => {
       }
 
       const firstName = email.toName?.split(' ')[0] || '';
-      const html = buildEmailHtml(firstName, email.subject, email.body);
+      const html = buildEmailHtml(firstName, email.subject, email.body, email.prospectId);
 
       const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
