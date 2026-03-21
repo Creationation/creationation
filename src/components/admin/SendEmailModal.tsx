@@ -42,7 +42,7 @@ L'équipe CreationNation`,
   },
   {
     label: 'Proposition commerciale',
-    subject: 'Creationation — Votre proposition personnalisée',
+    subject: 'CreationNation — Votre proposition personnalisée',
     body: `Bonjour {name},
 
 Suite à notre discussion, veuillez trouver ci-dessous notre proposition adaptée à vos besoins.
