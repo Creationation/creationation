@@ -52,7 +52,7 @@ Suite à notre discussion, veuillez trouver ci-dessous notre proposition adapté
 N'hésitez pas à revenir vers nous pour toute question.
 
 Cordialement,
-L'équipe Creationation`,
+L'équipe CreationNation`,
   },
 ];
 
