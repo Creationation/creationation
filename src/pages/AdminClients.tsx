@@ -67,6 +67,7 @@ const AdminClients = () => {
   const [expandedClient, setExpandedClient] = useState<string | null>(null);
   const [clientProjects, setClientProjects] = useState<Record<string, any[]>>({});
   const [projectDetailId, setProjectDetailId] = useState<string | null>(null);
+  const [prospectSources, setProspectSources] = useState<Record<string, { score: number; source: string }>>({});
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
