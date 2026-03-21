@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, ChevronLeft, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward } from 'lucide-react';
+import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut } from 'lucide-react';
+import AdminHeader from '@/components/admin/AdminHeader';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; };
@@ -400,17 +401,9 @@ const AdminProspects = () => {
   const stats = { total: prospects.length, noWebsite: prospects.filter(p => !p.has_website).length, withWebsite: prospects.filter(p => p.has_website).length, emailed: prospects.filter(p => p.email_count > 0).length, converted: prospects.filter(p => p.status === 'converted').length, withEmail: prospects.filter(p => !!p.email).length };
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--cream)', padding:'24px' }}>
-      <div style={{ maxWidth:1200, margin:'0 auto' }}>
-        <div className='flex items-center justify-between mb-6'>
-          <div className='flex items-center gap-4'>
-            <Link to='/admin' style={{ color:'var(--text-light)', textDecoration:'none', display:'flex', alignItems:'center', gap:4, fontFamily:'var(--font-b)', fontSize:13 }}>
-              <ChevronLeft size={16}/> Dashboard
-            </Link>
-            <h1 style={{ fontFamily:'var(--font-h)', fontSize:24, color:'var(--charcoal)', margin:0 }}>Agent Prospection</h1>
-          </div>
-          <button onClick={async () => { await supabase.auth.signOut(); navigate('/admin/login'); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-light)' }}><LogOut size={18}/></button>
-        </div>
+    <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
+      <AdminHeader />
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'24px' }}>
 
         <div className='flex flex-wrap gap-3 mb-6'>
           {[
