@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { Plus, X, Loader2, Play, Pause, Trash2, Users, TrendingUp, GripVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, X, Loader2, Play, Pause, Trash2, Users, TrendingUp, GripVertical, ChevronDown, ChevronUp, ArrowUp, ArrowDown } from 'lucide-react';
 
 type Sequence = {
   id: string;
