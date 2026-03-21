@@ -101,6 +101,16 @@ const AdminProspects = () => {
   const [transferring, setTransferring] = useState(false);
   const [scoring, setScoring] = useState(false);
   const [showSectors, setShowSectors] = useState(false);
+  const [scoreMin, setScoreMin] = useState(0);
+  const [sectorFilter, setSectorFilter] = useState<string[]>([]);
+  const [tagFilter, setTagFilter] = useState<string[]>([]);
+  const [sequenceFilter, setSequenceFilter] = useState<'all' | 'in_sequence' | 'not_in_sequence'>('all');
+  const [lastInteractionDays, setLastInteractionDays] = useState<number | null>(null);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [savedSearches, setSavedSearches] = useState<{ id: string; name: string; filters: any }[]>([]);
+  const [savingSearch, setSavingSearch] = useState(false);
+  const [allSectors, setAllSectors] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
 
   const scoreProspects = async () => {
     const targets = selectedIds.size > 0
