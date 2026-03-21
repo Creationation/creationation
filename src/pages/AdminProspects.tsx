@@ -862,7 +862,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
       </td>
       <td className='px-4 py-3' style={{ fontSize:12, color:'var(--text-light)' }}>{p.email_count}x</td>
       <td className='px-4 py-3'>
-        <button onClick={onDelete} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)' }}><Trash2 size={14}/></button>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)' }}><Trash2 size={14}/></button>
       </td>
     </tr>
   );
