@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Check, Clock, Star } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const STATUSES = [
   { key: 'brief', label: 'Brief', color: '#8B5CF6', emoji: '📋' },
@@ -15,6 +16,7 @@ const STATUSES = [
 
 const PortalProject = () => {
   const { client } = useOutletContext<{ client: { id: string } }>();
+  const isMobile = useIsMobile();
   const [projects, setProjects] = useState<any[]>([]);
   const [selected, setSelected] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
@@ -75,7 +77,6 @@ const PortalProject = () => {
   const doneTasks = tasks.filter(t => t.status === 'done').length;
   const progress = tasks.length ? Math.round(doneTasks / tasks.length * 100) : 0;
 
-  // Multi-project selector
   if (projects.length > 1 && !selected) {
     return (
       <div className="space-y-4">
@@ -110,43 +111,75 @@ const PortalProject = () => {
         </button>
       )}
 
-      {/* Header */}
       <div>
         <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: 0 }}>{selected.title}</h1>
         {selected.project_type && <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>{selected.project_type}</span>}
       </div>
 
-      {/* Stepper */}
-      <div className="overflow-x-auto">
-        <div className="flex items-center gap-0 min-w-[500px] md:min-w-0">
+      {/* Stepper - horizontal on desktop, vertical on mobile */}
+      {isMobile ? (
+        <div className="space-y-0" style={{ paddingLeft: 4 }}>
           {STATUSES.map((s, i) => {
             const isPast = i < currentIdx;
             const isCurrent = i === currentIdx;
             return (
-              <div key={s.key} className="flex items-center flex-1">
-                <div className="flex flex-col items-center flex-1">
+              <div key={s.key} className="flex items-start gap-3">
+                <div className="flex flex-col items-center">
                   <div style={{
-                    width: 40, height: 40, borderRadius: '50%',
+                    width: 36, height: 36, borderRadius: '50%',
                     background: isPast ? 'var(--teal)' : isCurrent ? s.color : 'rgba(0,0,0,0.06)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: isCurrent ? `0 0 0 4px ${s.color}30` : 'none',
-                    transition: 'all 0.3s',
+                    transition: 'all 0.3s', flexShrink: 0,
                   }}>
-                    {isPast ? <Check size={18} color="#fff" /> : <span style={{ fontSize: 16 }}>{s.emoji}</span>}
+                    {isPast ? <Check size={16} color="#fff" /> : <span style={{ fontSize: 14 }}>{s.emoji}</span>}
                   </div>
+                  {i < STATUSES.length - 1 && (
+                    <div style={{ width: 2, height: 24, background: i < currentIdx ? 'var(--teal)' : 'rgba(0,0,0,0.08)' }} />
+                  )}
+                </div>
+                <div style={{ paddingTop: 6, paddingBottom: i < STATUSES.length - 1 ? 0 : 0 }}>
                   <span style={{
-                    fontFamily: 'var(--font-b)', fontSize: 10, marginTop: 4, fontWeight: isCurrent ? 700 : 400,
+                    fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: isCurrent ? 700 : 400,
                     color: isCurrent ? s.color : isPast ? 'var(--teal)' : 'var(--text-light)',
                   }}>{s.label}</span>
                 </div>
-                {i < STATUSES.length - 1 && (
-                  <div style={{ height: 2, flex: 1, background: i < currentIdx ? 'var(--teal)' : 'rgba(0,0,0,0.08)', minWidth: 20 }} />
-                )}
               </div>
             );
           })}
         </div>
-      </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <div className="flex items-center gap-0 min-w-[500px] md:min-w-0">
+            {STATUSES.map((s, i) => {
+              const isPast = i < currentIdx;
+              const isCurrent = i === currentIdx;
+              return (
+                <div key={s.key} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center flex-1">
+                    <div style={{
+                      width: 40, height: 40, borderRadius: '50%',
+                      background: isPast ? 'var(--teal)' : isCurrent ? s.color : 'rgba(0,0,0,0.06)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      boxShadow: isCurrent ? `0 0 0 4px ${s.color}30` : 'none',
+                      transition: 'all 0.3s',
+                    }}>
+                      {isPast ? <Check size={18} color="#fff" /> : <span style={{ fontSize: 16 }}>{s.emoji}</span>}
+                    </div>
+                    <span style={{
+                      fontFamily: 'var(--font-b)', fontSize: 10, marginTop: 4, fontWeight: isCurrent ? 700 : 400,
+                      color: isCurrent ? s.color : isPast ? 'var(--teal)' : 'var(--text-light)',
+                    }}>{s.label}</span>
+                  </div>
+                  {i < STATUSES.length - 1 && (
+                    <div style={{ height: 2, flex: 1, background: i < currentIdx ? 'var(--teal)' : 'rgba(0,0,0,0.08)', minWidth: 20 }} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Progress */}
       <div style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(16px)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)', padding: 20 }}>
@@ -278,6 +311,12 @@ const PortalProject = () => {
                 Envoyer mon avis
               </button>
             </div>
+            <a href="https://g.page/r/CreationNation/review" target="_blank" rel="noreferrer" style={{
+              display: 'inline-block', marginTop: 16,
+              fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', textDecoration: 'underline',
+            }}>
+              ⭐ Laisser un avis Google
+            </a>
           </div>
         </div>
       )}

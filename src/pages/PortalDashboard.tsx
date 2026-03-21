@@ -11,38 +11,48 @@ const PortalDashboard = () => {
   const [pendingInvoices, setPendingInvoices] = useState({ count: 0, total: 0 });
   const [pendingReviews, setPendingReviews] = useState(0);
   const [nextMilestone, setNextMilestone] = useState<any>(null);
+  const [timeline, setTimeline] = useState<{ icon: string; title: string; date: string }[]>([]);
 
   useEffect(() => {
     if (!client?.id) return;
     (async () => {
-      // Get main project
       const { data: projects } = await supabase.from('projects').select('*').eq('client_id', client.id).order('created_at', { ascending: false }).limit(1);
       const p = projects?.[0];
       setProject(p);
 
       if (p) {
-        // Tasks
         const { data: tasks } = await supabase.from('project_tasks').select('status').eq('project_id', p.id);
         const t = tasks || [];
         setTaskStats({ done: t.filter(x => x.status === 'done').length, total: t.length });
 
-        // Unread messages
         const { count } = await supabase.from('portal_messages').select('*', { count: 'exact', head: true })
           .eq('project_id', p.id).eq('sender_type', 'team').eq('is_read', false);
         setUnreadMessages(count || 0);
 
-        // Pending reviews
         const { count: rc } = await supabase.from('deliverable_reviews').select('*', { count: 'exact', head: true })
           .eq('project_id', p.id).eq('status', 'pending');
         setPendingReviews(rc || 0);
 
-        // Next milestone
         const { data: ms } = await supabase.from('project_milestones').select('*').eq('project_id', p.id)
           .is('completed_at', null).order('position', { ascending: true }).limit(1);
         setNextMilestone(ms?.[0] || null);
+
+        // Build timeline from recent events
+        const events: { icon: string; title: string; date: string }[] = [];
+        const { data: recentMsgs } = await supabase.from('portal_messages').select('content,sender_type,created_at').eq('project_id', p.id).order('created_at', { ascending: false }).limit(5);
+        (recentMsgs || []).forEach(m => events.push({ icon: '💬', title: m.sender_type === 'team' ? `Message de l'équipe` : 'Votre message', date: m.created_at }));
+        const { data: recentReviews } = await supabase.from('deliverable_reviews').select('title,status,created_at,reviewed_at').eq('project_id', p.id).order('created_at', { ascending: false }).limit(5);
+        (recentReviews || []).forEach(r => {
+          events.push({ icon: '📦', title: `Livrable : ${r.title}`, date: r.created_at });
+          if (r.reviewed_at) events.push({ icon: r.status === 'approved' ? '✅' : '✏️', title: `${r.status === 'approved' ? 'Approuvé' : 'Révision'} : ${r.title}`, date: r.reviewed_at });
+        });
+        const { data: completedMs } = await supabase.from('project_milestones').select('title,completed_at').eq('project_id', p.id).not('completed_at', 'is', null).order('completed_at', { ascending: false }).limit(3);
+        (completedMs || []).forEach(m => events.push({ icon: '🏁', title: `Jalon : ${m.title}`, date: m.completed_at! }));
+
+        events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setTimeline(events.slice(0, 5));
       }
 
-      // Pending invoices
       const { data: invs } = await supabase.from('invoices').select('total,amount_paid,status')
         .eq('client_id', client.id).in('status', ['sent', 'viewed', 'overdue']);
       const inv = invs || [];
@@ -64,7 +74,6 @@ const PortalDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Welcome */}
       <div>
         <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: 'var(--charcoal)', margin: 0 }}>
           Bonjour {firstName} 👋
@@ -74,7 +83,6 @@ const PortalDashboard = () => {
         </p>
       </div>
 
-      {/* Project card */}
       {project && (
         <Link to="/portal/project" style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
@@ -93,8 +101,6 @@ const PortalDashboard = () => {
                 fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600,
               }}>{STATUS_LABELS[project.status]}</span>
             </div>
-
-            {/* Progress */}
             <div className="mb-3">
               <div className="flex justify-between mb-1" style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>
                 <span>{taskStats.done}/{taskStats.total} tâches terminées</span>
@@ -104,20 +110,17 @@ const PortalDashboard = () => {
                 <div style={{ width: `${progress}%`, height: '100%', background: 'var(--teal)', borderRadius: 4, transition: 'width 0.5s ease' }} />
               </div>
             </div>
-
             {nextMilestone && (
               <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)' }}>
                 Prochaine étape : <strong>{nextMilestone.title}</strong>
                 {nextMilestone.due_date && <span style={{ color: 'var(--text-light)' }}> — {new Date(nextMilestone.due_date).toLocaleDateString('fr-FR')}</span>}
               </div>
             )}
-
             {project.deadline && (
               <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', marginTop: 8 }}>
                 🏁 Livraison estimée : {new Date(project.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             )}
-
             <div className="flex items-center justify-end mt-3" style={{ color: 'var(--teal)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600 }}>
               Voir le détail <ArrowRight size={14} style={{ marginLeft: 4 }} />
             </div>
@@ -125,7 +128,6 @@ const PortalDashboard = () => {
         </Link>
       )}
 
-      {/* Summary cards */}
       <div className="grid grid-cols-2 gap-3">
         <Link to="/portal/messages" style={{ textDecoration: 'none' }}>
           <SummaryCard icon={MessageSquare} label="Messages non lus" value={unreadMessages} color="var(--teal)" />
@@ -136,6 +138,31 @@ const PortalDashboard = () => {
         <SummaryCard icon={CheckCircle} label="À valider" value={pendingReviews} color="var(--violet)" />
         <SummaryCard icon={Clock} label="Progression" value={`${progress}%`} color="var(--sky)" />
       </div>
+
+      {/* Timeline des derniers événements */}
+      {timeline.length > 0 && (
+        <div style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(16px)', borderRadius: 'var(--r-lg)', border: '1px solid var(--glass-border)', padding: 20 }}>
+          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', margin: '0 0 12px' }}>Dernière activité</h3>
+          <div className="space-y-0">
+            {timeline.map((ev, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className="flex flex-col items-center">
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
+                    {ev.icon}
+                  </div>
+                  {i < timeline.length - 1 && <div style={{ width: 2, height: 20, background: 'var(--glass-border)' }} />}
+                </div>
+                <div style={{ paddingBottom: i < timeline.length - 1 ? 8 : 0 }}>
+                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}>{ev.title}</div>
+                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)' }}>
+                    {new Date(ev.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
