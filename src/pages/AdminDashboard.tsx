@@ -58,6 +58,7 @@ const AdminDashboard = () => {
   const [emailLead, setEmailLead] = useState<Lead | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [dateFilter, setDateFilter] = useState<string>('all');
   const [invoiceKPI, setInvoiceKPI] = useState<InvoiceKPI>({ overdueCount: 0, overdueAmount: 0, dueThisMonthAmount: 0 });
   const [prospectKPI, setProspectKPI] = useState<ProspectKPI>({ hotCount: 0, activeSequences: 0, responseRate: 0 });
 
