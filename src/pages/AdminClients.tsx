@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Plus, Search, Pencil, Check, X, Target, DollarSign, Users, Wallet, ArrowRightLeft, Trash2 } from 'lucide-react';
+import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2 } from 'lucide-react';
+import AdminHeader from '@/components/admin/AdminHeader';
 
 type Client = {
   id: string;
