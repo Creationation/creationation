@@ -148,9 +148,21 @@ const AdminProspects = () => {
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
-    let query = supabase.from('prospects').select('*').order('created_at', { ascending: false });
-    if (statusFilter !== 'all') query = query.eq('status', statusFilter as ProspectStatus);
-    const { data, error } = await query;
+    // Fetch ALL prospects beyond the 1000-row default limit
+    let allData: Prospect[] = [];
+    let from = 0;
+    const pageSize = 1000;
+    let keepGoing = true;
+    while (keepGoing) {
+      let query = supabase.from('prospects').select('*').order('created_at', { ascending: false }).range(from, from + pageSize - 1);
+      if (statusFilter !== 'all') query = query.eq('status', statusFilter as ProspectStatus);
+      const { data, error } = await query;
+      if (error) { toast.error('Erreur chargement'); keepGoing = false; break; }
+      allData = allData.concat((data as Prospect[]) || []);
+      if (!data || data.length < pageSize) keepGoing = false;
+      else from += pageSize;
+    }
+    const data = allData; const error = null;
     if (error) toast.error('Erreur chargement');
     else {
       const p = (data as Prospect[]) || [];
@@ -211,8 +223,17 @@ const AdminProspects = () => {
     if (!location || !types.length) { toast.error('Remplis au moins une localisation et un type'); return; }
     setSearching(true); setSearchResults(null);
     try {
-      const { data: existing } = await supabase.from('prospects').select('google_place_id');
-      const existingIds = new Set((existing || []).map(p => p.google_place_id).filter(Boolean));
+      // Fetch ALL existing google_place_ids (paginated to bypass 1000 limit)
+      let allExisting: any[] = [];
+      let exFrom = 0;
+      let exKeep = true;
+      while (exKeep) {
+        const { data: exPage } = await supabase.from('prospects').select('google_place_id').range(exFrom, exFrom + 999);
+        allExisting = allExisting.concat(exPage || []);
+        if (!exPage || exPage.length < 1000) exKeep = false;
+        else exFrom += 1000;
+      }
+      const existingIds = new Set(allExisting.map(p => p.google_place_id).filter(Boolean));
 
       const countries: string[] = (!searchCountry && !searchCity && searchContinent && CONTINENTS[searchContinent])
         ? CONTINENTS[searchContinent]
@@ -286,11 +307,16 @@ const AdminProspects = () => {
           google_place_id: r.google_place_id, source: 'google_maps',
           language: COUNTRY_LANG[r.country] || 'en',
         }));
-        const { error: insertError } = await supabase.from('prospects').insert(rows);
-        if (insertError && insertError.code !== '23505') {
-          console.warn('Bulk insert error, trying one by one', insertError);
-          for (const row of rows) {
-            await supabase.from('prospects').insert(row);
+        // Insert in batches of 500 to avoid Supabase row limits
+        const batchSize = 500;
+        for (let i = 0; i < rows.length; i += batchSize) {
+          const batch = rows.slice(i, i + batchSize);
+          const { error: insertError } = await supabase.from('prospects').insert(batch);
+          if (insertError && insertError.code !== '23505') {
+            console.warn(`Bulk insert error batch ${i / batchSize + 1}, trying one by one`, insertError);
+            for (const row of batch) {
+              await supabase.from('prospects').insert(row);
+            }
           }
         }
         fetchProspects();
