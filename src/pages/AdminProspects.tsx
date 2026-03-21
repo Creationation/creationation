@@ -679,6 +679,9 @@ const AdminProspects = () => {
                 <button onClick={openEmailModal} style={{ padding:'6px 12px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
                   <Mail size={12}/> Emails IA
                 </button>
+                <button onClick={transferToClients} disabled={transferring} style={{ padding:'6px 12px', background:'var(--violet)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:transferring?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:transferring?0.7:1 }}>
+                  {transferring ? <Loader2 size={12} className='animate-spin'/> : <ArrowRightLeft size={12}/>} Vers Clients
+                </button>
               </div>
             )}
             {loading ? <div className='text-center py-20' style={{ color:'var(--text-light)', fontFamily:'var(--font-b)' }}>Chargement...</div>
