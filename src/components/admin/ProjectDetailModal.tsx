@@ -29,7 +29,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
   const [clientName, setClientName] = useState('');
   const [newTask, setNewTask] = useState('');
   const [newNote, setNewNote] = useState('');
-  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files'>('tasks');
+  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs'>('tasks');
 
   const fetch = useCallback(async () => {
     const { data: p } = await supabase.from('projects' as any).select('*').eq('id', projectId).single();
