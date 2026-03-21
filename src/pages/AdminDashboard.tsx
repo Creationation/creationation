@@ -90,6 +90,17 @@ const AdminDashboard = () => {
     });
   }, []);
 
+  const fetchProspectKPIs = useCallback(async () => {
+    const { data: prospects } = await supabase.from('prospects').select('score,status,sequence_id,email_count');
+    if (!prospects) return;
+    const hot = (prospects as any[]).filter(p => (p.score || 0) > 70).length;
+    const inSeq = (prospects as any[]).filter(p => p.sequence_id).length;
+    const emailed = (prospects as any[]).filter(p => (p.email_count || 0) > 0);
+    const replied = (prospects as any[]).filter(p => p.status === 'replied').length;
+    const rate = emailed.length > 0 ? Math.round((replied / emailed.length) * 100) : 0;
+    setProspectKPI({ hotCount: hot, activeSequences: inSeq, responseRate: rate });
+  }, []);
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { navigate('/admin/login'); return; }
