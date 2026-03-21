@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
-import { LogOut, RefreshCw, Search, Filter, Target, DollarSign } from 'lucide-react';
+import { LogOut, RefreshCw, Search, Filter, Target, DollarSign, Users, Wallet } from 'lucide-react';
 
 type Lead = {
   id: string;
