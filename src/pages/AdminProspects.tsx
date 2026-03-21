@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye, Reply } from 'lucide-react';
+import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye, Reply, Download } from 'lucide-react';
+import { exportToCSV } from '@/lib/csvExport';
 import AdminHeader from '@/components/admin/AdminHeader';
 import SectorsDashboard from '@/components/admin/SectorsDashboard';
 import ProspectDetailEnriched from '@/components/admin/ProspectDetailEnriched';
@@ -804,6 +805,17 @@ const AdminProspects = () => {
                   )}
                 </div>
               )}
+            </div>
+            {/* CSV Export */}
+            <div style={{ display:'flex', justifyContent:'flex-end' }}>
+              <button onClick={() => exportToCSV(filteredProspects, 'prospects', [
+                { key: 'business_name', label: 'Entreprise' }, { key: 'contact_name', label: 'Contact' }, { key: 'email', label: 'Email' },
+                { key: 'phone', label: 'Téléphone' }, { key: 'city', label: 'Ville' }, { key: 'country', label: 'Pays' },
+                { key: 'sector', label: 'Secteur' }, { key: 'status', label: 'Statut' }, { key: 'score', label: 'Score' },
+                { key: 'website_url', label: 'Site web' }, { key: 'source', label: 'Source' },
+              ])} style={{ display:'flex', alignItems:'center', gap:6, padding:'6px 14px', background:'var(--glass-bg-strong)', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, cursor:'pointer', color:'var(--text-mid)' }}>
+                <Download size={12}/> Exporter CSV
+              </button>
             </div>
             {/* AI Email Finder bar */}
             <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>

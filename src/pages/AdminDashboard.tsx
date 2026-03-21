@@ -58,6 +58,7 @@ const AdminDashboard = () => {
   const [emailLead, setEmailLead] = useState<Lead | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [dateFilter, setDateFilter] = useState<string>('all');
   const [invoiceKPI, setInvoiceKPI] = useState<InvoiceKPI>({ overdueCount: 0, overdueAmount: 0, dueThisMonthAmount: 0 });
   const [prospectKPI, setProspectKPI] = useState<ProspectKPI>({ hotCount: 0, activeSequences: 0, responseRate: 0 });
 
@@ -121,11 +122,20 @@ const AdminDashboard = () => {
     }
   };
 
-  const filteredLeads = leads.filter(l =>
-    l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    l.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (l.phone && l.phone.includes(searchQuery))
-  );
+  const filteredLeads = leads.filter(l => {
+    const matchSearch = l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      l.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (l.phone && l.phone.includes(searchQuery));
+    if (!matchSearch) return false;
+    if (dateFilter !== 'all') {
+      const d = new Date(l.created_at);
+      const now = new Date();
+      if (dateFilter === '7d' && now.getTime() - d.getTime() > 7 * 86400000) return false;
+      if (dateFilter === '30d' && now.getTime() - d.getTime() > 30 * 86400000) return false;
+      if (dateFilter === '90d' && now.getTime() - d.getTime() > 90 * 86400000) return false;
+    }
+    return true;
+  });
 
   const stats = {
     total: leads.length,
@@ -230,6 +240,14 @@ const AdminDashboard = () => {
               {Object.entries(statusLabels).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-2" style={{ padding: '10px 16px', background: 'var(--glass-bg)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)' }}>
+            <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} style={{ background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--text)', cursor: 'pointer' }}>
+              <option value="all">Toute période</option>
+              <option value="7d">7 derniers jours</option>
+              <option value="30d">30 derniers jours</option>
+              <option value="90d">90 derniers jours</option>
             </select>
           </div>
           <button onClick={fetchLeads} className="flex items-center gap-2 cursor-pointer" style={{ padding: '10px 20px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>

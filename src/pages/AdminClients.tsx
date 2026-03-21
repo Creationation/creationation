@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp, FolderKanban } from 'lucide-react';
+import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp, FolderKanban, Download } from 'lucide-react';
+import { exportToCSV } from '@/lib/csvExport';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectDetailModal from '@/components/admin/ProjectDetailModal';
 
@@ -206,6 +207,13 @@ const AdminClients = () => {
           </button>
           <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--violet)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
             <Plus size={14} /> Ajouter manuellement
+          </button>
+          <button onClick={() => exportToCSV(clients, 'clients', [
+            { key: 'business_name', label: 'Entreprise' }, { key: 'contact_name', label: 'Contact' }, { key: 'email', label: 'Email' },
+            { key: 'phone', label: 'Téléphone' }, { key: 'plan', label: 'Plan' }, { key: 'status', label: 'Statut' },
+            { key: 'monthly_amount', label: 'Montant mensuel' }, { key: 'total_paid', label: 'Total payé' },
+          ])} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer', color: 'var(--text-mid)' }}>
+            <Download size={14} /> CSV
           </button>
         </div>
 
