@@ -53,8 +53,15 @@ const PortalProject = () => {
   }, [selected, client]);
 
   const approveReview = async (id: string) => {
+    const review = reviews.find(r => r.id === id);
     await supabase.from('deliverable_reviews').update({ status: 'approved', reviewed_at: new Date().toISOString() } as any).eq('id', id);
     setReviews(r => r.map(x => x.id === id ? { ...x, status: 'approved' } : x));
+    // Notify admin
+    await supabase.from('portal_notifications').insert({
+      client_id: client.id, type: 'deliverable_review',
+      title: `Livrable approuvé : ${review?.title || ''}`,
+      message: 'Le client a approuvé ce livrable.',
+    } as any);
     toast.success('Livrable approuvé !');
   };
 
