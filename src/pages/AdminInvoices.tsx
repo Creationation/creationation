@@ -234,6 +234,16 @@ const AdminInvoices = () => {
             }}>
               <Plus size={14} /> Nouvelle facture
             </button>
+            <button onClick={() => exportToCSV(filtered.map(i => ({ ...i })), 'factures', [
+              { key: 'invoice_number', label: 'N°' }, { key: 'client_name', label: 'Client' }, { key: 'status', label: 'Statut' },
+              { key: 'issue_date', label: 'Date émission' }, { key: 'due_date', label: 'Échéance' },
+              { key: 'total', label: 'Total' }, { key: 'amount_paid', label: 'Payé' }, { key: 'currency', label: 'Devise' },
+            ])} className="flex items-center gap-2" style={{
+              padding: '10px 14px', background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)',
+              borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer', color: 'var(--text-mid)',
+            }}>
+              <Download size={14} /> CSV
+            </button>
           </div>
         </div>
 
