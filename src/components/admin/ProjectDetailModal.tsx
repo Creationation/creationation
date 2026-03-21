@@ -598,8 +598,29 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               })}
             </div>
           )}
+          {/* Feedback client */}
+          <FeedbackSection projectId={projectId} clientId={project?.client_id} />
         </div>
       </div>
+    </div>
+  );
+};
+
+const FeedbackSection = ({ projectId, clientId }: { projectId: string; clientId?: string }) => {
+  const [fb, setFb] = useState<any>(null);
+  useEffect(() => {
+    if (!projectId || !clientId) return;
+    supabase.from('client_feedback').select('*').eq('project_id', projectId).eq('client_id', clientId).limit(1).then(({ data }) => setFb(data?.[0] || null));
+  }, [projectId, clientId]);
+  if (!fb) return null;
+  return (
+    <div style={{ marginTop: 16, padding: 16, borderRadius: 14, background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}>
+      <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, color: '#f59e0b', marginBottom: 6 }}>⭐ Feedback client</div>
+      <div className="flex gap-1 mb-2">
+        {[1,2,3,4,5].map(n => <span key={n} style={{ fontSize: 16, opacity: n <= fb.rating ? 1 : 0.2 }}>⭐</span>)}
+      </div>
+      {fb.comment && <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)', margin: 0 }}>"{fb.comment}"</p>}
+      <div style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)', marginTop: 4 }}>{new Date(fb.submitted_at).toLocaleDateString('fr-FR')}</div>
     </div>
   );
 };
