@@ -114,6 +114,173 @@ export type Database = {
           },
         ]
       }
+      invoice_items: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          invoice_id: string
+          position: number
+          quantity: number
+          total: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          invoice_id: string
+          position?: number
+          quantity?: number
+          total: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          invoice_id?: string
+          position?: number
+          quantity?: number
+          total?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_templates: {
+        Row: {
+          created_at: string | null
+          default_items: Json | null
+          default_notes: string | null
+          default_tax_rate: number | null
+          id: string
+          name: string
+          payment_terms_days: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          default_items?: Json | null
+          default_notes?: string | null
+          default_tax_rate?: number | null
+          id?: string
+          name: string
+          payment_terms_days?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          default_items?: Json | null
+          default_notes?: string | null
+          default_tax_rate?: number | null
+          id?: string
+          name?: string
+          payment_terms_days?: number | null
+        }
+        Relationships: []
+      }
+      invoices: {
+        Row: {
+          amount_paid: number
+          client_id: string
+          created_at: string | null
+          currency: string
+          due_date: string
+          id: string
+          internal_notes: string | null
+          invoice_number: string
+          issue_date: string
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          project_id: string | null
+          reminder_count: number | null
+          reminder_sent_at: string | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          stripe_hosted_url: string | null
+          stripe_invoice_id: string | null
+          stripe_payment_url: string | null
+          subtotal: number
+          tax_amount: number
+          tax_rate: number
+          total: number
+          updated_at: string | null
+        }
+        Insert: {
+          amount_paid?: number
+          client_id: string
+          created_at?: string | null
+          currency?: string
+          due_date: string
+          id?: string
+          internal_notes?: string | null
+          invoice_number: string
+          issue_date?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          project_id?: string | null
+          reminder_count?: number | null
+          reminder_sent_at?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          stripe_hosted_url?: string | null
+          stripe_invoice_id?: string | null
+          stripe_payment_url?: string | null
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          total?: number
+          updated_at?: string | null
+        }
+        Update: {
+          amount_paid?: number
+          client_id?: string
+          created_at?: string | null
+          currency?: string
+          due_date?: string
+          id?: string
+          internal_notes?: string | null
+          invoice_number?: string
+          issue_date?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          project_id?: string | null
+          reminder_count?: number | null
+          reminder_sent_at?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          stripe_hosted_url?: string | null
+          stripe_invoice_id?: string | null
+          stripe_payment_url?: string | null
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          total?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_emails: {
         Row: {
           body: string
@@ -252,6 +419,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      payment_history: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          invoice_id: string
+          notes: string | null
+          payment_date: string
+          payment_method: string | null
+          stripe_payment_intent_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          invoice_id: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string | null
+          stripe_payment_intent_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          invoice_id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string | null
+          stripe_payment_intent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -649,6 +857,82 @@ export type Database = {
         }
         Relationships: []
       }
+      recurring_invoices: {
+        Row: {
+          amount: number
+          client_id: string
+          created_at: string | null
+          description: string
+          frequency: Database["public"]["Enums"]["recurring_frequency"]
+          id: string
+          is_active: boolean | null
+          last_invoiced_at: string | null
+          next_invoice_date: string
+          project_id: string | null
+          stripe_price_id: string | null
+          stripe_subscription_id: string | null
+          tax_rate: number | null
+          template_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          client_id: string
+          created_at?: string | null
+          description: string
+          frequency?: Database["public"]["Enums"]["recurring_frequency"]
+          id?: string
+          is_active?: boolean | null
+          last_invoiced_at?: string | null
+          next_invoice_date: string
+          project_id?: string | null
+          stripe_price_id?: string | null
+          stripe_subscription_id?: string | null
+          tax_rate?: number | null
+          template_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          client_id?: string
+          created_at?: string | null
+          description?: string
+          frequency?: Database["public"]["Enums"]["recurring_frequency"]
+          id?: string
+          is_active?: boolean | null
+          last_invoiced_at?: string | null
+          next_invoice_date?: string
+          project_id?: string | null
+          stripe_price_id?: string | null
+          stripe_subscription_id?: string | null
+          tax_rate?: number | null
+          template_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_invoices_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_invoices_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_invoices_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       search_chunks: {
         Row: {
           business_type: string
@@ -711,6 +995,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_invoice_number: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -721,6 +1006,15 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      invoice_status:
+        | "draft"
+        | "sent"
+        | "viewed"
+        | "paid"
+        | "partially_paid"
+        | "overdue"
+        | "cancelled"
+        | "refunded"
       lead_status: "new" | "contacted" | "qualified" | "converted" | "lost"
       project_priority: "low" | "medium" | "high" | "urgent"
       project_status:
@@ -731,6 +1025,7 @@ export type Database = {
         | "delivered"
         | "maintenance"
       prospect_status: "new" | "emailed" | "replied" | "converted" | "rejected"
+      recurring_frequency: "weekly" | "monthly" | "quarterly" | "yearly"
       task_status: "todo" | "in_progress" | "done"
     }
     CompositeTypes: {
@@ -860,6 +1155,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      invoice_status: [
+        "draft",
+        "sent",
+        "viewed",
+        "paid",
+        "partially_paid",
+        "overdue",
+        "cancelled",
+        "refunded",
+      ],
       lead_status: ["new", "contacted", "qualified", "converted", "lost"],
       project_priority: ["low", "medium", "high", "urgent"],
       project_status: [
@@ -871,6 +1176,7 @@ export const Constants = {
         "maintenance",
       ],
       prospect_status: ["new", "emailed", "replied", "converted", "rejected"],
+      recurring_frequency: ["weekly", "monthly", "quarterly", "yearly"],
       task_status: ["todo", "in_progress", "done"],
     },
   },
