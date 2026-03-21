@@ -165,6 +165,15 @@ const AdminProjects = () => {
       if (!roles?.some(r => r.role === 'admin')) { navigate('/admin/login'); return; }
       fetchProjects();
       fetchTemplates();
+      // Auto-open new project modal if query param present
+      const params = new URLSearchParams(window.location.search);
+      const newForClient = params.get('newForClient');
+      if (newForClient) {
+        setShowNew(true);
+        // Will be picked up by NewProjectModal via defaultClientId
+        (window as any).__newProjectClientId = newForClient;
+        window.history.replaceState({}, '', window.location.pathname);
+      }
     })();
   }, [navigate, fetchProjects, fetchTemplates]);
 
