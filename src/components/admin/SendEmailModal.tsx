@@ -18,7 +18,7 @@ interface Props {
 const templates = [
   {
     label: 'Premier contact',
-    subject: 'Creationation — Suite à votre demande',
+    subject: 'CreationNation — Suite à votre demande',
     body: `Bonjour {name},
 
 Merci pour votre intérêt pour nos services ! Nous avons bien reçu votre demande et nous serions ravis d'en discuter avec vous.
