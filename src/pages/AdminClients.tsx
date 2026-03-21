@@ -327,6 +327,7 @@ const AdminClients = () => {
       )}
 
       {showAdd && <AddClientModal onClose={() => setShowAdd(false)} onAdded={fetchClients} />}
+      {projectDetailId && <ProjectDetailModal projectId={projectDetailId} onClose={() => { setProjectDetailId(null); fetchClients(); }} />}
     </div>
   );
 };
