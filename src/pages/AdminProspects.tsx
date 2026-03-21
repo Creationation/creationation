@@ -97,6 +97,30 @@ const AdminProspects = () => {
   const [showChunkHistory, setShowChunkHistory] = useState(false);
   const [detailProspect, setDetailProspect] = useState<Prospect | null>(null);
   const [transferring, setTransferring] = useState(false);
+  const [scoring, setScoring] = useState(false);
+
+  const scoreProspects = async () => {
+    const targets = selectedIds.size > 0
+      ? prospects.filter(p => selectedIds.has(p.id))
+      : prospects;
+    if (!targets.length) { toast.error('Aucun prospect à scorer'); return; }
+    setScoring(true);
+    try {
+      const batchSize = 20;
+      let scored = 0;
+      for (let i = 0; i < targets.length; i += batchSize) {
+        const batch = targets.slice(i, i + batchSize);
+        const { data, error } = await supabase.functions.invoke('score-prospect', {
+          body: { prospect_ids: batch.map(p => p.id) }
+        });
+        if (error) console.warn('Score batch error:', error);
+        else scored += (data?.results?.length || 0);
+      }
+      toast.success(`${scored} prospect(s) scoré(s)`);
+      fetchProspects();
+    } catch (e: any) { toast.error(e.message || 'Erreur scoring'); }
+    finally { setScoring(false); }
+  };
 
   const fetchChunks = useCallback(async () => {
     const { data } = await supabase.from('search_chunks' as any).select('*').order('created_at', { ascending: false });
