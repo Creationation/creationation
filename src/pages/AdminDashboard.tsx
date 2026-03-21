@@ -109,7 +109,7 @@ const AdminDashboard = () => {
         else { fetchLeads(); fetchInvoiceKPIs(); fetchProspectKPIs(); }
       });
     });
-  }, [navigate, fetchLeads, fetchInvoiceKPIs]);
+  }, [navigate, fetchLeads, fetchInvoiceKPIs, fetchProspectKPIs]);
 
   const updateLeadStatus = async (leadId: string, status: string) => {
     const { error } = await supabase.from('leads').update({ status: status as Lead['status'] }).eq('id', leadId);
