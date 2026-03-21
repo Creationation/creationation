@@ -258,6 +258,36 @@ const AdminClients = () => {
                     )}
                   </div>
                 )}
+                {/* Projects section */}
+                {editId !== c.id && (
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--glass-border)' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <FolderKanban size={13} style={{ color: 'var(--text-mid)' }} />
+                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)' }}>
+                        {(clientProjects[c.id] || []).length} projet{(clientProjects[c.id] || []).length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    {(clientProjects[c.id] || []).length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {(clientProjects[c.id] || []).map((p: any) => {
+                          const statusCol = { brief: '#8B5CF6', maquette: '#F59E0B', development: '#3B82F6', review: '#F97316', delivered: '#10B981', maintenance: '#6B7280' }[p.status as string] || '#999';
+                          return (
+                            <button key={p.id} onClick={() => setProjectDetailId(p.id)} style={{
+                              display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 99,
+                              border: `1px solid ${statusCol}30`, background: `${statusCol}08`,
+                              fontFamily: 'var(--font-b)', fontSize: 12, cursor: 'pointer', color: 'var(--charcoal)',
+                            }}>
+                              <span style={{ width: 8, height: 8, borderRadius: '50%', background: statusCol }} />
+                              {p.title}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>Aucun projet</span>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
