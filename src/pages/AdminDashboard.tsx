@@ -7,7 +7,7 @@ import SendEmailModal from '@/components/admin/SendEmailModal';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectAlerts from '@/components/admin/ProjectAlerts';
 import ProjectKPIs from '@/components/admin/ProjectKPIs';
-import { RefreshCw, Search, Filter, FileText, AlertCircle } from 'lucide-react';
+import { RefreshCw, Search, Filter, FileText, AlertCircle, Flame, Zap, MessageSquare } from 'lucide-react';
 
 type Lead = {
   id: string;
