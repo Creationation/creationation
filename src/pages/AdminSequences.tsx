@@ -129,6 +129,16 @@ const AdminSequences = () => {
     }));
   };
 
+  const moveStep = (idx: number, direction: 'up' | 'down') => {
+    setForm(prev => {
+      const steps = [...prev.steps];
+      const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (targetIdx < 0 || targetIdx >= steps.length) return prev;
+      [steps[idx], steps[targetIdx]] = [steps[targetIdx], steps[idx]];
+      return { ...prev, steps: steps.map((s, i) => ({ ...s, step_number: i + 1 })) };
+    });
+  };
+
   const updateStep = (idx: number, field: string, value: any) => {
     setForm(prev => ({
       ...prev,
