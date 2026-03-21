@@ -4,6 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
+import SectorsDashboard from '@/components/admin/SectorsDashboard';
+import ProspectDetailEnriched from '@/components/admin/ProspectDetailEnriched';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; score?: number; score_breakdown?: any; sector?: string | null; sequence_id?: string | null; sequence_step?: number; sequence_paused?: boolean; tags?: string[]; competitor_site_url?: string | null; competitor_audit?: any; };
@@ -98,6 +100,7 @@ const AdminProspects = () => {
   const [detailProspect, setDetailProspect] = useState<Prospect | null>(null);
   const [transferring, setTransferring] = useState(false);
   const [scoring, setScoring] = useState(false);
+  const [showSectors, setShowSectors] = useState(false);
 
   const scoreProspects = async () => {
     const targets = selectedIds.size > 0
@@ -490,6 +493,9 @@ const AdminProspects = () => {
           <button onClick={() => setTab('search')} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:tab==='search'?'var(--teal)':'var(--glass-bg)', color:tab==='search'?'#fff':'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
             <Search size={12}/> Chercher
           </button>
+          <button onClick={() => setShowSectors(true)} style={{ padding:'8px 16px', borderRadius:100, border:'none', fontFamily:'var(--font-b)', fontSize:12, fontWeight:600, cursor:'pointer', background:'var(--glass-bg)', color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
+            📊 Secteurs
+          </button>
         </div>
 
         {tab === 'search' && (
@@ -798,69 +804,21 @@ const AdminProspects = () => {
         />
       )}
 
-      {/* Prospect Detail Modal */}
+      {/* Prospect Detail Modal - Enriched */}
       {detailProspect && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', backdropFilter:'blur(8px)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }} onClick={() => setDetailProspect(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ width:'100%', maxWidth:520, background:'white', borderRadius:28, padding:0, maxHeight:'90vh', overflowY:'auto', boxShadow:'0 20px 60px rgba(0,0,0,0.2)' }}>
-            {/* Header */}
-            <div style={{ padding:'24px 24px 16px', borderBottom:'1px solid var(--glass-border)' }}>
-              <div className='flex items-center justify-between mb-2'>
-                <h2 style={{ fontFamily:'var(--font-h)', fontSize:20, color:'var(--charcoal)', margin:0 }}>{detailProspect.business_name}</h2>
-                <button onClick={() => setDetailProspect(null)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-light)', padding:4 }}><X size={20}/></button>
-              </div>
-              <div className='flex items-center gap-2'>
-                <span style={{ padding:'3px 10px', borderRadius:100, background:SC[detailProspect.status]+'18', color:SC[detailProspect.status], fontSize:12, fontWeight:600, fontFamily:'var(--font-b)' }}>{SL[detailProspect.status]}</span>
-                {detailProspect.business_type && <span style={{ padding:'3px 10px', borderRadius:100, background:'var(--glass-bg)', color:'var(--text-mid)', fontSize:12, fontFamily:'var(--font-b)' }}>{detailProspect.business_type}</span>}
-              </div>
-            </div>
-            {/* Info rows */}
-            <div style={{ padding:'16px 24px' }}>
-              {[
-                { label:'Contact', value:detailProspect.contact_name, icon:'👤' },
-                { label:'Email', value:detailProspect.email, icon:'📧' },
-                { label:'Téléphone', value:detailProspect.phone, icon:'📞' },
-                { label:'Ville', value:[detailProspect.city, detailProspect.country].filter(Boolean).join(', '), icon:'📍' },
-                { label:'Adresse', value:detailProspect.address, icon:'🏠' },
-                { label:'Site web', value:detailProspect.website_url, icon:'🌐' },
-                { label:'Langue', value:LANG_LABELS[detailProspect.language || COUNTRY_LANG[detailProspect.country || ''] || 'en'] || detailProspect.language, icon:'🗣️' },
-                { label:'Source', value:detailProspect.source, icon:'🔍' },
-                { label:'Emails envoyés', value:String(detailProspect.email_count || 0), icon:'📤' },
-                { label:'Dernier email', value:detailProspect.last_emailed_at ? new Date(detailProspect.last_emailed_at).toLocaleDateString('fr-FR') : null, icon:'📅' },
-                { label:'Créé le', value:detailProspect.created_at ? new Date(detailProspect.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }) : null, icon:'🕐' },
-              ].filter(r => r.value).map(r => (
-                <div key={r.label} style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'8px 0', borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
-                  <span style={{ fontSize:14, width:24, textAlign:'center', flexShrink:0 }}>{r.icon}</span>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', textTransform:'uppercase', letterSpacing:0.5, marginBottom:2 }}>{r.label}</div>
-                    <div style={{ fontFamily:'var(--font-b)', fontSize:14, color:'var(--charcoal)', wordBreak:'break-word' }}>
-                      {r.label === 'Site web' && r.value ? <a href={r.value} target='_blank' rel='noopener noreferrer' style={{ color:'var(--teal)', textDecoration:'underline' }}>{r.value}</a> : r.value}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {detailProspect.notes && (
-                <div style={{ marginTop:12, padding:12, background:'rgba(212,165,90,0.08)', borderRadius:16, fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>
-                  <strong style={{ fontSize:11, textTransform:'uppercase', letterSpacing:0.5, color:'var(--text-light)' }}>Notes</strong>
-                  <p style={{ margin:'6px 0 0' }}>{detailProspect.notes}</p>
-                </div>
-              )}
-            </div>
-            {/* Actions */}
-            <div style={{ padding:'16px 24px 24px', display:'flex', gap:8, flexWrap:'wrap' }}>
-              <button onClick={() => {
-                setSelectedIds(new Set([detailProspect.id]));
-                setDetailProspect(null);
-                transferToClients();
-              }} style={{ padding:'10px 18px', background:'var(--violet)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-                <ArrowRightLeft size={14}/> Transférer vers Clients
-              </button>
-              <button onClick={() => setDetailProspect(null)} style={{ padding:'10px 18px', background:'var(--glass-bg)', color:'var(--text-mid)', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:13, cursor:'pointer' }}>
-                Fermer
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProspectDetailEnriched
+          prospect={detailProspect}
+          onClose={() => setDetailProspect(null)}
+          onTransfer={() => {
+            setSelectedIds(new Set([detailProspect.id]));
+            setDetailProspect(null);
+            transferToClients();
+          }}
+        />
       )}
+
+      {/* Sectors Dashboard */}
+      {showSectors && <SectorsDashboard onClose={() => setShowSectors(false)} />}
     </div>
   );
 };
