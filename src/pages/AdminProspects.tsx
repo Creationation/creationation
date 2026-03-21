@@ -242,7 +242,7 @@ const AdminProspects = () => {
           }
           try {
             const { data, error } = await supabase.functions.invoke('prospect-search', {
-              body: { city: searchCity || '', businessType: type, country: country, maxResults: Math.min(maxResults, countries.length > 1 ? 60 : maxResults), fetchPhone, skipDetails }
+              body: { city: searchCity || '', businessType: type, country: country, maxResults, fetchPhone, skipDetails }
             });
             if (error) { console.warn(`Error for ${type} in ${country}:`, error.message); continue; }
             const results = (data.results || []) as SearchResult[];
