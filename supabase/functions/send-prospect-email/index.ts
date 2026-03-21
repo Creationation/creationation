@@ -118,7 +118,7 @@ serve(async (req) => {
           <!-- Header -->
           <div style="background: #0d8a6f; padding: 36px 24px; text-align: center;">
             <p style="margin: 0 0 4px; font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; text-transform: uppercase;">DIGITAL PRODUCT STUDIO</p>
-            <h1 style="margin: 0; font-size: 28px; color: #fff; font-family: Georgia, serif; letter-spacing: 1px;">CREATIONATION</h1>
+            <h1 style="margin: 0; font-size: 28px; color: #fff; font-family: Georgia, serif; letter-spacing: 1px;">CREATIONNATION</h1>
           </div>
 
           <!-- Body -->

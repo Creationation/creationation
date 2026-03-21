@@ -104,7 +104,7 @@ PROSPECT:
 - Notes: ${prospect.notes || 'none'}
 - Website: ${websiteNote}
 
-CREATIONATION:
+CREATIONNATION:
 - Showcase websites from 290€
 - Custom web/mobile apps from 900€
 - Delivery: 7 to 14 days
