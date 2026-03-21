@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2 } from 'lucide-react';
+import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
 
 type Client = {
@@ -21,6 +21,10 @@ type Client = {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  portal_enabled: boolean | null;
+  portal_user_id: string | null;
+  portal_invited_at: string | null;
+  portal_last_login: string | null;
 };
 
 type Prospect = {
@@ -78,7 +82,6 @@ const AdminClients = () => {
 
   const fetchConvertedProspects = async () => {
     const { data } = await supabase.from('prospects').select('id,business_name,contact_name,email,phone,website_url,status').eq('status', 'converted');
-    // Filter out ones already imported
     const existingIds = new Set(clients.filter(c => c.prospect_id).map(c => c.prospect_id));
     setProspects((data || []).filter(p => !existingIds.has(p.id)) as Prospect[]);
   };
@@ -86,21 +89,12 @@ const AdminClients = () => {
   const importProspects = async () => {
     const toImport = prospects.filter(p => selectedProspects.includes(p.id));
     if (!toImport.length) return;
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
 
     for (const p of toImport) {
       await supabase.from('clients' as any).insert({
-        prospect_id: p.id,
-        business_name: p.business_name,
-        contact_name: p.contact_name,
-        email: p.email,
-        phone: p.phone,
-        website_url: p.website_url,
-        plan: 'basic',
-        status: 'active',
-        monthly_amount: 0,
-        total_paid: 0,
+        prospect_id: p.id, business_name: p.business_name, contact_name: p.contact_name,
+        email: p.email, phone: p.phone, website_url: p.website_url, plan: 'basic', status: 'active',
+        monthly_amount: 0, total_paid: 0,
       } as any);
     }
     toast.success(`${toImport.length} client(s) importé(s)`);
@@ -121,11 +115,6 @@ const AdminClients = () => {
     await supabase.from('clients' as any).delete().eq('id', id);
     fetchClients();
     toast.success('Client supprimé');
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/admin/login');
   };
 
   const filtered = clients.filter(c =>
@@ -181,7 +170,7 @@ const AdminClients = () => {
         {loading ? (
           <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Chargement...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Aucun client trouvé. Importez des prospects convertis ou ajoutez un client manuellement.</div>
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Aucun client trouvé.</div>
         ) : (
           <div className="space-y-3">
             {filtered.map(c => (
@@ -195,12 +184,12 @@ const AdminClients = () => {
                         <span style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)' }}>{c.business_name}</span>
                         <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-b)', color: 'white', background: STATUS_COLORS[c.status] || '#999' }}>{STATUS_LABELS[c.status] || c.status}</span>
                         <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--violet)', background: 'rgba(124,92,191,0.12)' }}>{c.plan}</span>
+                        {c.portal_enabled && <span style={{ padding: '2px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--teal)', background: 'rgba(13,138,111,0.1)' }}>🌐 Portail</span>}
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1" style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>
                         {c.contact_name && <span>{c.contact_name}</span>}
                         {c.email && <span>{c.email}</span>}
                         {c.phone && <span>{c.phone}</span>}
-                        {c.website_url && <span>{c.website_url}</span>}
                       </div>
                     </div>
                     <div className="flex items-center gap-4" style={{ fontFamily: 'var(--font-b)', fontSize: 13 }}>
@@ -212,11 +201,8 @@ const AdminClients = () => {
                         <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Total payé</div>
                         <div style={{ color: '#d4a55a', fontWeight: 700 }}>{f(c.total_paid)} €</div>
                       </div>
-                      <div className="text-center">
-                        <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Depuis</div>
-                        <div style={{ fontWeight: 600 }}>{new Date(c.started_at).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}</div>
-                      </div>
                       <button onClick={() => { setEditId(c.id); setEditData({ plan: c.plan, status: c.status, monthly_amount: c.monthly_amount, total_paid: c.total_paid, notes: c.notes }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--teal)' }}><Pencil size={15} /></button>
+                      <PortalInviteButton client={c} onRefresh={fetchClients} />
                       <button onClick={() => deleteClient(c.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)' }}><Trash2 size={15} /></button>
                     </div>
                   </div>
@@ -236,7 +222,7 @@ const AdminClients = () => {
               <button onClick={() => setShowImport(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
             </div>
             {prospects.length === 0 ? (
-              <p style={{ fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--muted-foreground)' }}>Aucun prospect converti disponible à importer.</p>
+              <p style={{ fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--muted-foreground)' }}>Aucun prospect converti disponible.</p>
             ) : (
               <>
                 <div className="space-y-2 mb-4">
@@ -245,7 +231,7 @@ const AdminClients = () => {
                       <input type="checkbox" checked={selectedProspects.includes(p.id)} onChange={() => setSelectedProspects(s => s.includes(p.id) ? s.filter(x => x !== p.id) : [...s, p.id])} />
                       <div>
                         <div style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600 }}>{p.business_name}</div>
-                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{p.email || 'Pas d\'email'} · {p.contact_name || ''}</div>
+                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{p.email || 'Pas d\'email'}</div>
                       </div>
                     </label>
                   ))}
@@ -259,7 +245,6 @@ const AdminClients = () => {
         </div>
       )}
 
-      {/* Add manual modal */}
       {showAdd && <AddClientModal onClose={() => setShowAdd(false)} onAdded={fetchClients} />}
     </div>
   );
@@ -347,6 +332,67 @@ const AddClientModal = ({ onClose, onAdded }: { onClose: () => void; onAdded: ()
         </div>
       </div>
     </div>
+  );
+};
+
+const PortalInviteButton = ({ client, onRefresh }: { client: Client; onRefresh: () => void }) => {
+  const [loading, setLoading] = useState(false);
+
+  const inviteToPortal = async () => {
+    if (!client.email) { toast.error('Ce client n\'a pas d\'email'); return; }
+    if (!confirm(`Envoyer une invitation au portail client à ${client.email} ?`)) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({ email: client.email, options: { shouldCreateUser: true } });
+      if (error) throw error;
+      await supabase.from('clients' as any).update({
+        portal_enabled: true,
+        portal_invited_at: new Date().toISOString(),
+      } as any).eq('id', client.id);
+      toast.success(`Invitation envoyée à ${client.email}`);
+      onRefresh();
+    } catch (e: any) {
+      toast.error(e.message || 'Erreur lors de l\'invitation');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resendInvite = async () => {
+    if (!client.email) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({ email: client.email });
+      if (error) throw error;
+      toast.success('Lien renvoyé');
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const disablePortal = async () => {
+    if (!confirm('Désactiver l\'accès portail pour ce client ?')) return;
+    await supabase.from('clients' as any).update({ portal_enabled: false } as any).eq('id', client.id);
+    toast.success('Accès portail désactivé');
+    onRefresh();
+  };
+
+  if (client.portal_enabled) {
+    return (
+      <div className="flex items-center gap-1">
+        <span title={`Portail actif${client.portal_invited_at ? ' — Invité le ' + new Date(client.portal_invited_at).toLocaleDateString('fr-FR') : ''}${client.portal_last_login ? '\nDernière connexion : ' + new Date(client.portal_last_login).toLocaleDateString('fr-FR') : ''}`} style={{ color: 'var(--teal)', cursor: 'help' }}><Shield size={15} /></span>
+        <button onClick={resendInvite} disabled={loading} title="Renvoyer l'invitation" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--sky)', opacity: loading ? 0.5 : 1 }}><RefreshCw size={13} /></button>
+        <button onClick={disablePortal} title="Désactiver l'accès" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)', fontSize: 11, fontFamily: 'var(--font-b)' }}>✕</button>
+      </div>
+    );
+  }
+
+  return (
+    <button onClick={inviteToPortal} disabled={loading || !client.email} title={client.email ? 'Inviter au portail client' : 'Email requis'} style={{ background: 'none', border: 'none', cursor: client.email ? 'pointer' : 'default', color: client.email ? 'var(--violet)' : 'var(--muted-foreground)', opacity: loading ? 0.5 : 1 }}>
+      <UserPlus size={15} />
+    </button>
   );
 };
 
