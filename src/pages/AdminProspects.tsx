@@ -856,7 +856,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
           : <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'var(--teal)', fontWeight:600 }}><GlobeLock size={12}/> Aucun site</span>}
       </td>
       <td className='px-4 py-3'>
-        <select value={p.status} onChange={e => onUpdateStatus(e.target.value as ProspectStatus)} style={{ padding:'4px 8px', borderRadius:'var(--pill)', border:'none', background:SC[p.status]+'18', color:SC[p.status], fontWeight:600, fontSize:12, fontFamily:'var(--font-m)', cursor:'pointer' }}>
+        <select value={p.status} onClick={e => e.stopPropagation()} onChange={e => { e.stopPropagation(); onUpdateStatus(e.target.value as ProspectStatus); }} style={{ padding:'4px 8px', borderRadius:'var(--pill)', border:'none', background:SC[p.status]+'18', color:SC[p.status], fontWeight:600, fontSize:12, fontFamily:'var(--font-m)', cursor:'pointer' }}>
           {Object.entries(SL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
         </select>
       </td>
