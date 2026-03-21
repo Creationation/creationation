@@ -25,6 +25,7 @@ const PRIORITY_COLORS: Record<string, string> = { urgent: '#ef4444', high: '#f97
 const PRIORITY_LABELS: Record<string, string> = { urgent: 'Urgent', high: 'Haute', medium: 'Moyenne', low: 'Basse' };
 
 const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose: () => void }) => {
+  const navigate = useNavigate();
   const [project, setProject] = useState<any>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [milestones, setMilestones] = useState<MilestoneT[]>([]);
