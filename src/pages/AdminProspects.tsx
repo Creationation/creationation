@@ -808,16 +808,17 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
   </div>
 );
 
-const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus }: {
+const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail, onUpdateStatus, onViewDetail }: {
   prospect: Prospect; selected: boolean;
   onToggle: () => void; onDelete: () => void;
   onUpdateEmail: (email: string) => void;
   onUpdateStatus: (status: ProspectStatus) => void;
+  onViewDetail: () => void;
 }) => {
   const [editingEmail, setEditingEmail] = useState(false);
   const [emailVal, setEmailVal] = useState(p.email || '');
   return (
-    <tr style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', background:selected?'rgba(13,138,111,0.04)':'transparent' }}>
+    <tr style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', background:selected?'rgba(13,138,111,0.04)':'transparent', cursor:'pointer' }} onClick={onViewDetail}>
       <td className='px-4 py-3'>
         <button onClick={onToggle} style={{ background:'none', border:'none', cursor:'pointer' }}>
           {selected ? <CheckSquare size={16} style={{ color:'var(--teal)' }}/> : <Square size={16} style={{ color:'var(--text-ghost)' }}/>}
