@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Check, Plus, Trash2, CheckCircle2, Circle, GripVertical, MessageSquare, FileUp, Milestone } from 'lucide-react';
+import { X, Check, Plus, Trash2, CheckCircle2, Circle, GripVertical, MessageSquare, FileUp, Milestone, MessagesSquare } from 'lucide-react';
+import PortalMessagesAdmin from '@/components/admin/PortalMessagesAdmin';
 
 type Task = { id: string; project_id: string; title: string; description: string | null; status: string; position: number; due_date: string | null; completed_at: string | null };
 type MilestoneT = { id: string; project_id: string; title: string; description: string | null; due_date: string | null; completed_at: string | null; position: number };
@@ -28,7 +29,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
   const [clientName, setClientName] = useState('');
   const [newTask, setNewTask] = useState('');
   const [newNote, setNewNote] = useState('');
-  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files'>('tasks');
+  const [tab, setTab] = useState<'tasks' | 'milestones' | 'notes' | 'files' | 'clientmsgs'>('tasks');
 
   const fetch = useCallback(async () => {
     const { data: p } = await supabase.from('projects' as any).select('*').eq('id', projectId).single();
@@ -154,11 +155,12 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           {/* Tabs */}
           <div className="flex gap-1 mb-4 border-b" style={{ borderColor: 'var(--glass-border)' }}>
             {([
-              { key: 'tasks', label: 'Tâches', icon: Check, count: tasks.length },
-              { key: 'milestones', label: 'Jalons', icon: Milestone, count: milestones.length },
-              { key: 'notes', label: 'Notes', icon: MessageSquare, count: notes.length },
-              { key: 'files', label: 'Fichiers', icon: FileUp, count: files.length },
-            ] as const).map(t => (
+              { key: 'tasks' as const, label: 'Tâches', icon: Check, count: tasks.length },
+              { key: 'milestones' as const, label: 'Jalons', icon: Milestone, count: milestones.length },
+              { key: 'notes' as const, label: 'Notes', icon: MessageSquare, count: notes.length },
+              { key: 'files' as const, label: 'Fichiers', icon: FileUp, count: files.length },
+              { key: 'clientmsgs' as const, label: 'Client', icon: MessagesSquare, count: 0 },
+            ]).map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', border: 'none',
                 borderBottom: tab === t.key ? '2px solid var(--teal)' : '2px solid transparent',
