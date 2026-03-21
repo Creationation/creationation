@@ -26,7 +26,7 @@ Merci pour votre intérêt pour nos services ! Nous avons bien reçu votre deman
 Seriez-vous disponible cette semaine pour un appel de 15 minutes ? Nous pourrons discuter de votre projet en détail et voir comment nous pouvons vous aider.
 
 À très vite,
-L'équipe Creationation`,
+L'équipe CreationNation`,
   },
   {
     label: 'Suivi',
