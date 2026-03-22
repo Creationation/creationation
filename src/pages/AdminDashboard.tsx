@@ -38,18 +38,6 @@ const statusLabels: Record<string, string> = {
   lost: 'Perdu',
 };
 
-type InvoiceKPI = {
-  overdueCount: number;
-  overdueAmount: number;
-  dueThisMonthAmount: number;
-};
-
-type ProspectKPI = {
-  hotCount: number;
-  activeSequences: number;
-  responseRate: number;
-};
-
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -59,8 +47,6 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState<string>('all');
-  const [invoiceKPI, setInvoiceKPI] = useState<InvoiceKPI>({ overdueCount: 0, overdueAmount: 0, dueThisMonthAmount: 0 });
-  const [prospectKPI, setProspectKPI] = useState<ProspectKPI>({ hotCount: 0, activeSequences: 0, responseRate: 0 });
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
