@@ -6,8 +6,8 @@ import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectAlerts from '@/components/admin/ProjectAlerts';
-import ProjectKPIs from '@/components/admin/ProjectKPIs';
-import { RefreshCw, Search, Filter, FileText, AlertCircle, Flame, Zap, MessageSquare } from 'lucide-react';
+import DashboardCharts from '@/components/admin/DashboardCharts';
+import { RefreshCw, Search, Filter } from 'lucide-react';
 
 type Lead = {
   id: string;
@@ -38,18 +38,6 @@ const statusLabels: Record<string, string> = {
   lost: 'Perdu',
 };
 
-type InvoiceKPI = {
-  overdueCount: number;
-  overdueAmount: number;
-  dueThisMonthAmount: number;
-};
-
-type ProspectKPI = {
-  hotCount: number;
-  activeSequences: number;
-  responseRate: number;
-};
-
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -59,8 +47,6 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState<string>('all');
-  const [invoiceKPI, setInvoiceKPI] = useState<InvoiceKPI>({ overdueCount: 0, overdueAmount: 0, dueThisMonthAmount: 0 });
-  const [prospectKPI, setProspectKPI] = useState<ProspectKPI>({ hotCount: 0, activeSequences: 0, responseRate: 0 });
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -72,45 +58,16 @@ const AdminDashboard = () => {
     setLoading(false);
   }, [statusFilter]);
 
-  const fetchInvoiceKPIs = useCallback(async () => {
-    const { data: invoices } = await supabase.from('invoices').select('status,total,due_date,amount_paid');
-    if (!invoices) return;
-
-    const now = new Date();
-    const currentMonth = now.toISOString().slice(0, 7);
-
-    const overdue = (invoices as any[]).filter(i => i.status === 'overdue');
-    const dueThisMonth = (invoices as any[]).filter(i =>
-      ['sent', 'viewed'].includes(i.status) && i.due_date?.startsWith(currentMonth)
-    );
-
-    setInvoiceKPI({
-      overdueCount: overdue.length,
-      overdueAmount: overdue.reduce((s: number, i: any) => s + (i.total - i.amount_paid), 0),
-      dueThisMonthAmount: dueThisMonth.reduce((s: number, i: any) => s + (i.total - i.amount_paid), 0),
-    });
-  }, []);
-
-  const fetchProspectKPIs = useCallback(async () => {
-    const { data: prospects } = await supabase.from('prospects').select('score,status,sequence_id,email_count');
-    if (!prospects) return;
-    const hot = (prospects as any[]).filter(p => (p.score || 0) > 70).length;
-    const inSeq = (prospects as any[]).filter(p => p.sequence_id).length;
-    const emailed = (prospects as any[]).filter(p => (p.email_count || 0) > 0);
-    const replied = (prospects as any[]).filter(p => p.status === 'replied').length;
-    const rate = emailed.length > 0 ? Math.round((replied / emailed.length) * 100) : 0;
-    setProspectKPI({ hotCount: hot, activeSequences: inSeq, responseRate: rate });
-  }, []);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { navigate('/admin/login'); return; }
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else { fetchLeads(); fetchInvoiceKPIs(); fetchProspectKPIs(); }
+        else { fetchLeads(); }
       });
     });
-  }, [navigate, fetchLeads, fetchInvoiceKPIs, fetchProspectKPIs]);
+  }, [navigate, fetchLeads]);
 
   const updateLeadStatus = async (leadId: string, status: string) => {
     const { error } = await supabase.from('leads').update({ status: status as Lead['status'] }).eq('id', leadId);
@@ -137,14 +94,8 @@ const AdminDashboard = () => {
     return true;
   });
 
-  const stats = {
-    total: leads.length,
-    new: leads.filter(l => l.status === 'new').length,
-    contacted: leads.filter(l => l.status === 'contacted').length,
-    converted: leads.filter(l => l.status === 'converted').length,
-  };
 
-  const f = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
@@ -154,78 +105,15 @@ const AdminDashboard = () => {
         {/* Project Alerts */}
         <ProjectAlerts />
 
-        {/* Invoice alerts */}
-        {(invoiceKPI.overdueCount > 0 || invoiceKPI.dueThisMonthAmount > 0) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-            {invoiceKPI.overdueCount > 0 && (
-              <div onClick={() => navigate('/admin/invoices')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 14 }}>
-                <AlertCircle size={18} color="#ef4444" />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#ef4444' }}>{invoiceKPI.overdueCount} facture{invoiceKPI.overdueCount > 1 ? 's' : ''} en retard</div>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>{f(invoiceKPI.overdueAmount)} € impayés</div>
-                </div>
-              </div>
-            )}
-            {invoiceKPI.dueThisMonthAmount > 0 && (
-              <div onClick={() => navigate('/admin/invoices')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(212,165,90,0.06)', border: '1px solid rgba(212,165,90,0.15)', borderRadius: 14 }}>
-                <FileText size={18} color="#d4a55a" />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#d4a55a' }}>À encaisser ce mois</div>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>{f(invoiceKPI.dueThisMonthAmount)} €</div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Prospect KPI cards */}
-        {(prospectKPI.hotCount > 0 || prospectKPI.activeSequences > 0 || prospectKPI.responseRate > 0) && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-            {prospectKPI.hotCount > 0 && (
-              <div onClick={() => navigate('/admin/prospects')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(239,115,90,0.06)', border: '1px solid rgba(239,115,90,0.15)', borderRadius: 14 }}>
-                <Flame size={18} color="#e8735a" />
-                <div>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#e8735a' }}>{prospectKPI.hotCount} prospect{prospectKPI.hotCount > 1 ? 's' : ''} chaud{prospectKPI.hotCount > 1 ? 's' : ''}</div>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Score &gt; 70</div>
-                </div>
-              </div>
-            )}
-            <div onClick={() => navigate('/admin/sequences')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(13,138,111,0.06)', border: '1px solid rgba(13,138,111,0.15)', borderRadius: 14 }}>
-              <Zap size={18} color="#0d8a6f" />
-              <div>
-                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#0d8a6f' }}>{prospectKPI.activeSequences} en séquence</div>
-                <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Séquences actives</div>
-              </div>
-            </div>
-            <div onClick={() => navigate('/admin/prospects')} className="cursor-pointer flex items-center gap-3 px-4 py-3" style={{ background: 'rgba(77,166,217,0.06)', border: '1px solid rgba(77,166,217,0.15)', borderRadius: 14 }}>
-              <MessageSquare size={18} color="#4da6d9" />
-              <div>
-                <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: '#4da6d9' }}>Taux de réponse : {prospectKPI.responseRate}%</div>
-                <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Prospects emailés</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Project KPIs */}
-        <div className="mb-6">
-          <ProjectKPIs />
+        {/* Dashboard Charts & KPIs */}
+        <div className="mb-8">
+          <DashboardCharts />
         </div>
 
-        {/* Lead Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {[
-            { label: 'Total prospects', value: stats.total, color: 'var(--charcoal)' },
-            { label: 'Nouveaux', value: stats.new, color: statusColors.new },
-            { label: 'Contactés', value: stats.contacted, color: statusColors.contacted },
-            { label: 'Convertis', value: stats.converted, color: statusColors.converted },
-          ].map((s, i) => (
-            <div key={i} style={{ padding: '20px', background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)' }}>
-              <p style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', marginBottom: 4 }}>{s.label}</p>
-              <p style={{ fontFamily: 'var(--font-h)', fontSize: 32, color: s.color }}>{s.value}</p>
-            </div>
-          ))}
-        </div>
+        {/* Lead Filters & Table */}
+        <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 18, color: 'var(--charcoal)', margin: '0 0 16px' }}>
+          Leads entrants
+        </h3>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
