@@ -64,10 +64,10 @@ const AdminDashboard = () => {
       if (!user) { navigate('/admin/login'); return; }
       supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').then(({ data: roles }) => {
         if (!roles || roles.length === 0) navigate('/admin/login');
-        else { fetchLeads(); fetchInvoiceKPIs(); fetchProspectKPIs(); }
+        else { fetchLeads(); }
       });
     });
-  }, [navigate, fetchLeads, fetchInvoiceKPIs, fetchProspectKPIs]);
+  }, [navigate, fetchLeads]);
 
   const updateLeadStatus = async (leadId: string, status: string) => {
     const { error } = await supabase.from('leads').update({ status: status as Lead['status'] }).eq('id', leadId);
