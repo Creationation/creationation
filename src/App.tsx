@@ -17,6 +17,7 @@ import AdminCosts from "./pages/AdminCosts";
 import AdminClients from "./pages/AdminClients";
 import AdminRevenues from "./pages/AdminRevenues";
 import AdminInvoices from "./pages/AdminInvoices";
+import AdminPortfolio from "./pages/AdminPortfolio";
 
 // Portal (lazy loaded)
 const PortalLogin = lazy(() => import("./pages/PortalLogin"));
@@ -55,6 +56,7 @@ const App = () => (
               <Route path="/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
               <Route path="/admin/revenues" element={<AdminRoute><AdminRevenues /></AdminRoute>} />
               <Route path="/admin/costs" element={<AdminRoute><AdminCosts /></AdminRoute>} />
+              <Route path="/admin/portfolio" element={<AdminRoute><AdminPortfolio /></AdminRoute>} />
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>

@@ -753,6 +753,69 @@ export type Database = {
           },
         ]
       }
+      portfolio_projects: {
+        Row: {
+          badge: string
+          category: string
+          color: string
+          created_at: string | null
+          description_de: string
+          description_en: string
+          description_fr: string
+          featured: boolean
+          id: string
+          name: string
+          position: number
+          screenshot_url: string | null
+          tags: string[]
+          updated_at: string | null
+          url: string
+          url_display: string
+          video_url: string | null
+          visible: boolean
+        }
+        Insert: {
+          badge?: string
+          category?: string
+          color?: string
+          created_at?: string | null
+          description_de?: string
+          description_en?: string
+          description_fr?: string
+          featured?: boolean
+          id?: string
+          name: string
+          position?: number
+          screenshot_url?: string | null
+          tags?: string[]
+          updated_at?: string | null
+          url?: string
+          url_display?: string
+          video_url?: string | null
+          visible?: boolean
+        }
+        Update: {
+          badge?: string
+          category?: string
+          color?: string
+          created_at?: string | null
+          description_de?: string
+          description_en?: string
+          description_fr?: string
+          featured?: boolean
+          id?: string
+          name?: string
+          position?: number
+          screenshot_url?: string | null
+          tags?: string[]
+          updated_at?: string | null
+          url?: string
+          url_display?: string
+          video_url?: string | null
+          visible?: boolean
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
