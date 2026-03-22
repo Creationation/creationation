@@ -17,7 +17,7 @@ const Services = () => {
   const ref = useScrollReveal();
 
   return (
-    <section id="services" className="relative z-[1] max-w-[1400px] mx-auto px-7 md:px-16" style={{ padding: '140px 0 100px' }}>
+    <section id="services" className="relative z-[1] max-w-[1400px] mx-auto px-7 md:px-16" style={{ padding: '60px 0 100px' }}>
       <div className="px-7 md:px-16">
         <div style={{ fontFamily: 'var(--font-m)', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--teal)', marginBottom: 16 }} className="flex items-center gap-2.5">
           <span className="w-7 h-0.5 rounded" style={{ background: 'var(--teal)' }} />
