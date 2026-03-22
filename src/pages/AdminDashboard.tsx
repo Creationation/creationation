@@ -95,7 +95,7 @@ const AdminDashboard = () => {
   });
 
 
-  const f = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
