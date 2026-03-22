@@ -94,7 +94,8 @@ const Pricing = ({ onContact }: { onContact?: () => void }) => {
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           overscrollBehaviorX: 'contain',
-          touchAction: 'pan-y pinch-zoom',
+          touchAction: 'auto',
+          WebkitOverflowScrolling: 'touch',
         }}
       >
         <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; }`}</style>
