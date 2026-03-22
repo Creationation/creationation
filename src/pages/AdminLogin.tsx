@@ -32,6 +32,8 @@ const AdminLogin = () => {
         return;
       }
 
+      // Cache admin verification
+      localStorage.setItem('admin_verified_at', Date.now().toString());
       navigate('/admin');
     } catch (err: any) {
       toast.error(err.message || 'Erreur de connexion');
