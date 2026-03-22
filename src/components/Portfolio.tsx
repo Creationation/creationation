@@ -1,7 +1,10 @@
+import { useState, useEffect, useRef } from 'react';
 import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
-import { projects, type ProjectColor } from '@/lib/projects';
+import { type ProjectColor } from '@/lib/projects';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { supabase } from '@/integrations/supabase/client';
+import { ChevronDown } from 'lucide-react';
 
 const colorMap: Record<ProjectColor, { glow: string; visBg: string }> = {
   teal: { glow: 'var(--teal)', visBg: 'linear-gradient(135deg, #dff5ef, #c8ece2)' },
@@ -11,48 +14,70 @@ const colorMap: Record<ProjectColor, { glow: string; visBg: string }> = {
   violet: { glow: 'var(--violet)', visBg: 'linear-gradient(135deg, #ece4f7, #ddd0f0)' },
 };
 
-const BrowserMockup = ({ url, featured }: { url: string; featured?: boolean }) => (
-  <div
-    className="relative z-[1] overflow-hidden"
-    style={{
-      width: featured ? '80%' : '72%', maxWidth: featured ? 520 : 420,
-      borderRadius: 14,
-      background: 'rgba(255,255,255,0.55)',
-      backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-      border: '1px solid rgba(255,255,255,0.6)',
-      boxShadow: '0 16px 48px rgba(0,0,0,0.08)',
-      transform: 'perspective(600px) rotateY(-2deg) rotateX(2deg)',
-      transition: 'transform 0.6s cubic-bezier(.23,1,.32,1)',
-    }}
-  >
-    <div className="flex items-center gap-1.5 h-[30px] px-3" style={{ background: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-      <span className="w-2 h-2 rounded-full" style={{ background: '#ff5f57' }} />
-      <span className="w-2 h-2 rounded-full" style={{ background: '#febc2e' }} />
-      <span className="w-2 h-2 rounded-full" style={{ background: '#28c840' }} />
-      <span className="ml-3 px-3 py-0.5 rounded-lg text-[10px]" style={{ background: 'rgba(0,0,0,0.04)', fontFamily: 'var(--font-m)', color: 'var(--text-light)' }}>
-        {url}
-      </span>
-    </div>
-    <div className="p-4 flex flex-col gap-2" style={{ minHeight: featured ? 210 : 150 }}>
-      <div className="rounded h-[7px]" style={{ width: '55%', background: 'rgba(0,0,0,0.05)' }} />
-      <div className="rounded h-[7px]" style={{ width: '75%', background: 'rgba(0,0,0,0.05)' }} />
-      <div className="rounded h-[7px]" style={{ width: '40%', background: 'rgba(0,0,0,0.05)' }} />
-      <div className="mt-2 h-11 rounded-[10px]" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.03)' }} />
-      {featured && (
-        <div className="flex gap-2 mt-1.5">
-          <div className="w-11 h-11 rounded-[10px] shrink-0" style={{ background: 'rgba(0,0,0,0.03)' }} />
-          <div className="w-11 h-11 rounded-[10px] shrink-0" style={{ background: 'rgba(0,0,0,0.03)' }} />
-          <div className="w-11 h-11 rounded-[10px] shrink-0" style={{ background: 'rgba(0,0,0,0.03)' }} />
-        </div>
-      )}
-    </div>
-  </div>
-);
+interface PortfolioProject {
+  id: string;
+  name: string;
+  url: string;
+  url_display: string;
+  badge: string;
+  category: string;
+  color: string;
+  description_fr: string;
+  description_en: string;
+  description_de: string;
+  tags: string[];
+  screenshot_url: string | null;
+  video_url: string | null;
+  featured: boolean;
+  visible: boolean;
+  position: number;
+}
+
+const INITIAL_COUNT = 3;
 
 const Portfolio = () => {
   const { lang } = useLang();
   const p = t.portfolio;
   const ref = useScrollReveal();
+  const [projects, setProjects] = useState<PortfolioProject[]>([]);
+  const [expanded, setExpanded] = useState(false);
+  const extraRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const { data } = await supabase
+        .from('portfolio_projects')
+        .select('*')
+        .eq('visible', true)
+        .order('position', { ascending: true });
+      if (data) setProjects(data as unknown as PortfolioProject[]);
+    };
+    fetchProjects();
+  }, []);
+
+  const visibleProjects = expanded ? projects : projects.slice(0, INITIAL_COUNT);
+  const hasMore = projects.length > INITIAL_COUNT;
+
+  const getDesc = (proj: PortfolioProject) => {
+    if (lang === 'en') return proj.description_en;
+    if (lang === 'de') return proj.description_de;
+    return proj.description_fr;
+  };
+
+  const handleToggle = () => {
+    if (expanded) {
+      // Scroll back to portfolio section before collapsing
+      const section = document.getElementById('portfolio');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => setExpanded(false), 400);
+    } else {
+      setExpanded(true);
+      // Scroll to newly revealed content
+      setTimeout(() => {
+        extraRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+  };
 
   return (
     <section id="portfolio" className="relative z-[1] max-w-[1400px] mx-auto px-7 md:px-16" style={{ padding: '80px 0 140px' }}>
@@ -69,11 +94,11 @@ const Portfolio = () => {
         </p>
 
         <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 gap-[18px] mt-14">
-          {projects.map((proj, i) => {
-            const colors = colorMap[proj.color];
+          {visibleProjects.map((proj, i) => {
+            const colors = colorMap[(proj.color as ProjectColor) || 'teal'];
             return (
               <a
-                key={proj.name}
+                key={proj.id}
                 href={proj.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -113,39 +138,64 @@ const Portfolio = () => {
                 {/* Visual */}
                 <div className={`relative flex items-center justify-center overflow-hidden ${proj.featured ? 'flex-[1.2]' : ''}`} style={{ minHeight: proj.featured ? 340 : 260 }}>
                   <div className="absolute inset-0 opacity-[0.35]" style={{ background: colors.visBg }} />
-                  <div className="brow-mock relative z-[1] overflow-hidden" style={{
-                    width: proj.featured ? '80%' : '72%', maxWidth: proj.featured ? 520 : 420,
-                    borderRadius: 14,
-                    background: 'rgba(255,255,255,0.55)',
-                    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-                    border: '1px solid rgba(255,255,255,0.6)',
-                    boxShadow: '0 16px 48px rgba(0,0,0,0.08)',
-                    transform: 'perspective(600px) rotateY(-2deg) rotateX(2deg)',
-                    transition: 'transform 0.6s cubic-bezier(.23,1,.32,1)',
-                  }}>
-                    <div className="flex items-center gap-1.5 h-[30px] px-3" style={{ background: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                      <span className="w-2 h-2 rounded-full" style={{ background: '#ff5f57' }} />
-                      <span className="w-2 h-2 rounded-full" style={{ background: '#febc2e' }} />
-                      <span className="w-2 h-2 rounded-full" style={{ background: '#28c840' }} />
-                      <span className="ml-3 px-3 py-0.5 rounded-lg text-[10px]" style={{ background: 'rgba(0,0,0,0.04)', fontFamily: 'var(--font-m)', color: 'var(--text-light)' }}>
-                        {proj.urlDisplay}
-                      </span>
+                  {proj.video_url ? (
+                    <video
+                      src={proj.video_url}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="brow-mock relative z-[1] overflow-hidden object-cover"
+                      style={{
+                        width: proj.featured ? '80%' : '72%', maxWidth: proj.featured ? 520 : 420,
+                        borderRadius: 14,
+                        boxShadow: '0 16px 48px rgba(0,0,0,0.08)',
+                        transform: 'perspective(600px) rotateY(-2deg) rotateX(2deg)',
+                        transition: 'transform 0.6s cubic-bezier(.23,1,.32,1)',
+                      }}
+                    />
+                  ) : (
+                    <div className="brow-mock relative z-[1] overflow-hidden" style={{
+                      width: proj.featured ? '80%' : '72%', maxWidth: proj.featured ? 520 : 420,
+                      borderRadius: 14,
+                      background: 'rgba(255,255,255,0.55)',
+                      backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+                      border: '1px solid rgba(255,255,255,0.6)',
+                      boxShadow: '0 16px 48px rgba(0,0,0,0.08)',
+                      transform: 'perspective(600px) rotateY(-2deg) rotateX(2deg)',
+                      transition: 'transform 0.6s cubic-bezier(.23,1,.32,1)',
+                    }}>
+                      <div className="flex items-center gap-1.5 h-[30px] px-3" style={{ background: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                        <span className="w-2 h-2 rounded-full" style={{ background: '#ff5f57' }} />
+                        <span className="w-2 h-2 rounded-full" style={{ background: '#febc2e' }} />
+                        <span className="w-2 h-2 rounded-full" style={{ background: '#28c840' }} />
+                        <span className="ml-3 px-3 py-0.5 rounded-lg text-[10px]" style={{ background: 'rgba(0,0,0,0.04)', fontFamily: 'var(--font-m)', color: 'var(--text-light)' }}>
+                          {proj.url_display}
+                        </span>
+                      </div>
+                      <div className="overflow-hidden" style={{ minHeight: proj.featured ? 210 : 150 }}>
+                        {proj.screenshot_url ? (
+                          <img
+                            src={proj.screenshot_url}
+                            alt={proj.name}
+                            className="w-full h-full object-cover object-top"
+                            loading="lazy"
+                            style={{ minHeight: proj.featured ? 210 : 150 }}
+                          />
+                        ) : (
+                          <div className="p-4 flex flex-col gap-2" style={{ minHeight: proj.featured ? 210 : 150 }}>
+                            <div className="rounded h-[7px]" style={{ width: '55%', background: 'rgba(0,0,0,0.05)' }} />
+                            <div className="rounded h-[7px]" style={{ width: '75%', background: 'rgba(0,0,0,0.05)' }} />
+                            <div className="rounded h-[7px]" style={{ width: '40%', background: 'rgba(0,0,0,0.05)' }} />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="overflow-hidden" style={{ minHeight: proj.featured ? 210 : 150 }}>
-                      <img
-                        src={proj.screenshot}
-                        alt={proj.name}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
-                        style={{ minHeight: proj.featured ? 210 : 150 }}
-                      />
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Info */}
                 <div className={`relative z-[1] ${proj.featured ? 'flex-1 flex flex-col justify-center p-10' : 'p-7 pb-8'}`}>
-                  {/* Badge */}
                   <div className="inline-flex items-center gap-1.5 w-fit mb-3.5" style={{
                     padding: '4px 14px', borderRadius: 'var(--pill)',
                     fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase',
@@ -164,7 +214,7 @@ const Portfolio = () => {
                     {proj.name}
                   </h3>
                   <p className="text-sm leading-relaxed mb-[18px]" style={{ color: 'var(--text-mid)' }}>
-                    {proj.desc[lang]}
+                    {getDesc(proj)}
                   </p>
                   <div className="flex flex-wrap gap-[7px] mb-[22px]">
                     {proj.tags.map((tag) => (
@@ -191,6 +241,36 @@ const Portfolio = () => {
             );
           })}
         </div>
+
+        {/* Extra ref for scroll target */}
+        <div ref={extraRef} />
+
+        {/* See more / less button */}
+        {hasMore && (
+          <div className="flex justify-center mt-10">
+            <button
+              onClick={handleToggle}
+              className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+              style={{
+                background: 'rgba(255,255,255,0.35)',
+                backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255,255,255,0.5)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+                color: 'var(--teal)',
+                fontFamily: 'var(--font-m)',
+              }}
+            >
+              {expanded
+                ? (lang === 'fr' ? 'Voir moins' : lang === 'de' ? 'Weniger anzeigen' : 'See less')
+                : (lang === 'fr' ? `Voir les ${projects.length - INITIAL_COUNT} autres projets` : lang === 'de' ? `${projects.length - INITIAL_COUNT} weitere Projekte` : `See ${projects.length - INITIAL_COUNT} more projects`)}
+              <ChevronDown
+                size={18}
+                className="transition-transform duration-300"
+                style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+              />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
