@@ -12,6 +12,7 @@ const navItems = [
   { to: '/admin/invoices', label: 'Factures', icon: FileText, color: '#f59e0b' },
   { to: '/admin/revenues', label: 'Revenus', icon: Wallet, color: 'var(--sky)' },
   { to: '/admin/costs', label: 'Coûts', icon: DollarSign, color: '#d4a55a' },
+  { to: '/admin/portfolio', label: 'Portfolio', icon: Image, color: 'var(--coral)' },
 ];
 
 const AdminHeader = () => {

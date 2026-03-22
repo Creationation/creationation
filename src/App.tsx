@@ -56,6 +56,7 @@ const App = () => (
               <Route path="/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
               <Route path="/admin/revenues" element={<AdminRoute><AdminRevenues /></AdminRoute>} />
               <Route path="/admin/costs" element={<AdminRoute><AdminCosts /></AdminRoute>} />
+              <Route path="/admin/portfolio" element={<AdminRoute><AdminPortfolio /></AdminRoute>} />
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>
