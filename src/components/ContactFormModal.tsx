@@ -285,9 +285,10 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
     : 'translate-x-0 opacity-100';
 
   const stepMinHeight = () => {
-    if ([2, 5, 7].includes(step)) return 320;
-    if ([3, 6].includes(step)) return 280;
-    if (step === 8) return 240;
+    if ([2, 6, 8].includes(step)) return 320;
+    if ([4, 7].includes(step)) return 280;
+    if (step === 9) return 240;
+    if (step === 3) return 200;
     return 160;
   };
 
