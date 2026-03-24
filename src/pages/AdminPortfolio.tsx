@@ -98,9 +98,21 @@ const AdminPortfolio = () => {
     setTagInput('');
   };
 
-  const removeTag = (idx: number) => {
+  const addTagEn = () => {
+    if (!tagEnInput.trim() || !editing) return;
+    setEditing({ ...editing, tags_en: [...editing.tags_en, tagEnInput.trim()] });
+    setTagEnInput('');
+  };
+
+  const addTagDe = () => {
+    if (!tagDeInput.trim() || !editing) return;
+    setEditing({ ...editing, tags_de: [...editing.tags_de, tagDeInput.trim()] });
+    setTagDeInput('');
+  };
+
+  const removeTag = (field: 'tags' | 'tags_en' | 'tags_de', idx: number) => {
     if (!editing) return;
-    setEditing({ ...editing, tags: editing.tags.filter((_, i) => i !== idx) });
+    setEditing({ ...editing, [field]: editing[field].filter((_, i) => i !== idx) });
   };
 
   const moveProject = async (id: string, dir: -1 | 1) => {
