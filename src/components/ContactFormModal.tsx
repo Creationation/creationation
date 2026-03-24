@@ -49,6 +49,7 @@ const tr = {
   },
   industryOtherPh: { fr: 'Précisez votre secteur...', en: 'Specify your industry...', de: 'Geben Sie Ihre Branche an...' },
   styleLabel: { fr: 'QUELLE DIRECTION VISUELLE VOUS PARLE ?', en: 'WHICH VISUAL DIRECTION SPEAKS TO YOU?', de: 'WELCHE VISUELLE RICHTUNG SPRICHT SIE AN?' },
+  styleOtherPh: { fr: 'Décrivez les couleurs souhaitées...', en: 'Describe your desired colors...', de: 'Beschreiben Sie Ihre gewünschten Farben...' },
   featuresLabel: { fr: 'QUELLES FONCTIONNALITÉS AVEZ-VOUS BESOIN ?', en: 'WHAT FEATURES DO YOU NEED?', de: 'WELCHE FUNKTIONEN BENÖTIGEN SIE?' },
   features: {
     fr: ['Réservation en ligne', 'Paiements en ligne', 'Portfolio / Galerie', 'Blog', 'Chat en direct', 'Portail client', 'Formulaire de contact', 'Réseaux sociaux', 'Newsletter', 'Multi-langue'],
@@ -91,7 +92,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', project_types: [] as string[], budget: '2000', budgetCustom: '', message: '',
     industry: '', industryCustom: '',
-    style: '',
+    style: '', styleCustom: '',
     features: [] as string[],
     inspiration1: '', inspiration2: '', inspiration3: '',
     timeline: '',
@@ -140,7 +141,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       case 3: return true;
       case 4: return form.message.trim().length > 0;
       case 5: return form.industry.length > 0 && (!isOtherIndustry(form.industry) || form.industryCustom.trim().length > 0);
-      case 6: return form.style.length > 0;
+      case 6: return form.style.length > 0 && (form.style !== 'Other' || form.styleCustom.trim().length > 0);
       case 7: return form.features.length > 0;
       case 8: return true; // optional
       case 9: return form.timeline.length > 0;
@@ -173,7 +174,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       form.message.trim(),
       `\n\n--- Additional details ---`,
       `Industry: ${industryFinal}`,
-      `Style: ${form.style}`,
+      `Style: ${form.style === 'Other' ? form.styleCustom.trim() : form.style}`,
       `Features: ${featuresStr}`,
       inspirations ? `Inspiration: ${inspirations}` : null,
       `Timeline: ${form.timeline}`,
@@ -212,7 +213,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       }).catch(console.error);
 
       toast.success(tr.success[lang]);
-      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '', industry: '', industryCustom: '', style: '', features: [], inspiration1: '', inspiration2: '', inspiration3: '', timeline: '' });
+      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '', industry: '', industryCustom: '', style: '', styleCustom: '', features: [], inspiration1: '', inspiration2: '', inspiration3: '', timeline: '' });
       onOpenChange(false);
     } catch {
       toast.error(tr.error[lang]);
@@ -387,6 +388,8 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         );
 
       case 6: // Style
+        const isOtherStyle = form.style === 'Other';
+        const otherStyleLabel = { fr: 'Autre', en: 'Other', de: 'Andere' };
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.styleLabel[lang]}</label>
@@ -394,7 +397,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
               {styleOptions.map(opt => {
                 const isSelected = form.style === opt.label.en;
                 return (
-                  <button key={opt.label.en} type="button" onClick={() => setForm(f => ({ ...f, style: opt.label.en }))} style={{ ...chipStyle(isSelected), justifyContent: 'space-between' }}>
+                  <button key={opt.label.en} type="button" onClick={() => setForm(f => ({ ...f, style: opt.label.en, styleCustom: '' }))} style={{ ...chipStyle(isSelected), justifyContent: 'space-between' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       {isSelected && <Check size={14} style={{ color: 'var(--teal)' }} />}
                       {opt.label[lang]}
@@ -407,6 +410,24 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
                   </button>
                 );
               })}
+              <button type="button" onClick={() => setForm(f => ({ ...f, style: 'Other' }))} style={{ ...chipStyle(isOtherStyle), justifyContent: 'flex-start' }}>
+                {isOtherStyle && <Check size={14} style={{ color: 'var(--teal)' }} />}
+                {otherStyleLabel[lang]}
+              </button>
+              {isOtherStyle && (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={form.styleCustom}
+                  onChange={e => setForm(f => ({ ...f, styleCustom: e.target.value }))}
+                  onKeyDown={handleKeyDown}
+                  placeholder={tr.styleOtherPh[lang]}
+                  style={inputStyle}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
+                  autoFocus
+                />
+              )}
             </div>
           </div>
         );
