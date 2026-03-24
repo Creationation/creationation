@@ -768,6 +768,8 @@ export type Database = {
           position: number
           screenshot_url: string | null
           tags: string[]
+          tags_de: string[]
+          tags_en: string[]
           updated_at: string | null
           url: string
           url_display: string
@@ -788,6 +790,8 @@ export type Database = {
           position?: number
           screenshot_url?: string | null
           tags?: string[]
+          tags_de?: string[]
+          tags_en?: string[]
           updated_at?: string | null
           url?: string
           url_display?: string
@@ -808,6 +812,8 @@ export type Database = {
           position?: number
           screenshot_url?: string | null
           tags?: string[]
+          tags_de?: string[]
+          tags_en?: string[]
           updated_at?: string | null
           url?: string
           url_display?: string

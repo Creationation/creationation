@@ -26,6 +26,8 @@ interface PortfolioProject {
   description_en: string;
   description_de: string;
   tags: string[];
+  tags_en: string[];
+  tags_de: string[];
   screenshot_url: string | null;
   video_url: string | null;
   featured: boolean;
@@ -237,7 +239,7 @@ const Portfolio = () => {
                     {getDesc(proj)}
                   </p>
                   <div className="flex flex-wrap gap-[7px] mb-[22px]">
-                    {proj.tags.map((tag) => (
+                    {(lang === 'en' && proj.tags_en?.length ? proj.tags_en : lang === 'de' && proj.tags_de?.length ? proj.tags_de : proj.tags).map((tag) => (
                       <span key={tag} style={{
                         fontSize: 11, fontWeight: 600, padding: '5px 14px', borderRadius: 'var(--pill)',
                         background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
