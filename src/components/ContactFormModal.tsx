@@ -388,6 +388,8 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
         );
 
       case 6: // Style
+        const isOtherStyle = form.style === 'Other';
+        const otherStyleLabel = { fr: 'Autre', en: 'Other', de: 'Andere' };
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.styleLabel[lang]}</label>
@@ -395,7 +397,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
               {styleOptions.map(opt => {
                 const isSelected = form.style === opt.label.en;
                 return (
-                  <button key={opt.label.en} type="button" onClick={() => setForm(f => ({ ...f, style: opt.label.en }))} style={{ ...chipStyle(isSelected), justifyContent: 'space-between' }}>
+                  <button key={opt.label.en} type="button" onClick={() => setForm(f => ({ ...f, style: opt.label.en, styleCustom: '' }))} style={{ ...chipStyle(isSelected), justifyContent: 'space-between' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       {isSelected && <Check size={14} style={{ color: 'var(--teal)' }} />}
                       {opt.label[lang]}
@@ -408,6 +410,24 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
                   </button>
                 );
               })}
+              <button type="button" onClick={() => setForm(f => ({ ...f, style: 'Other' }))} style={{ ...chipStyle(isOtherStyle), justifyContent: 'flex-start' }}>
+                {isOtherStyle && <Check size={14} style={{ color: 'var(--teal)' }} />}
+                {otherStyleLabel[lang]}
+              </button>
+              {isOtherStyle && (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={form.styleCustom}
+                  onChange={e => setForm(f => ({ ...f, styleCustom: e.target.value }))}
+                  onKeyDown={handleKeyDown}
+                  placeholder={tr.styleOtherPh[lang]}
+                  style={inputStyle}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
+                  autoFocus
+                />
+              )}
             </div>
           </div>
         );
