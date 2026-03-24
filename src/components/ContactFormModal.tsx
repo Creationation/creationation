@@ -93,7 +93,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   const [animating, setAnimating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', project_types: [] as string[], budget: '2000', budgetCustom: '', message: '',
+    name: '', email: '', phone: '', project_types: [] as string[], projectName: '', projectNameUnknown: false, budget: '2000', budgetCustom: '', message: '',
     industry: '', industryCustom: '',
     style: '', styleCustom: '',
     features: [] as string[],
