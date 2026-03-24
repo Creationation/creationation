@@ -36,7 +36,6 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
           opacity: 0,
         }}
       >
-        <img src={logo} alt="CreationNation" className="h-8" />
 
         <button
           onClick={() => setMenuOpen(true)}
