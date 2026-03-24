@@ -49,6 +49,7 @@ const tr = {
   },
   industryOtherPh: { fr: 'Précisez votre secteur...', en: 'Specify your industry...', de: 'Geben Sie Ihre Branche an...' },
   styleLabel: { fr: 'QUELLE DIRECTION VISUELLE VOUS PARLE ?', en: 'WHICH VISUAL DIRECTION SPEAKS TO YOU?', de: 'WELCHE VISUELLE RICHTUNG SPRICHT SIE AN?' },
+  styleOtherPh: { fr: 'Décrivez les couleurs souhaitées...', en: 'Describe your desired colors...', de: 'Beschreiben Sie Ihre gewünschten Farben...' },
   featuresLabel: { fr: 'QUELLES FONCTIONNALITÉS AVEZ-VOUS BESOIN ?', en: 'WHAT FEATURES DO YOU NEED?', de: 'WELCHE FUNKTIONEN BENÖTIGEN SIE?' },
   features: {
     fr: ['Réservation en ligne', 'Paiements en ligne', 'Portfolio / Galerie', 'Blog', 'Chat en direct', 'Portail client', 'Formulaire de contact', 'Réseaux sociaux', 'Newsletter', 'Multi-langue'],
