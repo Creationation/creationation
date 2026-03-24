@@ -26,6 +26,8 @@ interface PortfolioProject {
   description_en: string;
   description_de: string;
   tags: string[];
+  tags_en: string[];
+  tags_de: string[];
   screenshot_url: string | null;
   video_url: string | null;
   featured: boolean;
