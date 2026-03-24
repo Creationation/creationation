@@ -3,6 +3,7 @@ import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import type { Lang } from '@/lib/translations';
 import { Menu, X } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const langs: Lang[] = ['fr', 'en', 'de'];
 const labels: Record<Lang, string> = { fr: 'FR', en: 'EN', de: 'DE' };
