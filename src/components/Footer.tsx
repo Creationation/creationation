@@ -2,6 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import { useNavigate } from 'react-router-dom';
 import { Settings } from 'lucide-react';
 import t from '@/lib/translations';
+import logo from '@/assets/logo.png';
 
 const Footer = () => {
   const { lang } = useLang();
