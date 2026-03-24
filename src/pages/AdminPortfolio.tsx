@@ -33,7 +33,7 @@ const COLOR_MAP: Record<string, string> = {
 const emptyProject: Omit<PortfolioProject, 'id'> = {
   name: '', url: '', url_display: '', badge: 'demo', category: '', color: 'teal',
   description_fr: '', description_en: '', description_de: '',
-  tags: [], screenshot_url: null, video_url: null, featured: false, visible: true, position: 0,
+  tags: [], tags_en: [], tags_de: [], screenshot_url: null, video_url: null, featured: false, visible: true, position: 0,
 };
 
 const AdminPortfolio = () => {
