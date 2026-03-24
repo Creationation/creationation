@@ -332,7 +332,32 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
             </div>
           </div>
         );
-      case 3:
+      case 3: // Project name
+        return (
+          <div className="flex flex-col gap-5">
+            <label style={labelStyle}>{tr.projectNameLabel[lang]}</label>
+            <input
+              ref={inputRef}
+              value={form.projectName}
+              onChange={e => setForm(f => ({ ...f, projectName: e.target.value, projectNameUnknown: false }))}
+              placeholder={tr.projectNamePh[lang]}
+              onKeyDown={handleKeyDown}
+              onFocus={focusStyle}
+              onBlur={blurStyle}
+              style={{ ...inputStyle, opacity: form.projectNameUnknown ? 0.4 : 1 }}
+              disabled={form.projectNameUnknown}
+            />
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, projectNameUnknown: !f.projectNameUnknown, projectName: !f.projectNameUnknown ? '' : f.projectName }))}
+              style={chipStyle(form.projectNameUnknown)}
+            >
+              {form.projectNameUnknown && <Check size={14} style={{ color: 'var(--teal)' }} />}
+              {tr.projectNameUnknown[lang]}
+            </button>
+          </div>
+        );
+      case 4:
         return (
           <div className="flex flex-col gap-6">
             <label style={labelStyle}>{tr.budget[lang]}</label>
@@ -362,7 +387,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
             </div>
           </div>
         );
-      case 4:
+      case 5:
         return (
           <div className="flex flex-col gap-4">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.message[lang]}</label>
@@ -370,9 +395,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      // --- NEW STEPS ---
-
-      case 5: // Industry
+      case 6: // Industry
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.industryLabel[lang]}</label>
@@ -392,7 +415,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 6: // Style
+      case 7: // Style
         const isOtherStyle = form.style === 'Other';
         const otherStyleLabel = { fr: 'Autre', en: 'Other', de: 'Andere' };
         return (
@@ -437,7 +460,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 7: // Features
+      case 8: // Features
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.featuresLabel[lang]}</label>
@@ -454,7 +477,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 8: // Inspiration
+      case 9: // Inspiration
         return (
           <div className="flex flex-col gap-4">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.inspirationLabel[lang]}</label>
@@ -465,7 +488,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 9: // Timeline
+      case 10: // Timeline
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.timelineLabel[lang]}</label>
