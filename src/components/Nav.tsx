@@ -29,7 +29,7 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
     <>
       {/* Top bar */}
       <nav
-        className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between"
+        className="fixed top-0 left-0 z-[100] flex items-center"
         style={{
           padding: '16px 24px',
           animation: 'navIn 0.8s cubic-bezier(.23,1,.32,1) forwards',
