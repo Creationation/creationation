@@ -141,13 +141,14 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       case 0: return form.name.trim().length > 0;
       case 1: return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
       case 2: return form.project_types.length > 0;
-      case 3: return true;
-      case 4: return form.message.trim().length > 0;
-      case 5: return form.industry.length > 0 && (!isOtherIndustry(form.industry) || form.industryCustom.trim().length > 0);
-      case 6: return form.style.length > 0 && (form.style !== 'Other' || form.styleCustom.trim().length > 0);
-      case 7: return form.features.length > 0;
-      case 8: return true; // optional
-      case 9: return form.timeline.length > 0;
+      case 3: return form.projectName.trim().length > 0 || form.projectNameUnknown;
+      case 4: return true;
+      case 5: return form.message.trim().length > 0;
+      case 6: return form.industry.length > 0 && (!isOtherIndustry(form.industry) || form.industryCustom.trim().length > 0);
+      case 7: return form.style.length > 0 && (form.style !== 'Other' || form.styleCustom.trim().length > 0);
+      case 8: return form.features.length > 0;
+      case 9: return true; // optional
+      case 10: return form.timeline.length > 0;
       default: return false;
     }
   };
