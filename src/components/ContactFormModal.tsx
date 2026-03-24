@@ -17,10 +17,13 @@ const contactSchema = z.object({
 
 const tr = {
   steps: {
-    fr: ['Qui êtes-vous ?', 'Comment vous joindre ?', 'Votre projet', 'Votre budget', 'Décrivez votre vision', 'Votre secteur', 'Votre style', 'Fonctionnalités clés', 'Votre inspiration', 'Votre calendrier'],
-    en: ['Who are you?', 'How to reach you?', 'Your project', 'Your budget', 'Describe your vision', 'Your industry', 'Your style', 'Key features', 'Your inspiration', 'Your timeline'],
-    de: ['Wer sind Sie?', 'Wie erreichen wir Sie?', 'Ihr Projekt', 'Ihr Budget', 'Beschreiben Sie Ihre Vision', 'Ihre Branche', 'Ihr Stil', 'Schlüsselfunktionen', 'Ihre Inspiration', 'Ihr Zeitrahmen'],
+    fr: ['Qui êtes-vous ?', 'Comment vous joindre ?', 'Votre projet', 'Nom du projet', 'Votre budget', 'Décrivez votre vision', 'Votre secteur', 'Votre style', 'Fonctionnalités clés', 'Votre inspiration', 'Votre calendrier'],
+    en: ['Who are you?', 'How to reach you?', 'Your project', 'Project name', 'Your budget', 'Describe your vision', 'Your industry', 'Your style', 'Key features', 'Your inspiration', 'Your timeline'],
+    de: ['Wer sind Sie?', 'Wie erreichen wir Sie?', 'Ihr Projekt', 'Projektname', 'Ihr Budget', 'Beschreiben Sie Ihre Vision', 'Ihre Branche', 'Ihr Stil', 'Schlüsselfunktionen', 'Ihre Inspiration', 'Ihr Zeitrahmen'],
   },
+  projectNameLabel: { fr: 'COMMENT S\'APPELLE VOTRE PROJET ?', en: 'WHAT IS YOUR PROJECT CALLED?', de: 'WIE HEISST IHR PROJEKT?' },
+  projectNamePh: { fr: 'Ex : MonSuperSite', en: 'E.g.: MySuperSite', de: 'Z.B.: MeineSuperSeite' },
+  projectNameUnknown: { fr: 'Je ne sais pas encore', en: "I don't know yet", de: 'Ich weiß es noch nicht' },
   name: { fr: 'Votre nom complet', en: 'Your full name', de: 'Ihr vollständiger Name' },
   namePh: { fr: 'Jean Dupont', en: 'John Doe', de: 'Max Mustermann' },
   email: { fr: 'Adresse email', en: 'Email address', de: 'E-Mail-Adresse' },
@@ -74,7 +77,7 @@ const styleOptions = [
   { label: { fr: 'Minimal & Épuré', en: 'Minimal & Clean', de: 'Minimal & Klar' }, colors: ['#000000', '#ffffff', '#737373', '#e5e5e5'] },
 ];
 
-const TOTAL_STEPS = 10;
+const TOTAL_STEPS = 11;
 const MIN_BUDGET = 200;
 const MAX_BUDGET = 10000;
 
@@ -90,7 +93,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   const [animating, setAnimating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', project_types: [] as string[], budget: '2000', budgetCustom: '', message: '',
+    name: '', email: '', phone: '', project_types: [] as string[], projectName: '', projectNameUnknown: false, budget: '2000', budgetCustom: '', message: '',
     industry: '', industryCustom: '',
     style: '', styleCustom: '',
     features: [] as string[],
@@ -112,7 +115,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   useEffect(() => {
     if (!animating) {
       setTimeout(() => {
-        if (step === 4) textareaRef.current?.focus();
+        if (step === 5) textareaRef.current?.focus();
         else inputRef.current?.focus();
       }, 100);
     }
@@ -138,13 +141,14 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       case 0: return form.name.trim().length > 0;
       case 1: return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
       case 2: return form.project_types.length > 0;
-      case 3: return true;
-      case 4: return form.message.trim().length > 0;
-      case 5: return form.industry.length > 0 && (!isOtherIndustry(form.industry) || form.industryCustom.trim().length > 0);
-      case 6: return form.style.length > 0 && (form.style !== 'Other' || form.styleCustom.trim().length > 0);
-      case 7: return form.features.length > 0;
-      case 8: return true; // optional
-      case 9: return form.timeline.length > 0;
+      case 3: return form.projectName.trim().length > 0 || form.projectNameUnknown;
+      case 4: return true;
+      case 5: return form.message.trim().length > 0;
+      case 6: return form.industry.length > 0 && (!isOtherIndustry(form.industry) || form.industryCustom.trim().length > 0);
+      case 7: return form.style.length > 0 && (form.style !== 'Other' || form.styleCustom.trim().length > 0);
+      case 8: return form.features.length > 0;
+      case 9: return true; // optional
+      case 10: return form.timeline.length > 0;
       default: return false;
     }
   };
@@ -169,10 +173,12 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
     const industryFinal = isOtherIndustry(form.industry) ? form.industryCustom.trim() : form.industry;
     const inspirations = [form.inspiration1, form.inspiration2, form.inspiration3].filter(Boolean).join(', ');
     const featuresStr = form.features.join(', ');
+    const projectNameFinal = form.projectNameUnknown ? 'TBD' : form.projectName.trim();
 
     const fullMessage = [
       form.message.trim(),
       `\n\n--- Additional details ---`,
+      `Project name: ${projectNameFinal}`,
       `Industry: ${industryFinal}`,
       `Style: ${form.style === 'Other' ? form.styleCustom.trim() : form.style}`,
       `Features: ${featuresStr}`,
@@ -213,7 +219,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       }).catch(console.error);
 
       toast.success(tr.success[lang]);
-      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '', industry: '', industryCustom: '', style: '', styleCustom: '', features: [], inspiration1: '', inspiration2: '', inspiration3: '', timeline: '' });
+      setForm({ name: '', email: '', phone: '', project_types: [], projectName: '', projectNameUnknown: false, budget: '2000', budgetCustom: '', message: '', industry: '', industryCustom: '', style: '', styleCustom: '', features: [], inspiration1: '', inspiration2: '', inspiration3: '', timeline: '' });
       onOpenChange(false);
     } catch {
       toast.error(tr.error[lang]);
@@ -281,9 +287,10 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
     : 'translate-x-0 opacity-100';
 
   const stepMinHeight = () => {
-    if ([2, 5, 7].includes(step)) return 320;
-    if ([3, 6].includes(step)) return 280;
-    if (step === 8) return 240;
+    if ([2, 6, 8].includes(step)) return 320;
+    if ([4, 7].includes(step)) return 280;
+    if (step === 9) return 240;
+    if (step === 3) return 200;
     return 160;
   };
 
@@ -327,7 +334,32 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
             </div>
           </div>
         );
-      case 3:
+      case 3: // Project name
+        return (
+          <div className="flex flex-col gap-5">
+            <label style={labelStyle}>{tr.projectNameLabel[lang]}</label>
+            <input
+              ref={inputRef}
+              value={form.projectName}
+              onChange={e => setForm(f => ({ ...f, projectName: e.target.value, projectNameUnknown: false }))}
+              placeholder={tr.projectNamePh[lang]}
+              onKeyDown={handleKeyDown}
+              onFocus={focusStyle}
+              onBlur={blurStyle}
+              style={{ ...inputStyle, opacity: form.projectNameUnknown ? 0.4 : 1 }}
+              disabled={form.projectNameUnknown}
+            />
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, projectNameUnknown: !f.projectNameUnknown, projectName: !f.projectNameUnknown ? '' : f.projectName }))}
+              style={chipStyle(form.projectNameUnknown)}
+            >
+              {form.projectNameUnknown && <Check size={14} style={{ color: 'var(--teal)' }} />}
+              {tr.projectNameUnknown[lang]}
+            </button>
+          </div>
+        );
+      case 4:
         return (
           <div className="flex flex-col gap-6">
             <label style={labelStyle}>{tr.budget[lang]}</label>
@@ -357,7 +389,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
             </div>
           </div>
         );
-      case 4:
+      case 5:
         return (
           <div className="flex flex-col gap-4">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.message[lang]}</label>
@@ -365,9 +397,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      // --- NEW STEPS ---
-
-      case 5: // Industry
+      case 6: // Industry
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.industryLabel[lang]}</label>
@@ -387,7 +417,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 6: // Style
+      case 7: // Style
         const isOtherStyle = form.style === 'Other';
         const otherStyleLabel = { fr: 'Autre', en: 'Other', de: 'Andere' };
         return (
@@ -432,7 +462,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 7: // Features
+      case 8: // Features
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.featuresLabel[lang]}</label>
@@ -449,7 +479,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 8: // Inspiration
+      case 9: // Inspiration
         return (
           <div className="flex flex-col gap-4">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.inspirationLabel[lang]}</label>
@@ -460,7 +490,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
           </div>
         );
 
-      case 9: // Timeline
+      case 10: // Timeline
         return (
           <div className="flex flex-col gap-3">
             <label style={{ ...labelStyle, marginBottom: 4 }}>{tr.timelineLabel[lang]}</label>
