@@ -38,10 +38,10 @@ const INITIAL_COUNT = 3;
 const Portfolio = () => {
   const { lang } = useLang();
   const p = t.portfolio;
-  const ref = useScrollReveal();
   const [projects, setProjects] = useState<PortfolioProject[]>([]);
   const [expanded, setExpanded] = useState(false);
   const extraRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -54,6 +54,26 @@ const Portfolio = () => {
     };
     fetchProjects();
   }, []);
+
+  // Re-run scroll reveal after projects load
+  useEffect(() => {
+    const container = gridRef.current;
+    if (!container || projects.length === 0) return;
+    const els = container.querySelectorAll('.rv');
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('vis');
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [projects, expanded]);
 
   const visibleProjects = expanded ? projects : projects.slice(0, INITIAL_COUNT);
   const hasMore = projects.length > INITIAL_COUNT;
