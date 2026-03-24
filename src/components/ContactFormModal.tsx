@@ -115,7 +115,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   useEffect(() => {
     if (!animating) {
       setTimeout(() => {
-        if (step === 4) textareaRef.current?.focus();
+        if (step === 5) textareaRef.current?.focus();
         else inputRef.current?.focus();
       }, 100);
     }
