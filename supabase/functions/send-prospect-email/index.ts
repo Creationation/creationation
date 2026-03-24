@@ -167,7 +167,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'CreationNation <info@ugcpanel.app>',
+        from: 'CreationNation <Hello@creationation.app>',
         to: [to],
         subject: l.subject,
         html,
