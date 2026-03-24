@@ -1,9 +1,9 @@
 import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { ShieldCheck, Clock, CreditCard, HeadphonesIcon } from 'lucide-react';
+import { ShieldCheck, Clock, Layers, HeadphonesIcon } from 'lucide-react';
 
-const icons = [ShieldCheck, Clock, CreditCard, HeadphonesIcon];
+const icons = [ShieldCheck, Clock, Layers, HeadphonesIcon];
 
 const Guarantees = () => {
   const { lang } = useLang();
