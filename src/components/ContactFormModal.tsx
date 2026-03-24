@@ -17,10 +17,13 @@ const contactSchema = z.object({
 
 const tr = {
   steps: {
-    fr: ['Qui êtes-vous ?', 'Comment vous joindre ?', 'Votre projet', 'Votre budget', 'Décrivez votre vision', 'Votre secteur', 'Votre style', 'Fonctionnalités clés', 'Votre inspiration', 'Votre calendrier'],
-    en: ['Who are you?', 'How to reach you?', 'Your project', 'Your budget', 'Describe your vision', 'Your industry', 'Your style', 'Key features', 'Your inspiration', 'Your timeline'],
-    de: ['Wer sind Sie?', 'Wie erreichen wir Sie?', 'Ihr Projekt', 'Ihr Budget', 'Beschreiben Sie Ihre Vision', 'Ihre Branche', 'Ihr Stil', 'Schlüsselfunktionen', 'Ihre Inspiration', 'Ihr Zeitrahmen'],
+    fr: ['Qui êtes-vous ?', 'Comment vous joindre ?', 'Votre projet', 'Nom du projet', 'Votre budget', 'Décrivez votre vision', 'Votre secteur', 'Votre style', 'Fonctionnalités clés', 'Votre inspiration', 'Votre calendrier'],
+    en: ['Who are you?', 'How to reach you?', 'Your project', 'Project name', 'Your budget', 'Describe your vision', 'Your industry', 'Your style', 'Key features', 'Your inspiration', 'Your timeline'],
+    de: ['Wer sind Sie?', 'Wie erreichen wir Sie?', 'Ihr Projekt', 'Projektname', 'Ihr Budget', 'Beschreiben Sie Ihre Vision', 'Ihre Branche', 'Ihr Stil', 'Schlüsselfunktionen', 'Ihre Inspiration', 'Ihr Zeitrahmen'],
   },
+  projectNameLabel: { fr: 'COMMENT S\'APPELLE VOTRE PROJET ?', en: 'WHAT IS YOUR PROJECT CALLED?', de: 'WIE HEISST IHR PROJEKT?' },
+  projectNamePh: { fr: 'Ex : MonSuperSite', en: 'E.g.: MySuperSite', de: 'Z.B.: MeineSuperSeite' },
+  projectNameUnknown: { fr: 'Je ne sais pas encore', en: "I don't know yet", de: 'Ich weiß es noch nicht' },
   name: { fr: 'Votre nom complet', en: 'Your full name', de: 'Ihr vollständiger Name' },
   namePh: { fr: 'Jean Dupont', en: 'John Doe', de: 'Max Mustermann' },
   email: { fr: 'Adresse email', en: 'Email address', de: 'E-Mail-Adresse' },
