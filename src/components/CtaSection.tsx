@@ -8,7 +8,7 @@ const CtaSection = ({ onContact }: { onContact?: () => void }) => {
   const ref = useScrollReveal();
 
   return (
-    <section id="contact" className="relative z-[1] text-center max-w-[1400px] mx-auto px-7 md:px-16" style={{ padding: '100px 0 120px' }}>
+    <section id="contact" className="relative z-[1] text-center max-w-[1400px] mx-auto px-7 md:px-16" style={{ padding: '40px 0 120px' }}>
       {/* Radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(13,138,111,0.08), transparent 60%)', filter: 'blur(40px)' }} />
       <div ref={ref}>
