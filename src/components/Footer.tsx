@@ -2,6 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import { useNavigate } from 'react-router-dom';
 import { Settings } from 'lucide-react';
 import t from '@/lib/translations';
+import logo from '@/assets/logo.png';
 
 const Footer = () => {
   const { lang } = useLang();
@@ -16,7 +17,7 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto px-7 md:px-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
-            <div style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--teal-deep)' }}>CreationNation</div>
+            <img src={logo} alt="CreationNation" className="h-8 mb-1" />
             <div className="text-xs mt-0.5 flex items-center gap-2" style={{ color: 'var(--text-ghost)' }}>
               {t.footer.copy[lang]}
               <button
