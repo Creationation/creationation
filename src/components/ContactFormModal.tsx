@@ -174,7 +174,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       form.message.trim(),
       `\n\n--- Additional details ---`,
       `Industry: ${industryFinal}`,
-      `Style: ${form.style}`,
+      `Style: ${form.style === 'Other' ? form.styleCustom.trim() : form.style}`,
       `Features: ${featuresStr}`,
       inspirations ? `Inspiration: ${inspirations}` : null,
       `Timeline: ${form.timeline}`,
