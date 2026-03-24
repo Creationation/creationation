@@ -173,10 +173,12 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
     const industryFinal = isOtherIndustry(form.industry) ? form.industryCustom.trim() : form.industry;
     const inspirations = [form.inspiration1, form.inspiration2, form.inspiration3].filter(Boolean).join(', ');
     const featuresStr = form.features.join(', ');
+    const projectNameFinal = form.projectNameUnknown ? 'TBD' : form.projectName.trim();
 
     const fullMessage = [
       form.message.trim(),
       `\n\n--- Additional details ---`,
+      `Project name: ${projectNameFinal}`,
       `Industry: ${industryFinal}`,
       `Style: ${form.style === 'Other' ? form.styleCustom.trim() : form.style}`,
       `Features: ${featuresStr}`,
