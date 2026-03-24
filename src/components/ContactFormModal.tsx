@@ -92,7 +92,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', project_types: [] as string[], budget: '2000', budgetCustom: '', message: '',
     industry: '', industryCustom: '',
-    style: '',
+    style: '', styleCustom: '',
     features: [] as string[],
     inspiration1: '', inspiration2: '', inspiration3: '',
     timeline: '',
