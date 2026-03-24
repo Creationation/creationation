@@ -28,10 +28,10 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
   return (
     <>
       <nav
-        className="fixed top-5 left-1/2 z-[100] flex items-center gap-4 md:gap-8"
+        className="fixed top-5 left-1/2 z-[100] flex items-center gap-3 md:gap-6"
         style={{
           transform: 'translateX(-50%)',
-          padding: '10px 10px 10px 28px',
+          padding: '8px 10px 8px 14px',
           background: 'rgba(255,255,255,0.4)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
@@ -40,9 +40,10 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
           boxShadow: '0 4px 24px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
           animation: 'navIn 0.8s cubic-bezier(.23,1,.32,1) forwards',
           opacity: 0,
+          maxWidth: 'calc(100vw - 32px)',
         }}
       >
-        <img src={logo} alt="CreationNation" style={{ height: 28 }} />
+        <img src={logo} alt="CreationNation" className="h-7 md:h-8 w-auto shrink-0" />
         <ul className="hidden md:flex gap-6 list-none">
           {links.map((l) => (
             <li key={l.id}>
