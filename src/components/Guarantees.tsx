@@ -19,7 +19,7 @@ const Guarantees = () => {
 
   return (
     <section className="relative z-[1] max-w-[1400px] mx-auto px-7 md:px-16 py-16">
-      <div ref={ref} className="rv grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         {items.map((item, i) => {
           const Icon = icons[item.icon];
           return (
