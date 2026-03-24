@@ -141,7 +141,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       case 3: return true;
       case 4: return form.message.trim().length > 0;
       case 5: return form.industry.length > 0 && (!isOtherIndustry(form.industry) || form.industryCustom.trim().length > 0);
-      case 6: return form.style.length > 0;
+      case 6: return form.style.length > 0 && (form.style !== 'Other' || form.styleCustom.trim().length > 0);
       case 7: return form.features.length > 0;
       case 8: return true; // optional
       case 9: return form.timeline.length > 0;
