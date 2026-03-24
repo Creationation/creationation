@@ -114,7 +114,7 @@ function buildEmailHtml(firstName: string, subject: string, body: string, prospe
         <div style="font-size:15px;color:#2a2722;line-height:1.8;font-family:Georgia,serif;">${body}</div>
         <hr style="border:none;border-top:1px solid #f0ece6;margin:32px 0;"/>
         <div style="text-align:center;">
-          <a href="https://wa.me/33612345678" style="display:inline-block;padding:14px 32px;background:#25D366;color:#fff;text-decoration:none;border-radius:50px;font-family:Arial,sans-serif;font-size:14px;font-weight:600;margin:0 6px 8px;">💬 WhatsApp</a>
+          <a href="https://wa.me/436702022360" style="display:inline-block;padding:14px 32px;background:#25D366;color:#fff;text-decoration:none;border-radius:50px;font-family:Arial,sans-serif;font-size:14px;font-weight:600;margin:0 6px 8px;">💬 WhatsApp</a>
           <a href="mailto:Hello@creationation.app" style="display:inline-block;padding:14px 32px;background:#0d8a6f;color:#fff;text-decoration:none;border-radius:50px;font-family:Arial,sans-serif;font-size:14px;font-weight:600;margin:0 6px 8px;">✉️ E-Mail</a>
         </div>
       </div>
