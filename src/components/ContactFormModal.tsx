@@ -213,7 +213,7 @@ const ContactFormModal = ({ open, onOpenChange }: Props) => {
       }).catch(console.error);
 
       toast.success(tr.success[lang]);
-      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '', industry: '', industryCustom: '', style: '', features: [], inspiration1: '', inspiration2: '', inspiration3: '', timeline: '' });
+      setForm({ name: '', email: '', phone: '', project_types: [], budget: '2000', budgetCustom: '', message: '', industry: '', industryCustom: '', style: '', styleCustom: '', features: [], inspiration1: '', inspiration2: '', inspiration3: '', timeline: '' });
       onOpenChange(false);
     } catch {
       toast.error(tr.error[lang]);
