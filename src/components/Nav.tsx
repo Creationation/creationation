@@ -42,9 +42,7 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
           opacity: 0,
         }}
       >
-        <span style={{ fontFamily: 'var(--font-h)', fontSize: 18, color: 'var(--teal-deep)', letterSpacing: -0.3 }}>
-          CreationNation
-        </span>
+        <img src={logo} alt="CreationNation" style={{ height: 28 }} />
         <ul className="hidden md:flex gap-6 list-none">
           {links.map((l) => (
             <li key={l.id}>
