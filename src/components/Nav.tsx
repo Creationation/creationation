@@ -3,6 +3,7 @@ import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import type { Lang } from '@/lib/translations';
 import { Menu, X } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const langs: Lang[] = ['fr', 'en', 'de'];
 const labels: Record<Lang, string> = { fr: 'FR', en: 'EN', de: 'DE' };
@@ -41,9 +42,7 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
           opacity: 0,
         }}
       >
-        <span style={{ fontFamily: 'var(--font-h)', fontSize: 18, color: 'var(--teal-deep)', letterSpacing: -0.3 }}>
-          CreationNation
-        </span>
+        <img src={logo} alt="CreationNation" style={{ height: 28 }} />
         <ul className="hidden md:flex gap-6 list-none">
           {links.map((l) => (
             <li key={l.id}>
