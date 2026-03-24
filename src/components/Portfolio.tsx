@@ -113,7 +113,7 @@ const Portfolio = () => {
           {p.sub[lang]}
         </p>
 
-        <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 gap-[18px] mt-14">
+        <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-[18px] mt-14">
           {visibleProjects.map((proj, i) => {
             const colors = colorMap[(proj.color as ProjectColor) || 'teal'];
             return (
