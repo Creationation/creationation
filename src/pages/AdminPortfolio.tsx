@@ -325,26 +325,54 @@ const AdminPortfolio = () => {
                   <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.description_de} onChange={e => setEditing({ ...editing, description_de: e.target.value })} />
                 </div>
 
-                {/* Tags */}
+                {/* Tags FR */}
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Tags</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Tags FR</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {editing.tags.map((tag, i) => (
                       <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--text-mid)' }}>
                         {tag}
-                        <button onClick={() => removeTag(i)} className="hover:text-red-500"><X size={12} /></button>
+                        <button onClick={() => removeTag('tags', i)} className="hover:text-red-500"><X size={12} /></button>
                       </span>
                     ))}
                   </div>
                   <div className="flex gap-2">
-                    <input
-                      style={{ ...inputStyle, flex: 1 }}
-                      value={tagInput}
-                      onChange={e => setTagInput(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                      placeholder="Ajouter un tag..."
-                    />
+                    <input style={{ ...inputStyle, flex: 1 }} value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag())} placeholder="Ajouter un tag FR..." />
                     <button onClick={addTag} className="px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'rgba(0,0,0,0.05)' }}>+</button>
+                  </div>
+                </div>
+
+                {/* Tags EN */}
+                <div>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Tags EN</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {editing.tags_en.map((tag, i) => (
+                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--text-mid)' }}>
+                        {tag}
+                        <button onClick={() => removeTag('tags_en', i)} className="hover:text-red-500"><X size={12} /></button>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <input style={{ ...inputStyle, flex: 1 }} value={tagEnInput} onChange={e => setTagEnInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTagEn())} placeholder="Add EN tag..." />
+                    <button onClick={addTagEn} className="px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'rgba(0,0,0,0.05)' }}>+</button>
+                  </div>
+                </div>
+
+                {/* Tags DE */}
+                <div>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Tags DE</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {editing.tags_de.map((tag, i) => (
+                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--text-mid)' }}>
+                        {tag}
+                        <button onClick={() => removeTag('tags_de', i)} className="hover:text-red-500"><X size={12} /></button>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <input style={{ ...inputStyle, flex: 1 }} value={tagDeInput} onChange={e => setTagDeInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTagDe())} placeholder="DE-Tag hinzufügen..." />
+                    <button onClick={addTagDe} className="px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'rgba(0,0,0,0.05)' }}>+</button>
                   </div>
                 </div>
 
