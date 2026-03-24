@@ -41,6 +41,8 @@ const AdminPortfolio = () => {
   const [editing, setEditing] = useState<PortfolioProject | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [tagInput, setTagInput] = useState('');
+  const [tagEnInput, setTagEnInput] = useState('');
+  const [tagDeInput, setTagDeInput] = useState('');
   const { toast } = useToast();
 
   const fetchProjects = async () => {
