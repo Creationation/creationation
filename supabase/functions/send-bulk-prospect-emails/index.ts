@@ -99,7 +99,7 @@ serve(async (req) => {
 });
 
 function buildEmailHtml(firstName: string, subject: string, body: string, prospectId?: string): string {
-  const unsubscribeUrl = `mailto:info@ugcpanel.app?subject=Unsubscribe&body=ID:${prospectId || 'unknown'}`;
+  const unsubscribeUrl = `mailto:Hello@creationation.app?subject=Unsubscribe&body=ID:${prospectId || 'unknown'}`;
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
