@@ -77,7 +77,7 @@ const styleOptions = [
   { label: { fr: 'Minimal & Épuré', en: 'Minimal & Clean', de: 'Minimal & Klar' }, colors: ['#000000', '#ffffff', '#737373', '#e5e5e5'] },
 ];
 
-const TOTAL_STEPS = 10;
+const TOTAL_STEPS = 11;
 const MIN_BUDGET = 200;
 const MAX_BUDGET = 10000;
 
