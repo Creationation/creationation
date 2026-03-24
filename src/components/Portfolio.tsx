@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import { type ProjectColor } from '@/lib/projects';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
+
 import { supabase } from '@/integrations/supabase/client';
 import { ChevronDown } from 'lucide-react';
 
