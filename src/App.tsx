@@ -21,6 +21,7 @@ import AdminClients from "./pages/AdminClients";
 import AdminRevenues from "./pages/AdminRevenues";
 import AdminInvoices from "./pages/AdminInvoices";
 import AdminPortfolio from "./pages/AdminPortfolio";
+import CaseStudy from "./pages/CaseStudy";
 
 // Portal (lazy loaded)
 const PortalLogin = lazy(() => import("./pages/PortalLogin"));
