@@ -6,6 +6,7 @@ const t = {
     process: { fr: 'Process', en: 'Process', de: 'Prozess' },
     services: { fr: 'Services', en: 'Services', de: 'Leistungen' },
     pricing: { fr: 'Tarifs', en: 'Pricing', de: 'Preise' },
+    about: { fr: 'À propos', en: 'About', de: 'Über uns' },
     cta: { fr: 'Discutons', en: "Let's talk", de: 'Kontakt' },
   },
   hero: {

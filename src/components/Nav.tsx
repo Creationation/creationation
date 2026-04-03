@@ -105,6 +105,22 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
             </button>
           ))}
 
+          {/* About link */}
+          <button
+            onClick={() => { setMenuOpen(false); navigate('/about'); }}
+            className="bg-transparent border-none cursor-pointer"
+            style={{
+              fontFamily: 'var(--font-h)',
+              fontSize: 28,
+              color: 'var(--charcoal)',
+              opacity: menuOpen ? 1 : 0,
+              transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+              transition: `opacity 0.3s ease ${links.length * 0.06 + 0.1}s, transform 0.4s cubic-bezier(.23,1,.32,1) ${links.length * 0.06 + 0.1}s`,
+            }}
+          >
+            {n.about[lang]}
+          </button>
+
           <button
             onClick={() => {
               setMenuOpen(false);
