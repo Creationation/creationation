@@ -158,6 +158,16 @@ const t = {
   footer: {
     copy: { fr: '© 2026 CreationNation. Digital Product Studio', en: '© 2026 CreationNation. Digital Product Studio', de: '© 2026 CreationNation. Digital Product Studio' },
     contact: { fr: 'Contact', en: 'Contact', de: 'Kontakt' },
+    privacy: { fr: 'Politique de confidentialité', en: 'Privacy Policy', de: 'Datenschutz' },
+    terms: { fr: 'Conditions générales', en: 'Terms of Service', de: 'AGB' },
+    impressum: { fr: 'Mentions légales', en: 'Impressum', de: 'Impressum' },
+  },
+  legal: {
+    backHome: { fr: '← Retour à l\'accueil', en: '← Back to home', de: '← Zurück zur Startseite' },
+    lastUpdated: { fr: 'Dernière mise à jour : 3 avril 2026', en: 'Last updated: April 3, 2026', de: 'Zuletzt aktualisiert: 3. April 2026' },
+    privacyTitle: { fr: 'Politique de confidentialité', en: 'Privacy Policy', de: 'Datenschutzerklärung' },
+    termsTitle: { fr: 'Conditions générales de service', en: 'Terms of Service', de: 'Allgemeine Geschäftsbedingungen' },
+    impressumTitle: { fr: 'Mentions légales', en: 'Impressum', de: 'Impressum' },
   },
 } as const;
 
