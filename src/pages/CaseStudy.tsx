@@ -130,6 +130,12 @@ const CaseStudy = () => {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--cream)', fontFamily: 'var(--font-b)' }}>
+      <SeoHead
+        title={`${project.name} — Case Study | Creationation`}
+        description={desc.slice(0, 155)}
+        path={`/portfolio/${project.slug}`}
+        ogImage={project.screenshot_url || '/og-image.png'}
+      />
       <Nav />
 
       {/* Hero */}
