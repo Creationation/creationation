@@ -23,6 +23,21 @@ interface PortfolioProject {
   featured: boolean;
   visible: boolean;
   position: number;
+  slug: string | null;
+  challenge_fr: string;
+  challenge_en: string;
+  challenge_de: string;
+  solution_fr: string;
+  solution_en: string;
+  solution_de: string;
+  results_fr: string;
+  results_en: string;
+  results_de: string;
+  client_brief_fr: string;
+  client_brief_en: string;
+  client_brief_de: string;
+  tech_stack: string[];
+  gallery_urls: string[];
 }
 
 const COLORS = ['teal', 'coral', 'gold', 'sky', 'violet'];
