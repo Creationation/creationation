@@ -254,7 +254,9 @@ const Portfolio = () => {
                     ))}
                   </div>
                   <div className="inline-flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--teal)' }}>
-                    {proj.featured ? p.discover[lang] : p.discoverShort[lang]}
+                    {proj.slug
+                      ? (lang === 'fr' ? 'Voir l\'étude de cas' : lang === 'de' ? 'Fallstudie ansehen' : 'View case study')
+                      : (proj.featured ? p.discover[lang] : p.discoverShort[lang])}
                     <span className="inline-flex items-center justify-center w-[30px] h-[30px] rounded-full text-sm transition-all duration-400" style={{
                       background: 'rgba(13,138,111,0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                       border: '1px solid rgba(13,138,111,0.12)',
@@ -263,7 +265,7 @@ const Portfolio = () => {
                     </span>
                   </div>
                 </div>
-              </a>
+              </CardWrapper>
             );
           })}
         </div>
