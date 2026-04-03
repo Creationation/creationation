@@ -22,6 +22,11 @@ const Index = () => {
 
   return (
     <>
+      <SeoHead
+        title="Creationation — Premium Digital Product Studio"
+        description="Custom web apps, mobile apps and digital solutions for ambitious businesses. Premium design, fast development, measurable results. Based in Vienna, Austria."
+        path="/"
+      />
       <Blobs />
       <Nav onContact={() => setContactOpen(true)} />
       <Hero onContact={() => setContactOpen(true)} />

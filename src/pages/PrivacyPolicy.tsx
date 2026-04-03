@@ -2,6 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import { Link } from 'react-router-dom';
 import t from '@/lib/translations';
 import Footer from '@/components/Footer';
+import SeoHead from '@/components/SeoHead';
 
 const content = {
   en: {
