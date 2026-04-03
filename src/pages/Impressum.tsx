@@ -2,6 +2,7 @@ import { useLang } from '@/hooks/useLang';
 import { Link } from 'react-router-dom';
 import t from '@/lib/translations';
 import Footer from '@/components/Footer';
+import SeoHead from '@/components/SeoHead';
 
 const content = {
   en: {
@@ -87,6 +88,11 @@ const Impressum = () => {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--cream)', color: 'var(--text-main)' }}>
+      <SeoHead
+        title="Impressum — Creationation"
+        description="Legal information (Impressumspflicht) for Creationation. Company details, Vienna Austria, web and mobile app development."
+        path="/impressum"
+      />
       <div className="flex-1 max-w-[800px] mx-auto px-7 md:px-16 py-16 md:py-24">
         <Link
           to="/"

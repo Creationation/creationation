@@ -15,12 +15,18 @@ import ContactInfo from '@/components/ContactInfo';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ContactFormModal from '@/components/ContactFormModal';
+import SeoHead from '@/components/SeoHead';
 
 const Index = () => {
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <>
+      <SeoHead
+        title="Creationation — Premium Digital Product Studio"
+        description="Custom web apps, mobile apps and digital solutions for ambitious businesses. Premium design, fast development, measurable results. Based in Vienna, Austria."
+        path="/"
+      />
       <Blobs />
       <Nav onContact={() => setContactOpen(true)} />
       <Hero onContact={() => setContactOpen(true)} />

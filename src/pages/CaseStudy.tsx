@@ -6,6 +6,7 @@ import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
+import SeoHead from '@/components/SeoHead';
 
 interface CaseStudyProject {
   id: string;
@@ -129,6 +130,12 @@ const CaseStudy = () => {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--cream)', fontFamily: 'var(--font-b)' }}>
+      <SeoHead
+        title={`${project.name} — Case Study | Creationation`}
+        description={desc.slice(0, 155)}
+        path={`/portfolio/${project.slug}`}
+        ogImage={project.screenshot_url || '/og-image.png'}
+      />
       <Nav />
 
       {/* Hero */}
