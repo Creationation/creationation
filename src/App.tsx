@@ -36,7 +36,7 @@ const queryClient = new QueryClient();
 
 const Loader = () => (
   <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--cream)' }}>
-    <div style={{ fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Chargement...</div>
+    <div style={{ fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Loading...</div>
   </div>
 );
 
