@@ -11,7 +11,9 @@ import Pricing from '@/components/Pricing';
 import FAQ from '@/components/FAQ';
 import Guarantees from '@/components/Guarantees';
 import CtaSection from '@/components/CtaSection';
+import ContactInfo from '@/components/ContactInfo';
 import Footer from '@/components/Footer';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ContactFormModal from '@/components/ContactFormModal';
 
 const Index = () => {
@@ -31,7 +33,9 @@ const Index = () => {
       <FAQ />
       <Guarantees />
       <CtaSection onContact={() => setContactOpen(true)} />
+      <ContactInfo />
       <Footer />
+      <WhatsAppFloat />
       <ContactFormModal open={contactOpen} onOpenChange={setContactOpen} />
     </>
   );
