@@ -11,6 +11,7 @@ const labels: Record<Lang, string> = { fr: 'FR', en: 'EN', de: 'DE' };
 
 const Nav = ({ onContact }: { onContact?: () => void }) => {
   const { lang, setLang } = useLang();
+  const navigate = useNavigate();
   const n = t.nav;
   const [menuOpen, setMenuOpen] = useState(false);
 
