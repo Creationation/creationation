@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLang } from '@/hooks/useLang';
 import t from '@/lib/translations';
 import type { Lang } from '@/lib/translations';
@@ -10,6 +11,7 @@ const labels: Record<Lang, string> = { fr: 'FR', en: 'EN', de: 'DE' };
 
 const Nav = ({ onContact }: { onContact?: () => void }) => {
   const { lang, setLang } = useLang();
+  const navigate = useNavigate();
   const n = t.nav;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -102,6 +104,22 @@ const Nav = ({ onContact }: { onContact?: () => void }) => {
               {l.label}
             </button>
           ))}
+
+          {/* About link */}
+          <button
+            onClick={() => { setMenuOpen(false); navigate('/about'); }}
+            className="bg-transparent border-none cursor-pointer"
+            style={{
+              fontFamily: 'var(--font-h)',
+              fontSize: 28,
+              color: 'var(--charcoal)',
+              opacity: menuOpen ? 1 : 0,
+              transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+              transition: `opacity 0.3s ease ${links.length * 0.06 + 0.1}s, transform 0.4s cubic-bezier(.23,1,.32,1) ${links.length * 0.06 + 0.1}s`,
+            }}
+          >
+            {n.about[lang]}
+          </button>
 
           <button
             onClick={() => {
