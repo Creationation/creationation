@@ -49,6 +49,11 @@ const emptyProject: Omit<PortfolioProject, 'id'> = {
   name: '', url: '', url_display: '', badge: 'demo', category: '', color: 'teal',
   description_fr: '', description_en: '', description_de: '',
   tags: [], tags_en: [], tags_de: [], screenshot_url: null, video_url: null, featured: false, visible: true, position: 0,
+  slug: null, challenge_fr: '', challenge_en: '', challenge_de: '',
+  solution_fr: '', solution_en: '', solution_de: '',
+  results_fr: '', results_en: '', results_de: '',
+  client_brief_fr: '', client_brief_en: '', client_brief_de: '',
+  tech_stack: [], gallery_urls: [],
 };
 
 const AdminPortfolio = () => {
