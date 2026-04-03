@@ -757,19 +757,34 @@ export type Database = {
         Row: {
           badge: string
           category: string
+          challenge_de: string
+          challenge_en: string
+          challenge_fr: string
+          client_brief_de: string
+          client_brief_en: string
+          client_brief_fr: string
           color: string
           created_at: string | null
           description_de: string
           description_en: string
           description_fr: string
           featured: boolean
+          gallery_urls: string[]
           id: string
           name: string
           position: number
+          results_de: string
+          results_en: string
+          results_fr: string
           screenshot_url: string | null
+          slug: string | null
+          solution_de: string
+          solution_en: string
+          solution_fr: string
           tags: string[]
           tags_de: string[]
           tags_en: string[]
+          tech_stack: string[]
           updated_at: string | null
           url: string
           url_display: string
@@ -779,19 +794,34 @@ export type Database = {
         Insert: {
           badge?: string
           category?: string
+          challenge_de?: string
+          challenge_en?: string
+          challenge_fr?: string
+          client_brief_de?: string
+          client_brief_en?: string
+          client_brief_fr?: string
           color?: string
           created_at?: string | null
           description_de?: string
           description_en?: string
           description_fr?: string
           featured?: boolean
+          gallery_urls?: string[]
           id?: string
           name: string
           position?: number
+          results_de?: string
+          results_en?: string
+          results_fr?: string
           screenshot_url?: string | null
+          slug?: string | null
+          solution_de?: string
+          solution_en?: string
+          solution_fr?: string
           tags?: string[]
           tags_de?: string[]
           tags_en?: string[]
+          tech_stack?: string[]
           updated_at?: string | null
           url?: string
           url_display?: string
@@ -801,19 +831,34 @@ export type Database = {
         Update: {
           badge?: string
           category?: string
+          challenge_de?: string
+          challenge_en?: string
+          challenge_fr?: string
+          client_brief_de?: string
+          client_brief_en?: string
+          client_brief_fr?: string
           color?: string
           created_at?: string | null
           description_de?: string
           description_en?: string
           description_fr?: string
           featured?: boolean
+          gallery_urls?: string[]
           id?: string
           name?: string
           position?: number
+          results_de?: string
+          results_en?: string
+          results_fr?: string
           screenshot_url?: string | null
+          slug?: string | null
+          solution_de?: string
+          solution_en?: string
+          solution_fr?: string
           tags?: string[]
           tags_de?: string[]
           tags_en?: string[]
+          tech_stack?: string[]
           updated_at?: string | null
           url?: string
           url_display?: string
