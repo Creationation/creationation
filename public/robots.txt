@@ -15,4 +15,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /portal/
 
-Sitemap: https://creationation.lovable.app/sitemap.xml
+Sitemap: https://creationation.app/sitemap.xml
