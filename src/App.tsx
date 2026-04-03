@@ -52,6 +52,7 @@ const App = () => (
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/impressum" element={<Impressum />} />
