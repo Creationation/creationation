@@ -63,6 +63,8 @@ const AdminPortfolio = () => {
   const [tagInput, setTagInput] = useState('');
   const [tagEnInput, setTagEnInput] = useState('');
   const [tagDeInput, setTagDeInput] = useState('');
+  const [techInput, setTechInput] = useState('');
+  const [galleryInput, setGalleryInput] = useState('');
   const { toast } = useToast();
 
   const fetchProjects = async () => {
