@@ -15,6 +15,7 @@ import ContactInfo from '@/components/ContactInfo';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ContactFormModal from '@/components/ContactFormModal';
+import SeoHead from '@/components/SeoHead';
 
 const Index = () => {
   const [contactOpen, setContactOpen] = useState(false);
