@@ -6,6 +6,7 @@ import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
+import SeoHead from '@/components/SeoHead';
 
 interface CaseStudyProject {
   id: string;

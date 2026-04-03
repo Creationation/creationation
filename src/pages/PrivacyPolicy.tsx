@@ -124,6 +124,11 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--cream)', color: 'var(--text-main)' }}>
+      <SeoHead
+        title="Privacy Policy — Creationation"
+        description="How Creationation collects, uses and protects your personal data. GDPR compliant privacy policy."
+        path="/privacy"
+      />
       <div className="flex-1 max-w-[800px] mx-auto px-7 md:px-16 py-16 md:py-24">
         <Link
           to="/"

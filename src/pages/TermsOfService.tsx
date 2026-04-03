@@ -148,6 +148,11 @@ const TermsOfService = () => {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--cream)', color: 'var(--text-main)' }}>
+      <SeoHead
+        title="Terms of Service — Creationation"
+        description="Terms and conditions for Creationation web and mobile app development services. Project process, pricing, intellectual property."
+        path="/terms"
+      />
       <div className="flex-1 max-w-[800px] mx-auto px-7 md:px-16 py-16 md:py-24">
         <Link
           to="/"
