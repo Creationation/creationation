@@ -34,6 +34,7 @@ interface PortfolioProject {
   featured: boolean;
   visible: boolean;
   position: number;
+  slug: string | null;
 }
 
 const INITIAL_COUNT = 3;
