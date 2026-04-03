@@ -1470,6 +1470,57 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials: {
+        Row: {
+          business: string | null
+          created_at: string
+          id: string
+          is_visible: boolean
+          logo_url: string | null
+          name: string
+          photo_url: string | null
+          position: number
+          quote_de: string
+          quote_en: string
+          quote_fr: string
+          rating: number
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          business?: string | null
+          created_at?: string
+          id?: string
+          is_visible?: boolean
+          logo_url?: string | null
+          name: string
+          photo_url?: string | null
+          position?: number
+          quote_de?: string
+          quote_en?: string
+          quote_fr?: string
+          rating?: number
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business?: string | null
+          created_at?: string
+          id?: string
+          is_visible?: boolean
+          logo_url?: string | null
+          name?: string
+          photo_url?: string | null
+          position?: number
+          quote_de?: string
+          quote_en?: string
+          quote_fr?: string
+          rating?: number
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
