@@ -120,12 +120,14 @@ const Portfolio = () => {
         <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-[18px] mt-14">
           {visibleProjects.map((proj, i) => {
             const colors = colorMap[(proj.color as ProjectColor) || 'teal'];
+            const CardWrapper = proj.slug ? Link : 'a';
+            const cardProps = proj.slug
+              ? { to: `/portfolio/${proj.slug}` as string }
+              : { href: proj.url, target: '_blank', rel: 'noopener noreferrer' };
             return (
-              <a
+              <CardWrapper
                 key={proj.id}
-                href={proj.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(cardProps as any)}
                 className={`rv group relative flex flex-col overflow-hidden no-underline text-inherit transition-all duration-[600ms] ${proj.featured ? 'lg:col-span-2 lg:flex-row' : ''}`}
                 style={{
                   borderRadius: 'var(--r-xl)',
@@ -135,7 +137,7 @@ const Portfolio = () => {
                   boxShadow: '0 8px 32px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)',
                   transitionDelay: `${i * 0.08}s`,
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: React.MouseEvent<HTMLElement>) => {
                   const el = e.currentTarget;
                   el.style.transform = 'translateY(-6px)';
                   el.style.background = 'rgba(255,255,255,0.4)';
@@ -145,7 +147,7 @@ const Portfolio = () => {
                   const glow = el.querySelector('.proj-glow') as HTMLElement;
                   if (glow) glow.style.opacity = '0.4';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: React.MouseEvent<HTMLElement>) => {
                   const el = e.currentTarget;
                   el.style.transform = 'translateY(0)';
                   el.style.background = 'rgba(255,255,255,0.25)';
