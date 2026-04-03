@@ -10,7 +10,6 @@ import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Impressum from "./pages/Impressum";
-import About from "./pages/About";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -22,7 +21,7 @@ import AdminClients from "./pages/AdminClients";
 import AdminRevenues from "./pages/AdminRevenues";
 import AdminInvoices from "./pages/AdminInvoices";
 import AdminPortfolio from "./pages/AdminPortfolio";
-import AdminTestimonials from "./pages/AdminTestimonials";
+import CaseStudy from "./pages/CaseStudy";
 
 // Portal (lazy loaded)
 const PortalLogin = lazy(() => import("./pages/PortalLogin"));
@@ -52,10 +51,10 @@ const App = () => (
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/impressum" element={<Impressum />} />
+              <Route path="/portfolio/:slug" element={<CaseStudy />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="/admin/prospects" element={<AdminRoute><AdminProspects /></AdminRoute>} />
@@ -66,7 +65,6 @@ const App = () => (
               <Route path="/admin/revenues" element={<AdminRoute><AdminRevenues /></AdminRoute>} />
               <Route path="/admin/costs" element={<AdminRoute><AdminCosts /></AdminRoute>} />
               <Route path="/admin/portfolio" element={<AdminRoute><AdminPortfolio /></AdminRoute>} />
-              <Route path="/admin/testimonials" element={<AdminRoute><AdminTestimonials /></AdminRoute>} />
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>

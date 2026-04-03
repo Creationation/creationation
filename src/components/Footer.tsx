@@ -14,10 +14,6 @@ const Footer = () => {
         <div className="flex flex-col items-center gap-3">
           <img src={logo} alt="CreationNation" className="h-8" />
           <div className="flex items-center gap-4 text-xs" style={{ fontFamily: 'var(--font-b)' }}>
-            <Link to="/about" className="hover:opacity-70 transition-opacity" style={{ color: 'var(--text-ghost)' }}>
-              {t.nav.about[lang]}
-            </Link>
-            <span style={{ color: 'var(--text-ghost)', opacity: 0.4 }}>|</span>
             <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ color: 'var(--text-ghost)' }}>
               {t.footer.privacy[lang]}
             </Link>

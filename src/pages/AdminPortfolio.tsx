@@ -23,6 +23,21 @@ interface PortfolioProject {
   featured: boolean;
   visible: boolean;
   position: number;
+  slug: string | null;
+  challenge_fr: string;
+  challenge_en: string;
+  challenge_de: string;
+  solution_fr: string;
+  solution_en: string;
+  solution_de: string;
+  results_fr: string;
+  results_en: string;
+  results_de: string;
+  client_brief_fr: string;
+  client_brief_en: string;
+  client_brief_de: string;
+  tech_stack: string[];
+  gallery_urls: string[];
 }
 
 const COLORS = ['teal', 'coral', 'gold', 'sky', 'violet'];
@@ -34,6 +49,11 @@ const emptyProject: Omit<PortfolioProject, 'id'> = {
   name: '', url: '', url_display: '', badge: 'demo', category: '', color: 'teal',
   description_fr: '', description_en: '', description_de: '',
   tags: [], tags_en: [], tags_de: [], screenshot_url: null, video_url: null, featured: false, visible: true, position: 0,
+  slug: null, challenge_fr: '', challenge_en: '', challenge_de: '',
+  solution_fr: '', solution_en: '', solution_de: '',
+  results_fr: '', results_en: '', results_de: '',
+  client_brief_fr: '', client_brief_en: '', client_brief_de: '',
+  tech_stack: [], gallery_urls: [],
 };
 
 const AdminPortfolio = () => {
@@ -43,6 +63,8 @@ const AdminPortfolio = () => {
   const [tagInput, setTagInput] = useState('');
   const [tagEnInput, setTagEnInput] = useState('');
   const [tagDeInput, setTagDeInput] = useState('');
+  const [techInput, setTechInput] = useState('');
+  const [galleryInput, setGalleryInput] = useState('');
   const { toast } = useToast();
 
   const fetchProjects = async () => {
@@ -378,6 +400,101 @@ const AdminPortfolio = () => {
                   </div>
                 </div>
 
+                {/* Case Study Section */}
+                <div className="mt-6 pt-6" style={{ borderTop: '2px solid rgba(13,138,111,0.15)' }}>
+                  <h3 className="text-sm font-bold mb-4" style={{ color: 'var(--teal)', letterSpacing: 1, textTransform: 'uppercase' }}>📋 Case Study</h3>
+
+                  <div>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Slug (URL)</label>
+                    <input style={inputStyle} value={editing.slug || ''} onChange={e => setEditing({ ...editing, slug: e.target.value || null })} placeholder="permanent-valentyna" />
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Brief client FR</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.client_brief_fr} onChange={e => setEditing({ ...editing, client_brief_fr: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Brief client EN</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.client_brief_en} onChange={e => setEditing({ ...editing, client_brief_en: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Brief client DE</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.client_brief_de} onChange={e => setEditing({ ...editing, client_brief_de: e.target.value })} />
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Challenge FR</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.challenge_fr} onChange={e => setEditing({ ...editing, challenge_fr: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Challenge EN</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.challenge_en} onChange={e => setEditing({ ...editing, challenge_en: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Challenge DE</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.challenge_de} onChange={e => setEditing({ ...editing, challenge_de: e.target.value })} />
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Solution FR</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.solution_fr} onChange={e => setEditing({ ...editing, solution_fr: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Solution EN</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.solution_en} onChange={e => setEditing({ ...editing, solution_en: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Solution DE</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.solution_de} onChange={e => setEditing({ ...editing, solution_de: e.target.value })} />
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Résultats FR</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.results_fr} onChange={e => setEditing({ ...editing, results_fr: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Résultats EN</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.results_en} onChange={e => setEditing({ ...editing, results_en: e.target.value })} />
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Résultats DE</label>
+                    <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.results_de} onChange={e => setEditing({ ...editing, results_de: e.target.value })} />
+                  </div>
+
+                  {/* Tech stack */}
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Tech Stack</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {editing.tech_stack.map((t, i) => (
+                        <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(13,138,111,0.08)', color: 'var(--teal)' }}>
+                          {t}
+                          <button onClick={() => setEditing({ ...editing, tech_stack: editing.tech_stack.filter((_, j) => j !== i) })} className="hover:text-red-500"><X size={12} /></button>
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input style={{ ...inputStyle, flex: 1 }} value={techInput} onChange={e => setTechInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (techInput.trim()) { setEditing({ ...editing, tech_stack: [...editing.tech_stack, techInput.trim()] }); setTechInput(''); } } }} placeholder="React, Stripe, ..." />
+                      <button onClick={() => { if (techInput.trim()) { setEditing({ ...editing, tech_stack: [...editing.tech_stack, techInput.trim()] }); setTechInput(''); } }} className="px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'rgba(0,0,0,0.05)' }}>+</button>
+                    </div>
+                  </div>
+
+                  {/* Gallery URLs */}
+                  <div className="mt-4">
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'var(--text-mid)' }}>Gallery URLs</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {editing.gallery_urls.map((url, i) => (
+                        <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full max-w-[200px] truncate" style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--text-mid)' }}>
+                          {url.split('/').pop()}
+                          <button onClick={() => setEditing({ ...editing, gallery_urls: editing.gallery_urls.filter((_, j) => j !== i) })} className="hover:text-red-500 shrink-0"><X size={12} /></button>
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input style={{ ...inputStyle, flex: 1 }} value={galleryInput} onChange={e => setGalleryInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (galleryInput.trim()) { setEditing({ ...editing, gallery_urls: [...editing.gallery_urls, galleryInput.trim()] }); setGalleryInput(''); } } }} placeholder="https://..." />
+                      <button onClick={() => { if (galleryInput.trim()) { setEditing({ ...editing, gallery_urls: [...editing.gallery_urls, galleryInput.trim()] }); setGalleryInput(''); } }} className="px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'rgba(0,0,0,0.05)' }}>+</button>
+                    </div>
+                  </div>
+                </div>
                 <div className="flex justify-end gap-3 mt-6 pt-4" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                   <button
                     onClick={() => { setEditing(null); setIsNew(false); }}
