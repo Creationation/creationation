@@ -7,6 +7,9 @@ import { LangProvider } from "@/hooks/useLang";
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Impressum from "./pages/Impressum";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -47,6 +50,9 @@ const App = () => (
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/impressum" element={<Impressum />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="/admin/prospects" element={<AdminRoute><AdminProspects /></AdminRoute>} />
