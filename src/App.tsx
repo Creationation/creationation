@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Impressum from "./pages/Impressum";
+import About from "./pages/About";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
