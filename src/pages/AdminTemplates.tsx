@@ -52,6 +52,15 @@ type Template = {
 };
 
 const generateThumbnail = async (template: Template) => {
+  // Fetch JSX content if available
+  let jsxContent: string | null = null;
+  if (template.jsx_file_url) {
+    try {
+      const resp = await fetch(template.jsx_file_url);
+      if (resp.ok) jsxContent = await resp.text();
+    } catch { /* ignore */ }
+  }
+
   const { data, error } = await supabase.functions.invoke('generate-template-thumbnail', {
     body: {
       templateId: template.id,
@@ -59,6 +68,8 @@ const generateThumbnail = async (template: Template) => {
       category: template.category,
       primaryColor: template.primary_color,
       secondaryColor: template.secondary_color,
+      screenshots: (template.screenshots || []).filter(Boolean),
+      jsxContent,
     },
   });
   if (error) throw error;
