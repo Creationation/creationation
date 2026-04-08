@@ -9,10 +9,10 @@ import DashboardCharts from '@/components/admin/DashboardCharts';
 import { RefreshCw, Search } from 'lucide-react';
 
 const C = {
-  textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.70)',
-  textMuted: 'rgba(245,240,232,0.42)',
-  teal: '#2DD4B8',
+  textPrimary: '#2a2722',
+  textSecondary: '#6b6560',
+  textMuted: '#9b9590',
+  teal: '#0d8a6f',
 };
 
 type Lead = {
