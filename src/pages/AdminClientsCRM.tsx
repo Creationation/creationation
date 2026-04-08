@@ -374,6 +374,13 @@ const AdminClientsCRM = () => {
           </div>
         </div>
       )}
+
+      {showPaymentModal && selected && (
+        <SendPaymentLinkModal
+          client={{ id: selected.id, business_name: selected.business_name, email: selected.email, contact_name: selected.contact_name }}
+          onClose={() => setShowPaymentModal(false)}
+        />
+      )}
     </div>
   );
 };
