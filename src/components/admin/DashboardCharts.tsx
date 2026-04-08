@@ -303,7 +303,7 @@ const DashboardCharts = () => {
                     <span style={{ fontSize: 13, color: C.textSecondary, fontFamily: "'Outfit', sans-serif" }}>{item.name}</span>
                     <span style={{ fontSize: 13, fontWeight: 600, color: item.color, fontFamily: "'Outfit', sans-serif" }}>{item.value}</span>
                   </div>
-                  <div style={{ height: 5, borderRadius: 3, background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
+                  <div style={{ height: 5, borderRadius: 3, background: 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                     <div style={{
                       width: `${pct}%`, height: '100%', borderRadius: 3,
                       background: `linear-gradient(90deg, ${item.color}, ${item.color}BB)`,
@@ -337,7 +337,7 @@ const DashboardCharts = () => {
               onClick={() => navigate('/admin/tickets')}
               className="grid items-center gap-0 px-5 py-3 cursor-pointer transition-colors"
               style={{ gridTemplateColumns: '2fr 1.2fr 1fr 0.8fr 0.8fr', borderBottom: `1px solid ${C.border}` }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.02)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
               <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500, color: C.textPrimary }}>{t.title}</span>
