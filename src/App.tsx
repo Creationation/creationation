@@ -29,6 +29,7 @@ import AdminTimeTracking from "./pages/AdminTimeTracking";
 import AdminNotes from "./pages/AdminNotes";
 import AdminServices from "./pages/AdminServices";
 import AdminContracts from "./pages/AdminContracts";
+import ViewAsClientLayout from "./components/admin/ViewAsClientLayout";
 import CaseStudy from "./pages/CaseStudy";
 
 // Portal (lazy loaded)
