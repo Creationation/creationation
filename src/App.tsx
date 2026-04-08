@@ -28,6 +28,8 @@ const PortalLogin = lazy(() => import("./pages/PortalLogin"));
 const PortalLayout = lazy(() => import("./components/portal/PortalLayout"));
 const PortalDashboard = lazy(() => import("./pages/PortalDashboard"));
 const PortalProject = lazy(() => import("./pages/PortalProject"));
+const PortalTickets = lazy(() => import("./pages/PortalTickets"));
+const PortalTicketDetail = lazy(() => import("./pages/PortalTicketDetail"));
 const PortalMessages = lazy(() => import("./pages/PortalMessages"));
 const PortalInvoices = lazy(() => import("./pages/PortalInvoices"));
 const PortalFiles = lazy(() => import("./pages/PortalFiles"));
