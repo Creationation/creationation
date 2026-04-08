@@ -38,6 +38,19 @@ const PortalTickets = () => {
   const [category, setCategory] = useState('other');
   const [priority, setPriority] = useState('medium');
   const [submitting, setSubmitting] = useState(false);
+  const [attachments, setAttachments] = useState<File[]>([]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setAttachments(prev => [...prev, ...newFiles].slice(0, 5));
+    }
+    e.target.value = '';
+  };
+
+  const removeAttachment = (idx: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== idx));
+  };
 
   const fetchTickets = async () => {
     if (!client?.id) return;
@@ -65,8 +78,32 @@ const PortalTickets = () => {
       created_by: 'client' as any,
     } as any);
     if (error) { toast.error('Erreur lors de la création'); setSubmitting(false); return; }
+
+    // Upload attachments if any — get ticket id first
+    if (attachments.length > 0) {
+      const { data: newTicket } = await supabase.from('support_tickets').select('id').eq('client_id', client.id).order('created_at', { ascending: false }).limit(1).single();
+      if (newTicket) {
+        for (const file of attachments) {
+          const path = `${client.id}/${newTicket.id}/${Date.now()}_${file.name}`;
+          const { data: uploadData } = await supabase.storage.from('client-uploads').upload(path, file);
+          if (uploadData) {
+            const { data: urlData } = supabase.storage.from('client-uploads').getPublicUrl(path);
+            await supabase.from('support_files').insert({
+              client_id: client.id,
+              ticket_id: newTicket.id,
+              file_name: file.name,
+              file_url: urlData.publicUrl || path,
+              file_type: file.type,
+              file_size: file.size,
+              uploaded_by: 'client' as any,
+            } as any);
+          }
+        }
+      }
+    }
+
     toast.success('Ticket créé !');
-    setTitle(''); setDescription(''); setCategory('other'); setPriority('medium');
+    setTitle(''); setDescription(''); setCategory('other'); setPriority('medium'); setAttachments([]);
     setShowNew(false); setSubmitting(false);
     fetchTickets();
   };
@@ -201,6 +238,32 @@ const PortalTickets = () => {
                     {Object.entries(priorityLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 </div>
+              </div>
+              <div>
+                <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', marginBottom: 4, display: 'block' }}>Pièces jointes (max 5)</label>
+                <label style={{
+                  display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', background: 'rgba(255,255,255,0.6)',
+                  border: '1px dashed var(--glass-border)', borderRadius: 12, cursor: 'pointer', fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)',
+                }}>
+                  <Upload size={14} /> Ajouter des fichiers
+                  <input type="file" multiple onChange={handleFileSelect} style={{ display: 'none' }} accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" />
+                </label>
+                {attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {attachments.map((f, i) => (
+                      <span key={i} style={{
+                        display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px',
+                        background: 'rgba(13,138,111,0.08)', borderRadius: 'var(--pill)',
+                        fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--teal)',
+                      }}>
+                        {f.name.length > 20 ? f.name.slice(0, 17) + '...' : f.name}
+                        <button type="button" onClick={() => removeAttachment(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)', padding: 0, lineHeight: 1 }}>
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
               <button type="submit" disabled={submitting} style={{
                 padding: '14px 0', background: submitting ? 'var(--text-light)' : 'var(--teal)', color: '#fff',
