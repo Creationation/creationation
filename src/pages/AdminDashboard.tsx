@@ -9,10 +9,10 @@ import DashboardCharts from '@/components/admin/DashboardCharts';
 import { RefreshCw, Search } from 'lucide-react';
 
 const C = {
-  textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.70)',
-  textMuted: 'rgba(245,240,232,0.42)',
-  teal: '#2DD4B8',
+  textPrimary: '#2a2722',
+  textSecondary: '#6b6560',
+  textMuted: '#9b9590',
+  teal: '#0d8a6f',
 };
 
 type Lead = {
@@ -22,7 +22,7 @@ type Lead = {
   created_at: string; updated_at: string;
 };
 
-const statusColors: Record<string, string> = { new: '#2DD4B8', contacted: '#4da6d9', qualified: '#F0C95C', converted: '#A78BDB', lost: '#F07067' };
+const statusColors: Record<string, string> = { new: '#0d8a6f', contacted: '#3b8ec4', qualified: '#d4a55a', converted: '#7c5cbf', lost: '#e8735a' };
 const statusLabels: Record<string, string> = { new: 'Nouveau', contacted: 'Contacté', qualified: 'Qualifié', converted: 'Converti', lost: 'Perdu' };
 
 const AdminDashboard = () => {

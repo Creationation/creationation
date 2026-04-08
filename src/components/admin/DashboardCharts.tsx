@@ -3,22 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const C = {
-  bg: '#454860',
-  teal: '#2DD4B8',
-  tealDim: '#2A9D8F',
-  tealGlow: 'rgba(45,212,184,0.25)',
-  tealSoft: 'rgba(45,212,184,0.12)',
-  gold: '#F0C95C',
-  goldGlow: 'rgba(240,201,92,0.20)',
-  goldSoft: 'rgba(240,201,92,0.12)',
-  coral: '#F07067',
-  coralGlow: 'rgba(240,112,103,0.18)',
-  purple: '#A78BDB',
-  purpleGlow: 'rgba(167,139,219,0.18)',
-  textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.70)',
-  textMuted: 'rgba(245,240,232,0.42)',
-  border: 'rgba(255,255,255,0.12)',
+  bg: '#f6f1e9',
+  teal: '#0d8a6f',
+  tealDim: '#07694f',
+  tealGlow: 'rgba(13,138,111,0.18)',
+  tealSoft: 'rgba(13,138,111,0.08)',
+  gold: '#d4a55a',
+  goldGlow: 'rgba(212,165,90,0.18)',
+  goldSoft: 'rgba(212,165,90,0.10)',
+  coral: '#e8735a',
+  coralGlow: 'rgba(232,115,90,0.15)',
+  purple: '#7c5cbf',
+  purpleGlow: 'rgba(124,92,191,0.15)',
+  textPrimary: '#2a2722',
+  textSecondary: '#6b6560',
+  textMuted: '#9b9590',
+  border: 'rgba(0,0,0,0.08)',
 };
 
 const ticketStatusLabels: Record<string, string> = {
@@ -61,7 +61,7 @@ const SparkLine = ({ data, color = C.teal, height = 200 }: { data: { l: string; 
         <filter id={glowId}><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
       </defs>
       {[0.25, 0.5, 0.75].map((r, i) => (
-        <line key={i} x1={pad} y1={pad + r * (h - pad * 2)} x2={w - pad} y2={pad + r * (h - pad * 2)} stroke="rgba(255,255,255,0.04)" strokeDasharray="4 4" />
+        <line key={i} x1={pad} y1={pad + r * (h - pad * 2)} x2={w - pad} y2={pad + r * (h - pad * 2)} stroke="rgba(0,0,0,0.06)" strokeDasharray="4 4" />
       ))}
       <path d={area} fill={`url(#${gradId})`} />
       <path d={line} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" filter={`url(#${glowId})`} />
@@ -303,7 +303,7 @@ const DashboardCharts = () => {
                     <span style={{ fontSize: 13, color: C.textSecondary, fontFamily: "'Outfit', sans-serif" }}>{item.name}</span>
                     <span style={{ fontSize: 13, fontWeight: 600, color: item.color, fontFamily: "'Outfit', sans-serif" }}>{item.value}</span>
                   </div>
-                  <div style={{ height: 5, borderRadius: 3, background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
+                  <div style={{ height: 5, borderRadius: 3, background: 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                     <div style={{
                       width: `${pct}%`, height: '100%', borderRadius: 3,
                       background: `linear-gradient(90deg, ${item.color}, ${item.color}BB)`,
@@ -337,7 +337,7 @@ const DashboardCharts = () => {
               onClick={() => navigate('/admin/tickets')}
               className="grid items-center gap-0 px-5 py-3 cursor-pointer transition-colors"
               style={{ gridTemplateColumns: '2fr 1.2fr 1fr 0.8fr 0.8fr', borderBottom: `1px solid ${C.border}` }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.02)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
               <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500, color: C.textPrimary }}>{t.title}</span>

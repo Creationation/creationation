@@ -3,15 +3,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { AlertTriangle, Clock, FolderKanban } from 'lucide-react';
 
 const C = {
-  textPrimary: '#F2EDE4',
-  textSecondary: 'rgba(242,237,228,0.55)',
-  coral: '#F07067',
-  coralGlow: 'rgba(240,112,103,0.12)',
-  gold: '#F0C95C',
-  goldGlow: 'rgba(240,201,92,0.15)',
-  teal: '#2DD4B8',
-  tealGlow: 'rgba(45,212,184,0.20)',
-  muted: 'rgba(242,237,228,0.28)',
+  textPrimary: '#2a2722',
+  textSecondary: '#6b6560',
+  coral: '#e8735a',
+  coralGlow: 'rgba(232,115,90,0.10)',
+  gold: '#d4a55a',
+  goldGlow: 'rgba(212,165,90,0.12)',
+  teal: '#0d8a6f',
+  tealGlow: 'rgba(13,138,111,0.12)',
+  muted: '#9b9590',
 };
 
 type ProjectAlert = { id: string; title: string; client_name: string; deadline: string | null; status: string; type: 'overdue' | 'soon' | 'stalled' };
@@ -48,7 +48,7 @@ const ProjectAlerts = ({ onClickProject }: { onClickProject?: (id: string) => vo
   const alertStyles = {
     overdue: { bg: C.coralGlow, border: `rgba(240,112,103,0.15)`, color: C.coral, emoji: '⚠️', label: 'En retard' },
     soon: { bg: C.goldGlow, border: `rgba(240,201,92,0.15)`, color: C.gold, emoji: '⏰', label: 'Bientôt' },
-    stalled: { bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.08)', color: C.muted, emoji: '💤', label: 'Bloqué' },
+    stalled: { bg: 'rgba(0,0,0,0.03)', border: 'rgba(0,0,0,0.06)', color: C.muted, emoji: '💤', label: 'Bloqué' },
   };
 
   return (
