@@ -81,7 +81,7 @@ const PortalTicketDetail = () => {
     <div className="flex flex-col" style={{ height: 'calc(100vh - 140px)' }}>
       {/* Header */}
       <div style={{ marginBottom: 16 }}>
-        <button onClick={() => navigate('/portal/tickets')} style={{
+        <button onClick={() => navigate(-1)} style={{
           display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
           cursor: 'pointer', fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 12,
         }}>
