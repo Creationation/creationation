@@ -177,13 +177,13 @@ const AdminSequences = () => {
     if (selectedSequence) fetchEnrolled(selectedSequence.id);
   };
 
-  const gs = { card: { padding: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r-xl)' } as React.CSSProperties };
+  const gs = { card: { padding: 20, borderRadius: 20 } as React.CSSProperties };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
+    <div>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: 16 }}>
         <div className="flex items-center justify-between mb-6">
-          <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)', margin: 0 }}>Séquences d'emails</h1>
+          <h1 className="admin-page-title">Séquences d'emails</h1>
           <button onClick={() => { setSelectedSequence(null); setShowForm(true); setForm({ name: '', description: '', sector: '', language: 'auto', steps: [{ step_number: 1, delay_days: 0, type: 'initial', subject_template: '', body_template: '' }] }); }} style={{ padding: '10px 20px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
             <Plus size={14} /> Nouvelle séquence
           </button>
@@ -195,7 +195,7 @@ const AdminSequences = () => {
             {loading ? <p style={{ fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Chargement...</p> :
               sequences.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Aucune séquence créée.</p> :
               sequences.map(seq => (
-                <div key={seq.id} onClick={() => selectSequence(seq)} style={{ ...gs.card, cursor: 'pointer', borderColor: selectedSequence?.id === seq.id ? 'var(--teal)' : 'var(--glass-border)', transition: 'border-color 0.2s' }}>
+                <div key={seq.id} onClick={() => selectSequence(seq)} className="admin-glass-card" style={{ ...gs.card, cursor: 'pointer', borderColor: selectedSequence?.id === seq.id ? '#2A9D8F' : 'rgba(255,255,255,0.30)', transition: 'border-color 0.2s' }}>
                   <div className="flex items-center justify-between mb-2">
                     <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 15, color: 'var(--charcoal)', margin: 0 }}>{seq.name}</h3>
                     <div className="flex items-center gap-2">
@@ -221,7 +221,7 @@ const AdminSequences = () => {
           {/* Detail / Form */}
           <div style={{ flex: 1 }}>
             {(selectedSequence || showForm) ? (
-              <div style={gs.card}>
+              <div className="admin-glass-card" style={gs.card}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 18, color: 'var(--charcoal)', margin: 0 }}>
                     {selectedSequence ? 'Modifier la séquence' : 'Nouvelle séquence'}
