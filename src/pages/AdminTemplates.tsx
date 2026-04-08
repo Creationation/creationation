@@ -236,6 +236,8 @@ const AdminTemplates = () => {
           onEdit={() => { setEditingTemplate(detailTemplate); setShowForm(true); setDetailTemplate(null); }}
           onDuplicate={() => { duplicateTemplate(detailTemplate); setDetailTemplate(null); }}
           onDelete={() => { deleteTemplate(detailTemplate.id); setDetailTemplate(null); }}
+          onRefresh={fetchTemplates}
+        />
         />
       )}
 
