@@ -71,12 +71,14 @@ const App = () => (
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/portfolio/:slug" element={<CaseStudy />} />
+              <Route path="/demo/:token" element={<PublicDemo />} />
               <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               {/* Admin with sidebar layout */}
               <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
                 <Route index element={<AdminSupportDashboard />} />
                 <Route path="prospects" element={<AdminProspects />} />
+                <Route path="demos" element={<AdminDemos />} />
                 <Route path="sequences" element={<AdminSequences />} />
                 <Route path="projects" element={<AdminProjects />} />
                 <Route path="clients" element={<AdminClients />} />
