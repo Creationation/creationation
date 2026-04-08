@@ -194,7 +194,11 @@ const AdminTemplates = () => {
                   boxShadow: `0 0 30px ${t.primary_color}40`, pointerEvents: 'none',
                 }} className="group-hover:!opacity-100" />
 
-                <div style={{ height: 8, background: `linear-gradient(90deg, ${t.primary_color}, ${t.secondary_color})` }} />
+                {t.preview_url ? (
+                  <img src={t.preview_url} alt={t.name} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
+                ) : (
+                  <div style={{ height: 8, background: `linear-gradient(90deg, ${t.primary_color}, ${t.secondary_color})` }} />
+                )}
 
                 <div style={{ padding: 16 }}>
                   <div className="flex items-center gap-2 mb-2">
@@ -210,7 +214,7 @@ const AdminTemplates = () => {
                   </div>
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: TEXT_PRIMARY, marginBottom: 6 }}>{t.name}</h3>
                   {t.style_prompt && (
-                    <p style={{ fontSize: 12, color: TEXT_SECONDARY, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ fontSize: 12, color: TEXT_SECONDARY, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {t.style_prompt}
                     </p>
                   )}
