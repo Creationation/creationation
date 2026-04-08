@@ -249,8 +249,7 @@ const AdminDemos = () => {
 const btnStyle: React.CSSProperties = {
   width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
   background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-  color: TEXT_PRIMARY,
+  color: '#1A2332',
 };
-const TEXT_PRIMARY_STATIC = '#1A2332';
 
 export default AdminDemos;
