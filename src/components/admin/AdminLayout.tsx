@@ -31,16 +31,16 @@ const secondaryNav = [
 ];
 
 const C = {
-  teal: '#2DD4B8',
-  tealDim: '#2A9D8F',
-  tealSoft: 'rgba(45,212,184,0.12)',
-  tealGlow: 'rgba(45,212,184,0.25)',
-  coral: '#F07067',
-  coralGlow: 'rgba(240,112,103,0.18)',
-  textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.70)',
-  textMuted: 'rgba(245,240,232,0.42)',
-  border: 'rgba(255,255,255,0.12)',
+  teal: '#0d8a6f',
+  tealDim: '#07694f',
+  tealSoft: 'rgba(13,138,111,0.08)',
+  tealGlow: 'rgba(13,138,111,0.15)',
+  coral: '#e8735a',
+  coralGlow: 'rgba(232,115,90,0.12)',
+  textPrimary: '#2a2722',
+  textSecondary: '#6b6560',
+  textMuted: '#9b9590',
+  border: 'rgba(0,0,0,0.08)',
 };
 
 const AdminLayout = () => {
@@ -131,7 +131,7 @@ const AdminLayout = () => {
               background: `linear-gradient(135deg, ${C.tealDim}, ${C.teal})`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, fontWeight: 700, color: '#fff',
-              boxShadow: `0 4px 20px ${C.tealGlow}`,
+              boxShadow: `0 4px 20px rgba(13,138,111,0.25)`,
             }}>C</div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 15, fontWeight: 700, color: C.textPrimary, fontFamily: "'Outfit', sans-serif" }}>Creationation</div>
@@ -142,7 +142,7 @@ const AdminLayout = () => {
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="hidden md:flex items-center justify-center"
-          style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'rgba(255,255,255,0.06)', cursor: 'pointer', color: C.textSecondary }}
+          style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'rgba(0,0,0,0.04)', cursor: 'pointer', color: C.textSecondary }}
         >
           <ChevronLeft size={16} style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
         </button>
@@ -225,7 +225,7 @@ const AdminLayout = () => {
           className="hidden md:flex flex-col flex-shrink-0 sticky top-0 h-screen transition-all duration-200"
           style={{
             width: collapsed ? 72 : 256,
-            background: 'rgba(69,72,96,0.75)',
+            background: 'rgba(255,255,255,0.45)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
             borderRight: `1px solid ${C.border}`,
