@@ -22,7 +22,8 @@ const STATUS_COLORS: Record<string, { color: string; label: string }> = {
 
 const AdminContracts = () => {
   const [contracts, setContracts] = useState<any[]>([]);
-  const [clients, setClients] = useState<{ id: string; business_name: string; email: string | null }[]>([]);
+  const [clients, setClients] = useState<{ id: string; business_name: string; email: string | null; contact_name: string | null; company_address: string | null }[]>([]);
+  const [companySettings, setCompanySettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [detail, setDetail] = useState<any>(null);
@@ -33,15 +34,19 @@ const AdminContracts = () => {
   const [sendingEmail, setSendingEmail] = useState<string | null>(null);
   const [showSendModal, setShowSendModal] = useState<any>(null);
   const [customMessage, setCustomMessage] = useState('');
+  const [sendEmail, setSendEmail] = useState('');
+  const [sendSubject, setSendSubject] = useState('');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [{ data: co }, { data: cl }] = await Promise.all([
+    const [{ data: co }, { data: cl }, { data: cs }] = await Promise.all([
       supabase.from('contracts').select('*').order('created_at', { ascending: false }),
-      supabase.from('clients').select('id, business_name, email'),
+      supabase.from('clients').select('id, business_name, email, contact_name, company_address'),
+      supabase.from('company_settings').select('*').limit(1).single(),
     ]);
     setContracts(co || []);
     setClients(cl || []);
+    if (cs) setCompanySettings(cs);
     setLoading(false);
   }, []);
 
@@ -62,11 +67,34 @@ const AdminContracts = () => {
   const generatePDF = async (contract: any) => {
     setGeneratingPdf(contract.id);
     try {
-      const clientName = clientMap[contract.client_id]?.business_name || 'Client';
-      const content = contract.content || `Contrat pour ${clientName}`;
-      
-      const blob = await pdf(<ContractPDFDocument content={content} clientName={clientName} />).toBlob();
-      const fileName = `contrat-${clientName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.pdf`;
+      const client = clientMap[contract.client_id];
+      const clientName = client?.business_name || 'Client';
+
+      // Parse new content format
+      let lineItems = [{ leistung: 'Leistung', zeitraum: '', betrag: contract.setup_price || 0 }];
+      let rechnungsnummer = '';
+      let bemerkungen = contract.special_conditions || '';
+      let datum = contract.start_date || '';
+
+      try {
+        const parsed = JSON.parse(contract.content || '{}');
+        if (parsed.lineItems) lineItems = parsed.lineItems;
+        if (parsed.rechnungsnummer) rechnungsnummer = parsed.rechnungsnummer;
+        if (parsed.bemerkungen) bemerkungen = parsed.bemerkungen;
+        if (parsed.datum) datum = parsed.datum;
+      } catch { /* old format */ }
+
+      const blob = await pdf(
+        <ContractPDFDocument
+          companySettings={companySettings}
+          client={{ business_name: clientName, contact_name: client?.contact_name || null, company_address: client?.company_address || null, email: client?.email || null }}
+          lineItems={lineItems}
+          rechnungsnummer={rechnungsnummer}
+          datum={datum}
+          bemerkungen={bemerkungen}
+        />
+      ).toBlob();
+      const fileName = `honorarnote-${clientName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.pdf`;
       
       const { error: uploadError } = await supabase.storage
         .from('contract-documents')
@@ -80,11 +108,11 @@ const AdminContracts = () => {
 
       await supabase.from('contracts').update({ document_url: urlData.publicUrl }).eq('id', contract.id);
       
-      toast.success('PDF généré et stocké');
+      toast.success('PDF erstellt und gespeichert');
       fetchData();
     } catch (e: any) {
       console.error(e);
-      toast.error('Erreur lors de la génération du PDF');
+      toast.error('Fehler bei der PDF-Erstellung');
     } finally {
       setGeneratingPdf(null);
     }
@@ -302,52 +330,61 @@ const AdminContracts = () => {
       )}
 
       {/* Send Email Modal */}
-      {showSendModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
-          <div className="w-full max-w-lg admin-glass-modal p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: TEXT_PRIMARY }}>Envoyer le contrat</h2>
-              <button onClick={() => { setShowSendModal(null); setCustomMessage(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY }}><X size={20} /></button>
-            </div>
-            
-            <div className="mb-4">
-              <p style={{ fontSize: 12, color: TEXT_SECONDARY, marginBottom: 4 }}>
-                <strong>Destinataire :</strong> {clientMap[showSendModal.client_id]?.email || 'Pas d\'email'}
-              </p>
-              <p style={{ fontSize: 12, color: TEXT_SECONDARY }}>
-                <strong>Business :</strong> {clientMap[showSendModal.client_id]?.business_name}
-              </p>
-            </div>
+      {showSendModal && (() => {
+        const c = clientMap[showSendModal.client_id];
+        const defaultEmail = c?.email || '';
+        const defaultSubject = `Ihre Honorarnote von Creationation - ${c?.business_name || ''}`;
+        const defaultMsg = `Sehr geehrte/r ${c?.contact_name || 'Kunde/Kundin'},\n\nanbei finden Sie Ihre Honorarnote.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${companySettings?.legal_name || 'Diego Renard'}\nCreationation`;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+            <div className="w-full max-w-lg admin-glass-modal p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: TEXT_PRIMARY }}>Per E-Mail senden</h2>
+                <button onClick={() => { setShowSendModal(null); setCustomMessage(''); setSendEmail(''); setSendSubject(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY }}><X size={20} /></button>
+              </div>
+              
+              <div className="space-y-4 mb-4">
+                <div>
+                  <label style={{ fontSize: 11, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4, fontWeight: 600 }}>Absender</label>
+                  <div style={{ fontSize: 13, color: TEXT_SECONDARY }}>{companySettings?.email || 'hello@creationation.app'}</div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4, fontWeight: 600 }}>Empfänger</label>
+                  <input value={sendEmail || defaultEmail} onChange={e => setSendEmail(e.target.value)} className="admin-glass-input w-full" />
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4, fontWeight: 600 }}>Betreff</label>
+                  <input value={sendSubject || defaultSubject} onChange={e => setSendSubject(e.target.value)} className="admin-glass-input w-full" />
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4, fontWeight: 600 }}>Nachricht</label>
+                  <textarea
+                    value={customMessage || defaultMsg}
+                    onChange={e => setCustomMessage(e.target.value)}
+                    className="admin-glass-input w-full"
+                    rows={6}
+                    style={{ fontSize: 12 }}
+                  />
+                </div>
+              </div>
 
-            <div className="mb-4">
-              <label style={{ fontSize: 11, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6, fontWeight: 600 }}>
-                Message d'accompagnement (optionnel)
-              </label>
-              <textarea
-                value={customMessage}
-                onChange={e => setCustomMessage(e.target.value)}
-                placeholder="Bonjour, veuillez trouver ci-joint votre contrat..."
-                className="admin-glass-input w-full"
-                rows={4}
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => sendContractEmail(showSendModal)}
-                disabled={sendingEmail === showSendModal.id || !clientMap[showSendModal.client_id]?.email}
-                className="admin-glass-btn"
-                style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg, #2A9D8F, #264653)', color: 'white' }}
-              >
-                <Send size={14} /> {sendingEmail === showSendModal.id ? 'Envoi...' : 'Envoyer'}
-              </button>
-              <button onClick={() => { setShowSendModal(null); setCustomMessage(''); }} className="admin-glass-btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <X size={14} /> Annuler
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => sendContractEmail(showSendModal)}
+                  disabled={sendingEmail === showSendModal.id}
+                  className="admin-glass-btn"
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg, #2A9D8F, #264653)', color: 'white' }}
+                >
+                  <Send size={14} /> {sendingEmail === showSendModal.id ? 'Wird gesendet...' : 'Senden'}
+                </button>
+                <button onClick={() => { setShowSendModal(null); setCustomMessage(''); setSendEmail(''); setSendSubject(''); }} className="admin-glass-btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <X size={14} /> Abbrechen
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 };

@@ -256,6 +256,90 @@ export type Database = {
           },
         ]
       }
+      company_settings: {
+        Row: {
+          account_holder: string
+          address: string
+          bank_name: string | null
+          bic: string | null
+          city: string
+          company_name: string
+          company_registration: string | null
+          country: string
+          created_at: string
+          email: string
+          has_company_registration: boolean
+          has_tax_number: boolean
+          has_vat_number: boolean
+          iban: string | null
+          id: string
+          invoice_country: string
+          legal_name: string
+          logo_url: string | null
+          phone: string | null
+          tax_note: string
+          tax_number: string | null
+          updated_at: string
+          vat_number: string | null
+          website: string
+          zip_code: string
+        }
+        Insert: {
+          account_holder?: string
+          address?: string
+          bank_name?: string | null
+          bic?: string | null
+          city?: string
+          company_name?: string
+          company_registration?: string | null
+          country?: string
+          created_at?: string
+          email?: string
+          has_company_registration?: boolean
+          has_tax_number?: boolean
+          has_vat_number?: boolean
+          iban?: string | null
+          id?: string
+          invoice_country?: string
+          legal_name?: string
+          logo_url?: string | null
+          phone?: string | null
+          tax_note?: string
+          tax_number?: string | null
+          updated_at?: string
+          vat_number?: string | null
+          website?: string
+          zip_code?: string
+        }
+        Update: {
+          account_holder?: string
+          address?: string
+          bank_name?: string | null
+          bic?: string | null
+          city?: string
+          company_name?: string
+          company_registration?: string | null
+          country?: string
+          created_at?: string
+          email?: string
+          has_company_registration?: boolean
+          has_tax_number?: boolean
+          has_vat_number?: boolean
+          iban?: string | null
+          id?: string
+          invoice_country?: string
+          legal_name?: string
+          logo_url?: string | null
+          phone?: string | null
+          tax_note?: string
+          tax_number?: string | null
+          updated_at?: string
+          vat_number?: string | null
+          website?: string
+          zip_code?: string
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           client_id: string

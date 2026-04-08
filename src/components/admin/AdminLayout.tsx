@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import AdminMeshBackground from './AdminMeshBackground';
 import {
   LayoutDashboard, Users, Ticket, FileText, Clock, StickyNote, Briefcase, ScrollText,
-  Target, Mail, FolderKanban, Wallet, DollarSign, Image, LogOut, ExternalLink, Menu, X, ChevronLeft
+  Target, Mail, FolderKanban, Wallet, DollarSign, Image, LogOut, ExternalLink, Menu, X, ChevronLeft, Settings
 } from 'lucide-react';
 
 const mainNav = [
@@ -16,6 +16,7 @@ const mainNav = [
   { to: '/admin/notes', label: 'Notes', icon: StickyNote },
   { to: '/admin/services', label: 'Services', icon: Briefcase },
   { to: '/admin/contracts', label: 'Contrats', icon: ScrollText },
+  { to: '/admin/settings', label: 'Paramètres', icon: Settings },
 ];
 
 const secondaryNav = [
