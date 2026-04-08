@@ -28,6 +28,8 @@ const PortalLogin = lazy(() => import("./pages/PortalLogin"));
 const PortalLayout = lazy(() => import("./components/portal/PortalLayout"));
 const PortalDashboard = lazy(() => import("./pages/PortalDashboard"));
 const PortalProject = lazy(() => import("./pages/PortalProject"));
+const PortalTickets = lazy(() => import("./pages/PortalTickets"));
+const PortalTicketDetail = lazy(() => import("./pages/PortalTicketDetail"));
 const PortalMessages = lazy(() => import("./pages/PortalMessages"));
 const PortalInvoices = lazy(() => import("./pages/PortalInvoices"));
 const PortalFiles = lazy(() => import("./pages/PortalFiles"));
@@ -69,6 +71,8 @@ const App = () => (
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>
                 <Route index element={<PortalDashboard />} />
+                <Route path="tickets" element={<PortalTickets />} />
+                <Route path="tickets/:id" element={<PortalTicketDetail />} />
                 <Route path="project" element={<PortalProject />} />
                 <Route path="messages" element={<PortalMessages />} />
                 <Route path="invoices" element={<PortalInvoices />} />
