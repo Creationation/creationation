@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff } from 'lucide-react';
+import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet } from 'lucide-react';
 
 const TEXT_PRIMARY = '#1A2332';
 const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
@@ -38,6 +38,7 @@ const AdminClientsCRM = () => {
   const [timeEntries, setTimeEntries] = useState<any[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<any[]>([]);
+  const [clientExpenses, setClientExpenses] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');
 
   const fetchClients = useCallback(async () => {
@@ -57,7 +58,7 @@ const AdminClientsCRM = () => {
 
   const openClient = async (client: Client) => {
     setSelected(client); setTab('overview');
-    const [{ data: p }, { data: t }, { data: i }, { data: c }, { data: tt }, { data: n }, { data: f }] = await Promise.all([
+    const [{ data: p }, { data: t }, { data: i }, { data: c }, { data: tt }, { data: n }, { data: f }, { data: ex }] = await Promise.all([
       supabase.from('projects').select('*').eq('client_id', client.id),
       supabase.from('support_tickets').select('*').eq('client_id', client.id).order('created_at', { ascending: false }),
       supabase.from('invoices').select('*').eq('client_id', client.id).order('issue_date', { ascending: false }),
@@ -65,9 +66,11 @@ const AdminClientsCRM = () => {
       supabase.from('time_tracking').select('*').eq('client_id', client.id).order('date', { ascending: false }),
       supabase.from('internal_notes').select('*').eq('client_id', client.id).order('is_pinned', { ascending: false }).order('created_at', { ascending: false }),
       supabase.from('client_feedback').select('*').eq('client_id', client.id),
+      supabase.from('expenses').select('*').eq('client_id', client.id).order('created_at', { ascending: false }),
     ]);
     setProjects(p || []); setTickets(t || []); setInvoices(i || []);
     setContracts(c || []); setTimeEntries(tt || []); setNotes(n || []); setFeedback(f || []);
+    setClientExpenses((ex || []) as any[]);
   };
 
   const addNote = async () => {
@@ -100,8 +103,8 @@ const AdminClientsCRM = () => {
 
   if (loading) return <div className="p-8 text-center" style={{ fontFamily: "'Outfit', sans-serif", color: TEXT_MUTED }}>Chargement...</div>;
 
-  const tabs = ['overview', 'projets', 'tickets', 'factures', 'contrat', 'time', 'notes', 'feedback'];
-  const tabLabels: Record<string, string> = { overview: 'Overview', projets: 'Projets', tickets: 'Tickets', factures: 'Factures', contrat: 'Contrat', time: 'Time Tracking', notes: 'Notes', feedback: 'Feedback' };
+  const tabs = ['overview', 'projets', 'tickets', 'factures', 'contrat', 'depenses', 'time', 'notes', 'feedback'];
+  const tabLabels: Record<string, string> = { overview: 'Overview', projets: 'Projets', tickets: 'Tickets', factures: 'Factures', contrat: 'Contrat', depenses: 'Dépenses', time: 'Time Tracking', notes: 'Notes', feedback: 'Feedback' };
 
   return (
     <div className="p-4 md:p-6 max-w-[1400px] mx-auto" style={{ fontFamily: "'Outfit', sans-serif" }}>

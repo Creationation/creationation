@@ -25,7 +25,7 @@ const secondaryNav = [
   { to: '/admin/sequences', label: 'Séquences', icon: Mail },
   { to: '/admin/projects', label: 'Projets', icon: FolderKanban },
   { to: '/admin/revenues', label: 'Revenus', icon: Wallet },
-  { to: '/admin/costs', label: 'Coûts', icon: DollarSign },
+  { to: '/admin/costs', label: 'Coûts API', icon: DollarSign },
   { to: '/admin/portfolio', label: 'Portfolio', icon: Image },
 ];
 
