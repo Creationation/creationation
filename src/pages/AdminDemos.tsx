@@ -210,6 +210,12 @@ const AdminDemos = () => {
                       color: STATUS_COLORS[d.status] || '#888',
                     }}>{STATUS_LABELS[d.status] || d.status}</span>
                   </td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600,
+                      color: GEN_STATUS_COLORS[(d as any).generation_status] || '#888',
+                    }}>{GEN_STATUS_LABELS[(d as any).generation_status] || '—'}</span>
+                  </td>
                   <td style={{ padding: '12px 16px', color: TEXT_PRIMARY, fontWeight: 600 }}>
                     <div className="flex items-center gap-1"><Eye size={14} style={{ color: TEAL }} />{d.viewed_count}</div>
                   </td>
