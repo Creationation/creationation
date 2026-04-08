@@ -423,12 +423,19 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                   </div>
                 </div>
 
-                {/* Template type */}
+                {/* Template */}
                 <div>
                   <label style={labelStyle}>Template</label>
-                  <select value={templateType} onChange={e => setTemplateType(e.target.value)} style={inputStyle}>
-                    {TEMPLATE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                  </select>
+                  {dbTemplates.length > 0 ? (
+                    <select value={selectedTemplateId} onChange={e => { setSelectedTemplateId(e.target.value); if (e.target.value) applyTemplate(e.target.value); }} style={inputStyle}>
+                      <option value="">— Aucun template —</option>
+                      {dbTemplates.map((t: any) => <option key={t.id} value={t.id}>{t.name} ({t.category})</option>)}
+                    </select>
+                  ) : (
+                    <select value={templateType} onChange={e => setTemplateType(e.target.value)} style={inputStyle}>
+                      {TEMPLATE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                    </select>
+                  )}
                 </div>
 
                 {/* Primary color */}
