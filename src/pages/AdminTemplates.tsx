@@ -501,7 +501,57 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
             )}
           </div>
 
+          {/* Reference photos */}
           <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.15)' }}>
+            <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <Image size={14} style={{ color: TEAL }} />
+              Photos de référence
+              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Inspirations visuelles pour guider l'IA</span>
+            </label>
+            {screenshots.length > 0 && (
+              <div className="flex gap-2 flex-wrap mb-3">
+                {screenshots.map((url, i) => (
+                  <div key={i} className="relative group/img">
+                    <img src={url} alt="" style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 8, border: '1px solid rgba(255,255,255,0.2)' }} />
+                    <button onClick={() => setScreenshots(prev => prev.filter((_, j) => j !== i))}
+                      className="absolute -top-1 -right-1 opacity-0 group-hover/img:opacity-100" style={{
+                        width: 18, height: 18, borderRadius: 99, background: CORAL, border: 'none', cursor: 'pointer',
+                        color: '#fff', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}><X size={10} /></button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <label style={{ ...inputStyle, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px', fontSize: 13 }}>
+              <Upload size={14} /> {screenshots.length > 0 ? 'Ajouter' : 'Upload photos'}
+              <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} style={{ display: 'none' }} />
+            </label>
+            {uploading && <span style={{ fontSize: 12, color: TEXT_MUTED, marginLeft: 8 }}>Upload en cours...</span>}
+          </div>
+
+          {/* JSX file */}
+          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.15)' }}>
+            <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <FileCode size={14} style={{ color: PURPLE }} />
+              Fichier JSX
+              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Composant React de référence pour le design</span>
+            </label>
+            <div className="flex items-center gap-3">
+              {jsxFileUrl && (
+                <span style={{ fontSize: 12, color: TEAL, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  ✓ Fichier uploadé
+                  <button onClick={() => setJsxFileUrl('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CORAL, padding: 0 }}>
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+              <label style={{ ...inputStyle, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px', fontSize: 13 }}>
+                <Upload size={14} /> {jsxFileUrl ? 'Remplacer' : 'Upload JSX'}
+                <input type="file" accept=".jsx,.tsx,.js,.ts" onChange={handleJsxUpload} style={{ display: 'none' }} />
+              </label>
+            </div>
+          </div>
+
             <label className="flex items-center gap-3 cursor-pointer" onClick={() => setColorsEnabled(!colorsEnabled)}>
               <div style={{
                 width: 40, height: 22, borderRadius: 99, position: 'relative', cursor: 'pointer', transition: 'background 0.2s',
