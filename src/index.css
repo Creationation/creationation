@@ -211,9 +211,10 @@ body::after {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 40%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
   pointer-events: none;
   border-radius: 20px 20px 0 0;
+  z-index: 0;
 }
 
 /* Admin glass table — light cream */
