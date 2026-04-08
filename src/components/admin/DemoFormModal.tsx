@@ -439,15 +439,61 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                 </div>
               </div>
 
-              {/* Design Prompt */}
-              <div>
-                <label style={labelStyle}>🎨 Prompt de design (guide l'IA pour le style)</label>
+              {/* Design Prompt — Enhanced */}
+              <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: 14, padding: 16, border: '1px solid rgba(255,255,255,0.2)' }}>
+                <label style={{ ...labelStyle, fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Sparkles size={16} style={{ color: GOLD }} /> Prompt créatif (pilote toute la génération IA)
+                </label>
+                <p style={{ fontSize: 11, color: TEXT_SECONDARY, marginBottom: 8, lineHeight: 1.5 }}>
+                  Ce prompt influence <b>tout</b> : textes marketing, tagline, descriptions, images hero &amp; galerie, ambiance, ton de voix, et style photographique. Plus il est détaillé, meilleur sera le résultat.
+                </p>
+
+                {/* Quick insert chips */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {[
+                    { label: '🧘 Zen & Spa', text: 'Ambiance zen et relaxante, tons naturels, bois et pierre. Photos avec bougies, serviettes et plantes. Ton apaisant et professionnel.' },
+                    { label: '💎 Luxe', text: 'Style haut de gamme et exclusif, finitions dorées. Photos avec éclairage dramatique. Ton sophistiqué, clientèle premium.' },
+                    { label: '🌸 Frais & Moderne', text: 'Style frais et contemporain, couleurs vives, ambiance jeune et dynamique. Photos lumineuses et énergiques.' },
+                    { label: '🏠 Chaleureux', text: 'Ambiance familiale et chaleureuse, décor cosy. Photos avec lumière naturelle et sourires. Ton amical et accueillant.' },
+                    { label: '🖤 Minimaliste', text: 'Design épuré et minimaliste, noir et blanc avec touches de couleur. Photos architecturales. Ton précis et élégant.' },
+                    { label: '🎯 Résultats', text: 'Focus sur les résultats et transformations. Avant/après. Chiffres et preuves. Ton confiant et orienté performance.' },
+                  ].map(chip => (
+                    <button key={chip.label} type="button" onClick={() => setDesignPrompt(prev => prev ? `${prev}\n${chip.text}` : chip.text)}
+                      style={{
+                        padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+                        background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.3)',
+                        cursor: 'pointer', color: TEXT_PRIMARY, transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={e => { (e.target as HTMLElement).style.background = `${GOLD}30`; }}
+                      onMouseLeave={e => { (e.target as HTMLElement).style.background = 'rgba(255,255,255,0.25)'; }}
+                    >{chip.label}</button>
+                  ))}
+                </div>
+
                 <textarea value={designPrompt} onChange={e => setDesignPrompt(e.target.value)}
-                  style={{ ...inputStyle, minHeight: 80 }}
-                  placeholder="Ex: Style luxueux et épuré, ambiance spa zen avec des tons doux. Photos de salon haut de gamme avec éclairage chaleureux. Typographie moderne et minimaliste." />
-                <span style={{ fontSize: 11, color: TEXT_MUTED, marginTop: 2, display: 'block' }}>
-                  Ce prompt sera utilisé par l'IA pour générer des textes, images et le design global de la démo.
-                </span>
+                  style={{ ...inputStyle, minHeight: 120, lineHeight: 1.6 }}
+                  placeholder={`Décrivez en détail le résultat souhaité. Exemples :
+
+🎨 STYLE : Style luxueux et épuré, ambiance spa zen
+📸 PHOTOS : Éclairage chaleureux, intérieur haut de gamme, plantes vertes
+✍️ TEXTES : Ton professionnel mais chaleureux, focus sur le bien-être
+🎯 USP : Spécialisé dans les soins bio, 15 ans d'expérience
+👥 CIBLE : Femmes 25-45 ans, CSP+, soucieuses de leur bien-être
+💬 MESSAGE CLÉ : "Votre moment de détente méritée"`} />
+                
+                <div className="flex items-center justify-between mt-2">
+                  <span style={{ fontSize: 11, color: TEXT_MUTED }}>
+                    {designPrompt.length > 0 ? `${designPrompt.length} caractères — ` : ''}
+                    {designPrompt.length === 0 ? '⚠️ Sans prompt, l\'IA génèrera du contenu générique' : 
+                     designPrompt.length < 50 ? '💡 Ajoutez plus de détails pour un meilleur résultat' :
+                     designPrompt.length < 150 ? '👍 Bon début, continuez à détailler' : '✨ Excellent ! Le résultat sera très personnalisé'}
+                  </span>
+                  {designPrompt.length > 0 && (
+                    <button type="button" onClick={() => setDesignPrompt('')} style={{ fontSize: 11, color: CORAL, background: 'none', border: 'none', cursor: 'pointer' }}>
+                      Effacer
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Tagline */}
