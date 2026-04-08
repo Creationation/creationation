@@ -2,7 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Users, Eye, Pencil, Trash2, X, Save, Pin, PinOff, MessageSquare, Send } from 'lucide-react';
+import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff } from 'lucide-react';
+
+const TEXT_PRIMARY = '#1A2332';
+const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
+const TEXT_MUTED = 'rgba(26,35,50,0.30)';
+const TEAL = '#2A9D8F';
+const CORAL = '#E76F51';
 
 type Client = {
   id: string; business_name: string; business_type: string | null; contact_name: string | null;
@@ -12,8 +18,8 @@ type Client = {
   company_address: string | null;
 };
 
-const SUB_COLORS: Record<string, string> = { trial: '#f59e0b', active: '#10b981', past_due: '#ef4444', cancelled: '#6b7280' };
-const STATUS_COLORS: Record<string, string> = { active: '#10b981', inactive: '#6b7280', onboarding: '#f59e0b' };
+const SUB_COLORS: Record<string, string> = { trial: '#D4A843', active: TEAL, past_due: CORAL, cancelled: 'rgba(26,35,50,0.35)' };
+const STATUS_COLORS: Record<string, string> = { active: TEAL, inactive: 'rgba(26,35,50,0.35)', onboarding: '#D4A843' };
 
 const AdminClientsCRM = () => {
   const navigate = useNavigate();
@@ -25,8 +31,6 @@ const AdminClientsCRM = () => {
   const [selected, setSelected] = useState<Client | null>(null);
   const [tab, setTab] = useState('overview');
   const [ticketCounts, setTicketCounts] = useState<Record<string, number>>({});
-
-  // Detail tab data
   const [projects, setProjects] = useState<any[]>([]);
   const [tickets, setTickets] = useState<any[]>([]);
   const [invoices, setInvoices] = useState<any[]>([]);
@@ -52,11 +56,8 @@ const AdminClientsCRM = () => {
   useEffect(() => { fetchClients(); }, [fetchClients]);
 
   const openClient = async (client: Client) => {
-    setSelected(client);
-    setTab('overview');
-    const [
-      { data: p }, { data: t }, { data: i }, { data: c }, { data: tt }, { data: n }, { data: f },
-    ] = await Promise.all([
+    setSelected(client); setTab('overview');
+    const [{ data: p }, { data: t }, { data: i }, { data: c }, { data: tt }, { data: n }, { data: f }] = await Promise.all([
       supabase.from('projects').select('*').eq('client_id', client.id),
       supabase.from('support_tickets').select('*').eq('client_id', client.id).order('created_at', { ascending: false }),
       supabase.from('invoices').select('*').eq('client_id', client.id).order('issue_date', { ascending: false }),
@@ -74,8 +75,7 @@ const AdminClientsCRM = () => {
     await supabase.from('internal_notes').insert({ client_id: selected.id, content: newNote.trim() });
     setNewNote('');
     const { data } = await supabase.from('internal_notes').select('*').eq('client_id', selected.id).order('is_pinned', { ascending: false }).order('created_at', { ascending: false });
-    setNotes(data || []);
-    toast.success('Note ajoutée');
+    setNotes(data || []); toast.success('Note ajoutée');
   };
 
   const togglePin = async (noteId: string, current: boolean) => {
@@ -92,78 +92,57 @@ const AdminClientsCRM = () => {
   const filtered = clients.filter(c => {
     if (statusFilter !== 'all' && c.status !== statusFilter) return false;
     if (subFilter !== 'all' && c.subscription_status !== subFilter) return false;
-    if (search) {
-      const q = search.toLowerCase();
-      return c.business_name.toLowerCase().includes(q) || (c.contact_name || '').toLowerCase().includes(q) || (c.email || '').toLowerCase().includes(q);
-    }
+    if (search) { const q = search.toLowerCase(); return c.business_name.toLowerCase().includes(q) || (c.contact_name || '').toLowerCase().includes(q) || (c.email || '').toLowerCase().includes(q); }
     return true;
   });
 
   const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
 
-  if (loading) return <div className="p-8 text-center" style={{ fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Chargement...</div>;
+  if (loading) return <div className="p-8 text-center" style={{ fontFamily: "'Outfit', sans-serif", color: TEXT_MUTED }}>Chargement...</div>;
 
   const tabs = ['overview', 'projets', 'tickets', 'factures', 'contrat', 'time', 'notes', 'feedback'];
   const tabLabels: Record<string, string> = { overview: 'Overview', projets: 'Projets', tickets: 'Tickets', factures: 'Factures', contrat: 'Contrat', time: 'Time Tracking', notes: 'Notes', feedback: 'Feedback' };
 
   return (
-    <div className="p-4 md:p-6 max-w-[1400px] mx-auto">
+    <div className="p-4 md:p-6 max-w-[1400px] mx-auto" style={{ fontFamily: "'Outfit', sans-serif" }}>
       <div className="flex items-center gap-3 mb-6">
-        <Users size={24} style={{ color: 'var(--violet)' }} />
-        <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)' }}>Gestion Clients</h1>
+        <h1 className="admin-page-title">Gestion Clients</h1>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-6">
-        <div className="flex items-center gap-2 flex-1 min-w-[180px]" style={{ padding: '8px 14px', background: 'white', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
-          <Search size={14} style={{ color: 'var(--text-light)' }} />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ flex: 1, border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 13, background: 'transparent' }} />
+        <div className="flex items-center gap-2 flex-1 min-w-[180px] admin-glass-input" style={{ padding: '8px 14px' }}>
+          <Search size={14} style={{ color: TEXT_MUTED }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ flex: 1, border: 'none', outline: 'none', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'transparent', color: TEXT_PRIMARY }} />
         </div>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ padding: '8px 14px', borderRadius: 12, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, background: 'white', cursor: 'pointer' }}>
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="admin-glass-input" style={{ cursor: 'pointer' }}>
           <option value="all">Tous statuts</option>
-          <option value="active">Actif</option>
-          <option value="inactive">Inactif</option>
-          <option value="onboarding">Onboarding</option>
+          <option value="active">Actif</option><option value="inactive">Inactif</option><option value="onboarding">Onboarding</option>
         </select>
-        <select value={subFilter} onChange={e => setSubFilter(e.target.value)} style={{ padding: '8px 14px', borderRadius: 12, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, background: 'white', cursor: 'pointer' }}>
+        <select value={subFilter} onChange={e => setSubFilter(e.target.value)} className="admin-glass-input" style={{ cursor: 'pointer' }}>
           <option value="all">Abonnement</option>
-          <option value="trial">Essai</option>
-          <option value="active">Actif</option>
-          <option value="past_due">Retard</option>
-          <option value="cancelled">Annulé</option>
+          <option value="trial">Essai</option><option value="active">Actif</option><option value="past_due">Retard</option><option value="cancelled">Annulé</option>
         </select>
       </div>
 
-      {/* Table */}
-      <div className="rounded-2xl overflow-hidden mb-6" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+      <div className="admin-glass-table mb-6">
         <div className="overflow-x-auto">
-          <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 13 }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                {['Entreprise', 'Type', 'Contact', 'Statut', 'Abonnement', 'Tickets', 'MRR', 'Inscription'].map(h => (
-                  <th key={h} className="text-left px-4 py-3" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-light)', fontWeight: 600 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
+          <table className="w-full" style={{ fontSize: 13 }}>
+            <thead><tr>
+              {['Entreprise', 'Type', 'Contact', 'Statut', 'Abonnement', 'Tickets', 'MRR', 'Inscription'].map(h => (
+                <th key={h} className="text-left px-4 py-3" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.2, color: TEXT_MUTED, fontWeight: 600 }}>{h}</th>
+              ))}
+            </tr></thead>
             <tbody>
               {filtered.map(c => (
-                <tr key={c.id} className="cursor-pointer hover:bg-gray-50 transition-colors" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }} onClick={() => openClient(c)}>
-                  <td className="px-4 py-3 font-medium" style={{ color: 'var(--charcoal)' }}>{c.business_name}</td>
-                  <td className="px-4 py-3" style={{ color: 'var(--text-mid)' }}>{c.business_type || '—'}</td>
-                  <td className="px-4 py-3" style={{ color: 'var(--text-mid)' }}>{c.contact_name || '—'}</td>
-                  <td className="px-4 py-3">
-                    <span style={{ padding: '3px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: `${STATUS_COLORS[c.status] || '#999'}18`, color: STATUS_COLORS[c.status] || '#999' }}>{c.status}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span style={{ padding: '3px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: `${SUB_COLORS[c.subscription_status || ''] || '#999'}18`, color: SUB_COLORS[c.subscription_status || ''] || '#999' }}>{c.subscription_status || '—'}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    {ticketCounts[c.id] ? (
-                      <span style={{ padding: '3px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>{ticketCounts[c.id]}</span>
-                    ) : <span style={{ color: 'var(--text-light)' }}>0</span>}
-                  </td>
-                  <td className="px-4 py-3" style={{ color: 'var(--teal)', fontWeight: 600 }}>{fmt(c.monthly_amount || 0)}</td>
-                  <td className="px-4 py-3" style={{ color: 'var(--text-light)', fontSize: 12 }}>{new Date(c.created_at).toLocaleDateString('fr-FR')}</td>
+                <tr key={c.id} className="cursor-pointer" onClick={() => openClient(c)}>
+                  <td className="px-4 py-3 font-medium" style={{ color: TEXT_PRIMARY }}>{c.business_name}</td>
+                  <td className="px-4 py-3" style={{ color: TEXT_SECONDARY }}>{c.business_type || '—'}</td>
+                  <td className="px-4 py-3" style={{ color: TEXT_SECONDARY }}>{c.contact_name || '—'}</td>
+                  <td className="px-4 py-3"><span className="admin-status-badge" style={{ background: `${STATUS_COLORS[c.status] || '#999'}20`, color: STATUS_COLORS[c.status] || '#999' }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: STATUS_COLORS[c.status] }} />{c.status}</span></td>
+                  <td className="px-4 py-3"><span className="admin-status-badge" style={{ background: `${SUB_COLORS[c.subscription_status || ''] || '#999'}20`, color: SUB_COLORS[c.subscription_status || ''] || '#999' }}>{c.subscription_status || '—'}</span></td>
+                  <td className="px-4 py-3">{ticketCounts[c.id] ? <span className="admin-status-badge" style={{ background: 'rgba(231,111,81,0.12)', color: CORAL }}>{ticketCounts[c.id]}</span> : <span style={{ color: TEXT_MUTED }}>0</span>}</td>
+                  <td className="px-4 py-3" style={{ color: TEAL, fontWeight: 600 }}>{fmt(c.monthly_amount || 0)}</td>
+                  <td className="px-4 py-3" style={{ color: TEXT_MUTED, fontSize: 12 }}>{new Date(c.created_at).toLocaleDateString('fr-FR')}</td>
                 </tr>
               ))}
             </tbody>
@@ -174,32 +153,31 @@ const AdminClientsCRM = () => {
       {/* Client Detail Modal */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div className="w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl overflow-hidden" style={{ background: 'white' }}>
-            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--glass-border)' }}>
+          <div className="w-full max-w-4xl max-h-[90vh] flex flex-col admin-glass-modal">
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
               <div>
-                <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20, color: 'var(--charcoal)' }}>{selected.business_name}</h2>
-                <p style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>{selected.contact_name} · {selected.email}</p>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: TEXT_PRIMARY }}>{selected.business_name}</h2>
+                <p style={{ fontSize: 12, color: TEXT_MUTED }}>{selected.contact_name} · {selected.email}</p>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => navigate(`/admin/view-as/${selected.id}`)} style={{ padding: '8px 14px', borderRadius: 10, background: 'var(--teal)', color: '#fff', border: 'none', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <button onClick={() => navigate(`/admin/view-as/${selected.id}`)} className="admin-glass-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', fontSize: 12 }}>
                   <Eye size={14} /> Voir comme client
                 </button>
-                <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-mid)' }}><X size={20} /></button>
+                <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY }}><X size={20} /></button>
               </div>
             </div>
 
-            {/* Tabs */}
-            <div className="flex gap-1 px-5 pt-3 overflow-x-auto" style={{ borderBottom: '1px solid var(--glass-border)' }}>
+            <div className="flex gap-1 px-5 pt-3 overflow-x-auto" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
               {tabs.map(t => (
                 <button key={t} onClick={() => setTab(t)} style={{
-                  padding: '8px 14px', borderRadius: '10px 10px 0 0', border: 'none',
-                  background: tab === t ? 'var(--teal)' : 'transparent', color: tab === t ? '#fff' : 'var(--text-mid)',
-                  fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: tab === t ? 600 : 400, cursor: 'pointer',
+                  padding: '8px 14px', borderRadius: '12px 12px 0 0', border: 'none',
+                  background: tab === t ? `linear-gradient(135deg, ${TEAL}, #3EDDC7)` : 'transparent',
+                  color: tab === t ? '#fff' : TEXT_SECONDARY,
+                  fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: tab === t ? 600 : 400, cursor: 'pointer',
                 }}>{tabLabels[t]}</button>
               ))}
             </div>
 
-            {/* Tab Content */}
             <div className="flex-1 overflow-y-auto p-5">
               {tab === 'overview' && (
                 <div className="grid md:grid-cols-2 gap-4">
@@ -214,8 +192,8 @@ const AdminClientsCRM = () => {
                     { label: 'Inscrit le', value: new Date(selected.created_at).toLocaleDateString('fr-FR') },
                   ].map((f, i) => (
                     <div key={i}>
-                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 10, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{f.label}</p>
-                      <p style={{ fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--charcoal)', fontWeight: 500 }}>{f.value}</p>
+                      <p style={{ fontSize: 10, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 0.5 }}>{f.label}</p>
+                      <p style={{ fontSize: 14, color: TEXT_PRIMARY, fontWeight: 500 }}>{f.value}</p>
                     </div>
                   ))}
                 </div>
@@ -223,13 +201,13 @@ const AdminClientsCRM = () => {
 
               {tab === 'projets' && (
                 <div className="space-y-3">
-                  {projects.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucun projet</p> : projects.map(p => (
-                    <div key={p.id} className="p-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                      <div className="flex items-center justify-between">
-                        <span style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, color: 'var(--charcoal)' }}>{p.title}</span>
-                        <span style={{ padding: '3px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-b)', background: 'rgba(13,138,111,0.1)', color: 'var(--teal)' }}>{p.status}</span>
+                  {projects.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucun projet</p> : projects.map(p => (
+                    <div key={p.id} className="admin-glass-card" style={{ padding: 16 }}>
+                      <div className="relative z-[1] flex items-center justify-between">
+                        <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>{p.title}</span>
+                        <span className="admin-status-badge" style={{ background: 'rgba(42,157,143,0.12)', color: TEAL }}>{p.status}</span>
                       </div>
-                      {p.description && <p style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)', marginTop: 4 }}>{p.description}</p>}
+                      {p.description && <p className="relative z-[1]" style={{ fontSize: 12, color: TEXT_SECONDARY, marginTop: 4 }}>{p.description}</p>}
                     </div>
                   ))}
                 </div>
@@ -237,17 +215,19 @@ const AdminClientsCRM = () => {
 
               {tab === 'tickets' && (
                 <div className="space-y-3">
-                  {tickets.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucun ticket</p> : tickets.map(t => (
-                    <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                      <div style={{ width: 8, height: 8, borderRadius: 99, background: STATUS_COLORS[t.status] || '#999' }} />
-                      <div className="flex-1">
-                        <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{t.title}</span>
-                        <div className="flex gap-2 mt-1">
-                          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 99, background: `${STATUS_COLORS[t.status] || '#999'}18`, color: STATUS_COLORS[t.status] || '#999', fontFamily: 'var(--font-b)', fontWeight: 600 }}>{t.status}</span>
-                          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 99, background: 'rgba(0,0,0,0.04)', color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>{t.priority}</span>
+                  {tickets.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucun ticket</p> : tickets.map(t => (
+                    <div key={t.id} className="admin-glass-card flex items-center gap-3" style={{ padding: 12 }}>
+                      <div className="relative z-[1] flex items-center gap-3 flex-1">
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: STATUS_COLORS[t.status] || '#999', boxShadow: `0 0 6px ${STATUS_COLORS[t.status] || '#999'}55` }} />
+                        <div className="flex-1">
+                          <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_PRIMARY }}>{t.title}</span>
+                          <div className="flex gap-2 mt-1">
+                            <span className="admin-status-badge" style={{ padding: '2px 8px', fontSize: 10, background: `${STATUS_COLORS[t.status] || '#999'}20`, color: STATUS_COLORS[t.status] || '#999' }}>{t.status}</span>
+                            <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, background: 'rgba(255,255,255,0.20)', color: TEXT_SECONDARY }}>{t.priority}</span>
+                          </div>
                         </div>
+                        <span style={{ fontSize: 10, color: TEXT_MUTED }}>{new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
                       </div>
-                      <span style={{ fontFamily: 'var(--font-m)', fontSize: 10, color: 'var(--text-light)' }}>{new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
                     </div>
                   ))}
                 </div>
@@ -255,13 +235,15 @@ const AdminClientsCRM = () => {
 
               {tab === 'factures' && (
                 <div className="space-y-3">
-                  {invoices.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucune facture</p> : invoices.map(inv => (
-                    <div key={inv.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: inv.status === 'overdue' ? 'rgba(239,68,68,0.04)' : 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                      <div className="flex-1">
-                        <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }}>{inv.invoice_number}</span>
-                        <span style={{ marginLeft: 8, fontSize: 11, padding: '2px 8px', borderRadius: 99, background: inv.status === 'paid' ? 'rgba(16,185,129,0.1)' : inv.status === 'overdue' ? 'rgba(239,68,68,0.1)' : 'rgba(59,130,246,0.1)', color: inv.status === 'paid' ? '#10b981' : inv.status === 'overdue' ? '#ef4444' : '#3b82f6', fontFamily: 'var(--font-b)', fontWeight: 600 }}>{inv.status}</span>
+                  {invoices.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucune facture</p> : invoices.map(inv => (
+                    <div key={inv.id} className="admin-glass-card flex items-center gap-3" style={{ padding: 12, background: inv.status === 'overdue' ? 'rgba(231,111,81,0.08)' : undefined }}>
+                      <div className="relative z-[1] flex items-center gap-3 flex-1">
+                        <div className="flex-1">
+                          <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_PRIMARY }}>{inv.invoice_number}</span>
+                          <span className="admin-status-badge ml-2" style={{ background: inv.status === 'paid' ? 'rgba(42,157,143,0.12)' : inv.status === 'overdue' ? 'rgba(231,111,81,0.12)' : 'rgba(139,109,176,0.12)', color: inv.status === 'paid' ? TEAL : inv.status === 'overdue' ? CORAL : '#8B6DB0' }}>{inv.status}</span>
+                        </div>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(inv.total)}</span>
                       </div>
-                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, color: 'var(--charcoal)' }}>{fmt(inv.total)}</span>
                     </div>
                   ))}
                 </div>
@@ -269,15 +251,15 @@ const AdminClientsCRM = () => {
 
               {tab === 'contrat' && (
                 <div className="space-y-3">
-                  {contracts.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucun contrat</p> : contracts.map(c => (
-                    <div key={c.id} className="p-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div><p style={{ fontSize: 10, color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Setup</p><p style={{ fontFamily: 'var(--font-b)', fontWeight: 600 }}>{fmt(c.setup_price || 0)}</p></div>
-                        <div><p style={{ fontSize: 10, color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Mensuel</p><p style={{ fontFamily: 'var(--font-b)', fontWeight: 600 }}>{fmt(c.monthly_price || 0)}</p></div>
-                        <div><p style={{ fontSize: 10, color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Début</p><p style={{ fontFamily: 'var(--font-b)' }}>{c.start_date || '—'}</p></div>
-                        <div><p style={{ fontSize: 10, color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Statut</p><p style={{ fontFamily: 'var(--font-b)', fontWeight: 600 }}>{c.status}</p></div>
+                  {contracts.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucun contrat</p> : contracts.map(c => (
+                    <div key={c.id} className="admin-glass-card" style={{ padding: 16 }}>
+                      <div className="relative z-[1] grid grid-cols-2 gap-3">
+                        <div><p style={{ fontSize: 10, color: TEXT_MUTED }}>Setup</p><p style={{ fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(c.setup_price || 0)}</p></div>
+                        <div><p style={{ fontSize: 10, color: TEXT_MUTED }}>Mensuel</p><p style={{ fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(c.monthly_price || 0)}</p></div>
+                        <div><p style={{ fontSize: 10, color: TEXT_MUTED }}>Début</p><p>{c.start_date || '—'}</p></div>
+                        <div><p style={{ fontSize: 10, color: TEXT_MUTED }}>Statut</p><p style={{ fontWeight: 600 }}>{c.status}</p></div>
                       </div>
-                      {c.special_conditions && <p style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)', marginTop: 8 }}>{c.special_conditions}</p>}
+                      {c.special_conditions && <p className="relative z-[1]" style={{ fontSize: 12, color: TEXT_SECONDARY, marginTop: 8 }}>{c.special_conditions}</p>}
                     </div>
                   ))}
                 </div>
@@ -285,18 +267,20 @@ const AdminClientsCRM = () => {
 
               {tab === 'time' && (
                 <div className="space-y-3">
-                  {timeEntries.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucune entrée</p> : (
+                  {timeEntries.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucune entrée</p> : (
                     <>
-                      <div className="p-3 rounded-xl" style={{ background: 'rgba(13,138,111,0.06)' }}>
-                        <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--teal)', fontWeight: 600 }}>
-                          Total : {Math.floor(timeEntries.reduce((s, e) => s + e.duration_minutes, 0) / 60)}h {timeEntries.reduce((s, e) => s + e.duration_minutes, 0) % 60}min
+                      <div className="admin-glass-card" style={{ padding: 12, background: 'rgba(42,157,143,0.08)' }}>
+                        <span className="relative z-[1]" style={{ fontSize: 12, color: TEAL, fontWeight: 600 }}>
+                          Total : {Math.floor(timeEntries.reduce((s: number, e: any) => s + e.duration_minutes, 0) / 60)}h {timeEntries.reduce((s: number, e: any) => s + e.duration_minutes, 0) % 60}min
                         </span>
                       </div>
-                      {timeEntries.map(e => (
-                        <div key={e.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                          <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--teal)' }}>{e.duration_minutes}min</span>
-                          <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)', flex: 1 }}>{e.description || '—'}</span>
-                          <span style={{ fontFamily: 'var(--font-m)', fontSize: 10, color: 'var(--text-light)' }}>{e.date}</span>
+                      {timeEntries.map((e: any) => (
+                        <div key={e.id} className="admin-glass-card flex items-center gap-3" style={{ padding: 12 }}>
+                          <div className="relative z-[1] flex items-center gap-3 flex-1">
+                            <span style={{ fontSize: 13, fontWeight: 600, color: TEAL }}>{e.duration_minutes}min</span>
+                            <span style={{ fontSize: 13, color: TEXT_PRIMARY, flex: 1 }}>{e.description || '—'}</span>
+                            <span style={{ fontSize: 10, color: TEXT_MUTED }}>{e.date}</span>
+                          </div>
                         </div>
                       ))}
                     </>
@@ -307,19 +291,21 @@ const AdminClientsCRM = () => {
               {tab === 'notes' && (
                 <div className="space-y-3">
                   <div className="flex gap-2">
-                    <input value={newNote} onChange={e => setNewNote(e.target.value)} onKeyDown={e => e.key === 'Enter' && addNote()} placeholder="Ajouter une note..." style={{ flex: 1, padding: '10px 14px', borderRadius: 12, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none' }} />
-                    <button onClick={addNote} style={{ padding: '10px 16px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 12, cursor: 'pointer' }}><Plus size={16} /></button>
+                    <input value={newNote} onChange={e => setNewNote(e.target.value)} onKeyDown={e => e.key === 'Enter' && addNote()} placeholder="Ajouter une note..." className="admin-glass-input" style={{ flex: 1 }} />
+                    <button onClick={addNote} className="admin-glass-btn" style={{ padding: '10px 16px' }}><Plus size={16} /></button>
                   </div>
-                  {notes.map(n => (
-                    <div key={n.id} className="p-3 rounded-xl flex items-start gap-3" style={{ background: n.is_pinned ? 'rgba(212,165,90,0.08)' : 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                      <div className="flex-1">
-                        <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}>{n.content}</p>
-                        <p style={{ fontFamily: 'var(--font-m)', fontSize: 9, color: 'var(--text-light)', marginTop: 4 }}>{new Date(n.created_at).toLocaleString('fr-FR')}</p>
+                  {notes.map((n: any) => (
+                    <div key={n.id} className="admin-glass-card flex items-start gap-3" style={{ padding: 12, background: n.is_pinned ? 'rgba(212,168,67,0.08)' : undefined }}>
+                      <div className="relative z-[1] flex items-start gap-3 flex-1">
+                        <div className="flex-1">
+                          <p style={{ fontSize: 13, color: TEXT_PRIMARY }}>{n.content}</p>
+                          <p style={{ fontSize: 9, color: TEXT_MUTED, marginTop: 4 }}>{new Date(n.created_at).toLocaleString('fr-FR')}</p>
+                        </div>
+                        <button onClick={() => togglePin(n.id, n.is_pinned)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: n.is_pinned ? '#D4A843' : TEXT_MUTED }}>
+                          {n.is_pinned ? <PinOff size={14} /> : <Pin size={14} />}
+                        </button>
+                        <button onClick={() => deleteNote(n.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CORAL }}><Trash2 size={14} /></button>
                       </div>
-                      <button onClick={() => togglePin(n.id, n.is_pinned)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: n.is_pinned ? '#d4a55a' : 'var(--text-light)' }}>
-                        {n.is_pinned ? <PinOff size={14} /> : <Pin size={14} />}
-                      </button>
-                      <button onClick={() => deleteNote(n.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)' }}><Trash2 size={14} /></button>
                     </div>
                   ))}
                 </div>
@@ -327,15 +313,17 @@ const AdminClientsCRM = () => {
 
               {tab === 'feedback' && (
                 <div className="space-y-3">
-                  {feedback.length === 0 ? <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucun avis</p> : feedback.map(f => (
-                    <div key={f.id} className="p-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.02)', border: '1px solid var(--glass-border)' }}>
-                      <div className="flex items-center gap-2 mb-2">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i} style={{ color: i < f.rating ? '#f59e0b' : 'var(--text-ghost)', fontSize: 16 }}>★</span>
-                        ))}
+                  {feedback.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucun avis</p> : feedback.map((f: any) => (
+                    <div key={f.id} className="admin-glass-card" style={{ padding: 16 }}>
+                      <div className="relative z-[1]">
+                        <div className="flex items-center gap-2 mb-2">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i} style={{ color: i < f.rating ? '#D4A843' : TEXT_MUTED, fontSize: 16 }}>★</span>
+                          ))}
+                        </div>
+                        {f.comment && <p style={{ fontSize: 13, color: TEXT_PRIMARY }}>{f.comment}</p>}
+                        <p style={{ fontSize: 10, color: TEXT_MUTED, marginTop: 4 }}>{new Date(f.submitted_at).toLocaleDateString('fr-FR')}</p>
                       </div>
-                      {f.comment && <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)' }}>{f.comment}</p>}
-                      <p style={{ fontFamily: 'var(--font-m)', fontSize: 10, color: 'var(--text-light)', marginTop: 4 }}>{new Date(f.submitted_at).toLocaleDateString('fr-FR')}</p>
                     </div>
                   ))}
                 </div>
