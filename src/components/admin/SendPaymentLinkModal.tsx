@@ -65,7 +65,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
         {/* Client info */}
         <div style={{ background: 'rgba(42,157,143,0.08)', borderRadius: 12, padding: 14, marginBottom: 20 }}>
           <div style={{ fontWeight: 600, color: '#F2EDE4' }}>{client.business_name}</div>
-          <div style={{ fontSize: 13, color: 'rgba(26,35,50,0.55)' }}>{client.email || 'Pas d\'email'}</div>
+          <div style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)' }}>{client.email || 'Pas d\'email'}</div>
         </div>
 
         {/* Include setup toggle */}
@@ -79,7 +79,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
         {/* Setup price */}
         {includeSetup && (
           <div style={{ marginBottom: 14 }}>
-            <label style={{ fontSize: 13, color: 'rgba(26,35,50,0.55)', display: 'block', marginBottom: 4 }}>Prix setup (€)</label>
+            <label style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', display: 'block', marginBottom: 4 }}>Prix setup (€)</label>
             <input type="number" value={setupPrice} onChange={e => setSetupPrice(Number(e.target.value))}
               style={{
                 width: '100%', padding: '10px 14px', borderRadius: 10,
@@ -92,7 +92,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
 
         {/* Monthly price */}
         <div style={{ marginBottom: 14 }}>
-          <label style={{ fontSize: 13, color: 'rgba(26,35,50,0.55)', display: 'block', marginBottom: 4 }}>Prix mensuel (€)</label>
+          <label style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', display: 'block', marginBottom: 4 }}>Prix mensuel (€)</label>
           <input type="number" value={monthlyPrice} onChange={e => setMonthlyPrice(Number(e.target.value))}
             style={{
               width: '100%', padding: '10px 14px', borderRadius: 10,
@@ -104,7 +104,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
 
         {/* Custom message */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 13, color: 'rgba(26,35,50,0.55)', display: 'block', marginBottom: 4 }}>Message personnalisé (optionnel)</label>
+          <label style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', display: 'block', marginBottom: 4 }}>Message personnalisé (optionnel)</label>
           <textarea value={message} onChange={e => setMessage(e.target.value)} rows={3} placeholder="Un message pour votre client..."
             style={{
               width: '100%', padding: '10px 14px', borderRadius: 10, resize: 'vertical',

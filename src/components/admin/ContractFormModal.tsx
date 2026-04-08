@@ -295,7 +295,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
                     </td>
                     <td className="py-2">
                       {lineItems.length > 1 && (
-                        <button onClick={() => removeLine(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E76F51', padding: 4 }}>
+                        <button onClick={() => removeLine(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067', padding: 4 }}>
                           <Trash2 size={14} />
                         </button>
                       )}
@@ -343,7 +343,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 12, color: '#D4A843', fontStyle: 'italic' }}>Bankdaten in den Einstellungen hinterlegen</span>
+                <span style={{ fontSize: 12, color: '#F0C95C', fontStyle: 'italic' }}>Bankdaten in den Einstellungen hinterlegen</span>
                 <button onClick={() => { onClose(); navigate('/admin/settings'); }} className="admin-glass-btn-secondary" style={{ fontSize: 11, padding: '3px 10px', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <LinkIcon size={12} /> Einstellungen
                 </button>
