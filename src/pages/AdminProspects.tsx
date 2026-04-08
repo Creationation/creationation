@@ -4,7 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Search, Plus, Trash2, MapPin, Phone, Globe, GlobeLock, Star, RefreshCw, CheckSquare, Square, Loader2, UserPlus, Send, Pencil, X, Check, Target, Mail, Languages, Sparkles, History, SkipForward, LogOut, ArrowRightLeft, Eye, Reply, Download } from 'lucide-react';
 import { exportToCSV } from '@/lib/csvExport';
-import AdminHeader from '@/components/admin/AdminHeader';
 import SectorsDashboard from '@/components/admin/SectorsDashboard';
 import ProspectDetailEnriched from '@/components/admin/ProspectDetailEnriched';
 
@@ -591,7 +590,6 @@ const AdminProspects = () => {
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--cream)' }}>
-      <AdminHeader />
       <div style={{ maxWidth:1200, margin:'0 auto', padding:'16px' }}>
 
         {/* Stats — compact grid on mobile */}

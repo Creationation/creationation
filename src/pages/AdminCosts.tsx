@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { DollarSign, Search, Mail, Sparkles, MapPin, TrendingUp, Clock, Globe, Phone, Info } from 'lucide-react';
-import AdminHeader from '@/components/admin/AdminHeader';
 
 const COST_EUR = {
   GOOGLE_TEXT_SEARCH: 0.029,
@@ -97,7 +96,6 @@ const AdminCosts = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
-      <AdminHeader />
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px' }}>
 
         {loading ? (

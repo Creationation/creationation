@@ -4,7 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
-import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectAlerts from '@/components/admin/ProjectAlerts';
 import DashboardCharts from '@/components/admin/DashboardCharts';
 import { RefreshCw, Search, Filter } from 'lucide-react';
@@ -98,8 +97,7 @@ const AdminDashboard = () => {
   
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-      <AdminHeader />
+    <div>
 
       <div className="p-6 max-w-[1400px] mx-auto">
         {/* Project Alerts */}

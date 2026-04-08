@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Search, Plus, Filter, LayoutGrid, List, CalendarRange, AlertTriangle, X, GripVertical } from 'lucide-react';
-import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectDetailModal from '@/components/admin/ProjectDetailModal';
 import {
   DndContext, closestCorners, PointerSensor, useSensor, useSensors, DragOverlay, DragStartEvent, DragEndEvent,
@@ -213,8 +212,7 @@ const AdminProjects = () => {
   const activeProject = activeId ? projects.find(p => p.id === activeId) : null;
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-      <AdminHeader />
+    <div>
       <div className="p-4 md:p-6 max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
