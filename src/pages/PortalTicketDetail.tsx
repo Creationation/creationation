@@ -157,7 +157,7 @@ const PortalTicketDetail = () => {
       </div>
 
       {/* Input */}
-      {ticket.status !== 'closed' && (
+      {ticket.status !== 'closed' && !simulationMode && (
         <div className="flex items-center gap-2" style={{
           background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 16,
           border: '1px solid var(--glass-border)', padding: '8px 12px',

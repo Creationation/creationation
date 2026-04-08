@@ -43,6 +43,7 @@ const PortalProfile = () => {
   }, [client]);
 
   const handleSave = async () => {
+    if (simulationMode) { toast.info('Mode simulation : modification désactivée'); return; }
     setSaving(true);
     const { error } = await supabase.from('clients').update({
       business_name: form.business_name,
