@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
             messages: [{
               role: 'user',
               content: `Generate marketing content for a ${demo.business_type || 'business'} called "${demo.business_name}" located in ${demo.city || 'Wien'}. 
-              
+${demo.design_prompt ? `\nDesign direction from the client: ${demo.design_prompt}\n` : ''}
 Return ONLY valid JSON (no markdown, no code blocks) with this structure:
 {
   "tagline": "A catchy German tagline for the business (max 60 chars)",
@@ -109,6 +109,7 @@ Current tagline: ${demo.tagline || 'none'}
               content: `Generate a professional hero banner image for a ${demo.business_type || 'business'} called "${demo.business_name}". 
 Style: Modern, premium, clean. Show a beautiful interior or relevant scene for a ${demo.business_type || 'business'} establishment. 
 Colors: Use ${demo.primary_color} and ${demo.secondary_color} as accent colors.
+${demo.design_prompt ? `Design direction: ${demo.design_prompt}` : ''}
 The image should be warm, inviting, and professional. No text in the image.
 Aspect ratio: 16:9, landscape orientation.`
             }],

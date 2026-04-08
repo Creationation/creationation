@@ -1,0 +1,1 @@
+ALTER TABLE public.demos ADD COLUMN design_prompt text;

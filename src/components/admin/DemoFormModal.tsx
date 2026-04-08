@@ -84,6 +84,9 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   const [bgVideoUrl, setBgVideoUrl] = useState(demo?.background_video_url || '');
   const [galleryImages, setGalleryImages] = useState<string[]>(demo?.gallery_images || []);
 
+  // Design prompt
+  const [designPrompt, setDesignPrompt] = useState(demo?.design_prompt || '');
+
   // Generation
   const [generating, setGenerating] = useState<string | null>(null); // 'texts' | 'hero' | 'gallery' | null
 
@@ -243,6 +246,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
       background_video_enabled: bgVideoEnabled,
       background_video_url: bgVideoUrl || null,
       gallery_images: galleryImages,
+      design_prompt: designPrompt || null,
     };
 
     if (demo?.id) {
@@ -406,7 +410,12 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                         cursor: 'pointer', boxShadow: primaryColor === c.value ? `0 0 0 2px ${c.value}` : 'none',
                       }} title={c.label} />
                     ))}
-                    <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} style={{ width: 28, height: 28, border: 'none', cursor: 'pointer' }} />
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)}
+                      style={{ width: 32, height: 32, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
+                    <input value={primaryColor} onChange={e => setPrimaryColor(e.target.value)}
+                      style={{ ...inputStyle, width: 100, fontFamily: 'monospace', fontSize: 12 }} placeholder="#2DD4B8" />
                   </div>
                 </div>
 
@@ -420,9 +429,25 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                         cursor: 'pointer', boxShadow: secondaryColor === c.value ? `0 0 0 2px ${c.value}` : 'none',
                       }} title={c.label} />
                     ))}
-                    <input type="color" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)} style={{ width: 28, height: 28, border: 'none', cursor: 'pointer' }} />
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <input type="color" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
+                      style={{ width: 32, height: 32, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
+                    <input value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
+                      style={{ ...inputStyle, width: 100, fontFamily: 'monospace', fontSize: 12 }} placeholder="#E9C46A" />
                   </div>
                 </div>
+              </div>
+
+              {/* Design Prompt */}
+              <div>
+                <label style={labelStyle}>🎨 Prompt de design (guide l'IA pour le style)</label>
+                <textarea value={designPrompt} onChange={e => setDesignPrompt(e.target.value)}
+                  style={{ ...inputStyle, minHeight: 80 }}
+                  placeholder="Ex: Style luxueux et épuré, ambiance spa zen avec des tons doux. Photos de salon haut de gamme avec éclairage chaleureux. Typographie moderne et minimaliste." />
+                <span style={{ fontSize: 11, color: TEXT_MUTED, marginTop: 2, display: 'block' }}>
+                  Ce prompt sera utilisé par l'IA pour générer des textes, images et le design global de la démo.
+                </span>
               </div>
 
               {/* Tagline */}

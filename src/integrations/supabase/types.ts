@@ -486,6 +486,7 @@ export type Database = {
           contact_phone: string | null
           converted_to_client_id: string | null
           created_at: string
+          design_prompt: string | null
           expires_at: string
           gallery_images: Json | null
           generated_descriptions: Json | null
@@ -522,6 +523,7 @@ export type Database = {
           contact_phone?: string | null
           converted_to_client_id?: string | null
           created_at?: string
+          design_prompt?: string | null
           expires_at?: string
           gallery_images?: Json | null
           generated_descriptions?: Json | null
@@ -558,6 +560,7 @@ export type Database = {
           contact_phone?: string | null
           converted_to_client_id?: string | null
           created_at?: string
+          design_prompt?: string | null
           expires_at?: string
           gallery_images?: Json | null
           generated_descriptions?: Json | null
