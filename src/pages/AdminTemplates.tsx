@@ -237,6 +237,7 @@ const AdminTemplates = () => {
           onDuplicate={() => { duplicateTemplate(detailTemplate); setDetailTemplate(null); }}
           onDelete={() => { deleteTemplate(detailTemplate.id); setDetailTemplate(null); }}
           onRefresh={fetchTemplates}
+        />
       )}
 
       {showForm && (
