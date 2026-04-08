@@ -34,6 +34,8 @@ import AdminSettings from "./pages/AdminSettings";
 import ViewAsClientLayout from "./components/admin/ViewAsClientLayout";
 import CaseStudy from "./pages/CaseStudy";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import AdminDemos from "./pages/AdminDemos";
+import PublicDemo from "./pages/PublicDemo";
 
 // Portal (lazy loaded)
 const PortalLogin = lazy(() => import("./pages/PortalLogin"));
