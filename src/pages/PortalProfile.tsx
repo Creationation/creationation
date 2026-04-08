@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Save, ExternalLink } from 'lucide-react';
+import { Save, ExternalLink, Camera } from 'lucide-react';
 
 const invoiceStatusConfig: Record<string, { label: string; color: string }> = {
   draft: { label: 'Brouillon', color: '#9b9590' },
@@ -28,6 +28,23 @@ const PortalProfile = () => {
   const [invoices, setInvoices] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [avatarUrl, setAvatarUrl] = useState(client?.avatar_url || '');
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || simulationMode) return;
+    setUploadingAvatar(true);
+    const path = `avatars/${client.id}/${Date.now()}_${file.name}`;
+    const { error: upErr } = await supabase.storage.from('client-uploads').upload(path, file, { upsert: true });
+    if (upErr) { toast.error('Erreur upload'); setUploadingAvatar(false); return; }
+    const { data: urlData } = supabase.storage.from('client-uploads').getPublicUrl(path);
+    const url = urlData.publicUrl;
+    await supabase.from('clients').update({ avatar_url: url } as any).eq('id', client.id);
+    setAvatarUrl(url);
+    setUploadingAvatar(false);
+    toast.success('Avatar mis à jour');
+  };
 
   useEffect(() => {
     if (!client?.id) return;
@@ -68,6 +85,34 @@ const PortalProfile = () => {
   return (
     <div>
       <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: '0 0 24px' }}>Mon profil</h1>
+
+      {/* Avatar */}
+      <div className="flex items-center gap-4 mb-6" style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)', padding: 20 }}>
+        <div style={{ position: 'relative' }}>
+          <div style={{
+            width: 72, height: 72, borderRadius: '50%', background: avatarUrl ? `url(${avatarUrl}) center/cover` : 'linear-gradient(135deg, var(--teal), #4da6d9)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
+            fontFamily: 'var(--font-h)', fontSize: 28, fontWeight: 700,
+          }}>
+            {!avatarUrl && (client?.business_name?.[0]?.toUpperCase() || '?')}
+          </div>
+          {!simulationMode && (
+            <label style={{
+              position: 'absolute', bottom: -2, right: -2, width: 28, height: 28, borderRadius: '50%',
+              background: 'var(--teal)', border: '2px solid var(--warm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#fff',
+            }}>
+              <Camera size={13} />
+              <input type="file" accept="image/*" onChange={handleAvatarUpload} style={{ display: 'none' }} />
+            </label>
+          )}
+        </div>
+        <div>
+          <div style={{ fontFamily: 'var(--font-h)', fontSize: 18, color: 'var(--charcoal)' }}>{client?.business_name}</div>
+          <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)' }}>{client?.email}</div>
+          {uploadingAvatar && <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--teal)', marginTop: 2 }}>Upload en cours...</div>}
+        </div>
+      </div>
 
       <div style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)', padding: 24, marginBottom: 24 }}>
         <h3 style={{ fontFamily: 'var(--font-b)', fontSize: 15, fontWeight: 600, color: 'var(--charcoal)', margin: '0 0 16px' }}>Informations du business</h3>
