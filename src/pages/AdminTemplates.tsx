@@ -51,6 +51,20 @@ type Template = {
   created_at: string; updated_at: string;
 };
 
+const generateThumbnail = async (template: Template) => {
+  const { data, error } = await supabase.functions.invoke('generate-template-thumbnail', {
+    body: {
+      templateId: template.id,
+      prompt: template.style_prompt || '',
+      category: template.category,
+      primaryColor: template.primary_color,
+      secondaryColor: template.secondary_color,
+    },
+  });
+  if (error) throw error;
+  return data?.url as string;
+};
+
 const AdminTemplates = () => {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
