@@ -22,7 +22,7 @@ const categoryLabels: Record<string, string> = {
 
 const PortalTicketDetail = () => {
   const { id } = useParams();
-  const { client } = useOutletContext<{ client: any }>();
+  const { client, simulationMode } = useOutletContext<{ client: any; simulationMode?: boolean }>();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);

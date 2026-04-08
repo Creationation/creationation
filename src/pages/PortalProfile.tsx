@@ -23,7 +23,7 @@ const subStatusConfig: Record<string, { label: string; color: string }> = {
 };
 
 const PortalProfile = () => {
-  const { client } = useOutletContext<{ client: any }>();
+  const { client, simulationMode } = useOutletContext<{ client: any; simulationMode?: boolean }>();
   const [form, setForm] = useState({ business_name: '', contact_name: '', phone: '', address: '', city: '' });
   const [invoices, setInvoices] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
