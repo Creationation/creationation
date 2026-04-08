@@ -37,11 +37,11 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  new: '#0d8a6f',
+  new: '#2DD4B8',
   contacted: '#4da6d9',
-  qualified: '#d4a55a',
-  converted: '#7c5cbf',
-  lost: '#e8735a',
+  qualified: '#F0C95C',
+  converted: '#A78BDB',
+  lost: '#F07067',
 };
 
 interface Props {
@@ -101,11 +101,11 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
     padding: '8px 16px',
-    background: active ? 'var(--teal)' : 'transparent',
-    color: active ? '#fff' : 'var(--text-mid)',
-    border: active ? 'none' : '1px solid var(--glass-border)',
-    borderRadius: 'var(--pill)',
-    fontFamily: 'var(--font-b)',
+    background: active ? '#2DD4B8' : 'transparent',
+    color: active ? '#fff' : 'rgba(242,237,228,0.55)',
+    border: active ? 'none' : '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '100px',
+    fontFamily: "'Outfit', sans-serif",
     fontSize: 12,
     fontWeight: 600,
     cursor: 'pointer',
@@ -121,8 +121,8 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
       <div
         className="relative w-full max-w-md h-full overflow-y-auto"
         style={{
-          background: 'var(--cream)',
-          borderLeft: '1px solid var(--glass-border)',
+          background: 'transparent',
+          borderLeft: '1px solid rgba(255,255,255,0.12)',
           padding: '24px',
         }}
         onClick={e => e.stopPropagation()}
@@ -130,7 +130,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', marginBottom: 4 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#F2EDE4', marginBottom: 4 }}>
               {lead.name}
             </h2>
             <div className="flex items-center gap-2">
@@ -139,13 +139,13 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                 onChange={e => onStatusChange(e.target.value)}
                 style={{
                   padding: '4px 12px',
-                  borderRadius: 'var(--pill)',
+                  borderRadius: '100px',
                   border: 'none',
                   background: `${statusColors[lead.status]}18`,
                   color: statusColors[lead.status],
                   fontWeight: 600,
                   fontSize: 12,
-                  fontFamily: 'var(--font-m)',
+                  fontFamily: "'Space Mono', monospace",
                   cursor: 'pointer',
                 }}
               >
@@ -161,7 +161,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              color: 'var(--text-light)',
+              color: 'rgba(242,237,228,0.28)',
             }}
           >
             <X size={20} />
@@ -171,27 +171,27 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
         {/* Contact info */}
         <div className="flex flex-col gap-3 mb-6" style={{
           padding: '16px',
-          background: 'var(--glass-bg)',
-          borderRadius: 'var(--r)',
-          border: '1px solid var(--glass-border)',
+          background: 'rgba(255,255,255,0.06)',
+          borderRadius: '12px',
+          border: '1px solid rgba(255,255,255,0.12)',
         }}>
           <div className="flex items-center gap-3">
-            <Mail size={14} style={{ color: 'var(--teal)' }} />
-            <a href={`mailto:${lead.email}`} style={{ color: 'var(--text)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+            <Mail size={14} style={{ color: '#2DD4B8' }} />
+            <a href={`mailto:${lead.email}`} style={{ color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
               {lead.email}
             </a>
           </div>
           {lead.phone && (
             <div className="flex items-center gap-3">
-              <Phone size={14} style={{ color: 'var(--teal)' }} />
-              <a href={`tel:${lead.phone}`} style={{ color: 'var(--text)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+              <Phone size={14} style={{ color: '#2DD4B8' }} />
+              <a href={`tel:${lead.phone}`} style={{ color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                 {lead.phone}
               </a>
             </div>
           )}
           <div className="flex items-center gap-3">
-            <Calendar size={14} style={{ color: 'var(--teal)' }} />
-            <span style={{ color: 'var(--text-mid)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+            <Calendar size={14} style={{ color: '#2DD4B8' }} />
+            <span style={{ color: 'rgba(242,237,228,0.55)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
               {new Date(lead.created_at).toLocaleDateString('fr-FR', {
                 day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
               })}
@@ -205,15 +205,15 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
           className="w-full flex items-center justify-center gap-2 mb-6 cursor-pointer"
           style={{
             padding: '12px',
-            background: 'var(--teal)',
+            background: '#2DD4B8',
             color: '#fff',
             border: 'none',
-            borderRadius: 'var(--pill)',
-            fontFamily: 'var(--font-b)',
+            borderRadius: '100px',
+            fontFamily: "'Outfit', sans-serif",
             fontSize: 14,
             fontWeight: 600,
             cursor: 'pointer',
-            boxShadow: '0 4px 24px var(--teal-glow)',
+            boxShadow: '0 4px 24px rgba(45,212,184,0.20)',
           }}
         >
           <Send size={14} /> Envoyer un email
@@ -233,26 +233,26 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
           <div className="flex flex-col gap-4">
             {lead.project_type && (
               <div>
-                <p style={{ fontSize: 11, color: 'var(--text-light)', fontFamily: 'var(--font-m)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                   Type de projet
                 </p>
-                <p style={{ fontSize: 14, color: 'var(--text)', fontFamily: 'var(--font-b)' }}>{lead.project_type}</p>
+                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif" }}>{lead.project_type}</p>
               </div>
             )}
             {lead.budget && (
               <div>
-                <p style={{ fontSize: 11, color: 'var(--text-light)', fontFamily: 'var(--font-m)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                   Budget
                 </p>
-                <p style={{ fontSize: 14, color: 'var(--text)', fontFamily: 'var(--font-b)' }}>{lead.budget}</p>
+                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif" }}>{lead.budget}</p>
               </div>
             )}
             {lead.message && (
               <div>
-                <p style={{ fontSize: 11, color: 'var(--text-light)', fontFamily: 'var(--font-m)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                   Message
                 </p>
-                <p style={{ fontSize: 14, color: 'var(--text)', fontFamily: 'var(--font-b)', lineHeight: 1.6 }}>{lead.message}</p>
+                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", lineHeight: 1.6 }}>{lead.message}</p>
               </div>
             )}
           </div>
@@ -270,12 +270,12 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                 style={{
                   flex: 1,
                   padding: '10px 14px',
-                  background: 'var(--glass-bg)',
-                  border: '1px solid var(--glass-border)',
-                  borderRadius: 'var(--r)',
-                  fontFamily: 'var(--font-b)',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '12px',
+                  fontFamily: "'Outfit', sans-serif",
                   fontSize: 13,
-                  color: 'var(--text)',
+                  color: '#F2EDE4',
                   outline: 'none',
                 }}
               />
@@ -283,10 +283,10 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                 onClick={addNote}
                 style={{
                   padding: '10px',
-                  background: 'var(--teal)',
+                  background: '#2DD4B8',
                   color: '#fff',
                   border: 'none',
-                  borderRadius: 'var(--r)',
+                  borderRadius: '12px',
                   cursor: 'pointer',
                 }}
               >
@@ -296,14 +296,14 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
             {notes.map(note => (
               <div key={note.id} style={{
                 padding: '12px',
-                background: 'var(--glass-bg)',
-                borderRadius: 'var(--r)',
-                border: '1px solid var(--glass-border)',
+                background: 'rgba(255,255,255,0.06)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.12)',
               }}>
-                <p style={{ fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-b)', lineHeight: 1.5 }}>
+                <p style={{ fontSize: 13, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", lineHeight: 1.5 }}>
                   {note.content}
                 </p>
-                <p style={{ fontSize: 11, color: 'var(--text-light)', fontFamily: 'var(--font-m)', marginTop: 8 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", marginTop: 8 }}>
                   {new Date(note.created_at).toLocaleDateString('fr-FR', {
                     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                   })}
@@ -311,7 +311,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
               </div>
             ))}
             {notes.length === 0 && (
-              <p className="text-center py-8" style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+              <p className="text-center py-8" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
                 <MessageSquare size={24} className="mx-auto mb-2" style={{ opacity: 0.3 }} />
                 Aucune note pour ce prospect
               </p>
@@ -324,17 +324,17 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
             {emails.map(em => (
               <div key={em.id} style={{
                 padding: '12px',
-                background: 'var(--glass-bg)',
-                borderRadius: 'var(--r)',
-                border: '1px solid var(--glass-border)',
+                background: 'rgba(255,255,255,0.06)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.12)',
               }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--charcoal)', fontFamily: 'var(--font-b)', marginBottom: 4 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", marginBottom: 4 }}>
                   {em.subject}
                 </p>
-                <p style={{ fontSize: 13, color: 'var(--text-mid)', fontFamily: 'var(--font-b)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', fontFamily: "'Outfit', sans-serif", lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                   {em.body.substring(0, 200)}{em.body.length > 200 ? '...' : ''}
                 </p>
-                <p style={{ fontSize: 11, color: 'var(--text-light)', fontFamily: 'var(--font-m)', marginTop: 8 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", marginTop: 8 }}>
                   {new Date(em.sent_at).toLocaleDateString('fr-FR', {
                     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                   })}
@@ -342,7 +342,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
               </div>
             ))}
             {emails.length === 0 && (
-              <p className="text-center py-8" style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+              <p className="text-center py-8" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
                 <Mail size={24} className="mx-auto mb-2" style={{ opacity: 0.3 }} />
                 Aucun email envoyé à ce prospect
               </p>

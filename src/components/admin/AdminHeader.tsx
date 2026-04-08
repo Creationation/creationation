@@ -4,15 +4,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { Menu, X, Target, Users, Wallet, DollarSign, LayoutDashboard, LogOut, ExternalLink, FolderKanban, FileText, Mail, Image } from 'lucide-react';
 
 const navItems = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, color: 'var(--charcoal)' },
-  { to: '/admin/prospects', label: 'Prospection', icon: Target, color: 'var(--teal)' },
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, color: '#F2EDE4' },
+  { to: '/admin/prospects', label: 'Prospection', icon: Target, color: '#2DD4B8' },
   { to: '/admin/sequences', label: 'Séquences', icon: Mail, color: '#8B5CF6' },
-  { to: '/admin/clients', label: 'Clients', icon: Users, color: 'var(--violet)' },
+  { to: '/admin/clients', label: 'Clients', icon: Users, color: '#A78BDB' },
   { to: '/admin/projects', label: 'Projets', icon: FolderKanban, color: '#3B82F6' },
   { to: '/admin/invoices', label: 'Factures', icon: FileText, color: '#f59e0b' },
-  { to: '/admin/revenues', label: 'Revenus', icon: Wallet, color: 'var(--sky)' },
-  { to: '/admin/costs', label: 'Coûts', icon: DollarSign, color: '#d4a55a' },
-  { to: '/admin/portfolio', label: 'Portfolio', icon: Image, color: 'var(--coral)' },
+  { to: '/admin/revenues', label: 'Revenus', icon: Wallet, color: '#4da6d9' },
+  { to: '/admin/costs', label: 'Coûts', icon: DollarSign, color: '#F0C95C' },
+  { to: '/admin/portfolio', label: 'Portfolio', icon: Image, color: '#F07067' },
 ];
 
 const AdminHeader = () => {
@@ -43,9 +43,9 @@ const AdminHeader = () => {
     <header
       className="flex items-center justify-between px-5 py-3 sticky top-0 z-50"
       style={{
-        background: 'var(--glass-bg-strong)',
+        background: 'rgba(255,255,255,0.10)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--glass-border)',
+        borderBottom: '1px solid rgba(255,255,255,0.12)',
       }}
     >
       <div className="flex items-center gap-3">
@@ -55,8 +55,8 @@ const AdminHeader = () => {
             className="flex items-center justify-center"
             style={{
               width: 38, height: 38,
-              background: open ? 'var(--teal)' : 'rgba(0,0,0,0.05)',
-              color: open ? '#fff' : 'var(--charcoal)',
+              background: open ? '#2DD4B8' : 'rgba(0,0,0,0.05)',
+              color: open ? '#fff' : '#F2EDE4',
               border: 'none',
               borderRadius: 12,
               cursor: 'pointer',
@@ -76,7 +76,7 @@ const AdminHeader = () => {
               background: 'rgba(255,255,255,0.95)',
               backdropFilter: 'blur(24px)',
               borderRadius: 16,
-              border: '1px solid var(--glass-border)',
+              border: '1px solid rgba(255,255,255,0.12)',
               boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
               padding: '8px',
               opacity: open ? 1 : 0,
@@ -97,8 +97,8 @@ const AdminHeader = () => {
                     padding: '10px 14px',
                     borderRadius: 10,
                     background: isActive ? `${item.color}12` : 'transparent',
-                    color: isActive ? item.color : 'var(--text-mid)',
-                    fontFamily: 'var(--font-b)',
+                    color: isActive ? item.color : 'rgba(242,237,228,0.55)',
+                    fontFamily: "'Outfit', sans-serif",
                     fontSize: 14,
                     fontWeight: isActive ? 600 : 400,
                     textDecoration: 'none',
@@ -113,7 +113,7 @@ const AdminHeader = () => {
               );
             })}
 
-            <div style={{ height: 1, background: 'var(--glass-border)', margin: '6px 8px' }} />
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.12)', margin: '6px 8px' }} />
 
             <Link
               to="/"
@@ -121,8 +121,8 @@ const AdminHeader = () => {
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '10px 14px',
                 borderRadius: 10,
-                color: 'var(--teal)',
-                fontFamily: 'var(--font-b)',
+                color: '#2DD4B8',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
                 textDecoration: 'none',
                 transition: 'background 0.15s ease',
@@ -143,8 +143,8 @@ const AdminHeader = () => {
                 width: '100%',
                 background: 'transparent',
                 border: 'none',
-                color: 'var(--coral)',
-                fontFamily: 'var(--font-b)',
+                color: '#F07067',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
@@ -158,18 +158,18 @@ const AdminHeader = () => {
           </div>
         </div>
 
-        <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 20, color: 'var(--charcoal)', margin: 0 }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#F2EDE4', margin: 0 }}>
           CRM
         </h1>
         {currentPage && currentPage.to !== '/admin' && (
           <span style={{
-            fontFamily: 'var(--font-b)',
+            fontFamily: "'Outfit', sans-serif",
             fontSize: 13,
             fontWeight: 600,
             color: currentPage.color,
             padding: '4px 12px',
             background: `${currentPage.color}12`,
-            borderRadius: 'var(--pill)',
+            borderRadius: '100px',
           }}>
             {currentPage.label}
           </span>

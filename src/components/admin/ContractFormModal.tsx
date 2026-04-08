@@ -3,11 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X, Check, Eye, Plus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
 
 type Client = { id: string; business_name: string; contact_name: string | null; company_address: string | null; email: string | null; company_vat: string | null };
 type Project = { id: string; title: string; client_id: string };
@@ -298,7 +295,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
                     </td>
                     <td className="py-2">
                       {lineItems.length > 1 && (
-                        <button onClick={() => removeLine(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E76F51', padding: 4 }}>
+                        <button onClick={() => removeLine(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067', padding: 4 }}>
                           <Trash2 size={14} />
                         </button>
                       )}
@@ -346,7 +343,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 12, color: '#D4A843', fontStyle: 'italic' }}>Bankdaten in den Einstellungen hinterlegen</span>
+                <span style={{ fontSize: 12, color: '#F0C95C', fontStyle: 'italic' }}>Bankdaten in den Einstellungen hinterlegen</span>
                 <button onClick={() => { onClose(); navigate('/admin/settings'); }} className="admin-glass-btn-secondary" style={{ fontSize: 11, padding: '3px 10px', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <LinkIcon size={12} /> Einstellungen
                 </button>

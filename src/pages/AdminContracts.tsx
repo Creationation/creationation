@@ -5,19 +5,16 @@ import { Plus, X, Eye, Send, FileDown, Search, Filter } from 'lucide-react';
 import { pdf } from '@react-pdf/renderer';
 import ContractFormModal from '@/components/admin/ContractFormModal';
 import ContractPDFDocument from '@/components/admin/ContractPDFDocument';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
 
 const STATUS_COLORS: Record<string, { color: string; label: string }> = {
-  pending: { color: '#D4A843', label: 'En attente' },
+  pending: { color: '#F0C95C', label: 'En attente' },
   sent: { color: '#3b82f6', label: 'Envoyé' },
   signed: { color: '#8b5cf6', label: 'Signé' },
-  active: { color: '#2A9D8F', label: 'Actif' },
-  expired: { color: 'rgba(26,35,50,0.35)', label: 'Expiré' },
-  cancelled: { color: '#E76F51', label: 'Annulé' },
+  active: { color: '#2DD4B8', label: 'Actif' },
+  expired: { color: 'rgba(242,237,228,0.28)', label: 'Expiré' },
+  cancelled: { color: '#F07067', label: 'Annulé' },
 };
 
 const AdminContracts = () => {
@@ -170,7 +167,7 @@ const AdminContracts = () => {
         {[
           { label: 'Total', value: contracts.length, color: TEXT_PRIMARY },
           { label: 'Actifs', value: contracts.filter(c => c.status === 'active').length, color: TEAL },
-          { label: 'En attente', value: contracts.filter(c => c.status === 'pending' || c.status === 'sent').length, color: '#D4A843' },
+          { label: 'En attente', value: contracts.filter(c => c.status === 'pending' || c.status === 'sent').length, color: '#F0C95C' },
           { label: 'MRR', value: fmt(contracts.filter(c => c.status === 'active').reduce((s, c) => s + (c.monthly_price || 0), 0)), color: TEAL },
         ].map((stat, i) => (
           <div key={i} className="admin-glass-card p-4 text-center">

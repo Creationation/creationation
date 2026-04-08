@@ -3,15 +3,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X, ChevronRight, ChevronLeft, Copy, Send, Upload, Plus, Trash2 } from 'lucide-react';
 import SendDemoEmailModal from './SendDemoEmailModal';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEAL = '#2A9D8F';
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
 
 const COLOR_PRESETS = [
-  { label: 'Teal', value: '#2A9D8F' },
+  { label: 'Teal', value: '#2DD4B8' },
   { label: 'Gold', value: '#E9C46A' },
-  { label: 'Coral', value: '#E76F51' },
+  { label: 'Coral', value: '#F07067' },
   { label: 'Purple', value: '#7c5cbf' },
   { label: 'Bleu', value: '#4da6d9' },
   { label: 'Rose', value: '#E8739A' },
@@ -57,7 +55,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
 
   // Step 2
   const [logoUrl, setLogoUrl] = useState(demo?.logo_url || '');
-  const [primaryColor, setPrimaryColor] = useState(demo?.primary_color || '#2A9D8F');
+  const [primaryColor, setPrimaryColor] = useState(demo?.primary_color || '#2DD4B8');
   const [secondaryColor, setSecondaryColor] = useState(demo?.secondary_color || '#E9C46A');
   const [tagline, setTagline] = useState(demo?.tagline || '');
   const [services, setServices] = useState<string[]>(demo?.services || []);
@@ -335,7 +333,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                   {services.map((s, i) => (
                     <div key={i} className="flex items-center gap-2">
                       <input value={s} onChange={e => { const n = [...services]; n[i] = e.target.value; setServices(n); }} style={{ ...inputStyle, flex: 1 }} />
-                      <button onClick={() => setServices(services.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E76F51' }}><Trash2 size={16} /></button>
+                      <button onClick={() => setServices(services.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067' }}><Trash2 size={16} /></button>
                     </div>
                   ))}
                   <button onClick={() => setServices([...services, ''])} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEAL, fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>

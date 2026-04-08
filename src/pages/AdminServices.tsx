@@ -2,11 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Briefcase, Plus, Pencil, Check, X, Power } from 'lucide-react';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
 
 const AdminServices = () => {
   const [services, setServices] = useState<any[]>([]);
@@ -78,7 +75,7 @@ const AdminServices = () => {
                 <td className="px-5 py-3" style={{ color: TEXT_SECONDARY }}>{s.description || '—'}</td>
                 <td className="px-5 py-3" style={{ color: TEAL, fontWeight: 600 }}>{fmt(s.default_price || 0)}</td>
                 <td className="px-5 py-3">
-                  <span className="admin-status-badge" style={{ background: s.is_active ? 'rgba(42,157,143,0.12)' : 'rgba(26,35,50,0.06)', color: s.is_active ? TEAL : TEXT_MUTED }}>
+                  <span className="admin-status-badge" style={{ background: s.is_active ? 'rgba(42,157,143,0.12)' : 'rgba(255,255,255,0.06)', color: s.is_active ? TEAL : TEXT_MUTED }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.is_active ? TEAL : TEXT_MUTED }} />
                     {s.is_active ? 'Actif' : 'Inactif'}
                   </span>

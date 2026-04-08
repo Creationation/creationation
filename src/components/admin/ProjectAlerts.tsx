@@ -2,9 +2,17 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AlertTriangle, Clock, FolderKanban } from 'lucide-react';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEAL = '#2A9D8F';
+const C = {
+  textPrimary: '#F2EDE4',
+  textSecondary: 'rgba(242,237,228,0.55)',
+  coral: '#F07067',
+  coralGlow: 'rgba(240,112,103,0.12)',
+  gold: '#F0C95C',
+  goldGlow: 'rgba(240,201,92,0.15)',
+  teal: '#2DD4B8',
+  tealGlow: 'rgba(45,212,184,0.20)',
+  muted: 'rgba(242,237,228,0.28)',
+};
 
 type ProjectAlert = { id: string; title: string; client_name: string; deadline: string | null; status: string; type: 'overdue' | 'soon' | 'stalled' };
 
@@ -38,9 +46,9 @@ const ProjectAlerts = ({ onClickProject }: { onClickProject?: (id: string) => vo
   if (!alerts.length) return null;
 
   const alertStyles = {
-    overdue: { bg: 'rgba(231,111,81,0.08)', border: 'rgba(231,111,81,0.12)', color: '#E76F51' },
-    soon: { bg: 'rgba(212,168,67,0.08)', border: 'rgba(212,168,67,0.12)', color: '#D4A843' },
-    stalled: { bg: 'rgba(26,35,50,0.04)', border: 'rgba(26,35,50,0.08)', color: 'rgba(26,35,50,0.45)' },
+    overdue: { bg: C.coralGlow, border: `rgba(240,112,103,0.15)`, color: C.coral, emoji: '⚠️', label: 'En retard' },
+    soon: { bg: C.goldGlow, border: `rgba(240,201,92,0.15)`, color: C.gold, emoji: '⏰', label: 'Bientôt' },
+    stalled: { bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.08)', color: C.muted, emoji: '💤', label: 'Bloqué' },
   };
 
   return (
@@ -51,13 +59,13 @@ const ProjectAlerts = ({ onClickProject }: { onClickProject?: (id: string) => vo
           <div key={`${a.id}-${a.type}`} onClick={() => onClickProject?.(a.id)}
             className="cursor-pointer flex items-center gap-3 px-4 py-3"
             style={{ background: s.bg, border: `1px solid ${s.border}`, borderRadius: 14, backdropFilter: 'blur(12px)' }}>
-            {a.type === 'overdue' ? <AlertTriangle size={16} color={s.color} /> : a.type === 'soon' ? <Clock size={16} color={s.color} /> : <FolderKanban size={16} color={s.color} />}
+            <span style={{ fontSize: 16 }}>{s.emoji}</span>
             <div style={{ flex: 1 }}>
-              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: TEXT_PRIMARY }}>{a.title}</span>
-              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: TEXT_SECONDARY, marginLeft: 8 }}>{a.client_name}</span>
+              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: s.color }}>{a.title}</span>
+              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: C.textSecondary, marginLeft: 8 }}>{a.client_name}</span>
             </div>
             <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600, color: s.color }}>
-              {a.type === 'overdue' ? '⚠️ En retard' : a.type === 'soon' ? '⏰ Bientôt' : '💤 Bloqué'}
+              {s.label}
             </span>
           </div>
         );

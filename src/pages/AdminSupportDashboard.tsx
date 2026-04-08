@@ -105,7 +105,7 @@ const AdminSupportDashboard = () => {
   const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
   const priorityColor = (p: string) => ({ urgent: '#ef4444', high: '#f97316', medium: '#f59e0b', low: '#10b981' }[p] || '#999');
 
-  if (loading) return <div className="p-8 text-center" style={{ fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Chargement...</div>;
+  if (loading) return <div className="p-8 text-center" style={{ fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.28)' }}>Chargement...</div>;
 
   return (
     <div className="p-4 md:p-6 max-w-[1400px] mx-auto space-y-6">
@@ -114,17 +114,17 @@ const AdminSupportDashboard = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Clients actifs', value: kpis.activeClients, icon: Users, color: 'var(--teal)' },
+          { label: 'Clients actifs', value: kpis.activeClients, icon: Users, color: '#2DD4B8' },
           { label: 'Tickets ouverts', value: kpis.openTickets, icon: Ticket, color: '#ef4444' },
-          { label: 'MRR', value: fmt(kpis.mrr), icon: TrendingUp, color: 'var(--violet)' },
+          { label: 'MRR', value: fmt(kpis.mrr), icon: TrendingUp, color: '#A78BDB' },
           { label: 'Revenus ce mois', value: fmt(kpis.monthRevenue), icon: DollarSign, color: '#d4a55a' },
         ].map((k, i) => (
           <div key={i} className="admin-glass-card" style={{ padding: 20 }}>
             <div className="flex items-center gap-2 mb-2">
               <k.icon size={16} style={{ color: k.color }} />
-              <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{k.label}</span>
+              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{k.label}</span>
             </div>
-            <div style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: k.color }}>{k.value}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: k.color }}>{k.value}</div>
           </div>
         ))}
       </div>
@@ -133,32 +133,32 @@ const AdminSupportDashboard = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Revenue Chart */}
         <div className="admin-glass-card" style={{ padding: 20 }}>
-          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>Revenus mensuels</h3>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', marginBottom: 16 }}>Revenus mensuels</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={revenueChart}>
-              <XAxis dataKey="name" tick={{ fontSize: 11, fontFamily: 'var(--font-b)' }} />
-              <YAxis tick={{ fontSize: 11, fontFamily: 'var(--font-b)' }} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fontFamily: "'Outfit', sans-serif" }} />
+              <YAxis tick={{ fontSize: 11, fontFamily: "'Outfit', sans-serif" }} />
               <Tooltip formatter={(v: number) => fmt(v)} />
-              <Bar dataKey="total" fill="var(--teal)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="total" fill="#2DD4B8" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Ticket Donut */}
         <div className="admin-glass-card" style={{ padding: 20 }}>
-          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>Tickets par statut</h3>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', marginBottom: 16 }}>Tickets par statut</h3>
           {ticketDonut.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie data={ticketDonut} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3}>
                   {ticketDonut.map((entry, idx) => <Cell key={idx} fill={entry.color} />)}
                 </Pie>
-                <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'var(--font-b)' }} />
+                <Legend wrapperStyle={{ fontSize: 11, fontFamily: "'Outfit', sans-serif" }} />
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)', textAlign: 'center', paddingTop: 60 }}>Aucun ticket</p>
+            <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', paddingTop: 60 }}>Aucun ticket</p>
           )}
         </div>
       </div>
@@ -167,19 +167,19 @@ const AdminSupportDashboard = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent tickets */}
         <div className="admin-glass-card" style={{ padding: 20 }}>
-          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>Derniers tickets ouverts</h3>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', marginBottom: 16 }}>Derniers tickets ouverts</h3>
           {recentTickets.length === 0 ? (
-            <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucun ticket ouvert</p>
+            <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)' }}>Aucun ticket ouvert</p>
           ) : (
             <div className="space-y-3">
               {recentTickets.map(t => (
                 <div key={t.id} className="flex items-center gap-3 cursor-pointer p-3 rounded-xl transition-colors" style={{}} onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,157,143,0.04)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'} onClick={() => navigate('/admin/tickets')}>
                   <div style={{ width: 8, height: 8, borderRadius: 99, background: priorityColor(t.priority), flexShrink: 0 }} />
                   <div className="flex-1 min-w-0">
-                    <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }} className="truncate">{t.title}</div>
-                    <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>{t.client_name}</div>
+                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#F2EDE4' }} className="truncate">{t.title}</div>
+                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{t.client_name}</div>
                   </div>
-                  <span style={{ fontFamily: 'var(--font-m)', fontSize: 10, color: 'var(--text-light)' }}>
+                  <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>
                     {new Date(t.created_at).toLocaleDateString('fr-FR')}
                   </span>
                 </div>
@@ -190,19 +190,19 @@ const AdminSupportDashboard = () => {
 
         {/* Alerts */}
         <div className="admin-glass-card" style={{ padding: 20 }}>
-          <h3 className="flex items-center gap-2" style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>
-            <AlertTriangle size={16} style={{ color: 'var(--coral)' }} /> Alertes
+          <h3 className="flex items-center gap-2" style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', marginBottom: 16 }}>
+            <AlertTriangle size={16} style={{ color: '#F07067' }} /> Alertes
           </h3>
           {alerts.overdue.length === 0 && alerts.urgent.length === 0 ? (
-            <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucune alerte 🎉</p>
+            <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)' }}>Aucune alerte 🎉</p>
           ) : (
             <div className="space-y-2">
               {alerts.overdue.map(inv => (
                 <div key={inv.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.06)' }}>
                   <DollarSign size={14} style={{ color: '#ef4444' }} />
                   <div className="flex-1">
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: '#ef4444', fontWeight: 600 }}>Facture en retard</span>
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)', marginLeft: 8 }}>{inv.client_name} · {fmt(inv.total)}</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#ef4444', fontWeight: 600 }}>Facture en retard</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.55)', marginLeft: 8 }}>{inv.client_name} · {fmt(inv.total)}</span>
                   </div>
                 </div>
               ))}
@@ -210,8 +210,8 @@ const AdminSupportDashboard = () => {
                 <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.06)' }}>
                   <Ticket size={14} style={{ color: '#ef4444' }} />
                   <div className="flex-1">
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: '#ef4444', fontWeight: 600 }}>Ticket urgent</span>
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)', marginLeft: 8 }}>{t.client_name} · {t.title}</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#ef4444', fontWeight: 600 }}>Ticket urgent</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.55)', marginLeft: 8 }}>{t.client_name} · {t.title}</span>
                   </div>
                 </div>
               ))}

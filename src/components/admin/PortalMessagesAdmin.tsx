@@ -59,7 +59,7 @@ const PortalMessagesAdmin = ({ projectId, clientId }: { projectId: string; clien
     <div className="flex flex-col" style={{ height: 400 }}>
       <div className="flex-1 overflow-y-auto space-y-2 mb-3 pr-1" style={{ minHeight: 0 }}>
         {messages.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 20, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>
+          <div style={{ textAlign: 'center', padding: 20, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)' }}>
             Aucun message. Envoyez un premier message au client.
           </div>
         )}
@@ -69,13 +69,13 @@ const PortalMessagesAdmin = ({ projectId, clientId }: { projectId: string; clien
             <div key={m.id} style={{ display: 'flex', justifyContent: isTeam ? 'flex-end' : 'flex-start' }}>
               <div style={{
                 maxWidth: '70%', padding: '8px 12px', borderRadius: 12,
-                background: isTeam ? 'var(--teal)' : 'rgba(0,0,0,0.04)',
-                color: isTeam ? '#fff' : 'var(--charcoal)',
+                background: isTeam ? '#2DD4B8' : 'rgba(0,0,0,0.04)',
+                color: isTeam ? '#fff' : '#F2EDE4',
                 borderBottomRightRadius: isTeam ? 2 : 12,
                 borderBottomLeftRadius: isTeam ? 12 : 2,
               }}>
-                <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, margin: 0, whiteSpace: 'pre-wrap' }}>{m.content}</p>
-                <span style={{ fontFamily: 'var(--font-b)', fontSize: 9, opacity: 0.7 }}>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, margin: 0, whiteSpace: 'pre-wrap' }}>{m.content}</p>
+                <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 9, opacity: 0.7 }}>
                   {new Date(m.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                   {isTeam && m.is_read && ' ✓✓'}
                 </span>
@@ -90,11 +90,11 @@ const PortalMessagesAdmin = ({ projectId, clientId }: { projectId: string; clien
         <input value={newMsg} onChange={e => setNewMsg(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMessage())}
           placeholder="Répondre au client..."
-          style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none' }}
+          style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }}
         />
         <button onClick={sendMessage} disabled={!newMsg.trim()} style={{
-          padding: '8px 14px', background: newMsg.trim() ? 'var(--teal)' : 'rgba(0,0,0,0.06)',
-          color: newMsg.trim() ? '#fff' : 'var(--text-light)', border: 'none', borderRadius: 10, cursor: newMsg.trim() ? 'pointer' : 'default',
+          padding: '8px 14px', background: newMsg.trim() ? '#2DD4B8' : 'rgba(0,0,0,0.06)',
+          color: newMsg.trim() ? '#fff' : 'rgba(242,237,228,0.28)', border: 'none', borderRadius: 10, cursor: newMsg.trim() ? 'pointer' : 'default',
         }}>
           <Send size={16} />
         </button>

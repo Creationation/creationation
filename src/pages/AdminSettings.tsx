@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Save, Upload, Building2 } from 'lucide-react';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
 
 const EU_COUNTRIES = [
   'Österreich', 'Deutschland', 'France', 'Italia', 'España', 'Portugal',
@@ -58,7 +55,7 @@ const Toggle = ({ checked, onChange, label }: { checked: boolean; onChange: (v: 
       onClick={() => onChange(!checked)}
       style={{
         width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
-        background: checked ? TEAL : 'rgba(26,35,50,0.15)',
+        background: checked ? TEAL : 'rgba(255,255,255,0.12)',
         position: 'relative', transition: 'background 0.2s',
       }}
     >

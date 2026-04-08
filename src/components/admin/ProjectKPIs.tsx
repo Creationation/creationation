@@ -39,21 +39,21 @@ const ProjectKPIs = () => {
     { label: 'Projets en cours', value: stats.active, color: '#3B82F6', icon: FolderKanban },
     { label: 'À livrer ce mois', value: stats.dueThisMonth, color: '#F59E0B', icon: CalendarCheck },
     { label: 'En retard', value: stats.overdue, color: '#ef4444', icon: AlertTriangle },
-    { label: 'Complétion moy.', value: `${stats.avgCompletion}%`, color: 'var(--teal)', icon: TrendingUp },
+    { label: 'Complétion moy.', value: `${stats.avgCompletion}%`, color: '#2DD4B8', icon: TrendingUp },
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {items.map((s, i) => (
         <div key={i} style={{
-          padding: 20, background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)',
-          borderRadius: 'var(--r)', border: '1px solid var(--glass-border)',
+          padding: 20, background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(20px)',
+          borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)',
         }}>
           <div className="flex items-center gap-2 mb-1">
             <s.icon size={14} style={{ color: s.color }} />
-            <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>{s.label}</span>
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{s.label}</span>
           </div>
-          <p style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: s.color, margin: 0 }}>{s.value}</p>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: s.color, margin: 0 }}>{s.value}</p>
         </div>
       ))}
     </div>

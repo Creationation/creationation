@@ -33,7 +33,7 @@ type Invoice = {
 };
 
 const TYPE_LABELS: Record<string, string> = { monthly: 'Mensuel', one_time: 'Unique', setup: 'Setup', refund: 'Remboursement' };
-const TYPE_COLORS: Record<string, string> = { monthly: '#0d8a6f', one_time: '#4da6d9', setup: '#7c5cbf', refund: '#e8735a' };
+const TYPE_COLORS: Record<string, string> = { monthly: '#2DD4B8', one_time: '#4da6d9', setup: '#A78BDB', refund: '#F07067' };
 
 const AdminRevenues = () => {
   const navigate = useNavigate();
@@ -139,14 +139,14 @@ const AdminRevenues = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
-            { label: 'Revenus nets', value: `${f(net)} €`, color: 'var(--teal)' },
-            { label: 'MRR (récurrents)', value: `${f(mrr)} €`, color: 'var(--sky)' },
-            { label: 'Factures en attente', value: `${f(invoicePending)} €`, color: '#d4a55a' },
-            { label: 'Remboursements', value: `${f(totalRefunds)} €`, color: 'var(--coral)' },
-            { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: 'var(--violet)' },
+            { label: 'Revenus nets', value: `${f(net)} €`, color: '#2DD4B8' },
+            { label: 'MRR (récurrents)', value: `${f(mrr)} €`, color: '#4da6d9' },
+            { label: 'Factures en attente', value: `${f(invoicePending)} €`, color: '#F0C95C' },
+            { label: 'Remboursements', value: `${f(totalRefunds)} €`, color: '#F07067' },
+            { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: '#A78BDB' },
           ].map((s, i) => (
             <div key={i} className="admin-glass-card" style={{ padding: 16 }}>
-              <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>{s.label}</div>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>{s.label}</div>
               <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: s.color }}>{s.value}</div>
             </div>
           ))}
@@ -155,12 +155,12 @@ const AdminRevenues = () => {
         {/* Revenue chart */}
         {sortedMonths.length > 0 && (
           <div className="admin-glass-card" style={{ padding: 16 }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 12 }}>Revenus par mois</h3>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, marginBottom: 12 }}>Revenus par mois</h3>
             <div className="flex items-end gap-2" style={{ height: 120 }}>
               {sortedMonths.map(([m, v]) => (
                 <div key={m} className="flex flex-col items-center flex-1 min-w-0">
-                  <div style={{ width: '100%', maxWidth: 40, height: Math.max(4, (Math.abs(v) / maxMonth) * 100), background: v >= 0 ? 'var(--teal)' : 'var(--coral)', borderRadius: '4px 4px 0 0', transition: 'height 0.3s' }} />
-                  <span style={{ fontFamily: 'var(--font-b)', fontSize: 9, color: 'var(--muted-foreground)', marginTop: 4 }}>{m.slice(5)}</span>
+                  <div style={{ width: '100%', maxWidth: 40, height: Math.max(4, (Math.abs(v) / maxMonth) * 100), background: v >= 0 ? '#2DD4B8' : '#F07067', borderRadius: '4px 4px 0 0', transition: 'height 0.3s' }} />
+                  <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 9, color: 'var(--muted-foreground)', marginTop: 4 }}>{m.slice(5)}</span>
                 </div>
               ))}
             </div>
@@ -170,12 +170,12 @@ const AdminRevenues = () => {
         {/* Upcoming payments */}
         {upcoming.length > 0 && (
           <div className="admin-glass-card" style={{ padding: 16, borderColor: 'rgba(212,165,90,0.3)' }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 8, color: '#d4a55a' }}>Paiements attendus ce mois</h3>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, marginBottom: 8, color: '#F0C95C' }}>Paiements attendus ce mois</h3>
             <div className="space-y-2">
               {upcoming.map(c => (
-                <div key={c.id} className="flex justify-between items-center" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
+                <div key={c.id} className="flex justify-between items-center" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                   <span>{c.business_name}</span>
-                  <span style={{ fontWeight: 700, color: '#d4a55a' }}>{f(c.monthly_amount)} €</span>
+                  <span style={{ fontWeight: 700, color: '#F0C95C' }}>{f(c.monthly_amount)} €</span>
                 </div>
               ))}
             </div>
@@ -184,21 +184,21 @@ const AdminRevenues = () => {
 
         {/* Filters + add */}
         <div className="flex flex-wrap gap-3 items-center">
-          <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ padding: '8px 14px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, background: 'white' }}>
+          <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ padding: '8px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'white' }}>
             <option value="all">Tous types</option>
             {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
-          <input type="month" value={filterMonth} onChange={e => setFilterMonth(e.target.value)} style={{ padding: '8px 14px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, background: 'white' }} />
-          {filterMonth && <button onClick={() => setFilterMonth('')} style={{ padding: '6px 12px', background: 'none', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, cursor: 'pointer' }}>Tout</button>}
+          <input type="month" value={filterMonth} onChange={e => setFilterMonth(e.target.value)} style={{ padding: '8px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'white' }} />
+          {filterMonth && <button onClick={() => setFilterMonth('')} style={{ padding: '6px 12px', background: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, cursor: 'pointer' }}>Tout</button>}
           <div className="flex-1" />
-          <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}><Plus size={14} /> Ajouter paiement</button>
+          <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, cursor: 'pointer' }}><Plus size={14} /> Ajouter paiement</button>
         </div>
 
         {/* Payment list */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Chargement...</div>
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Outfit', sans-serif", color: 'var(--muted-foreground)' }}>Chargement...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Aucun paiement enregistré.</div>
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Outfit', sans-serif", color: 'var(--muted-foreground)' }}>Aucun paiement enregistré.</div>
         ) : (
           <div className="space-y-2">
             {filtered.map(p => (
@@ -206,16 +206,16 @@ const AdminRevenues = () => {
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: TYPE_COLORS[p.payment_type] || '#999', flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600 }}>{p.client_name}</span>
-                    <span style={{ padding: '1px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: TYPE_COLORS[p.payment_type], background: `${TYPE_COLORS[p.payment_type]}18` }}>{TYPE_LABELS[p.payment_type] || p.payment_type}</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600 }}>{p.client_name}</span>
+                    <span style={{ padding: '1px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: "'Outfit', sans-serif", color: TYPE_COLORS[p.payment_type], background: `${TYPE_COLORS[p.payment_type]}18` }}>{TYPE_LABELS[p.payment_type] || p.payment_type}</span>
                   </div>
-                  {p.description && <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{p.description}</div>}
+                  {p.description && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>{p.description}</div>}
                 </div>
                 <div className="text-right" style={{ flexShrink: 0 }}>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 15, fontWeight: 700, color: p.payment_type === 'refund' ? 'var(--coral)' : 'var(--teal)' }}>{p.payment_type === 'refund' ? '-' : '+'}{f(p.amount)} €</div>
-                  <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>{new Date(p.payment_date).toLocaleDateString('fr-FR')}</div>
+                  <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 700, color: p.payment_type === 'refund' ? '#F07067' : '#2DD4B8' }}>{p.payment_type === 'refund' ? '-' : '+'}{f(p.amount)} €</div>
+                  <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'var(--muted-foreground)' }}>{new Date(p.payment_date).toLocaleDateString('fr-FR')}</div>
                 </div>
-                <button onClick={() => deletePayment(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)', flexShrink: 0 }}><Trash2 size={14} /></button>
+                <button onClick={() => deletePayment(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067', flexShrink: 0 }}><Trash2 size={14} /></button>
               </div>
             ))}
           </div>
@@ -249,38 +249,38 @@ const AddPaymentModal = ({ clients, onClose, onAdded }: { clients: Client[]; onC
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
       <div className="rounded-3xl p-6 w-full max-w-md admin-glass-modal">
         <div className="flex items-center justify-between mb-4">
-          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20 }}>Nouveau paiement</h2>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20 }}>Nouveau paiement</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
         </div>
         <div className="space-y-3">
           <div>
-            <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Client *</label>
-            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+            <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Client *</label>
+            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
               <option value="">Sélectionner...</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Montant (€) *</label>
-              <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+              <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Montant (€) *</label>
+              <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
             </div>
             <div>
-              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Type</label>
-              <select value={form.payment_type} onChange={e => setForm({ ...form, payment_type: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+              <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Type</label>
+              <select value={form.payment_type} onChange={e => setForm({ ...form, payment_type: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                 {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Date</label>
-            <input type="date" value={form.payment_date} onChange={e => setForm({ ...form, payment_date: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+            <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Date</label>
+            <input type="date" value={form.payment_date} onChange={e => setForm({ ...form, payment_date: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
           </div>
           <div>
-            <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Description</label>
-            <input type="text" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Ex: Paiement mensuel mars" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+            <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Description</label>
+            <input type="text" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Ex: Paiement mensuel mars" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
           </div>
-          <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Enregistrer le paiement</button>
+          <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Enregistrer le paiement</button>
         </div>
       </div>
     </div>

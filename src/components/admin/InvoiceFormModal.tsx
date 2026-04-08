@@ -128,11 +128,11 @@ const InvoiceFormModal = ({ invoice, clients, onClose, onSaved, prefillClientId,
   };
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 14px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
-    borderRadius: 12, fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--text)', outline: 'none',
+    width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4', outline: 'none',
   };
   const labelStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', marginBottom: 4, display: 'block',
+    fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', marginBottom: 4, display: 'block',
   };
 
   return (
@@ -141,15 +141,15 @@ const InvoiceFormModal = ({ invoice, clients, onClose, onSaved, prefillClientId,
       display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '20px', overflowY: 'auto',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 720, background: 'var(--warm)', borderRadius: 'var(--r-lg)',
-        border: '1px solid var(--glass-border)', boxShadow: '0 24px 80px rgba(0,0,0,0.15)',
+        width: '100%', maxWidth: 720, background: 'var(--warm)', borderRadius: '20px',
+        border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 24px 80px rgba(0,0,0,0.15)',
         padding: 28, marginTop: 20, marginBottom: 20,
       }}>
         <div className="flex items-center justify-between mb-6">
-          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#F2EDE4' }}>
             {invoice ? 'Modifier la facture' : 'Nouvelle facture'}
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)' }}><X size={20} /></button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)' }}><X size={20} /></button>
         </div>
 
         {/* Section 1 */}
@@ -198,15 +198,15 @@ const InvoiceFormModal = ({ invoice, clients, onClose, onSaved, prefillClientId,
         </div>
 
         {/* Section 2 — Items */}
-        <h3 style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, color: 'var(--charcoal)', marginBottom: 12 }}>Lignes de facturation</h3>
+        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>Lignes de facturation</h3>
         <div className="overflow-x-auto mb-2">
-          <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 13 }}>
+          <table className="w-full" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                <th className="text-left py-2 px-2" style={{ color: 'var(--text-light)', fontSize: 11, fontWeight: 600 }}>Description</th>
-                <th className="text-left py-2 px-2" style={{ color: 'var(--text-light)', fontSize: 11, fontWeight: 600, width: 80 }}>Qté</th>
-                <th className="text-left py-2 px-2" style={{ color: 'var(--text-light)', fontSize: 11, fontWeight: 600, width: 110 }}>Prix unit.</th>
-                <th className="text-left py-2 px-2" style={{ color: 'var(--text-light)', fontSize: 11, fontWeight: 600, width: 100 }}>Total</th>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+                <th className="text-left py-2 px-2" style={{ color: 'rgba(242,237,228,0.28)', fontSize: 11, fontWeight: 600 }}>Description</th>
+                <th className="text-left py-2 px-2" style={{ color: 'rgba(242,237,228,0.28)', fontSize: 11, fontWeight: 600, width: 80 }}>Qté</th>
+                <th className="text-left py-2 px-2" style={{ color: 'rgba(242,237,228,0.28)', fontSize: 11, fontWeight: 600, width: 110 }}>Prix unit.</th>
+                <th className="text-left py-2 px-2" style={{ color: 'rgba(242,237,228,0.28)', fontSize: 11, fontWeight: 600, width: 100 }}>Total</th>
                 <th style={{ width: 36 }}></th>
               </tr>
             </thead>
@@ -225,11 +225,11 @@ const InvoiceFormModal = ({ invoice, clients, onClose, onSaved, prefillClientId,
                     <input type="number" min={0} step={0.01} value={it.unit_price} onChange={e => updateItem(idx, 'unit_price', Number(e.target.value))}
                       style={{ ...inputStyle, padding: '8px 10px' }} />
                   </td>
-                  <td className="py-2 px-2" style={{ fontWeight: 600, color: 'var(--charcoal)' }}>{fmt(it.total)}</td>
+                  <td className="py-2 px-2" style={{ fontWeight: 600, color: '#F2EDE4' }}>{fmt(it.total)}</td>
                   <td className="py-2 px-2">
                     {items.length > 1 && (
                       <button onClick={() => setItems(prev => prev.filter((_, i) => i !== idx))}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)' }}>
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067' }}>
                         <Trash2 size={14} />
                       </button>
                     )}
@@ -241,27 +241,27 @@ const InvoiceFormModal = ({ invoice, clients, onClose, onSaved, prefillClientId,
         </div>
         <button onClick={() => setItems(prev => [...prev, { description: '', quantity: 1, unit_price: 0, total: 0 }])}
           className="flex items-center gap-1 mb-4" style={{
-            padding: '6px 12px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
-            borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--teal)',
+            padding: '6px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#2DD4B8',
             cursor: 'pointer', fontWeight: 600,
           }}>
           <Plus size={12} /> Ajouter une ligne
         </button>
 
         {/* Totals */}
-        <div className="flex flex-col items-end gap-2 mb-6" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
+        <div className="flex flex-col items-end gap-2 mb-6" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
           <div className="flex gap-8">
-            <span style={{ color: 'var(--text-mid)' }}>Sous-total</span>
+            <span style={{ color: 'rgba(242,237,228,0.55)' }}>Sous-total</span>
             <span style={{ fontWeight: 600 }}>{fmt(subtotal)}</span>
           </div>
           <div className="flex items-center gap-4">
-            <span style={{ color: 'var(--text-mid)' }}>TVA</span>
+            <span style={{ color: 'rgba(242,237,228,0.55)' }}>TVA</span>
             <input type="number" min={0} max={100} step={0.5} value={taxRate} onChange={e => setTaxRate(Number(e.target.value))}
-              style={{ width: 60, padding: '4px 8px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 8, textAlign: 'center', fontSize: 13, fontFamily: 'var(--font-b)' }} />
+              style={{ width: 60, padding: '4px 8px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, textAlign: 'center', fontSize: 13, fontFamily: "'Outfit', sans-serif" }} />
             <span>%</span>
             <span style={{ fontWeight: 600 }}>{fmt(taxAmount)}</span>
           </div>
-          <div className="flex gap-8" style={{ fontSize: 18, fontWeight: 700, color: 'var(--charcoal)' }}>
+          <div className="flex gap-8" style={{ fontSize: 18, fontWeight: 700, color: '#F2EDE4' }}>
             <span>Total TTC</span>
             <span>{fmt(total)}</span>
           </div>
@@ -282,15 +282,15 @@ const InvoiceFormModal = ({ invoice, clients, onClose, onSaved, prefillClientId,
         {/* Actions */}
         <div className="flex gap-3 justify-end">
           <button onClick={() => handleSave(true)} disabled={saving} style={{
-            padding: '12px 24px', background: 'transparent', border: '2px solid var(--glass-border)',
-            borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600,
-            color: 'var(--charcoal)', cursor: 'pointer',
+            padding: '12px 24px', background: 'transparent', border: '2px solid rgba(255,255,255,0.12)',
+            borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600,
+            color: '#F2EDE4', cursor: 'pointer',
           }}>
             {saving ? '...' : 'Enregistrer comme brouillon'}
           </button>
           <button onClick={() => handleSave(false)} disabled={saving} style={{
-            padding: '12px 24px', background: 'var(--teal)', color: '#fff', border: 'none',
-            borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+            padding: '12px 24px', background: '#2DD4B8', color: '#fff', border: 'none',
+            borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer',
           }}>
             {saving ? '...' : 'Enregistrer et envoyer'}
           </button>

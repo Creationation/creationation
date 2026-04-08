@@ -6,12 +6,14 @@ import LeadDetail from '@/components/admin/LeadDetail';
 import SendEmailModal from '@/components/admin/SendEmailModal';
 import ProjectAlerts from '@/components/admin/ProjectAlerts';
 import DashboardCharts from '@/components/admin/DashboardCharts';
-import { RefreshCw, Search, Filter } from 'lucide-react';
+import { RefreshCw, Search } from 'lucide-react';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
+const C = {
+  textPrimary: '#F2EDE4',
+  textSecondary: 'rgba(242,237,228,0.55)',
+  textMuted: 'rgba(242,237,228,0.28)',
+  teal: '#2DD4B8',
+};
 
 type Lead = {
   id: string; name: string; email: string; phone: string | null;
@@ -20,7 +22,7 @@ type Lead = {
   created_at: string; updated_at: string;
 };
 
-const statusColors: Record<string, string> = { new: '#0d8a6f', contacted: '#4da6d9', qualified: '#d4a55a', converted: '#7c5cbf', lost: '#e8735a' };
+const statusColors: Record<string, string> = { new: '#2DD4B8', contacted: '#4da6d9', qualified: '#F0C95C', converted: '#A78BDB', lost: '#F07067' };
 const statusLabels: Record<string, string> = { new: 'Nouveau', contacted: 'Contacté', qualified: 'Qualifié', converted: 'Converti', lost: 'Perdu' };
 
 const AdminDashboard = () => {
@@ -76,20 +78,20 @@ const AdminDashboard = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="admin-page-title">Dashboard</h1>
-          <p style={{ fontSize: 14, color: TEXT_SECONDARY, marginTop: 4 }}>Vue d'ensemble de Creationation</p>
+          <p style={{ fontSize: 13, color: C.textSecondary, marginTop: 4 }}>Vue d'ensemble de Creationation</p>
         </div>
       </div>
 
       <ProjectAlerts />
       <div className="mb-8"><DashboardCharts /></div>
 
-      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: TEXT_PRIMARY, margin: '0 0 16px' }}>Leads entrants</h3>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: C.textPrimary, margin: '0 0 16px' }}>Leads entrants</h3>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex items-center gap-2 flex-1 admin-glass-input" style={{ padding: '10px 16px' }}>
-          <Search size={16} style={{ color: TEXT_MUTED }} />
-          <input placeholder="Rechercher un prospect..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: TEXT_PRIMARY }} />
+          <Search size={16} style={{ color: C.textMuted }} />
+          <input placeholder="Rechercher un prospect..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: C.textPrimary }} />
         </div>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="admin-glass-input" style={{ cursor: 'pointer' }}>
           <option value="all">Tous les statuts</option>
@@ -108,9 +110,9 @@ const AdminDashboard = () => {
 
       {/* Leads table */}
       {loading ? (
-        <div className="text-center py-20" style={{ color: TEXT_MUTED }}>Chargement...</div>
+        <div className="text-center py-20" style={{ color: C.textMuted }}>Chargement...</div>
       ) : filteredLeads.length === 0 ? (
-        <div className="text-center py-20" style={{ color: TEXT_MUTED }}>Aucun prospect trouvé</div>
+        <div className="text-center py-20" style={{ color: C.textMuted }}>Aucun prospect trouvé</div>
       ) : (
         <div className="admin-glass-table">
           <div className="hidden md:block overflow-x-auto">
@@ -118,23 +120,23 @@ const AdminDashboard = () => {
               <thead>
                 <tr>
                   {['Nom', 'Email', 'Type', 'Budget', 'Statut', 'Date', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-4 py-3" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.2, color: TEXT_MUTED, fontWeight: 600 }}>{h}</th>
+                    <th key={h} className="text-left px-4 py-3" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.2, color: C.textMuted, fontWeight: 600 }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {filteredLeads.map(lead => (
                   <tr key={lead.id} className="cursor-pointer" onClick={() => setSelectedLead(lead)}>
-                    <td className="px-4 py-3 font-medium" style={{ color: TEXT_PRIMARY }}>{lead.name}</td>
-                    <td className="px-4 py-3" style={{ color: TEXT_SECONDARY }}>{lead.email}</td>
-                    <td className="px-4 py-3" style={{ color: TEXT_SECONDARY }}>{lead.project_type || '—'}</td>
-                    <td className="px-4 py-3" style={{ color: TEXT_SECONDARY }}>{lead.budget || '—'}</td>
+                    <td className="px-4 py-3 font-medium" style={{ color: C.textPrimary }}>{lead.name}</td>
+                    <td className="px-4 py-3" style={{ color: C.textSecondary }}>{lead.email}</td>
+                    <td className="px-4 py-3" style={{ color: C.textSecondary }}>{lead.project_type || '—'}</td>
+                    <td className="px-4 py-3" style={{ color: C.textSecondary }}>{lead.budget || '—'}</td>
                     <td className="px-4 py-3">
-                      <select value={lead.status} onClick={e => e.stopPropagation()} onChange={e => { e.stopPropagation(); updateLeadStatus(lead.id, e.target.value); }} className="admin-status-badge" style={{ background: `${statusColors[lead.status]}20`, color: statusColors[lead.status], border: 'none', cursor: 'pointer', fontSize: 12 }}>
+                      <select value={lead.status} onClick={e => e.stopPropagation()} onChange={e => { e.stopPropagation(); updateLeadStatus(lead.id, e.target.value); }} className="admin-status-badge" style={{ background: `${statusColors[lead.status]}20`, color: statusColors[lead.status], border: 'none', cursor: 'pointer', fontSize: 11 }}>
                         {Object.entries(statusLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
                       </select>
                     </td>
-                    <td className="px-4 py-3" style={{ color: TEXT_MUTED, fontSize: 12 }}>{new Date(lead.created_at).toLocaleDateString('fr-FR')}</td>
+                    <td className="px-4 py-3" style={{ color: C.textMuted, fontSize: 12 }}>{new Date(lead.created_at).toLocaleDateString('fr-FR')}</td>
                     <td className="px-4 py-3">
                       <button onClick={e => { e.stopPropagation(); setEmailLead(lead); }} className="admin-glass-btn" style={{ padding: '6px 14px', fontSize: 11 }}>Email</button>
                     </td>
@@ -145,12 +147,12 @@ const AdminDashboard = () => {
           </div>
           <div className="md:hidden flex flex-col">
             {filteredLeads.map(lead => (
-              <div key={lead.id} className="p-4 cursor-pointer" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }} onClick={() => setSelectedLead(lead)}>
+              <div key={lead.id} className="p-4 cursor-pointer" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }} onClick={() => setSelectedLead(lead)}>
                 <div className="flex items-center justify-between mb-2">
-                  <span style={{ fontWeight: 600, color: TEXT_PRIMARY }}>{lead.name}</span>
+                  <span style={{ fontWeight: 600, color: C.textPrimary }}>{lead.name}</span>
                   <span className="admin-status-badge" style={{ background: `${statusColors[lead.status]}20`, color: statusColors[lead.status] }}>{statusLabels[lead.status]}</span>
                 </div>
-                <p style={{ fontSize: 13, color: TEXT_SECONDARY }}>{lead.email}</p>
+                <p style={{ fontSize: 13, color: C.textSecondary }}>{lead.email}</p>
               </div>
             ))}
           </div>

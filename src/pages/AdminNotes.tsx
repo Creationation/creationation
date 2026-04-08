@@ -2,13 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { StickyNote, Plus, Pin, PinOff, Trash2, Search } from 'lucide-react';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
-const CORAL = '#E76F51';
-const GOLD = '#D4A843';
 
 const AdminNotes = () => {
   const [notes, setNotes] = useState<any[]>([]);

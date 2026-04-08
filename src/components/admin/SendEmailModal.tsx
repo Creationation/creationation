@@ -116,18 +116,18 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
       <div
         className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto"
         style={{
-          background: 'var(--cream)',
-          borderRadius: 'var(--r-lg)',
-          border: '1px solid var(--glass-border)',
+          background: 'transparent',
+          borderRadius: '20px',
+          border: '1px solid rgba(255,255,255,0.12)',
           padding: '32px',
         }}
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#F2EDE4' }}>
             Email à {lead.name}
           </h3>
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-light)' }}>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)' }}>
             <X size={20} />
           </button>
         </div>
@@ -140,24 +140,24 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
               onClick={() => applyTemplate(tpl)}
               style={{
                 padding: '6px 14px',
-                background: 'var(--glass-bg)',
-                border: '1px solid var(--glass-border)',
-                borderRadius: 'var(--pill)',
-                fontFamily: 'var(--font-b)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: '100px',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 12,
-                color: 'var(--text-mid)',
+                color: 'rgba(242,237,228,0.55)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = 'var(--teal)';
+                e.currentTarget.style.background = '#2DD4B8';
                 e.currentTarget.style.color = '#fff';
-                e.currentTarget.style.borderColor = 'var(--teal)';
+                e.currentTarget.style.borderColor = '#2DD4B8';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'var(--glass-bg)';
-                e.currentTarget.style.color = 'var(--text-mid)';
-                e.currentTarget.style.borderColor = 'var(--glass-border)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+                e.currentTarget.style.color = 'rgba(242,237,228,0.55)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
               }}
             >
               {tpl.label}
@@ -168,10 +168,10 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
         <div className="flex flex-col gap-4">
           <div>
             <label style={{
-              fontFamily: 'var(--font-b)',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 11,
               fontWeight: 600,
-              color: 'var(--text-light)',
+              color: 'rgba(242,237,228,0.28)',
               letterSpacing: 1,
               textTransform: 'uppercase',
               marginBottom: 6,
@@ -181,12 +181,12 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
             </label>
             <div style={{
               padding: '10px 14px',
-              background: 'var(--glass-bg)',
-              borderRadius: 'var(--r)',
-              border: '1px solid var(--glass-border)',
-              fontFamily: 'var(--font-b)',
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.12)',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 14,
-              color: 'var(--text-mid)',
+              color: 'rgba(242,237,228,0.55)',
             }}>
               {lead.email}
             </div>
@@ -194,10 +194,10 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
 
           <div>
             <label style={{
-              fontFamily: 'var(--font-b)',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 11,
               fontWeight: 600,
-              color: 'var(--text-light)',
+              color: 'rgba(242,237,228,0.28)',
               letterSpacing: 1,
               textTransform: 'uppercase',
               marginBottom: 6,
@@ -212,12 +212,12 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
               style={{
                 width: '100%',
                 padding: '10px 14px',
-                background: 'var(--glass-bg)',
-                borderRadius: 'var(--r)',
-                border: '1px solid var(--glass-border)',
-                fontFamily: 'var(--font-b)',
+                background: 'rgba(255,255,255,0.06)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.12)',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
-                color: 'var(--text)',
+                color: '#F2EDE4',
                 outline: 'none',
               }}
             />
@@ -225,10 +225,10 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
 
           <div>
             <label style={{
-              fontFamily: 'var(--font-b)',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 11,
               fontWeight: 600,
-              color: 'var(--text-light)',
+              color: 'rgba(242,237,228,0.28)',
               letterSpacing: 1,
               textTransform: 'uppercase',
               marginBottom: 6,
@@ -244,12 +244,12 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
               style={{
                 width: '100%',
                 padding: '12px 14px',
-                background: 'var(--glass-bg)',
-                borderRadius: 'var(--r)',
-                border: '1px solid var(--glass-border)',
-                fontFamily: 'var(--font-b)',
+                background: 'rgba(255,255,255,0.06)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.12)',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
-                color: 'var(--text)',
+                color: '#F2EDE4',
                 outline: 'none',
                 resize: 'vertical',
                 lineHeight: 1.6,
@@ -263,15 +263,15 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
             className="flex items-center justify-center gap-2"
             style={{
               padding: '14px 24px',
-              background: loading ? 'var(--text-light)' : 'var(--teal)',
+              background: loading ? 'rgba(242,237,228,0.28)' : '#2DD4B8',
               color: '#fff',
               border: 'none',
-              borderRadius: 'var(--pill)',
-              fontFamily: 'var(--font-b)',
+              borderRadius: '100px',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 14,
               fontWeight: 600,
               cursor: loading ? 'not-allowed' : 'pointer',
-              boxShadow: '0 4px 24px var(--teal-glow)',
+              boxShadow: '0 4px 24px rgba(45,212,184,0.20)',
               transition: 'all 0.3s',
             }}
           >
