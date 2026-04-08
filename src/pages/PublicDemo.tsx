@@ -1,78 +1,125 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { MapPin, Phone, Clock, Calendar, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, Clock, Calendar, Camera, Star, Gift, Play, MessageCircle, ChevronRight, Sparkles } from 'lucide-react';
+import { useCountUp } from '@/hooks/useCountUp';
 
 type Demo = {
   id: string; business_name: string; business_type: string | null;
   logo_url: string | null; primary_color: string; secondary_color: string;
   tagline: string | null; services: string[]; address: string | null;
-  city: string | null; phone: string | null; opening_hours: Record<string, { open: string; close: string; closed: boolean }>;
+  city: string | null; phone: string | null;
+  opening_hours: Record<string, { open: string; close: string; closed: boolean }>;
   contact_email: string | null; viewed_count: number; status: string;
 };
+
+/* ─── Animated mesh background ─── */
+const MeshBg = ({ pc, sc }: { pc: string; sc: string }) => (
+  <div className="fixed inset-0 -z-10 overflow-hidden" style={{ background: '#f6f1e9' }}>
+    {[
+      { color: pc, w: 500, h: 500, top: '-10%', left: '-10%', dur: '18s' },
+      { color: sc, w: 400, h: 400, top: '50%', right: '-8%', dur: '22s' },
+      { color: pc, w: 350, h: 350, bottom: '5%', left: '20%', dur: '25s' },
+      { color: sc, w: 300, h: 300, top: '20%', left: '60%', dur: '20s' },
+    ].map((o, i) => (
+      <div key={i} className="absolute rounded-full" style={{
+        width: o.w, height: o.h, background: o.color, opacity: 0.12,
+        filter: 'blur(100px)', top: o.top, left: o.left, right: (o as any).right, bottom: (o as any).bottom,
+        animation: `float${i} ${o.dur} ease-in-out infinite alternate`,
+      }} />
+    ))}
+    <style>{`
+      @keyframes float0 { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,30px) scale(1.1)} }
+      @keyframes float1 { from{transform:translate(0,0) scale(1)} to{transform:translate(-30px,40px) scale(1.05)} }
+      @keyframes float2 { from{transform:translate(0,0) scale(1)} to{transform:translate(30px,-20px) scale(1.08)} }
+      @keyframes float3 { from{transform:translate(0,0) scale(1)} to{transform:translate(-20px,-30px) scale(1.12)} }
+    `}</style>
+  </div>
+);
+
+/* ─── Glass Card ─── */
+const Glass = ({ children, className = '', style = {} }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) => (
+  <div className={`backdrop-blur-2xl border border-white/40 ${className}`}
+    style={{ background: 'rgba(255,255,255,0.45)', borderRadius: 24, ...style }}>
+    {children}
+  </div>
+);
+
+/* ─── Scroll reveal hook ─── */
+const useReveal = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.15 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, visible };
+};
+
+const RevealSection = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => {
+  const { ref, visible } = useReveal();
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(30px)',
+      transition: 'opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1)',
+    }}>{children}</div>
+  );
+};
+
+/* ─── Stat counter ─── */
+const StatCard = ({ label, value, suffix = '', pc }: { label: string; value: number; suffix?: string; pc: string }) => {
+  const { count, ref } = useCountUp(value);
+  return (
+    <Glass className="flex-1 min-w-[100px] p-4 text-center">
+      <span ref={ref} className="block text-2xl font-bold" style={{ color: pc }}>{count}{suffix}</span>
+      <span className="text-xs mt-1 block" style={{ color: '#6b6560' }}>{label}</span>
+    </Glass>
+  );
+};
+
+/* ─── Day name map ─── */
+const dayOrder = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+const todayIndex = (new Date().getDay() + 6) % 7; // Mon=0
+const todayName = dayOrder[todayIndex];
 
 const PublicDemo = () => {
   const { token } = useParams<{ token: string }>();
   const [demo, setDemo] = useState<Demo | null>(null);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showBooking, setShowBooking] = useState(false);
+  const [bookingSlot, setBookingSlot] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
       if (!token) return;
-
-      // Use edge function for tracking (handles activity log + status update server-side)
       try {
-        const { data, error } = await supabase.functions.invoke('track-demo-view', {
-          body: { accessToken: token },
-        });
-
-        if (error) { setExpired(true); setLoading(false); return; }
-        const result = data as any;
-
-        if (result?.expired) { setExpired(true); setLoading(false); return; }
-        if (!result?.demo) { setExpired(true); setLoading(false); return; }
-
-        setDemo(result.demo);
-        setLoading(false);
-      } catch (e) {
-        console.error('Error loading demo:', e);
-        setExpired(true);
-        setLoading(false);
-      }
+        const { data, error } = await supabase.functions.invoke('track-demo-view', { body: { accessToken: token } });
+        if (error || !(data as any)?.demo) { setExpired(true); setLoading(false); return; }
+        const r = data as any;
+        if (r.expired) { setExpired(true); setLoading(false); return; }
+        setDemo(r.demo); setLoading(false);
+      } catch { setExpired(true); setLoading(false); }
     };
     load();
   }, [token]);
 
-  if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f6f1e9' }}>
-        <p style={{ fontFamily: "'Outfit', sans-serif", color: '#888' }}>Laden...</p>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: '#f6f1e9' }}>
+      <div className="w-10 h-10 rounded-full border-3 border-t-transparent animate-spin" style={{ borderColor: '#2A9D8F', borderTopColor: 'transparent' }} />
+    </div>
+  );
 
-  if (expired) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f6f1e9', padding: 24 }}>
-        <div style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(20px)', borderRadius: 20, padding: 48, textAlign: 'center', maxWidth: 480 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#1A2332', marginBottom: 12 }}>
-            Diese Demo ist abgelaufen
-          </h1>
-          <p style={{ fontSize: 15, color: 'rgba(26,35,50,0.6)', fontFamily: "'Outfit', sans-serif", marginBottom: 24 }}>
-            Kontaktieren Sie uns für eine neue Demo.
-          </p>
-          <a href="https://creationation.lovable.app" style={{
-            padding: '12px 28px', borderRadius: 99, background: '#2A9D8F', color: '#fff',
-            textDecoration: 'none', fontWeight: 600, fontFamily: "'Outfit', sans-serif", fontSize: 14,
-          }}>creationation.app besuchen</a>
-        </div>
-      </div>
-    );
-  }
-
-  if (!demo) return null;
+  if (expired || !demo) return (
+    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#f6f1e9' }}>
+      <Glass className="p-10 text-center max-w-md">
+        <h1 className="text-2xl font-bold mb-3" style={{ fontFamily: "'Playfair Display',serif", color: '#1A2332' }}>Diese Demo ist nicht verfügbar</h1>
+        <p className="text-sm mb-6" style={{ color: '#6b6560' }}>Kontaktieren Sie uns für eine neue Demo.</p>
+        <a href="https://creationation.app" className="inline-block px-7 py-3 rounded-full text-white font-semibold text-sm" style={{ background: '#2A9D8F' }}>creationation.app besuchen</a>
+      </Glass>
+    </div>
+  );
 
   const pc = demo.primary_color || '#2A9D8F';
   const sc = demo.secondary_color || '#E9C46A';
@@ -80,148 +127,292 @@ const PublicDemo = () => {
   const hours = demo.opening_hours || {};
   const initials = demo.business_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
+  const sortedHours = dayOrder
+    .filter(d => hours[d])
+    .map(d => ({ day: d, ...hours[d] }));
+
+  // Mini calendar slots
+  const slots = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+  const slotAvail = [true, true, false, true, false, true, true, false];
+
+  const serviceEmojis = ['✂️', '💆', '💅', '🧖', '💇', '🪮', '🧴', '💄', '🌿', '⭐'];
+
   return (
-    <div style={{ minHeight: '100vh', background: '#f6f1e9', fontFamily: "'Outfit', sans-serif" }}>
-      {/* Top banner */}
-      <div style={{
-        background: `linear-gradient(135deg, ${pc}, ${sc})`, color: '#fff',
-        padding: '10px 16px', textAlign: 'center', fontSize: 13, fontWeight: 500,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap',
-      }}>
-        <span>Dies ist eine Demo-Version Ihrer App. Interessiert?</span>
-        <a href="mailto:hello@creationation.app" style={{
-          padding: '5px 14px', borderRadius: 99, background: 'rgba(255,255,255,0.25)',
-          color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: 12,
-        }}>Kontakt</a>
+    <div className="min-h-screen relative" style={{ fontFamily: "'Outfit',sans-serif" }}>
+      <MeshBg pc={pc} sc={sc} />
+
+      {/* ─── Top banner ─── */}
+      <div className="sticky top-0 z-50 backdrop-blur-xl border-b border-white/30" style={{ background: 'rgba(255,255,255,0.35)' }}>
+        <div className="flex items-center justify-center gap-3 px-4 py-2.5 flex-wrap text-center">
+          <span className="text-xs font-medium" style={{ color: '#2a2722' }}>Dies ist eine Demo-Version Ihrer App. Interessiert?</span>
+          <a href="mailto:hello@creationation.app" className="px-4 py-1.5 rounded-full text-xs font-bold text-white transition-all hover:scale-105"
+            style={{ background: pc, boxShadow: `0 4px 20px ${pc}40` }}>Kontakt</a>
+        </div>
       </div>
 
-      {/* Hero */}
-      <div style={{
-        background: `linear-gradient(135deg, ${pc}, ${pc}dd)`,
-        padding: '48px 24px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden',
+      {/* ─── Hero ─── */}
+      <section className="relative overflow-hidden pt-16 pb-12 px-6 text-center" style={{
+        background: `linear-gradient(135deg, ${pc}, ${pc}cc, ${sc}88)`,
+        borderRadius: '0 0 40px 40px',
       }}>
-        {/* Decorative blobs */}
-        <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: sc, opacity: 0.15 }} />
-        <div style={{ position: 'absolute', bottom: -40, left: -40, width: 150, height: 150, borderRadius: '50%', background: '#fff', opacity: 0.08 }} />
+        {/* Floating shapes */}
+        <div className="absolute top-10 right-10 w-24 h-24 rounded-full opacity-20" style={{ background: sc, animation: 'float0 12s ease-in-out infinite alternate' }} />
+        <div className="absolute bottom-10 left-10 w-32 h-32 rounded-3xl rotate-45 opacity-10" style={{ background: '#fff', animation: 'float1 15s ease-in-out infinite alternate' }} />
 
+        {/* Logo */}
         {demo.logo_url ? (
-          <img src={demo.logo_url} alt={demo.business_name} style={{ width: 80, height: 80, borderRadius: 20, objectFit: 'cover', margin: '0 auto 16px', border: '3px solid rgba(255,255,255,0.3)' }} />
+          <img src={demo.logo_url} alt={demo.business_name} className="w-24 h-24 rounded-3xl mx-auto mb-5 object-cover shadow-xl" style={{ border: '3px solid rgba(255,255,255,0.4)' }} />
         ) : (
-          <div style={{
-            width: 80, height: 80, borderRadius: 20, margin: '0 auto 16px',
-            background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 28, fontWeight: 700, color: '#fff', border: '2px solid rgba(255,255,255,0.3)',
-          }}>{initials}</div>
+          <div className="w-24 h-24 rounded-3xl mx-auto mb-5 flex items-center justify-center text-3xl font-bold text-white shadow-xl"
+            style={{ background: `linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1))`, backdropFilter: 'blur(20px)', border: '2px solid rgba(255,255,255,0.4)' }}>
+            {initials}
+          </div>
         )}
-        <h1 style={{ fontSize: 32, fontWeight: 700, color: '#fff', margin: 0, fontFamily: "'Playfair Display', serif" }}>
-          {demo.business_name}
-        </h1>
-        {demo.tagline && <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', marginTop: 8 }}>{demo.tagline}</p>}
 
-        <button onClick={() => setShowBooking(true)} style={{
-          marginTop: 24, padding: '14px 36px', borderRadius: 99, border: 'none', cursor: 'pointer',
-          background: sc, color: '#fff', fontWeight: 700, fontSize: 16, fontFamily: "'Outfit', sans-serif",
-          boxShadow: `0 8px 30px ${sc}50`,
-        }}>
-          Termin buchen
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display',serif" }}>{demo.business_name}</h1>
+        {demo.tagline && <p className="text-base text-white/80 mb-8 max-w-md mx-auto">{demo.tagline}</p>}
+
+        {/* CTA */}
+        <button onClick={() => setBookingSlot('open')} className="relative px-10 py-4 rounded-full text-white font-bold text-lg transition-all hover:scale-105"
+          style={{ background: sc, boxShadow: `0 8px 30px ${sc}50` }}>
+          <span className="absolute inset-0 rounded-full animate-pulse opacity-30" style={{ background: sc, filter: 'blur(15px)' }} />
+          <span className="relative z-10 flex items-center gap-2"><Calendar size={20} /> Termin buchen</span>
         </button>
-      </div>
 
-      {/* Content */}
-      <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 16px' }}>
+        {/* Stats */}
+        <div className="flex gap-3 mt-10 max-w-sm mx-auto">
+          <StatCard label="Kunden" value={500} suffix="+" pc="#fff" />
+          <StatCard label="Bewertung" value={49} suffix="" pc="#fff" />
+          <StatCard label="24/7" value={24} suffix="h" pc="#fff" />
+        </div>
+      </section>
+
+      {/* ─── Content ─── */}
+      <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
+
         {/* Services */}
         {services.length > 0 && (
-          <div style={{
-            background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(16px)',
-            borderRadius: 16, padding: 24, marginBottom: 16, border: '1px solid rgba(255,255,255,0.4)',
-          }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1A2332', marginBottom: 16, fontFamily: "'Playfair Display', serif" }}>
-              Unsere Leistungen
+          <RevealSection>
+            <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+              <Sparkles size={18} className="inline mr-2" style={{ color: pc }} />Unsere Leistungen
             </h2>
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               {services.map((s, i) => (
-                <div key={i} className="flex items-center gap-3" style={{ padding: '10px 14px', borderRadius: 12, background: `${pc}08`, border: `1px solid ${pc}15` }}>
-                  <div style={{ width: 8, height: 8, borderRadius: 99, background: pc }} />
-                  <span style={{ fontSize: 15, color: '#1A2332', fontWeight: 500 }}>{s}</span>
-                </div>
+                <Glass key={i} className="p-4 transition-all hover:scale-[1.03] cursor-default" style={{ boxShadow: 'none' }}>
+                  <span className="text-2xl block mb-2">{serviceEmojis[i % serviceEmojis.length]}</span>
+                  <span className="text-sm font-semibold block" style={{ color: '#2a2722' }}>{s}</span>
+                </Glass>
               ))}
             </div>
-          </div>
+          </RevealSection>
         )}
 
-        {/* Opening Hours */}
-        {Object.keys(hours).length > 0 && (
-          <div style={{
-            background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(16px)',
-            borderRadius: 16, padding: 24, marginBottom: 16, border: '1px solid rgba(255,255,255,0.4)',
-          }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1A2332', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Playfair Display', serif" }}>
-              <Clock size={18} style={{ color: pc }} /> Öffnungszeiten
-            </h2>
-            <div className="space-y-2">
-              {Object.entries(hours).map(([day, h]: [string, any]) => (
-                <div key={day} className="flex justify-between" style={{ fontSize: 14, color: '#1A2332', padding: '4px 0' }}>
-                  <span style={{ fontWeight: 500 }}>{day}</span>
-                  <span style={{ color: h.closed ? '#E76F51' : 'rgba(26,35,50,0.6)' }}>
-                    {h.closed ? 'Geschlossen' : `${h.open} – ${h.close}`}
-                  </span>
+        {/* Gallery placeholder */}
+        <RevealSection>
+          <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+            <Camera size={18} className="inline mr-2" style={{ color: pc }} />Unsere Arbeit
+          </h2>
+          <div className="grid grid-cols-3 gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Glass key={i} className="aspect-square flex flex-col items-center justify-center gap-1 opacity-60">
+                <Camera size={20} style={{ color: pc }} />
+                <span className="text-[10px]" style={{ color: '#9a9490' }}>Foto</span>
+              </Glass>
+            ))}
+          </div>
+        </RevealSection>
+
+        {/* Reviews */}
+        <RevealSection>
+          <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+            <Star size={18} className="inline mr-2" style={{ color: sc }} />Das sagen unsere Kunden
+          </h2>
+          <div className="space-y-3">
+            {[
+              { name: 'Anna M.', text: 'Absolut begeistert! Die Buchung war so einfach und der Service erstklassig.', stars: 5 },
+              { name: 'Thomas K.', text: 'Endlich eine App die wirklich funktioniert. Termine buchen war noch nie so einfach.', stars: 5 },
+              { name: 'Sarah L.', text: 'Tolles Erlebnis, sehr professionell. Ich komme definitiv wieder!', stars: 4 },
+            ].map((r, i) => (
+              <Glass key={i} className="p-5">
+                <div className="flex gap-0.5 mb-2">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <Star key={j} size={14} fill={j < r.stars ? sc : 'transparent'} style={{ color: j < r.stars ? sc : '#ccc' }} />
+                  ))}
                 </div>
+                <p className="text-sm mb-2 italic" style={{ color: '#4a4540' }}>"{r.text}"</p>
+                <span className="text-xs font-semibold" style={{ color: pc }}>{r.name}</span>
+              </Glass>
+            ))}
+          </div>
+        </RevealSection>
+
+        {/* Opening Hours */}
+        {sortedHours.length > 0 && (
+          <RevealSection>
+            <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+              <Clock size={18} className="inline mr-2" style={{ color: pc }} />Öffnungszeiten
+            </h2>
+            <Glass className="p-5">
+              <div className="space-y-2.5">
+                {sortedHours.map(({ day, open, close, closed }) => {
+                  const isToday = day === todayName;
+                  return (
+                    <div key={day} className="flex justify-between items-center text-sm" style={{
+                      color: '#2a2722', padding: isToday ? '6px 10px' : '2px 0',
+                      borderRadius: isToday ? 12 : 0,
+                      background: isToday ? `${pc}12` : 'transparent',
+                    }}>
+                      <span className="font-medium flex items-center gap-2">
+                        {day}
+                        {isToday && <span className="text-[10px] px-2 py-0.5 rounded-full text-white font-bold" style={{ background: pc }}>Heute</span>}
+                      </span>
+                      <span style={{ color: closed ? '#E76F51' : '#6b6560' }}>
+                        {closed ? 'Geschlossen' : `${open} – ${close}`}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </Glass>
+          </RevealSection>
+        )}
+
+        {/* Loyalty Program */}
+        <RevealSection>
+          <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+            <Gift size={18} className="inline mr-2" style={{ color: sc }} />Treueprogramm
+          </h2>
+          <Glass className="p-6 text-center">
+            <Gift size={36} className="mx-auto mb-3" style={{ color: sc }} />
+            <div className="w-full h-3 rounded-full mb-3 overflow-hidden" style={{ background: `${pc}15` }}>
+              <div className="h-full rounded-full transition-all" style={{ width: '60%', background: `linear-gradient(90deg, ${pc}, ${sc})` }} />
+            </div>
+            <p className="text-sm font-semibold" style={{ color: '#2a2722' }}>Noch 4 Besuche bis zur Belohnung! 🎁</p>
+            <p className="text-xs mt-1" style={{ color: '#9a9490' }}>Sammeln Sie Punkte bei jedem Besuch</p>
+          </Glass>
+        </RevealSection>
+
+        {/* Online Booking */}
+        <RevealSection>
+          <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+            <Calendar size={18} className="inline mr-2" style={{ color: pc }} />Online Buchung
+          </h2>
+          <Glass className="p-5">
+            <p className="text-xs font-medium mb-3" style={{ color: '#6b6560' }}>Verfügbare Termine heute</p>
+            <div className="grid grid-cols-4 gap-2">
+              {slots.map((s, i) => (
+                <button key={s} onClick={() => setBookingSlot(s)}
+                  className="py-2.5 rounded-xl text-xs font-semibold transition-all hover:scale-105"
+                  style={{
+                    background: slotAvail[i] ? `${pc}15` : 'rgba(0,0,0,0.04)',
+                    color: slotAvail[i] ? pc : '#ccc',
+                    border: slotAvail[i] ? `1px solid ${pc}30` : '1px solid transparent',
+                    cursor: slotAvail[i] ? 'pointer' : 'default',
+                  }}
+                  disabled={!slotAvail[i]}>
+                  {s}
+                </button>
               ))}
             </div>
-          </div>
-        )}
+          </Glass>
+        </RevealSection>
 
         {/* Contact */}
         {(demo.address || demo.phone) && (
-          <div style={{
-            background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(16px)',
-            borderRadius: 16, padding: 24, marginBottom: 16, border: '1px solid rgba(255,255,255,0.4)',
-          }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1A2332', marginBottom: 16, fontFamily: "'Playfair Display', serif" }}>
-              Kontakt
+          <RevealSection>
+            <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+              <MapPin size={18} className="inline mr-2" style={{ color: pc }} />Kontakt
             </h2>
-            {demo.address && (
-              <div className="flex items-start gap-3 mb-3" style={{ fontSize: 14, color: '#1A2332' }}>
-                <MapPin size={16} style={{ color: pc, marginTop: 2 }} />
-                <span>{demo.address}{demo.city ? `, ${demo.city}` : ''}</span>
-              </div>
-            )}
-            {demo.phone && (
-              <div className="flex items-center gap-3" style={{ fontSize: 14, color: '#1A2332' }}>
-                <Phone size={16} style={{ color: pc }} />
-                <a href={`tel:${demo.phone}`} style={{ color: pc, textDecoration: 'none', fontWeight: 500 }}>{demo.phone}</a>
-              </div>
-            )}
-          </div>
+            <Glass className="p-5 space-y-4">
+              {demo.address && (
+                <>
+                  <div className="w-full h-32 rounded-2xl flex items-center justify-center" style={{ background: `${pc}08`, border: `1px solid ${pc}15` }}>
+                    <MapPin size={28} style={{ color: pc, opacity: 0.5 }} />
+                  </div>
+                  <div className="flex items-start gap-3 text-sm" style={{ color: '#2a2722' }}>
+                    <MapPin size={16} style={{ color: pc, marginTop: 2, flexShrink: 0 }} />
+                    <span>{demo.address}{demo.city ? `, ${demo.city}` : ''}</span>
+                  </div>
+                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((demo.address || '') + ' ' + (demo.city || ''))}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white transition-all hover:scale-105"
+                    style={{ background: pc }}>
+                    Route planen <ChevronRight size={14} />
+                  </a>
+                </>
+              )}
+              {demo.phone && (
+                <div className="flex items-center gap-3 text-sm" style={{ color: '#2a2722' }}>
+                  <Phone size={16} style={{ color: pc, flexShrink: 0 }} />
+                  <a href={`tel:${demo.phone}`} className="font-semibold" style={{ color: pc }}>{demo.phone}</a>
+                </div>
+              )}
+            </Glass>
+          </RevealSection>
         )}
+
+        {/* Telegram Bot */}
+        <RevealSection>
+          <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
+            <MessageCircle size={18} className="inline mr-2" style={{ color: pc }} />Telegram Management
+          </h2>
+          <Glass className="p-5">
+            <div className="space-y-2.5">
+              {[
+                { from: 'bot', text: '📅 Neue Buchung: Anna M., 14:00' },
+                { from: 'bot', text: '📊 3 Termine heute, 2 morgen' },
+                { from: 'user', text: '✅ Bestätigt' },
+              ].map((m, i) => (
+                <div key={i} className={`flex ${m.from === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className="px-4 py-2.5 rounded-2xl text-xs max-w-[80%]" style={{
+                    background: m.from === 'user' ? pc : 'rgba(255,255,255,0.7)',
+                    color: m.from === 'user' ? '#fff' : '#2a2722',
+                  }}>{m.text}</div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-center mt-3" style={{ color: '#9a9490' }}>Verwalten Sie alles direkt von Ihrem Handy</p>
+          </Glass>
+        </RevealSection>
+
+        {/* Promo video placeholder */}
+        <RevealSection>
+          <Glass className="p-8 text-center">
+            <div className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: `${pc}15` }}>
+              <Play size={28} style={{ color: pc }} />
+            </div>
+            <p className="text-sm font-semibold" style={{ color: '#2a2722' }}>Ihr Promo-Video hier</p>
+            <p className="text-xs mt-1" style={{ color: '#9a9490' }}>Präsentieren Sie Ihr Geschäft in 30 Sekunden</p>
+          </Glass>
+        </RevealSection>
       </div>
 
-      {/* Footer */}
-      <div style={{ textAlign: 'center', padding: '32px 16px', fontSize: 12, color: 'rgba(26,35,50,0.4)' }}>
-        <p>Diese Demo wurde erstellt von{' '}
-          <a href="https://creationation.lovable.app" style={{ color: pc, textDecoration: 'none', fontWeight: 600 }}>Creationation</a>
+      {/* ─── Footer ─── */}
+      <div className="text-center py-10 px-6">
+        <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center text-white font-bold text-lg" style={{ background: `linear-gradient(135deg, ${pc}, ${sc})` }}>C</div>
+        <p className="text-xs" style={{ color: '#9a9490' }}>
+          Erstellt mit <a href="https://creationation.app" className="font-semibold" style={{ color: pc }}>Creationation</a>
         </p>
+        <p className="text-[10px] mt-1" style={{ color: '#bbb' }}>Ihre eigene App ab 290€ + 34€/Monat</p>
       </div>
 
-      {/* Booking modal */}
-      {showBooking && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(6px)' }} onClick={() => setShowBooking(false)}>
-          <div onClick={e => e.stopPropagation()} style={{
-            background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)',
-            borderRadius: 20, padding: 32, maxWidth: 400, margin: 16, textAlign: 'center',
-          }}>
-            <Calendar size={40} style={{ color: pc, margin: '0 auto 16px' }} />
-            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1A2332', fontFamily: "'Playfair Display', serif", marginBottom: 8 }}>
-              Termin buchen
-            </h3>
-            <p style={{ fontSize: 14, color: 'rgba(26,35,50,0.6)', marginBottom: 24 }}>
-              Diese Funktion wird in der vollständigen App verfügbar sein.
+      {/* ─── Booking modal ─── */}
+      {bookingSlot && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}
+          onClick={() => setBookingSlot(null)}>
+          <div onClick={e => e.stopPropagation()} className="w-full max-w-md backdrop-blur-2xl border border-white/40 p-8 text-center animate-scale-in"
+            style={{ background: 'rgba(255,255,255,0.75)', borderRadius: 28 }}>
+            <Calendar size={44} className="mx-auto mb-4" style={{ color: pc }} />
+            <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>Online Buchung</h3>
+            {bookingSlot !== 'open' && <p className="text-sm font-medium mb-2" style={{ color: pc }}>Ausgewählter Termin: {bookingSlot}</p>}
+            <p className="text-sm mb-6" style={{ color: '#6b6560' }}>
+              In der vollständigen App können Ihre Kunden hier direkt buchen. Möchten Sie mehr erfahren?
             </p>
-            <a href="mailto:hello@creationation.app" style={{
-              display: 'inline-block', padding: '12px 28px', borderRadius: 99,
-              background: pc, color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: 14,
-            }}>Kontaktieren Sie uns</a>
+            <a href="mailto:hello@creationation.app"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-white font-bold text-sm transition-all hover:scale-105"
+              style={{ background: `linear-gradient(135deg, ${pc}, ${sc})`, boxShadow: `0 8px 25px ${pc}40` }}>
+              Kontakt aufnehmen <ChevronRight size={16} />
+            </a>
           </div>
         </div>
       )}
