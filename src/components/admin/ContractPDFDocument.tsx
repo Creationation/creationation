@@ -1,6 +1,6 @@
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEAL = '#2A9D8F';
 
 const styles = StyleSheet.create({
   page: { padding: 50, fontFamily: 'Helvetica', fontSize: 10, lineHeight: 1.6, color: '#1A2332' },

@@ -3,10 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X, ChevronRight, ChevronLeft, Copy, Send, Upload, Plus, Trash2 } from 'lucide-react';
 import SendDemoEmailModal from './SendDemoEmailModal';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEAL = '#2A9D8F';
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
 
 const COLOR_PRESETS = [
   { label: 'Teal', value: '#2A9D8F' },

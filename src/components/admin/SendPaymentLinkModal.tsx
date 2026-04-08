@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { CreditCard, Send, X, ToggleLeft, ToggleRight } from 'lucide-react';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEAL = '#2A9D8F';
 
 type Props = {
   client: { id: string; business_name: string; email: string | null; contact_name: string | null };

@@ -4,12 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet, CreditCard } from 'lucide-react';
 import SendPaymentLinkModal from '@/components/admin/SendPaymentLinkModal';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
-const CORAL = '#E76F51';
 
 type Client = {
   id: string; business_name: string; business_type: string | null; contact_name: string | null;

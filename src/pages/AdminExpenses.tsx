@@ -3,12 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Search, X, TrendingUp, TrendingDown, Wallet, Activity, Download, Upload, Pause, Ban, Trash2, FileText, ChevronRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
-const CORAL = '#E76F51';
 
 const CATEGORIES = ['hosting', 'domain', 'api_service', 'software', 'design', 'marketing', 'legal', 'accounting', 'tools', 'other'] as const;
 const FREQUENCIES = ['one_time', 'monthly', 'yearly'] as const;

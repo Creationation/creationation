@@ -4,12 +4,8 @@ import { toast } from 'sonner';
 import { Plus, Eye, Copy, Trash2, ExternalLink, UserPlus, Search, Filter } from 'lucide-react';
 import DemoFormModal from '@/components/admin/DemoFormModal';
 import { useNavigate } from 'react-router-dom';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEAL = '#2A9D8F';
-const GOLD = '#E9C46A';
-const CORAL = '#E76F51';
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
 
 type Demo = {
   id: string; business_name: string; business_type: string | null;

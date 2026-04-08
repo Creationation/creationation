@@ -5,11 +5,8 @@ import { Plus, X, Eye, Send, FileDown, Search, Filter } from 'lucide-react';
 import { pdf } from '@react-pdf/renderer';
 import ContractFormModal from '@/components/admin/ContractFormModal';
 import ContractPDFDocument from '@/components/admin/ContractPDFDocument';
+import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
-const TEXT_PRIMARY = '#1A2332';
-const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
-const TEXT_MUTED = 'rgba(26,35,50,0.30)';
-const TEAL = '#2A9D8F';
 
 const STATUS_COLORS: Record<string, { color: string; label: string }> = {
   pending: { color: '#D4A843', label: 'En attente' },
