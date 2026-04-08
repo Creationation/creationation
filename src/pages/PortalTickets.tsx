@@ -95,7 +95,7 @@ const PortalTickets = () => {
           fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
         }}>
           <Plus size={16} /> Nouveau ticket
-        </button>
+        </button>}
       </div>
 
       {/* Filters */}
