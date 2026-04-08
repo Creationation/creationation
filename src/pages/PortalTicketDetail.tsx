@@ -22,7 +22,7 @@ const categoryLabels: Record<string, string> = {
 
 const PortalTicketDetail = () => {
   const { id } = useParams();
-  const { client } = useOutletContext<{ client: any }>();
+  const { client, simulationMode } = useOutletContext<{ client: any; simulationMode?: boolean }>();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -81,7 +81,7 @@ const PortalTicketDetail = () => {
     <div className="flex flex-col" style={{ height: 'calc(100vh - 140px)' }}>
       {/* Header */}
       <div style={{ marginBottom: 16 }}>
-        <button onClick={() => navigate('/portal/tickets')} style={{
+        <button onClick={() => navigate(-1)} style={{
           display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
           cursor: 'pointer', fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 12,
         }}>
@@ -157,7 +157,7 @@ const PortalTicketDetail = () => {
       </div>
 
       {/* Input */}
-      {ticket.status !== 'closed' && (
+      {ticket.status !== 'closed' && !simulationMode && (
         <div className="flex items-center gap-2" style={{
           background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 16,
           border: '1px solid var(--glass-border)', padding: '8px 12px',

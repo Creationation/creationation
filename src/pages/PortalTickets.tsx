@@ -21,7 +21,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 const PortalTickets = () => {
-  const { client } = useOutletContext<{ client: any }>();
+  const { client, simulationMode } = useOutletContext<{ client: any; simulationMode?: boolean }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tickets, setTickets] = useState<any[]>([]);
@@ -89,13 +89,13 @@ const PortalTickets = () => {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: 0 }}>Mes tickets</h1>
-        <button onClick={() => setShowNew(true)} style={{
+        {!simulationMode && <button onClick={() => setShowNew(true)} style={{
           display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px',
           background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)',
           fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
         }}>
           <Plus size={16} /> Nouveau ticket
-        </button>
+        </button>}
       </div>
 
       {/* Filters */}
@@ -131,7 +131,7 @@ const PortalTickets = () => {
       ) : (
         <div className="flex flex-col gap-2">
           {filtered.map(t => (
-            <div key={t.id} onClick={() => navigate(`/portal/tickets/${t.id}`)}
+            <div key={t.id} onClick={() => { const base = simulationMode ? `/admin/view-as/${client.id}` : '/portal'; navigate(`${base}/tickets/${t.id}`); }}
               className="cursor-pointer transition-all"
               style={{
                 padding: '16px 20px', background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)',

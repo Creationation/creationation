@@ -15,7 +15,7 @@ const projectStatusLabels: Record<string, string> = {
 };
 
 const PortalDashboard = () => {
-  const { client } = useOutletContext<{ client: any }>();
+  const { client, simulationMode } = useOutletContext<{ client: any; simulationMode?: boolean }>();
   const navigate = useNavigate();
   const [openTickets, setOpenTickets] = useState(0);
   const [lastTicket, setLastTicket] = useState<any>(null);
@@ -57,6 +57,8 @@ const PortalDashboard = () => {
     </div>
   );
 
+  const base = simulationMode ? `/admin/view-as/${client?.id}` : '/portal';
+
   return (
     <div>
       <div style={{ marginBottom: 24 }}>
@@ -69,7 +71,7 @@ const PortalDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <Card onClick={() => navigate('/portal/tickets')}>
+        <Card onClick={() => navigate(`${base}/tickets`)}>
           <div className="flex items-center gap-3 mb-2">
             <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--teal-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <TicketCheck size={18} color="var(--teal)" />
@@ -79,7 +81,7 @@ const PortalDashboard = () => {
           <div style={{ fontFamily: 'var(--font-h)', fontSize: 32, color: 'var(--charcoal)' }}>{openTickets}</div>
         </Card>
 
-        <Card onClick={() => lastTicket && navigate(`/portal/tickets/${lastTicket.id}`)}>
+        <Card onClick={() => lastTicket && navigate(`${base}/tickets/${lastTicket.id}`)}>
           <div className="flex items-center gap-3 mb-2">
             <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--violet-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <AlertCircle size={18} color="var(--violet)" />
@@ -100,7 +102,7 @@ const PortalDashboard = () => {
           )}
         </Card>
 
-        <Card onClick={() => navigate('/portal/project')}>
+        <Card onClick={() => navigate(`${base}/project`)}>
           <div className="flex items-center gap-3 mb-2">
             <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(77,166,217,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <FolderOpen size={18} color="var(--sky)" />
@@ -133,13 +135,15 @@ const PortalDashboard = () => {
       )}
 
       <div className="flex flex-wrap gap-3">
-        <button onClick={() => navigate('/portal/tickets?new=1')} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-          <Plus size={16} /> Créer un ticket
-        </button>
-        <button onClick={() => navigate('/portal/tickets')} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: 'var(--glass-bg-strong)', color: 'var(--charcoal)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer', backdropFilter: 'blur(10px)' }}>
+        {!simulationMode && (
+          <button onClick={() => navigate(`${base}/tickets?new=1`)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+            <Plus size={16} /> Créer un ticket
+          </button>
+        )}
+        <button onClick={() => navigate(`${base}/tickets`)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: 'var(--glass-bg-strong)', color: 'var(--charcoal)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer', backdropFilter: 'blur(10px)' }}>
           Voir mes tickets <ArrowRight size={14} />
         </button>
-        <button onClick={() => navigate('/portal/project')} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: 'var(--glass-bg-strong)', color: 'var(--charcoal)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer', backdropFilter: 'blur(10px)' }}>
+        <button onClick={() => navigate(`${base}/project`)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: 'var(--glass-bg-strong)', color: 'var(--charcoal)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer', backdropFilter: 'blur(10px)' }}>
           Mon projet <ArrowRight size={14} />
         </button>
       </div>

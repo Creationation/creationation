@@ -29,6 +29,7 @@ import AdminTimeTracking from "./pages/AdminTimeTracking";
 import AdminNotes from "./pages/AdminNotes";
 import AdminServices from "./pages/AdminServices";
 import AdminContracts from "./pages/AdminContracts";
+import ViewAsClientLayout from "./components/admin/ViewAsClientLayout";
 import CaseStudy from "./pages/CaseStudy";
 
 // Portal (lazy loaded)
@@ -83,6 +84,14 @@ const App = () => (
                 <Route path="notes" element={<AdminNotes />} />
                 <Route path="services" element={<AdminServices />} />
                 <Route path="contracts" element={<AdminContracts />} />
+              </Route>
+              {/* Admin View-as-Client */}
+              <Route path="/admin/view-as/:clientId" element={<AdminRoute><ViewAsClientLayout /></AdminRoute>}>
+                <Route index element={<PortalDashboard />} />
+                <Route path="tickets" element={<PortalTickets />} />
+                <Route path="tickets/:id" element={<PortalTicketDetail />} />
+                <Route path="project" element={<PortalProject />} />
+                <Route path="profile" element={<PortalProfile />} />
               </Route>
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
