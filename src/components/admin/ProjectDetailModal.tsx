@@ -226,11 +226,11 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#F2EDE4', margin: 0 }}>{project.title}</h2>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#2a2722', margin: 0 }}>{project.title}</h2>
               <div className="flex items-center gap-2 mt-2 flex-wrap">
-                <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)' }}>{clientName}</span>
+                <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560' }}>{clientName}</span>
                 <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, color: '#fff', background: PRIORITY_COLORS[project.priority] }}>{PRIORITY_LABELS[project.priority]}</span>
-                {project.budget && <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>{project.budget} {project.currency}</span>}
+                {project.budget && <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>{project.budget} {project.currency}</span>}
               </div>
             </div>
             <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
@@ -240,9 +240,9 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           <div className="flex gap-1 mb-4 overflow-x-auto pb-1">
             {STATUS_COLS.map(s => (
               <button key={s.key} onClick={() => updateStatus(s.key)} style={{
-                padding: '5px 12px', borderRadius: 99, border: project.status === s.key ? `2px solid ${s.color}` : '1px solid rgba(255,255,255,0.12)',
+                padding: '5px 12px', borderRadius: 99, border: project.status === s.key ? `2px solid ${s.color}` : '1px solid rgba(0,0,0,0.08)',
                 background: project.status === s.key ? `${s.color}15` : 'transparent',
-                color: project.status === s.key ? s.color : 'rgba(242,237,228,0.28)',
+                color: project.status === s.key ? s.color : '#9a9490',
                 fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
               }}>{s.label}</button>
             ))}
@@ -250,7 +250,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
 
           {/* Progress */}
           <div className="mb-4">
-            <div className="flex justify-between mb-1" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>
+            <div className="flex justify-between mb-1" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>
               <span>{doneTasks}/{tasks.length} tâches terminées</span>
               <span>{progress}%</span>
             </div>
@@ -261,14 +261,14 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
 
           {/* Dates */}
           {(project.start_date || project.deadline) && (
-            <div className="flex gap-4 mb-4" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>
+            <div className="flex gap-4 mb-4" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>
               {project.start_date && <span>📅 Début : {new Date(project.start_date).toLocaleDateString('fr-FR')}</span>}
               {project.deadline && <span>🏁 Deadline : {new Date(project.deadline).toLocaleDateString('fr-FR')}</span>}
             </div>
           )}
 
           {/* Tabs */}
-          <div className="flex gap-1 mb-4 border-b overflow-x-auto" style={{ borderColor: 'rgba(255,255,255,0.12)' }}>
+          <div className="flex gap-1 mb-4 border-b overflow-x-auto" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
             {([
               { key: 'tasks' as const, label: 'Tâches', icon: Check, count: tasks.length },
               { key: 'milestones' as const, label: 'Jalons', icon: Milestone, count: milestones.length },
@@ -282,7 +282,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               <button key={t.key} onClick={() => setTab(t.key)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '8px 14px', border: 'none',
                 borderBottom: tab === t.key ? '2px solid #2DD4B8' : '2px solid transparent',
-                background: 'none', color: tab === t.key ? '#2DD4B8' : 'rgba(242,237,228,0.28)',
+                background: 'none', color: tab === t.key ? '#2DD4B8' : '#9a9490',
                 fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: tab === t.key ? 600 : 400, cursor: 'pointer', whiteSpace: 'nowrap',
               }}>
                 <t.icon size={14} /> {t.label} ({t.count})
@@ -306,20 +306,20 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                     cursor: 'grab',
                   }}
                 >
-                  <GripVertical size={12} style={{ color: 'rgba(242,237,228,0.28)', opacity: 0.4, flexShrink: 0 }} />
-                  <button onClick={() => toggleTask(t)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: t.status === 'done' ? '#2DD4B8' : 'rgba(242,237,228,0.28)', flexShrink: 0 }}>
+                  <GripVertical size={12} style={{ color: '#9a9490', opacity: 0.4, flexShrink: 0 }} />
+                  <button onClick={() => toggleTask(t)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: t.status === 'done' ? '#2DD4B8' : '#9a9490', flexShrink: 0 }}>
                     {t.status === 'done' ? <CheckCircle2 size={18} /> : <Circle size={18} />}
                   </button>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <span style={{
                       fontFamily: "'Outfit', sans-serif", fontSize: 13,
-                      color: t.status === 'done' ? 'rgba(242,237,228,0.28)' : '#F2EDE4',
+                      color: t.status === 'done' ? '#9a9490' : '#2a2722',
                       textDecoration: t.status === 'done' ? 'line-through' : 'none',
                     }}>{t.title}</span>
                     {t.due_date && (
                       <span style={{
                         fontFamily: "'Outfit', sans-serif", fontSize: 10, marginLeft: 8,
-                        color: new Date(t.due_date) < new Date() && t.status !== 'done' ? '#ef4444' : 'rgba(242,237,228,0.28)',
+                        color: new Date(t.due_date) < new Date() && t.status !== 'done' ? '#ef4444' : '#9a9490',
                       }}>
                         📅 {new Date(t.due_date).toLocaleDateString('fr-FR')}
                       </span>
@@ -333,16 +333,16 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                     title="Date d'échéance"
                     style={{ width: 28, height: 28, padding: 0, border: 'none', background: 'none', cursor: 'pointer', opacity: 0.4, flexShrink: 0 }}
                   />
-                  <button onClick={() => deleteTask(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)', opacity: 0.5, flexShrink: 0 }}>
+                  <button onClick={() => deleteTask(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9490', opacity: 0.5, flexShrink: 0 }}>
                     <Trash2 size={14} />
                   </button>
                 </div>
               ))}
               <div className="flex gap-2 mt-3">
                 <input value={newTask} onChange={e => setNewTask(e.target.value)} placeholder="Ajouter une tâche..." onKeyDown={e => e.key === 'Enter' && addTask()}
-                  style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
+                  style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
                 <input type="date" value={newTaskDue} onChange={e => setNewTaskDue(e.target.value)} title="Date d'échéance"
-                  style={{ padding: '8px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 12, outline: 'none', width: 120 }} />
+                  style={{ padding: '8px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 12, outline: 'none', width: 120 }} />
                 <button onClick={addTask} style={{ padding: '8px 14px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer' }}>
                   <Plus size={16} />
                 </button>
@@ -358,23 +358,23 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                     <button onClick={() => toggleMilestone(m)} style={{
                       width: 24, height: 24, borderRadius: '50%',
                       background: m.completed_at ? '#2DD4B8' : 'transparent',
-                      border: `2px solid ${m.completed_at ? '#2DD4B8' : 'rgba(255,255,255,0.12)'}`,
+                      border: `2px solid ${m.completed_at ? '#2DD4B8' : 'rgba(0,0,0,0.08)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
                     }}>
                       {m.completed_at && <Check size={12} color="#fff" />}
                     </button>
-                    {i < milestones.length - 1 && <div style={{ width: 2, height: 30, background: 'rgba(255,255,255,0.12)' }} />}
+                    {i < milestones.length - 1 && <div style={{ width: 2, height: 30, background: 'rgba(0,0,0,0.08)' }} />}
                   </div>
                   <div>
                     <div style={{
                       fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600,
-                      color: m.completed_at ? '#2DD4B8' : '#F2EDE4',
+                      color: m.completed_at ? '#2DD4B8' : '#2a2722',
                     }}>{m.title}</div>
-                    {m.due_date && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{new Date(m.due_date).toLocaleDateString('fr-FR')}</div>}
+                    {m.due_date && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>{new Date(m.due_date).toLocaleDateString('fr-FR')}</div>}
                   </div>
                 </div>
               ))}
-              {!milestones.length && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', padding: 20 }}>Aucun jalon défini.</div>}
+              {!milestones.length && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', textAlign: 'center', padding: 20 }}>Aucun jalon défini.</div>}
             </div>
           )}
 
@@ -383,15 +383,15 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               <div className="space-y-3 mb-4" style={{ maxHeight: 300, overflowY: 'auto' }}>
                 {notes.map(n => (
                   <div key={n.id} style={{ padding: 12, borderRadius: 12, background: 'rgba(0,0,0,0.02)' }}>
-                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', margin: 0, whiteSpace: 'pre-wrap' }}>{n.content}</p>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)', marginTop: 4, display: 'block' }}>{new Date(n.created_at).toLocaleString('fr-FR')}</span>
+                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', margin: 0, whiteSpace: 'pre-wrap' }}>{n.content}</p>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490', marginTop: 4, display: 'block' }}>{new Date(n.created_at).toLocaleString('fr-FR')}</span>
                   </div>
                 ))}
-                {!notes.length && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', padding: 20 }}>Aucune note.</div>}
+                {!notes.length && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', textAlign: 'center', padding: 20 }}>Aucune note.</div>}
               </div>
               <div className="flex gap-2">
                 <input value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="Écrire une note..." onKeyDown={e => e.key === 'Enter' && addNote()}
-                  style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
+                  style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
                 <button onClick={addNote} style={{ padding: '8px 14px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer' }}>
                   <MessageSquare size={16} />
                 </button>
@@ -408,14 +408,14 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                 onDrop={handleFileDrop}
                 onClick={() => fileInputRef.current?.click()}
                 style={{
-                  border: `2px dashed ${dragOver ? '#2DD4B8' : 'rgba(255,255,255,0.12)'}`,
+                  border: `2px dashed ${dragOver ? '#2DD4B8' : 'rgba(0,0,0,0.08)'}`,
                   borderRadius: 14, padding: 24, textAlign: 'center', cursor: 'pointer',
                   background: dragOver ? 'rgba(16,185,129,0.05)' : 'rgba(0,0,0,0.02)',
                   marginBottom: 16, transition: 'all 0.2s',
                 }}
               >
-                <Upload size={24} style={{ color: dragOver ? '#2DD4B8' : 'rgba(242,237,228,0.28)', margin: '0 auto 8px' }} />
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: dragOver ? '#2DD4B8' : 'rgba(242,237,228,0.28)' }}>
+                <Upload size={24} style={{ color: dragOver ? '#2DD4B8' : '#9a9490', margin: '0 auto 8px' }} />
+                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: dragOver ? '#2DD4B8' : '#9a9490' }}>
                   {uploading ? 'Upload en cours...' : 'Glissez des fichiers ici ou cliquez pour sélectionner'}
                 </div>
                 <input ref={fileInputRef} type="file" multiple className="hidden" onChange={e => e.target.files && uploadFiles(e.target.files)} />
@@ -427,18 +427,18 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                     const isImage = f.file_type?.startsWith('image/');
                     return (
                       <a key={f.id} href={f.file_url} target="_blank" rel="noreferrer" style={{
-                        padding: 12, borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)', display: 'block', textDecoration: 'none',
+                        padding: 12, borderRadius: 12, border: '1px solid rgba(0,0,0,0.08)', display: 'block', textDecoration: 'none',
                         overflow: 'hidden',
                       }}>
                         {isImage && <img src={f.file_url} alt={f.file_name} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />}
-                        <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, color: '#F2EDE4', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.file_name}</div>
-                        <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)', marginTop: 2 }}>{f.file_type || 'fichier'}</div>
+                        <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, color: '#2a2722', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.file_name}</div>
+                        <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490', marginTop: 2 }}>{f.file_type || 'fichier'}</div>
                       </a>
                     );
                   })}
                 </div>
               ) : (
-                !uploading && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', padding: 20 }}>Aucun fichier.</div>
+                !uploading && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', textAlign: 'center', padding: 20 }}>Aucun fichier.</div>
               )}
             </div>
           )}
@@ -454,26 +454,26 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               </button>
 
               {showNewDeliverable && (
-                <div style={{ padding: 16, borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(0,0,0,0.02)', marginBottom: 12 }}>
+                <div style={{ padding: 16, borderRadius: 12, border: '1px solid rgba(0,0,0,0.08)', background: 'rgba(0,0,0,0.02)', marginBottom: 12 }}>
                   <div className="space-y-3">
                     <div>
-                      <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>Titre *</label>
-                      <input value={newDeliverable.title} onChange={e => setNewDeliverable(d => ({ ...d, title: e.target.value }))} placeholder="Ex: Maquette page d'accueil" style={{ width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
+                      <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>Titre *</label>
+                      <input value={newDeliverable.title} onChange={e => setNewDeliverable(d => ({ ...d, title: e.target.value }))} placeholder="Ex: Maquette page d'accueil" style={{ width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
                     </div>
                     <div>
-                      <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>Description</label>
-                      <textarea value={newDeliverable.description} onChange={e => setNewDeliverable(d => ({ ...d, description: e.target.value }))} rows={2} placeholder="Détails pour le client..." style={{ width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', resize: 'vertical' }} />
+                      <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>Description</label>
+                      <textarea value={newDeliverable.description} onChange={e => setNewDeliverable(d => ({ ...d, description: e.target.value }))} rows={2} placeholder="Détails pour le client..." style={{ width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', resize: 'vertical' }} />
                     </div>
                     <div className="flex gap-2">
                       <button onClick={submitDeliverable} style={{ padding: '8px 16px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}>Soumettre</button>
-                      <button onClick={() => setShowNewDeliverable(false)} style={{ padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}>Annuler</button>
+                      <button onClick={() => setShowNewDeliverable(false)} style={{ padding: '8px 16px', background: 'transparent', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}>Annuler</button>
                     </div>
                   </div>
                 </div>
               )}
 
               {deliverables.length === 0 && !showNewDeliverable && (
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', padding: 20 }}>Aucun livrable soumis.</div>
+                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', textAlign: 'center', padding: 20 }}>Aucun livrable soumis.</div>
               )}
 
               <div className="space-y-3">
@@ -488,20 +488,20 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                     <div key={d.id} style={{ padding: 12, borderRadius: 12, border: `1px solid ${s.color}30`, background: `${s.color}08` }}>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, color: '#F2EDE4' }}>{d.title}</div>
-                          {d.description && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.55)', marginTop: 2 }}>{d.description}</div>}
+                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, color: '#2a2722' }}>{d.title}</div>
+                          {d.description && <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#6b6560', marginTop: 2 }}>{d.description}</div>}
                         </div>
                         <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, fontFamily: "'Outfit', sans-serif", color: s.color, background: `${s.color}15`, whiteSpace: 'nowrap' }}>{s.label}</span>
                       </div>
                       {d.client_comment && (
                         <div style={{ marginTop: 8, padding: 8, borderRadius: 8, background: 'rgba(0,0,0,0.04)' }}>
-                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', marginBottom: 2 }}>💬 Commentaire client :</div>
-                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#F2EDE4' }}>{d.client_comment}</div>
+                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', marginBottom: 2 }}>💬 Commentaire client :</div>
+                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#2a2722' }}>{d.client_comment}</div>
                         </div>
                       )}
                       <div className="flex items-center justify-between mt-2">
-                        <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>{new Date(d.created_at).toLocaleDateString('fr-FR')}</span>
-                        <button onClick={async () => { await supabase.from('deliverable_reviews' as any).delete().eq('id', d.id); fetchData(); toast.success('Livrable supprimé'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)', opacity: 0.5 }}><Trash2 size={13} /></button>
+                        <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490' }}>{new Date(d.created_at).toLocaleDateString('fr-FR')}</span>
+                        <button onClick={async () => { await supabase.from('deliverable_reviews' as any).delete().eq('id', d.id); fetchData(); toast.success('Livrable supprimé'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9490', opacity: 0.5 }}><Trash2 size={13} /></button>
                       </div>
                     </div>
                   );
@@ -521,21 +521,21 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                 const budgetPct = project?.budget ? Math.round((totalInvoiced / Number(project.budget)) * 100) : null;
                 return (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)' }}>
-                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>Facturé</p>
-                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 16, fontWeight: 700, color: '#F2EDE4' }}>{fmtE(totalInvoiced)}</p>
+                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 12, border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490' }}>Facturé</p>
+                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 16, fontWeight: 700, color: '#2a2722' }}>{fmtE(totalInvoiced)}</p>
                     </div>
-                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)' }}>
-                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>Encaissé</p>
+                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 12, border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490' }}>Encaissé</p>
                       <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 16, fontWeight: 700, color: '#2DD4B8' }}>{fmtE(totalPaid)}</p>
                     </div>
-                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)' }}>
-                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>Solde</p>
+                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 12, border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490' }}>Solde</p>
                       <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 16, fontWeight: 700, color: totalInvoiced - totalPaid > 0 ? '#F07067' : '#2DD4B8' }}>{fmtE(totalInvoiced - totalPaid)}</p>
                     </div>
                     {budgetPct !== null && (
-                      <div style={{ padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)' }}>
-                        <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>vs Budget</p>
+                      <div style={{ padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 12, border: '1px solid rgba(0,0,0,0.08)' }}>
+                        <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490' }}>vs Budget</p>
                         <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 16, fontWeight: 700, color: budgetPct > 100 ? '#F07067' : '#2DD4B8' }}>{budgetPct}%</p>
                       </div>
                     )}
@@ -544,7 +544,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
               })()}
               {/* Invoice list */}
               {projectInvoices.length === 0 ? (
-                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', padding: 20 }}>Aucune facture liée à ce projet</p>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', textAlign: 'center', padding: 20 }}>Aucune facture liée à ce projet</p>
               ) : (
                 <div className="space-y-2 mb-4">
                   {projectInvoices.map(inv => {
@@ -558,12 +558,12 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                     const fmtE = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
                     return (
                       <div key={inv.id} className="flex items-center justify-between" style={{
-                        padding: '10px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 10,
-                        border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13,
+                        padding: '10px 14px', background: 'rgba(255,255,255,0.5)', borderRadius: 10,
+                        border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13,
                       }}>
                         <span style={{ color: '#2DD4B8', fontFamily: "'Space Mono', monospace", fontSize: 12 }}>{inv.invoice_number}</span>
-                        <span style={{ color: 'rgba(242,237,228,0.55)' }}>{new Date(inv.issue_date).toLocaleDateString('fr-FR')}</span>
-                        <span style={{ fontWeight: 600, color: '#F2EDE4' }}>{fmtE(Number(inv.total))}</span>
+                        <span style={{ color: '#6b6560' }}>{new Date(inv.issue_date).toLocaleDateString('fr-FR')}</span>
+                        <span style={{ fontWeight: 600, color: '#2a2722' }}>{fmtE(Number(inv.total))}</span>
                         <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, background: `${s.color}18`, color: s.color }}>{s.label}</span>
                       </div>
                     );
@@ -582,7 +582,7 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
           {tab === 'activity' && (
             <div className="space-y-2" style={{ maxHeight: 400, overflowY: 'auto' }}>
               {activityLog.length === 0 && (
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', textAlign: 'center', padding: 20 }}>Aucune activité.</div>
+                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', textAlign: 'center', padding: 20 }}>Aucune activité.</div>
               )}
               {activityLog.map((a, i) => {
                 const icons: Record<string, string> = { task_created: '📋', task_done: '✅', milestone_done: '🏁', note: '💬', file: '📎', deliverable: '📦', review: '👁️' };
@@ -590,8 +590,8 @@ const ProjectDetailModal = ({ projectId, onClose }: { projectId: string; onClose
                   <div key={i} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                     <span style={{ fontSize: 14, flexShrink: 0, marginTop: 2 }}>{icons[a.type] || '•'}</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4' }}>{a.title}</div>
-                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)' }}>{new Date(a.date).toLocaleString('fr-FR')}</div>
+                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722' }}>{a.title}</div>
+                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490' }}>{new Date(a.date).toLocaleString('fr-FR')}</div>
                     </div>
                   </div>
                 );
@@ -619,8 +619,8 @@ const FeedbackSection = ({ projectId, clientId }: { projectId: string; clientId?
       <div className="flex gap-1 mb-2">
         {[1,2,3,4,5].map(n => <span key={n} style={{ fontSize: 16, opacity: n <= fb.rating ? 1 : 0.2 }}>⭐</span>)}
       </div>
-      {fb.comment && <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', margin: 0 }}>"{fb.comment}"</p>}
-      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: 'rgba(242,237,228,0.28)', marginTop: 4 }}>{new Date(fb.submitted_at).toLocaleDateString('fr-FR')}</div>
+      {fb.comment && <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', margin: 0 }}>"{fb.comment}"</p>}
+      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#9a9490', marginTop: 4 }}>{new Date(fb.submitted_at).toLocaleDateString('fr-FR')}</div>
     </div>
   );
 };

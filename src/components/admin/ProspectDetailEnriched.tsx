@@ -132,8 +132,8 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
       style={{
         padding: '6px 14px', borderRadius: 100, border: 'none',
         fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600, cursor: 'pointer',
-        background: active ? '#2DD4B8' : 'rgba(255,255,255,0.06)',
-        color: active ? '#fff' : 'rgba(242,237,228,0.55)',
+        background: active ? '#2DD4B8' : 'rgba(255,255,255,0.5)',
+        color: active ? '#fff' : '#6b6560',
       }}
     >{label}</button>
   );
@@ -142,14 +142,14 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 540, background: 'white', borderRadius: 28, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
         {/* Header */}
-        <div style={{ padding: '24px 24px 16px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+        <div style={{ padding: '24px 24px 16px', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
           <div className="flex items-center justify-between mb-2">
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#F2EDE4', margin: 0 }}>{prospect.business_name}</h2>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)', padding: 4 }}><X size={20} /></button>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#2a2722', margin: 0 }}>{prospect.business_name}</h2>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9490', padding: 4 }}><X size={20} /></button>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <span style={{ padding: '3px 10px', borderRadius: 100, background: SC[prospect.status] + '18', color: SC[prospect.status], fontSize: 12, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}>{SL[prospect.status]}</span>
-            {prospect.business_type && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'rgba(255,255,255,0.06)', color: 'rgba(242,237,228,0.55)', fontSize: 12, fontFamily: "'Outfit', sans-serif" }}>{prospect.business_type}</span>}
+            {prospect.business_type && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'rgba(255,255,255,0.5)', color: '#6b6560', fontSize: 12, fontFamily: "'Outfit', sans-serif" }}>{prospect.business_type}</span>}
             {hasScore && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'rgba(13,138,111,0.1)', color: '#2DD4B8', fontSize: 12, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}>Score: {prospect.score}/100</span>}
             {prospect.sequence_id && <span style={{ padding: '3px 10px', borderRadius: 100, background: 'rgba(59,130,246,0.1)', color: '#3B82F6', fontSize: 12, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}>Étape {(prospect.sequence_step || 0) + 1}</span>}
           </div>
@@ -181,19 +181,19 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                 <div key={r.label} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                   <span style={{ fontSize: 14, width: 24, textAlign: 'center', flexShrink: 0 }}>{r.icon}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>{r.label}</div>
-                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4', wordBreak: 'break-word' }}>
+                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>{r.label}</div>
+                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#2a2722', wordBreak: 'break-word' }}>
                       {r.isLink && r.value ? <a href={r.value} target="_blank" rel="noopener noreferrer" style={{ color: '#2DD4B8', textDecoration: 'underline' }}>{r.value}</a> : r.value}
                     </div>
                   </div>
                 </div>
               ))}
               {/* Inline sector & tags editing */}
-              <div style={{ marginTop: 16, padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 16 }}>
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Secteur & Tags</div>
+              <div style={{ marginTop: 16, padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 16 }}>
+                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Secteur & Tags</div>
                 <div className='flex flex-col gap-2'>
-                  <input value={editSector} onChange={e => setEditSector(e.target.value)} placeholder='Secteur (ex: restaurant)' style={{ padding: '8px 12px', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
-                  <input value={editTags} onChange={e => setEditTags(e.target.value)} placeholder='Tags (séparés par virgule)' style={{ padding: '8px 12px', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
+                  <input value={editSector} onChange={e => setEditSector(e.target.value)} placeholder='Secteur (ex: restaurant)' style={{ padding: '8px 12px', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
+                  <input value={editTags} onChange={e => setEditTags(e.target.value)} placeholder='Tags (séparés par virgule)' style={{ padding: '8px 12px', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none' }} />
                   <button onClick={handleSaveSector} disabled={savingField} style={{ padding: '6px 12px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer', alignSelf: 'flex-start' }}>
                     {savingField ? 'Enregistrement...' : 'Enregistrer'}
                   </button>
@@ -206,19 +206,19 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
             <div className="flex flex-col gap-3">
               <div style={{ textAlign: 'center', marginBottom: 8 }}>
                 <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 48, color: '#2DD4B8' }}>{prospect.score || 0}</div>
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>Score global / 100</div>
+                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>Score global / 100</div>
               </div>
               {hasScore && scoreBreakdown && Object.entries(scoreBreakdown).map(([key, value]) => {
                 const numVal = typeof value === 'number' ? value : 0;
                 return (
-                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', background: 'rgba(255,255,255,0.06)', borderRadius: 12 }}>
+                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', background: 'rgba(255,255,255,0.5)', borderRadius: 12 }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', textTransform: 'capitalize' }}>{key.replace(/_/g, ' ')}</div>
+                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', textTransform: 'capitalize' }}>{key.replace(/_/g, ' ')}</div>
                     </div>
-                    <div style={{ width: 80, height: 6, background: 'rgba(255,255,255,0.12)', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{ width: 80, height: 6, background: 'rgba(0,0,0,0.08)', borderRadius: 3, overflow: 'hidden' }}>
                       <div style={{ width: `${Math.min(100, numVal)}%`, height: '100%', background: numVal >= 70 ? '#2DD4B8' : numVal >= 40 ? '#F0C95C' : '#F07067', borderRadius: 3 }} />
                     </div>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#F2EDE4', width: 30, textAlign: 'right' }}>{numVal}</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#2a2722', width: 30, textAlign: 'right' }}>{numVal}</span>
                   </div>
                 );
               })}
@@ -232,17 +232,17 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
             <div className="flex flex-col gap-4">
               {hasAudit ? (
                 <>
-                  <div style={{ textAlign: 'center', padding: 16, background: 'rgba(255,255,255,0.06)', borderRadius: 16 }}>
+                  <div style={{ textAlign: 'center', padding: 16, background: 'rgba(255,255,255,0.5)', borderRadius: 16 }}>
                     <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, color: (audit.score || 0) >= 60 ? '#F0C95C' : '#F07067' }}>{audit.score || '?'}/100</div>
-                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>Score du site concurrent</div>
+                    <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>Score du site concurrent</div>
                   </div>
                   {['design_score', 'mobile_score', 'performance_score', 'seo_score', 'content_score'].map(key => {
                     const val = audit[key] || 0;
                     const label = key.replace('_score', '').replace(/_/g, ' ');
                     return (
                       <div key={key} className="flex items-center gap-3" style={{ padding: '6px 0' }}>
-                        <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', flex: 1, textTransform: 'capitalize' }}>{label}</span>
-                        <div style={{ width: 80, height: 6, background: 'rgba(255,255,255,0.12)', borderRadius: 3, overflow: 'hidden' }}>
+                        <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', flex: 1, textTransform: 'capitalize' }}>{label}</span>
+                        <div style={{ width: 80, height: 6, background: 'rgba(0,0,0,0.08)', borderRadius: 3, overflow: 'hidden' }}>
                           <div style={{ width: `${(val / 20) * 100}%`, height: '100%', background: val >= 14 ? '#2DD4B8' : val >= 10 ? '#F0C95C' : '#F07067', borderRadius: 3 }} />
                         </div>
                         <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, width: 36, textAlign: 'right' }}>{val}/20</span>
@@ -253,7 +253,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                     <div>
                       <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#F07067', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>⚠️ Points faibles</h4>
                       {audit.weaknesses.map((w: string, i: number) => (
-                        <div key={i} style={{ padding: '6px 12px', background: 'rgba(232,115,90,0.06)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', marginBottom: 4 }}>• {w}</div>
+                        <div key={i} style={{ padding: '6px 12px', background: 'rgba(232,115,90,0.06)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560', marginBottom: 4 }}>• {w}</div>
                       ))}
                     </div>
                   )}
@@ -261,21 +261,21 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                     <div>
                       <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#2DD4B8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>💡 Arguments de vente</h4>
                       {audit.pitch_arguments.map((a: string, i: number) => (
-                        <div key={i} onClick={() => { navigator.clipboard.writeText(a); toast.success('Copié !'); }} style={{ padding: '6px 12px', background: 'rgba(13,138,111,0.06)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', marginBottom: 4, cursor: 'pointer' }} title='Cliquer pour copier'>✓ {a}</div>
+                        <div key={i} onClick={() => { navigator.clipboard.writeText(a); toast.success('Copié !'); }} style={{ padding: '6px 12px', background: 'rgba(13,138,111,0.06)', borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560', marginBottom: 4, cursor: 'pointer' }} title='Cliquer pour copier'>✓ {a}</div>
                       ))}
                     </div>
                   )}
                   {audit.summary && (
-                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', fontStyle: 'italic' }}>
+                    <div style={{ padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560', fontStyle: 'italic' }}>
                       {audit.summary}
                     </div>
                   )}
                 </>
               ) : (
                 <div style={{ textAlign: 'center', padding: 24 }}>
-                  <FileText size={32} style={{ color: 'rgba(242,237,228,0.20)', margin: '0 auto 12px' }} />
-                  <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)', marginBottom: 16 }}>Aucun audit. Entrez l'URL du site concurrent pour lancer l'audit.</p>
-                  <input value={auditUrl} onChange={e => setAuditUrl(e.target.value)} placeholder='https://concurrent.com' style={{ width: '100%', padding: '10px 14px', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+                  <FileText size={32} style={{ color: '#c0bbb5', margin: '0 auto 12px' }} />
+                  <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', marginBottom: 16 }}>Aucun audit. Entrez l'URL du site concurrent pour lancer l'audit.</p>
+                  <input value={auditUrl} onChange={e => setAuditUrl(e.target.value)} placeholder='https://concurrent.com' style={{ width: '100%', padding: '10px 14px', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
                   <button onClick={handleLaunchAudit} disabled={auditing || !auditUrl} style={{ padding: '10px 20px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, cursor: auditing ? 'not-allowed' : 'pointer', opacity: auditing ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 6, margin: '0 auto' }}>
                     {auditing ? <Loader2 size={14} className='animate-spin' /> : <Target size={14} />} Lancer l'audit
                   </button>
@@ -287,17 +287,17 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
           {tab === 'tracking' && (
             <div className="flex flex-col gap-3">
               {loadingTracking ? (
-                <div style={{ textAlign: 'center', padding: 40, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Chargement...</div>
+                <div style={{ textAlign: 'center', padding: 40, color: '#9a9490', fontFamily: "'Outfit', sans-serif" }}>Chargement...</div>
               ) : (
                 <>
                   {/* Email history */}
                   {emails.length > 0 && (
                     <div>
-                      <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>📧 Emails envoyés</h4>
+                      <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>📧 Emails envoyés</h4>
                       {emails.map(em => (
-                        <div key={em.id} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.06)', borderRadius: 12, marginBottom: 6 }}>
-                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#F2EDE4' }}>{em.subject}</div>
-                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>
+                        <div key={em.id} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.5)', borderRadius: 12, marginBottom: 6 }}>
+                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#2a2722' }}>{em.subject}</div>
+                          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>
                             {new Date(em.sent_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>
@@ -305,24 +305,24 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                     </div>
                   )}
                   {/* Tracking events */}
-                  <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>📊 Événements de tracking</h4>
+                  <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>📊 Événements de tracking</h4>
                   {tracking.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: 24, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
+                    <div style={{ textAlign: 'center', padding: 24, color: '#9a9490', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
                       <Mail size={24} style={{ opacity: 0.3, margin: '0 auto 8px' }} />
                       Aucun événement
                     </div>
                   ) : (
                     tracking.map(ev => {
-                      const cfg = TRACKING_ICONS[ev.event_type] || { icon: Mail, color: 'rgba(242,237,228,0.28)', label: ev.event_type };
+                      const cfg = TRACKING_ICONS[ev.event_type] || { icon: Mail, color: '#9a9490', label: ev.event_type };
                       const Icon = cfg.icon;
                       return (
-                        <div key={ev.id} className="flex items-center gap-3" style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.06)', borderRadius: 12 }}>
+                        <div key={ev.id} className="flex items-center gap-3" style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.5)', borderRadius: 12 }}>
                           <div style={{ width: 32, height: 32, borderRadius: '50%', background: cfg.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                             <Icon size={14} style={{ color: cfg.color }} />
                           </div>
                           <div style={{ flex: 1 }}>
-                            <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#F2EDE4' }}>{cfg.label}</div>
-                            <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>
+                            <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: '#2a2722' }}>{cfg.label}</div>
+                            <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>
                               {new Date(ev.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                             </div>
                           </div>
@@ -338,17 +338,17 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
           {tab === 'notes' && (
             <div className="flex flex-col gap-3">
               <div>
-                <textarea value={noteText} onChange={e => setNoteText(e.target.value)} placeholder='Ajouter une note...' rows={3} style={{ width: '100%', padding: '10px 14px', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
+                <textarea value={noteText} onChange={e => setNoteText(e.target.value)} placeholder='Ajouter une note...' rows={3} style={{ width: '100%', padding: '10px 14px', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
                 <button onClick={handleSaveNotes} disabled={!noteText.trim()} style={{ marginTop: 6, padding: '8px 16px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: noteText.trim() ? 'pointer' : 'not-allowed', opacity: noteText.trim() ? 1 : 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
                   <Plus size={12} /> Ajouter
                 </button>
               </div>
               {notes ? (
-                <div style={{ padding: 12, background: 'rgba(255,255,255,0.06)', borderRadius: 16, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                <div style={{ padding: 12, background: 'rgba(255,255,255,0.5)', borderRadius: 16, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                   {notes}
                 </div>
               ) : (
-                <div style={{ textAlign: 'center', padding: 24, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
+                <div style={{ textAlign: 'center', padding: 24, color: '#9a9490', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
                   Aucune note pour ce prospect.
                 </div>
               )}
@@ -361,7 +361,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
           <button onClick={onTransfer} style={{ padding: '10px 18px', background: '#A78BDB', color: '#fff', border: 'none', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
             <ArrowRightLeft size={14} /> Transférer vers Clients
           </button>
-          <button onClick={onClose} style={{ padding: '10px 18px', background: 'rgba(255,255,255,0.06)', color: 'rgba(242,237,228,0.55)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ padding: '10px 18px', background: 'rgba(255,255,255,0.5)', color: '#6b6560', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}>
             Fermer
           </button>
         </div>

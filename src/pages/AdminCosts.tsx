@@ -99,7 +99,7 @@ const AdminCosts = () => {
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px' }}>
 
         {loading ? (
-          <div className='text-center py-20' style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Chargement...</div>
+          <div className='text-center py-20' style={{ color: '#9a9490', fontFamily: "'Outfit', sans-serif" }}>Chargement...</div>
         ) : (
           <div className='flex flex-col gap-6'>
             {/* Summary cards */}
@@ -108,28 +108,28 @@ const AdminCosts = () => {
                 { label: 'Coût total réel', value: fmt(totalFromLogs), icon: DollarSign, accent: '#2DD4B8' },
                 { label: 'Google API', value: fmt(googleLogsTotal), icon: Search, accent: '#4285F4' },
                 { label: 'IA (enrichissement + emails)', value: fmt(aiLogsTotal), icon: Sparkles, accent: '#F0C95C' },
-                { label: 'Coût / prospect', value: stats.totalProspects > 0 ? fmt(totalFromLogs / stats.totalProspects) : '—', icon: TrendingUp, accent: '#F2EDE4' },
+                { label: 'Coût / prospect', value: stats.totalProspects > 0 ? fmt(totalFromLogs / stats.totalProspects) : '—', icon: TrendingUp, accent: '#2a2722' },
               ].map(c => (
                 <div key={c.label} className="admin-glass-card" style={{ flex: '1 1 180px', padding: 20 }}>
                   <c.icon size={18} style={{ color: c.accent, marginBottom: 8 }} />
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#F2EDE4' }}>{c.value}</div>
-                  <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 1 }}>{c.label}</div>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#2a2722' }}>{c.value}</div>
+                  <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 1 }}>{c.label}</div>
                 </div>
               ))}
             </div>
 
             {/* Operation History */}
             <div className="admin-glass-table">
-              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#2a2722', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Clock size={16} /> Historique des opérations
                 </h2>
-                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '4px 0 0' }}>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', margin: '4px 0 0' }}>
                   {logs.length} opération(s) enregistrée(s)
                 </p>
               </div>
               {logs.length === 0 ? (
-                <div style={{ padding: '40px 24px', textAlign: 'center', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: 'rgba(242,237,228,0.28)' }}>
+                <div style={{ padding: '40px 24px', textAlign: 'center', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#9a9490' }}>
                   <Info size={24} style={{ margin: '0 auto 8px', opacity: 0.5 }} />
                   Aucune opération enregistrée. L'historique commencera à se remplir après vos prochaines recherches.
                 </div>
@@ -137,27 +137,27 @@ const AdminCosts = () => {
                 <div style={{ maxHeight: 400, overflowY: 'auto' }}>
                   <table className='w-full' style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', position: 'sticky', top: 0, background: 'rgba(255,255,255,0.10)' }}>
+                      <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', position: 'sticky', top: 0, background: 'rgba(255,255,255,0.45)' }}>
                         {['Date', 'Opération', 'Description', 'Prospects', 'Coût'].map(h => (
-                          <th key={h} className='text-left px-4 py-3' style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600 }}>{h}</th>
+                          <th key={h} className='text-left px-4 py-3' style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#9a9490', fontWeight: 600 }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       {logs.map(log => {
-                        const op = OP_LABELS[log.operation_type] || { label: log.operation_type, icon: Info, color: 'rgba(242,237,228,0.55)' };
+                        const op = OP_LABELS[log.operation_type] || { label: log.operation_type, icon: Info, color: '#6b6560' };
                         const Icon = op.icon;
                         return (
-                          <tr key={log.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
-                            <td className='px-4 py-3' style={{ color: 'rgba(242,237,228,0.28)', fontSize: 12, whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
+                          <tr key={log.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
+                            <td className='px-4 py-3' style={{ color: '#9a9490', fontSize: 12, whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
                             <td className='px-4 py-3'>
                               <div className='flex items-center gap-2'>
                                 <Icon size={14} style={{ color: op.color }} />
-                                <span style={{ fontWeight: 600, color: '#F2EDE4', fontSize: 12 }}>{op.label}</span>
+                                <span style={{ fontWeight: 600, color: '#2a2722', fontSize: 12 }}>{op.label}</span>
                               </div>
                             </td>
-                            <td className='px-4 py-3' style={{ color: 'rgba(242,237,228,0.55)', fontSize: 12, maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.description}</td>
-                            <td className='px-4 py-3' style={{ color: '#F2EDE4', fontWeight: 600, textAlign: 'center' }}>{log.prospect_count}</td>
+                            <td className='px-4 py-3' style={{ color: '#6b6560', fontSize: 12, maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.description}</td>
+                            <td className='px-4 py-3' style={{ color: '#2a2722', fontWeight: 600, textAlign: 'center' }}>{log.prospect_count}</td>
                             <td className='px-4 py-3' style={{ fontWeight: 600, color: '#2DD4B8', whiteSpace: 'nowrap' }}>{fmtSmall(Number(log.cost_eur))}</td>
                           </tr>
                         );
@@ -170,14 +170,14 @@ const AdminCosts = () => {
 
             {/* Tarifs de référence */}
             <div className="admin-glass-table">
-              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', margin: 0 }}>Grille tarifaire (€)</h2>
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#2a2722', margin: 0 }}>Grille tarifaire (€)</h2>
               </div>
               <table className='w-full' style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
                     {['Service', 'Coût unitaire', 'Note'].map(h => (
-                      <th key={h} className='text-left px-6 py-3' style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600 }}>{h}</th>
+                      <th key={h} className='text-left px-6 py-3' style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#9a9490', fontWeight: 600 }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -190,15 +190,15 @@ const AdminCosts = () => {
                     { icon: Mail, label: 'IA — Recherche emails', cost: `${COST_EUR.AI_EMAIL_FIND} € / prospect`, note: 'Enrichissement', color: '#2DD4B8' },
                     { icon: Sparkles, label: 'IA — Génération emails', cost: `${COST_EUR.AI_EMAIL_GEN} € / email`, note: 'Envoi personnalisé', color: '#A78BDB' },
                   ].map(r => (
-                    <tr key={r.label} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                    <tr key={r.label} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                       <td className='px-6 py-3'>
                         <div className='flex items-center gap-3'>
                           <r.icon size={16} style={{ color: r.color }} />
-                          <span style={{ fontWeight: 600, color: '#F2EDE4' }}>{r.label}</span>
+                          <span style={{ fontWeight: 600, color: '#2a2722' }}>{r.label}</span>
                         </div>
                       </td>
-                      <td className='px-6 py-3' style={{ color: 'rgba(242,237,228,0.55)', fontFamily: 'monospace', fontSize: 13 }}>{r.cost}</td>
-                      <td className='px-6 py-3' style={{ color: 'rgba(242,237,228,0.28)', fontSize: 12 }}>{r.note}</td>
+                      <td className='px-6 py-3' style={{ color: '#6b6560', fontFamily: 'monospace', fontSize: 13 }}>{r.cost}</td>
+                      <td className='px-6 py-3' style={{ color: '#9a9490', fontSize: 12 }}>{r.note}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -207,17 +207,17 @@ const AdminCosts = () => {
 
             {/* Projections */}
             <div className="admin-glass-table">
-              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', margin: 0 }}>Projections de coûts (€)</h2>
-                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '4px 0 0' }}>
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#2a2722', margin: 0 }}>Projections de coûts (€)</h2>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', margin: '4px 0 0' }}>
                   Comparaison standard vs éco — recherche + enrichissement + envoi emails
                 </p>
               </div>
               <table className='w-full' style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
                     {['Prospects', 'Standard', 'Mode Éco', 'Économie', '€/prospect (éco)'].map(h => (
-                      <th key={h} className='text-left px-5 py-3' style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600 }}>{h}</th>
+                      <th key={h} className='text-left px-5 py-3' style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#9a9490', fontWeight: 600 }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -226,12 +226,12 @@ const AdminCosts = () => {
                     const saving = p.standard.total - p.eco.total;
                     const savingPct = p.standard.total > 0 ? Math.round((saving / p.standard.total) * 100) : 0;
                     return (
-                      <tr key={p.n} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
-                        <td className='px-5 py-3' style={{ fontWeight: 600, color: '#F2EDE4' }}>{p.n.toLocaleString('fr-FR')}</td>
-                        <td className='px-5 py-3' style={{ color: 'rgba(242,237,228,0.55)' }}>{fmt(p.standard.total)}</td>
+                      <tr key={p.n} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
+                        <td className='px-5 py-3' style={{ fontWeight: 600, color: '#2a2722' }}>{p.n.toLocaleString('fr-FR')}</td>
+                        <td className='px-5 py-3' style={{ color: '#6b6560' }}>{fmt(p.standard.total)}</td>
                         <td className='px-5 py-3' style={{ fontWeight: 700, color: '#2DD4B8' }}>{fmt(p.eco.total)}</td>
                         <td className='px-5 py-3' style={{ color: '#34A853', fontWeight: 600 }}>-{fmt(saving)} ({savingPct}%)</td>
-                        <td className='px-5 py-3' style={{ color: 'rgba(242,237,228,0.55)' }}>{fmt(p.eco.total / p.n)}</td>
+                        <td className='px-5 py-3' style={{ color: '#6b6560' }}>{fmt(p.eco.total / p.n)}</td>
                       </tr>
                     );
                   })}
@@ -241,8 +241,8 @@ const AdminCosts = () => {
 
             {/* Notes */}
             <div style={{ padding: '20px 24px', background: 'rgba(13,138,111,0.04)', border: '1px solid rgba(13,138,111,0.15)', borderRadius: '28px' }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, color: '#F2EDE4', margin: '0 0 8px' }}>📝 Notes</h3>
-              <ul style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', margin: 0, paddingLeft: 20, lineHeight: 2 }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, color: '#2a2722', margin: '0 0 8px' }}>📝 Notes</h3>
+              <ul style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560', margin: 0, paddingLeft: 20, lineHeight: 2 }}>
                 <li>Tous les coûts sont en <strong>euros (€)</strong></li>
                 <li>Les coûts Google sont basés sur le <strong>Places API (New)</strong> — Text Search + Place Details</li>
                 <li>Les coûts IA sont estimatifs (Lovable AI facture à l'usage)</li>

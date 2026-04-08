@@ -78,7 +78,7 @@ const AdminNotes = () => {
 
       {Object.entries(grouped).map(([clientName, clientNotes]) => (
         <div key={clientName} className="admin-glass-table">
-          <div className="px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)' }}>
+          <div className="px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)', background: 'rgba(255,255,255,0.05)' }}>
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: TEXT_PRIMARY }}>{clientName}</span>
             <span style={{ fontSize: 11, color: TEXT_MUTED, marginLeft: 8 }}>{clientNotes.length} note{clientNotes.length > 1 ? 's' : ''}</span>
           </div>

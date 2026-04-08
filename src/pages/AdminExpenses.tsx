@@ -319,7 +319,7 @@ const AdminExpenses = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1" style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 12, padding: 4, width: 'fit-content' }}>
+      <div className="flex gap-1" style={{ background: 'rgba(255,255,255,0.45)', borderRadius: 12, padding: 4, width: 'fit-content' }}>
         {[
           { key: 'list' as const, label: 'Toutes les dépenses' },
           { key: 'profit' as const, label: 'Rentabilité' },
@@ -371,7 +371,7 @@ const AdminExpenses = () => {
           <div className="admin-glass-table">
             <div className="overflow-x-auto">
               <table className="w-full" style={{ fontSize: 13 }}>
-                <thead><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                <thead><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                   {['Nom', 'Catégorie', 'Client', 'Montant', 'Fréquence', 'Facturable', 'Statut', ''].map(h => (
                     <th key={h} className="text-left px-4 py-3" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.2, color: TEXT_MUTED, fontWeight: 600 }}>{h}</th>
                   ))}
@@ -399,7 +399,7 @@ const AdminExpenses = () => {
                         <td className="px-4 py-3" style={{ fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(e.amount)}</td>
                         <td className="px-4 py-3">
                           <span className="admin-status-badge" style={{
-                            background: e.frequency === 'monthly' ? 'rgba(42,157,143,0.12)' : e.frequency === 'yearly' ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.06)',
+                            background: e.frequency === 'monthly' ? 'rgba(42,157,143,0.12)' : e.frequency === 'yearly' ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.5)',
                             color: e.frequency === 'monthly' ? TEAL : e.frequency === 'yearly' ? '#8b5cf6' : TEXT_SECONDARY,
                           }}>
                             {FREQ_LABELS[e.frequency]}
@@ -409,7 +409,7 @@ const AdminExpenses = () => {
                           <button onClick={ev => { ev.stopPropagation(); toggleBillable(e); }}
                             style={{
                               width: 36, height: 20, borderRadius: 10, border: 'none', cursor: 'pointer',
-                              background: e.is_billable ? TEAL : 'rgba(255,255,255,0.12)', position: 'relative', transition: 'background 0.2s',
+                              background: e.is_billable ? TEAL : 'rgba(0,0,0,0.08)', position: 'relative', transition: 'background 0.2s',
                             }}>
                             <span style={{
                               position: 'absolute', top: 2, left: e.is_billable ? 18 : 2,
@@ -448,7 +448,7 @@ const AdminExpenses = () => {
             <div className="admin-glass-table">
               <div className="overflow-x-auto">
                 <table className="w-full" style={{ fontSize: 13 }}>
-                  <thead><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                  <thead><tr style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                     {['Client', 'Revenus mensuels', 'Dépenses mensuelles', 'Marge', '%'].map(h => (
                       <th key={h} className="text-left px-4 py-3" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.2, color: TEXT_MUTED, fontWeight: 600 }}>{h}</th>
                     ))}
@@ -470,7 +470,7 @@ const AdminExpenses = () => {
                           </tr>
                         );
                       })}
-                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                       <td className="px-4 py-3 font-medium" style={{ color: TEXT_MUTED, fontStyle: 'italic' }}>Frais généraux Creationation</td>
                       <td className="px-4 py-3" style={{ color: TEXT_MUTED }}>—</td>
                       <td className="px-4 py-3" style={{ color: CORAL, fontWeight: 600 }}>{fmt(profitData.generalExpenses)}</td>
@@ -516,7 +516,7 @@ const AdminExpenses = () => {
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/30" onClick={() => setSlideOpen(null)} />
           <div className="relative w-full max-w-md h-full overflow-y-auto" style={{
-            background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(24px) saturate(1.4)',
+            background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(24px) saturate(1.4)',
             borderLeft: '1px solid rgba(255,255,255,0.25)',
             animation: 'slideInRight 0.2s ease-out',
           }}>
@@ -571,7 +571,7 @@ const AdminExpenses = () => {
                 )}
               </div>
 
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.15)', margin: '16px 0' }} />
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.55)', margin: '16px 0' }} />
 
               <div className="flex flex-col gap-2">
                 <button onClick={() => openForm(slideOpen)} className="admin-glass-btn w-full" style={{ justifyContent: 'center' }}>
@@ -679,7 +679,7 @@ const AdminExpenses = () => {
                     <button key={f} type="button" onClick={() => setForm({ ...form, frequency: f })}
                       style={{
                         flex: 1, padding: '10px 14px', borderRadius: 20, border: 'none', cursor: 'pointer',
-                        background: form.frequency === f ? `${TEAL}20` : 'rgba(255,255,255,0.10)',
+                        background: form.frequency === f ? `${TEAL}20` : 'rgba(255,255,255,0.45)',
                         color: form.frequency === f ? TEAL : TEXT_SECONDARY,
                         fontWeight: form.frequency === f ? 600 : 400, fontSize: 13,
                         fontFamily: "'Outfit', sans-serif",
@@ -709,7 +709,7 @@ const AdminExpenses = () => {
                 <button type="button" onClick={() => setForm({ ...form, is_billable: !form.is_billable })}
                   style={{
                     width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
-                    background: form.is_billable ? TEAL : 'rgba(255,255,255,0.12)',
+                    background: form.is_billable ? TEAL : 'rgba(0,0,0,0.08)',
                     position: 'relative', transition: 'background 0.2s',
                   }}>
                   <span style={{

@@ -152,7 +152,7 @@ const AdminPortfolio = () => {
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: 12,
     background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(0,0,0,0.08)',
-    fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4',
+    fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#2a2722',
     outline: 'none',
   };
 
@@ -162,7 +162,7 @@ const AdminPortfolio = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="admin-page-title">Portfolio</h1>
-            <p className="text-sm mt-1" style={{ color: 'rgba(242,237,228,0.55)' }}>
+            <p className="text-sm mt-1" style={{ color: '#6b6560' }}>
               Gérez les projets affichés sur le site
             </p>
           </div>
@@ -198,11 +198,11 @@ const AdminPortfolio = () => {
                   <img src={proj.screenshot_url} alt="" className="w-full h-full object-cover" />
                 ) : proj.video_url ? (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Video size={16} style={{ color: 'rgba(242,237,228,0.28)' }} />
+                    <Video size={16} style={{ color: '#9a9490' }} />
                   </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Image size={16} style={{ color: 'rgba(242,237,228,0.28)' }} />
+                    <Image size={16} style={{ color: '#9a9490' }} />
                   </div>
                 )}
               </div>
@@ -210,7 +210,7 @@ const AdminPortfolio = () => {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm truncate" style={{ color: '#F2EDE4' }}>
+                  <span className="font-semibold text-sm truncate" style={{ color: '#2a2722' }}>
                     {proj.name}
                   </span>
                   {proj.featured && (
@@ -226,16 +226,16 @@ const AdminPortfolio = () => {
                   </span>
                   <span className="w-3 h-3 rounded-full" style={{ background: COLOR_MAP[proj.color] || '#999' }} />
                 </div>
-                <p className="text-xs truncate mt-0.5" style={{ color: 'rgba(242,237,228,0.28)' }}>{proj.category} · {proj.url_display}</p>
+                <p className="text-xs truncate mt-0.5" style={{ color: '#9a9490' }}>{proj.category} · {proj.url_display}</p>
               </div>
 
               {/* Actions */}
               <div className="flex items-center gap-1.5 shrink-0">
                 <button onClick={() => toggleVisibility(proj)} className="p-2 rounded-xl hover:bg-black/5 transition-colors" title={proj.visible ? 'Masquer' : 'Afficher'}>
-                  {proj.visible ? <Eye size={16} style={{ color: '#2DD4B8' }} /> : <EyeOff size={16} style={{ color: 'rgba(242,237,228,0.28)' }} />}
+                  {proj.visible ? <Eye size={16} style={{ color: '#2DD4B8' }} /> : <EyeOff size={16} style={{ color: '#9a9490' }} />}
                 </button>
                 <button onClick={() => { setEditing(proj); setIsNew(false); }} className="p-2 rounded-xl hover:bg-black/5 transition-colors">
-                  <Pencil size={16} style={{ color: 'rgba(242,237,228,0.55)' }} />
+                  <Pencil size={16} style={{ color: '#6b6560' }} />
                 </button>
                 <button onClick={() => deleteProject(proj.id)} className="p-2 rounded-xl hover:bg-red-50 transition-colors">
                   <Trash2 size={16} style={{ color: '#F07067' }} />
@@ -252,7 +252,7 @@ const AdminPortfolio = () => {
               className="admin-glass-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#F2EDE4' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#2a2722' }}>
                   {isNew ? 'Nouveau projet' : `Modifier — ${editing.name}`}
                 </h2>
                 <button onClick={() => { setEditing(null); setIsNew(false); }} className="p-2 rounded-xl hover:bg-black/5">
@@ -263,36 +263,36 @@ const AdminPortfolio = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Nom</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Nom</label>
                     <input style={inputStyle} value={editing.name} onChange={e => setEditing({ ...editing, name: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Catégorie</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Catégorie</label>
                     <input style={inputStyle} value={editing.category} onChange={e => setEditing({ ...editing, category: e.target.value })} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>URL</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>URL</label>
                     <input style={inputStyle} value={editing.url} onChange={e => setEditing({ ...editing, url: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>URL Display</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>URL Display</label>
                     <input style={inputStyle} value={editing.url_display} onChange={e => setEditing({ ...editing, url_display: e.target.value })} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Badge</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Badge</label>
                     <select style={inputStyle} value={editing.badge} onChange={e => setEditing({ ...editing, badge: e.target.value })}>
                       <option value="live">Live</option>
                       <option value="demo">Démo</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Couleur</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Couleur</label>
                     <div className="flex gap-2 mt-2">
                       {COLORS.map(c => (
                         <button
@@ -309,7 +309,7 @@ const AdminPortfolio = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-4 pt-5">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold" style={{ color: 'rgba(242,237,228,0.55)' }}>
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold" style={{ color: '#6b6560' }}>
                       <input type="checkbox" checked={editing.featured} onChange={e => setEditing({ ...editing, featured: e.target.checked })} />
                       Featured
                     </label>
@@ -317,34 +317,34 @@ const AdminPortfolio = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Screenshot URL</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Screenshot URL</label>
                   <input style={inputStyle} value={editing.screenshot_url || ''} onChange={e => setEditing({ ...editing, screenshot_url: e.target.value || null })} placeholder="/projects/mon-projet.png" />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Vidéo URL (optionnel — remplace le screenshot)</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Vidéo URL (optionnel — remplace le screenshot)</label>
                   <input style={inputStyle} value={editing.video_url || ''} onChange={e => setEditing({ ...editing, video_url: e.target.value || null })} placeholder="https://..." />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Description FR</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Description FR</label>
                   <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.description_fr} onChange={e => setEditing({ ...editing, description_fr: e.target.value })} />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Description EN</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Description EN</label>
                   <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.description_en} onChange={e => setEditing({ ...editing, description_en: e.target.value })} />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Description DE</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Description DE</label>
                   <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.description_de} onChange={e => setEditing({ ...editing, description_de: e.target.value })} />
                 </div>
 
                 {/* Tags FR */}
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Tags FR</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Tags FR</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {editing.tags.map((tag, i) => (
-                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(242,237,228,0.55)' }}>
+                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#6b6560' }}>
                         {tag}
                         <button onClick={() => removeTag('tags', i)} className="hover:text-red-500"><X size={12} /></button>
                       </span>
@@ -358,10 +358,10 @@ const AdminPortfolio = () => {
 
                 {/* Tags EN */}
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Tags EN</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Tags EN</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {editing.tags_en.map((tag, i) => (
-                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(242,237,228,0.55)' }}>
+                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#6b6560' }}>
                         {tag}
                         <button onClick={() => removeTag('tags_en', i)} className="hover:text-red-500"><X size={12} /></button>
                       </span>
@@ -375,10 +375,10 @@ const AdminPortfolio = () => {
 
                 {/* Tags DE */}
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Tags DE</label>
+                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Tags DE</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {editing.tags_de.map((tag, i) => (
-                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(242,237,228,0.55)' }}>
+                      <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#6b6560' }}>
                         {tag}
                         <button onClick={() => removeTag('tags_de', i)} className="hover:text-red-500"><X size={12} /></button>
                       </span>
@@ -395,65 +395,65 @@ const AdminPortfolio = () => {
                   <h3 className="text-sm font-bold mb-4" style={{ color: '#2DD4B8', letterSpacing: 1, textTransform: 'uppercase' }}>📋 Case Study</h3>
 
                   <div>
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Slug (URL)</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Slug (URL)</label>
                     <input style={inputStyle} value={editing.slug || ''} onChange={e => setEditing({ ...editing, slug: e.target.value || null })} placeholder="permanent-valentyna" />
                   </div>
 
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Brief client FR</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Brief client FR</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.client_brief_fr} onChange={e => setEditing({ ...editing, client_brief_fr: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Brief client EN</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Brief client EN</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.client_brief_en} onChange={e => setEditing({ ...editing, client_brief_en: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Brief client DE</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Brief client DE</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.client_brief_de} onChange={e => setEditing({ ...editing, client_brief_de: e.target.value })} />
                   </div>
 
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Challenge FR</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Challenge FR</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.challenge_fr} onChange={e => setEditing({ ...editing, challenge_fr: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Challenge EN</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Challenge EN</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.challenge_en} onChange={e => setEditing({ ...editing, challenge_en: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Challenge DE</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Challenge DE</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.challenge_de} onChange={e => setEditing({ ...editing, challenge_de: e.target.value })} />
                   </div>
 
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Solution FR</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Solution FR</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.solution_fr} onChange={e => setEditing({ ...editing, solution_fr: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Solution EN</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Solution EN</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.solution_en} onChange={e => setEditing({ ...editing, solution_en: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Solution DE</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Solution DE</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.solution_de} onChange={e => setEditing({ ...editing, solution_de: e.target.value })} />
                   </div>
 
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Résultats FR</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Résultats FR</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.results_fr} onChange={e => setEditing({ ...editing, results_fr: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Résultats EN</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Résultats EN</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.results_en} onChange={e => setEditing({ ...editing, results_en: e.target.value })} />
                   </div>
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Résultats DE</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Résultats DE</label>
                     <textarea style={{ ...inputStyle, minHeight: 60 }} value={editing.results_de} onChange={e => setEditing({ ...editing, results_de: e.target.value })} />
                   </div>
 
                   {/* Tech stack */}
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Tech Stack</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Tech Stack</label>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {editing.tech_stack.map((t, i) => (
                         <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: 'rgba(13,138,111,0.08)', color: '#2DD4B8' }}>
@@ -470,10 +470,10 @@ const AdminPortfolio = () => {
 
                   {/* Gallery URLs */}
                   <div className="mt-4">
-                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: 'rgba(242,237,228,0.55)' }}>Gallery URLs</label>
+                    <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#6b6560' }}>Gallery URLs</label>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {editing.gallery_urls.map((url, i) => (
-                        <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full max-w-[200px] truncate" style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(242,237,228,0.55)' }}>
+                        <span key={i} className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full max-w-[200px] truncate" style={{ background: 'rgba(0,0,0,0.05)', color: '#6b6560' }}>
                           {url.split('/').pop()}
                           <button onClick={() => setEditing({ ...editing, gallery_urls: editing.gallery_urls.filter((_, j) => j !== i) })} className="hover:text-red-500 shrink-0"><X size={12} /></button>
                         </span>
@@ -489,7 +489,7 @@ const AdminPortfolio = () => {
                   <button
                     onClick={() => { setEditing(null); setIsNew(false); }}
                     className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:bg-black/5"
-                    style={{ color: 'rgba(242,237,228,0.55)' }}
+                    style={{ color: '#6b6560' }}
                   >
                     Annuler
                   </button>

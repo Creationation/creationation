@@ -55,7 +55,7 @@ const Toggle = ({ checked, onChange, label }: { checked: boolean; onChange: (v: 
       onClick={() => onChange(!checked)}
       style={{
         width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
-        background: checked ? TEAL : 'rgba(255,255,255,0.12)',
+        background: checked ? TEAL : 'rgba(0,0,0,0.08)',
         position: 'relative', transition: 'background 0.2s',
       }}
     >
@@ -200,7 +200,7 @@ const AdminSettings = () => {
       <div className="admin-glass-card p-6">
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: TEXT_PRIMARY, marginBottom: 16 }}>Informations fiscales</h2>
 
-        <div className="space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: 16, marginBottom: 16 }}>
+        <div className="space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)', paddingBottom: 16, marginBottom: 16 }}>
           <Toggle checked={settings.has_tax_number} onChange={v => update('has_tax_number', v)} label="Steuernummer vorhanden" />
           {settings.has_tax_number && (
             <div>
@@ -210,7 +210,7 @@ const AdminSettings = () => {
           )}
         </div>
 
-        <div className="space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: 16, marginBottom: 16 }}>
+        <div className="space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)', paddingBottom: 16, marginBottom: 16 }}>
           <Toggle checked={settings.has_vat_number} onChange={v => update('has_vat_number', v)} label="UID-Nummer vorhanden" />
           {settings.has_vat_number && (
             <div>
@@ -220,7 +220,7 @@ const AdminSettings = () => {
           )}
         </div>
 
-        <div className="space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: 16, marginBottom: 16 }}>
+        <div className="space-y-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)', paddingBottom: 16, marginBottom: 16 }}>
           <Toggle checked={settings.has_company_registration} onChange={v => update('has_company_registration', v)} label="Firmenbuchnummer vorhanden" />
           {settings.has_company_registration && (
             <div>

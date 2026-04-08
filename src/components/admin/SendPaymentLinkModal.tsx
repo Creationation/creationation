@@ -50,7 +50,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={onClose} />
       <div style={{
         position: 'relative', zIndex: 1, width: '100%', maxWidth: 520,
-        background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(24px)',
+        background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(24px)',
         border: '1px solid rgba(255,255,255,0.18)', borderRadius: 20, padding: 32,
       }}>
         <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(26,35,50,0.5)' }}>
@@ -59,18 +59,18 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
           <CreditCard size={22} color={TEAL} />
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#F2EDE4', margin: 0 }}>Envoyer lien de paiement</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#2a2722', margin: 0 }}>Envoyer lien de paiement</h2>
         </div>
 
         {/* Client info */}
         <div style={{ background: 'rgba(42,157,143,0.08)', borderRadius: 12, padding: 14, marginBottom: 20 }}>
-          <div style={{ fontWeight: 600, color: '#F2EDE4' }}>{client.business_name}</div>
-          <div style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)' }}>{client.email || 'Pas d\'email'}</div>
+          <div style={{ fontWeight: 600, color: '#2a2722' }}>{client.business_name}</div>
+          <div style={{ fontSize: 13, color: '#6b6560' }}>{client.email || 'Pas d\'email'}</div>
         </div>
 
         {/* Include setup toggle */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <span style={{ fontSize: 14, fontWeight: 500, color: '#F2EDE4' }}>Inclure le setup</span>
+          <span style={{ fontSize: 14, fontWeight: 500, color: '#2a2722' }}>Inclure le setup</span>
           <button onClick={() => setIncludeSetup(!includeSetup)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             {includeSetup ? <ToggleRight size={28} color={TEAL} /> : <ToggleLeft size={28} color="rgba(26,35,50,0.3)" />}
           </button>
@@ -79,12 +79,12 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
         {/* Setup price */}
         {includeSetup && (
           <div style={{ marginBottom: 14 }}>
-            <label style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', display: 'block', marginBottom: 4 }}>Prix setup (€)</label>
+            <label style={{ fontSize: 13, color: '#6b6560', display: 'block', marginBottom: 4 }}>Prix setup (€)</label>
             <input type="number" value={setupPrice} onChange={e => setSetupPrice(Number(e.target.value))}
               style={{
                 width: '100%', padding: '10px 14px', borderRadius: 10,
                 border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)',
-                color: '#F2EDE4', fontSize: 14, outline: 'none',
+                color: '#2a2722', fontSize: 14, outline: 'none',
               }}
             />
           </div>
@@ -92,24 +92,24 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
 
         {/* Monthly price */}
         <div style={{ marginBottom: 14 }}>
-          <label style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', display: 'block', marginBottom: 4 }}>Prix mensuel (€)</label>
+          <label style={{ fontSize: 13, color: '#6b6560', display: 'block', marginBottom: 4 }}>Prix mensuel (€)</label>
           <input type="number" value={monthlyPrice} onChange={e => setMonthlyPrice(Number(e.target.value))}
             style={{
               width: '100%', padding: '10px 14px', borderRadius: 10,
               border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)',
-              color: '#F2EDE4', fontSize: 14, outline: 'none',
+              color: '#2a2722', fontSize: 14, outline: 'none',
             }}
           />
         </div>
 
         {/* Custom message */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', display: 'block', marginBottom: 4 }}>Message personnalisé (optionnel)</label>
+          <label style={{ fontSize: 13, color: '#6b6560', display: 'block', marginBottom: 4 }}>Message personnalisé (optionnel)</label>
           <textarea value={message} onChange={e => setMessage(e.target.value)} rows={3} placeholder="Un message pour votre client..."
             style={{
               width: '100%', padding: '10px 14px', borderRadius: 10, resize: 'vertical',
               border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)',
-              color: '#F2EDE4', fontSize: 14, outline: 'none', fontFamily: 'inherit',
+              color: '#2a2722', fontSize: 14, outline: 'none', fontFamily: 'inherit',
             }}
           />
         </div>
@@ -119,7 +119,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
           background: 'rgba(42,157,143,0.12)', borderRadius: 12, padding: 14, marginBottom: 20,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         }}>
-          <span style={{ fontWeight: 600, color: '#F2EDE4' }}>Premier paiement</span>
+          <span style={{ fontWeight: 600, color: '#2a2722' }}>Premier paiement</span>
           <span style={{ fontWeight: 700, fontSize: 20, color: TEAL }}>{total}€</span>
         </div>
         <div style={{ fontSize: 12, color: 'rgba(26,35,50,0.4)', marginBottom: 20, textAlign: 'center' }}>

@@ -132,13 +132,13 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
         width: '100%', maxWidth: 800, background: 'var(--warm)', borderRadius: '20px',
-        border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 24px 80px rgba(0,0,0,0.15)',
+        border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 24px 80px rgba(0,0,0,0.15)',
         padding: 28, marginTop: 20, marginBottom: 20,
       }}>
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 style={{ fontFamily: "'Space Mono', monospace", fontSize: 20, color: '#F2EDE4', marginBottom: 4 }}>
+            <h2 style={{ fontFamily: "'Space Mono', monospace", fontSize: 20, color: '#2a2722', marginBottom: 4 }}>
               {invoice.invoice_number}
             </h2>
             <div className="flex items-center gap-3 flex-wrap">
@@ -149,17 +149,17 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
               }}>
                 {Object.entries(STATUS_CONFIG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
               </select>
-              <span style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', fontFamily: "'Outfit', sans-serif" }}>
+              <span style={{ fontSize: 13, color: '#6b6560', fontFamily: "'Outfit', sans-serif" }}>
                 {invoice.client_name}
               </span>
               {invoice.project_title && (
-                <span style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>
+                <span style={{ fontSize: 13, color: '#9a9490', fontFamily: "'Outfit', sans-serif" }}>
                   • {invoice.project_title}
                 </span>
               )}
             </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)' }}>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9490' }}>
             <X size={20} />
           </button>
         </div>
@@ -259,7 +259,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         {!invoice.stripe_payment_url ? (
           <div style={{
             padding: 16, background: 'rgba(0,0,0,0.03)', borderRadius: 12, marginBottom: 24,
-            fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", textAlign: 'center',
+            fontSize: 13, color: '#9a9490', fontFamily: "'Outfit', sans-serif", textAlign: 'center',
           }}>
             💳 Stripe non configuré — le paiement en ligne sera disponible après configuration
           </div>
@@ -274,41 +274,41 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         )}
 
         {/* Payment history */}
-        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>
+        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600, color: '#2a2722', marginBottom: 12 }}>
           Historique des paiements
         </h3>
         <div style={{ marginBottom: 12 }}>
           <div style={{ height: 8, background: 'rgba(0,0,0,0.06)', borderRadius: 4, overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${progressPct}%`, background: '#2DD4B8', borderRadius: 4, transition: 'width 0.3s' }} />
           </div>
-          <div className="flex justify-between mt-1" style={{ fontSize: 12, fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.55)' }}>
+          <div className="flex justify-between mt-1" style={{ fontSize: 12, fontFamily: "'Outfit', sans-serif", color: '#6b6560' }}>
             <span>Payé : {fmt(Number(invoice.amount_paid))}</span>
             <span>Reste : {fmt(remaining)}</span>
           </div>
         </div>
         {payments.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", marginBottom: 16 }}>Aucun paiement enregistré</p>
+          <p style={{ fontSize: 13, color: '#9a9490', fontFamily: "'Outfit', sans-serif", marginBottom: 16 }}>Aucun paiement enregistré</p>
         ) : (
           <div className="flex flex-col gap-2 mb-6">
             {payments.map(p => (
               <div key={p.id} className="flex items-center justify-between" style={{
-                padding: '10px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 10,
-                border: '1px solid rgba(255,255,255,0.12)', fontSize: 13, fontFamily: "'Outfit', sans-serif",
+                padding: '10px 14px', background: 'rgba(255,255,255,0.5)', borderRadius: 10,
+                border: '1px solid rgba(0,0,0,0.08)', fontSize: 13, fontFamily: "'Outfit', sans-serif",
               }}>
-                <span style={{ color: 'rgba(242,237,228,0.55)' }}>{new Date(p.payment_date).toLocaleDateString('fr-FR')}</span>
+                <span style={{ color: '#6b6560' }}>{new Date(p.payment_date).toLocaleDateString('fr-FR')}</span>
                 <span style={{ fontWeight: 600, color: '#2DD4B8' }}>{fmt(Number(p.amount))}</span>
-                <span style={{ color: 'rgba(242,237,228,0.28)', fontSize: 12 }}>{p.payment_method || '—'}</span>
+                <span style={{ color: '#9a9490', fontSize: 12 }}>{p.payment_method || '—'}</span>
               </div>
             ))}
           </div>
         )}
 
         {/* Activity log */}
-        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>
+        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600, color: '#2a2722', marginBottom: 12 }}>
           Activité
         </h3>
         {activityLog.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", marginBottom: 16 }}>Aucune activité</p>
+          <p style={{ fontSize: 13, color: '#9a9490', fontFamily: "'Outfit', sans-serif", marginBottom: 16 }}>Aucune activité</p>
         ) : (
           <div className="flex flex-col gap-0 mb-6">
             {activityLog.map((ev, i) => {
@@ -317,14 +317,14 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
                 <div key={i} className="flex items-start gap-3" style={{ position: 'relative', paddingBottom: 16, paddingLeft: 24 }}>
                   {/* Vertical line */}
                   {i < activityLog.length - 1 && (
-                    <div style={{ position: 'absolute', left: 11, top: 20, bottom: 0, width: 2, background: 'rgba(255,255,255,0.12)' }} />
+                    <div style={{ position: 'absolute', left: 11, top: 20, bottom: 0, width: 2, background: 'rgba(0,0,0,0.08)' }} />
                   )}
                   <div style={{ position: 'absolute', left: 2, top: 2, width: 20, height: 20, borderRadius: '50%', background: `${ev.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={10} style={{ color: ev.color }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4' }}>{ev.label}</p>
-                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>
+                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722' }}>{ev.label}</p>
+                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>
                       {new Date(ev.date).toLocaleDateString('fr-FR')} à {new Date(ev.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -337,17 +337,17 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         {/* Payment modal */}
         {showPayment && (
           <div style={{
-            padding: 20, background: 'rgba(255,255,255,0.10)', borderRadius: 16,
-            border: '1px solid rgba(255,255,255,0.12)', marginBottom: 16,
+            padding: 20, background: 'rgba(255,255,255,0.45)', borderRadius: 16,
+            border: '1px solid rgba(0,0,0,0.08)', marginBottom: 16,
           }}>
             <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Enregistrer un paiement</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Montant</label>
+                <label style={{ fontSize: 11, color: '#9a9490', fontFamily: "'Outfit', sans-serif" }}>Montant</label>
                 <input type="number" value={payAmount} onChange={e => setPayAmount(Number(e.target.value))} style={inputSm} />
               </div>
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Méthode</label>
+                <label style={{ fontSize: 11, color: '#9a9490', fontFamily: "'Outfit', sans-serif" }}>Méthode</label>
                 <select value={payMethod} onChange={e => setPayMethod(e.target.value)} style={inputSm}>
                   <option value="bank_transfer">Virement</option>
                   <option value="stripe">Stripe</option>
@@ -356,7 +356,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Notes</label>
+                <label style={{ fontSize: 11, color: '#9a9490', fontFamily: "'Outfit', sans-serif" }}>Notes</label>
                 <input value={payNotes} onChange={e => setPayNotes(e.target.value)} placeholder="Optionnel" style={inputSm} />
               </div>
             </div>
@@ -375,13 +375,13 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
 };
 
 const btnOutline: React.CSSProperties = {
-  padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)',
+  padding: '8px 16px', background: 'transparent', border: '1px solid rgba(0,0,0,0.08)',
   borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600,
-  color: '#F2EDE4', cursor: 'pointer',
+  color: '#2a2722', cursor: 'pointer',
 };
 const inputSm: React.CSSProperties = {
-  width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-  borderRadius: 8, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', outline: 'none',
+  width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)',
+  borderRadius: 8, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', outline: 'none',
 };
 
 export default InvoiceDetailModal;
