@@ -165,6 +165,9 @@ const AdminClientsCRM = () => {
                 <p style={{ fontSize: 12, color: TEXT_MUTED }}>{selected.contact_name} · {selected.email}</p>
               </div>
               <div className="flex items-center gap-2">
+                <button onClick={() => setShowPaymentModal(true)} className="admin-glass-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', fontSize: 12, background: 'rgba(42,157,143,0.15)', color: TEAL }}>
+                  <CreditCard size={14} /> Lien de paiement
+                </button>
                 <button onClick={() => navigate(`/admin/view-as/${selected.id}`)} className="admin-glass-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', fontSize: 12 }}>
                   <Eye size={14} /> Voir comme client
                 </button>
