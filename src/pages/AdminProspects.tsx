@@ -671,11 +671,6 @@ const AdminProspects = () => {
                       {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
                       {searching ? 'Recherche...' : 'Chercher (standard)'}
                     </button>
-                    <button onClick={() => handleSearch(true)} disabled={searching} style={{ padding:'10px 24px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
-                      {searching ? <Loader2 size={14} className='animate-spin'/> : <Sparkles size={14}/>}
-                      {searching ? 'Recherche...' : 'Chercher éco (IA)'}
-                      <span style={{ fontSize:10, opacity:0.8 }}>~$1.60/1000</span>
-                    </button>
                   </div>
                 </div>
               </div>
