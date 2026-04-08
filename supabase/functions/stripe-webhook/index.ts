@@ -244,6 +244,36 @@ serve(async (req) => {
           console.log(`[STRIPE] Subscription cancelled for client ${client.id}`);
         }
         break;
+    }
+
+      case "checkout.session.expired": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const clientId = session.metadata?.creationation_client_id;
+
+        if (clientId) {
+          await supabase.from("activity_log").insert({
+            action: "checkout_expired",
+            client_id: clientId,
+            performed_by: "system",
+            details: {
+              event: "checkout.session.expired",
+              stripe_session_id: session.id,
+              customer_email: session.customer_email || session.customer_details?.email,
+            },
+          });
+
+          await supabase.from("portal_notifications").insert({
+            client_id: clientId,
+            type: "general",
+            title: "Lien de paiement expiré",
+            message: "Le lien de paiement envoyé a expiré sans être utilisé. Un nouveau lien peut être envoyé.",
+          });
+
+          console.log(`[STRIPE] Checkout expired for client ${clientId}`);
+        } else {
+          console.log(`[STRIPE] Checkout expired (no client ID): ${session.id}`);
+        }
+        break;
       }
     }
   } catch (err) {
