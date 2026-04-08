@@ -161,7 +161,7 @@ const AdminPortfolio = () => {
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: 'var(--charcoal)' }}>Portfolio</h1>
+            <h1 className="admin-page-title">Portfolio</h1>
             <p className="text-sm mt-1" style={{ color: 'var(--text-mid)' }}>
               Gérez les projets affichés sur le site
             </p>
@@ -180,11 +180,8 @@ const AdminPortfolio = () => {
           {projects.map((proj) => (
             <div
               key={proj.id}
-              className="flex items-center gap-4 p-4 rounded-2xl transition-all"
+              className="admin-glass-card flex items-center gap-4 p-4 transition-all"
               style={{
-                background: proj.visible ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.03)',
-                border: '1px solid rgba(255,255,255,0.5)',
-                backdropFilter: 'blur(12px)',
                 opacity: proj.visible ? 1 : 0.5,
               }}
             >
@@ -252,12 +249,7 @@ const AdminPortfolio = () => {
         {editing && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
             <div
-              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-8"
-              style={{
-                background: 'var(--cream)',
-                border: '1px solid rgba(255,255,255,0.5)',
-                boxShadow: '0 32px 80px rgba(0,0,0,0.15)',
-              }}
+              className="admin-glass-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8"
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)' }}>

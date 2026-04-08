@@ -61,14 +61,14 @@ const ProjectCard = ({ project, onClick, dragListeners }: { project: Project; on
       onClick={onClick}
       className="cursor-pointer group"
       style={{
-        background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,255,255,0.8)', borderRadius: 14,
+        background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(20px) saturate(1.4)',
+        border: '1px solid rgba(255,255,255,0.30)', borderRadius: 14,
         padding: 14, marginBottom: 8,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+        boxShadow: '0 4px 20px rgba(42,157,143,0.04), 0 1px 3px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.4)',
         transition: 'box-shadow 0.2s, transform 0.15s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(42,157,143,0.08)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(42,157,143,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
       <div className="flex items-start gap-2">
         <button {...dragListeners} className="mt-1 cursor-grab opacity-0 group-hover:opacity-40 transition-opacity" style={{ background: 'none', border: 'none', padding: 0 }} onClick={e => e.stopPropagation()}>
