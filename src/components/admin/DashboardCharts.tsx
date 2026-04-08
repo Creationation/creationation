@@ -3,22 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const C = {
-  bg: '#1C1F2E',
+  bg: '#2C2F3E',
   teal: '#2DD4B8',
   tealDim: '#2A9D8F',
-  tealGlow: 'rgba(45,212,184,0.20)',
-  tealSoft: 'rgba(45,212,184,0.08)',
+  tealGlow: 'rgba(45,212,184,0.22)',
+  tealSoft: 'rgba(45,212,184,0.10)',
   gold: '#F0C95C',
-  goldGlow: 'rgba(240,201,92,0.15)',
-  goldSoft: 'rgba(240,201,92,0.08)',
+  goldGlow: 'rgba(240,201,92,0.18)',
+  goldSoft: 'rgba(240,201,92,0.10)',
   coral: '#F07067',
-  coralGlow: 'rgba(240,112,103,0.12)',
+  coralGlow: 'rgba(240,112,103,0.15)',
   purple: '#A78BDB',
-  purpleGlow: 'rgba(167,139,219,0.12)',
-  textPrimary: '#F2EDE4',
-  textSecondary: 'rgba(242,237,228,0.55)',
-  textMuted: 'rgba(242,237,228,0.28)',
-  border: 'rgba(255,255,255,0.08)',
+  purpleGlow: 'rgba(167,139,219,0.15)',
+  textPrimary: '#F5F0E8',
+  textSecondary: 'rgba(245,240,232,0.65)',
+  textMuted: 'rgba(245,240,232,0.38)',
+  border: 'rgba(255,255,255,0.10)',
 };
 
 const ticketStatusLabels: Record<string, string> = {

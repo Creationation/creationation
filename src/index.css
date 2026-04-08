@@ -190,81 +190,81 @@ body::after {
 
 /* Admin glass card — dark */
 .admin-glass-card {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
   backdrop-filter: blur(20px) saturate(1.4);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 20px;
   padding: 24px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .admin-glass-card:hover {
-  background: rgba(255,255,255,0.10);
-  border-color: rgba(255,255,255,0.15);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .admin-glass-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 40%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
   pointer-events: none;
   border-radius: 20px 20px 0 0;
 }
 
 /* Admin glass table — dark */
 .admin-glass-table {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
   backdrop-filter: blur(20px) saturate(1.4);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 .admin-glass-table thead tr {
-  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
 }
 .admin-glass-table tbody tr {
   border-bottom: 1px solid rgba(255,255,255,0.08) !important;
 }
 .admin-glass-table tbody tr:hover {
-  background: rgba(255,255,255,0.03) !important;
+  background: rgba(255,255,255,0.05) !important;
 }
 
 /* Admin glass input — dark */
 .admin-glass-input {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 12px;
   padding: 10px 14px;
   font-family: 'Outfit', sans-serif;
   font-size: 13px;
-  color: #F2EDE4;
+  color: #F5F0E8;
   outline: none;
   transition: all 0.2s;
 }
 .admin-glass-input::placeholder {
-  color: rgba(242,237,228,0.28);
+  color: rgba(245,240,232,0.38);
 }
 .admin-glass-input:focus {
   border-color: rgba(45,212,184,0.40);
   box-shadow: 0 0 0 3px rgba(45,212,184,0.10);
 }
 .admin-glass-input option {
-  background: #1C1F2E;
-  color: #F2EDE4;
+  background: #2C2F3E;
+  color: #F5F0E8;
 }
 
 /* Admin glass button primary — dark */
 .admin-glass-btn {
-  background: rgba(45,212,184,0.08);
-  border: 1px solid rgba(45,212,184,0.33);
+  background: rgba(45,212,184,0.10);
+  border: 1px solid rgba(45,212,184,0.35);
   border-radius: 100px;
   padding: 10px 24px;
   font-family: 'Outfit', sans-serif;
@@ -280,24 +280,24 @@ body::after {
   background: linear-gradient(135deg, #2DD4B8, #2A9D8F);
   border-color: #2DD4B8;
   color: #fff;
-  box-shadow: 0 4px 24px rgba(45,212,184,0.20);
+  box-shadow: 0 4px 24px rgba(45,212,184,0.25);
 }
 
 .admin-glass-btn-secondary {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: 100px;
   padding: 10px 24px;
   font-family: 'Outfit', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(242,237,228,0.55);
+  color: rgba(245,240,232,0.65);
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: all 0.3s;
 }
 .admin-glass-btn-secondary:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.10);
 }
 
 /* Admin page title — dark */
@@ -305,18 +305,18 @@ body::after {
   font-family: 'Playfair Display', serif;
   font-size: 26px;
   font-weight: 700;
-  color: #F2EDE4;
+  color: #F5F0E8;
   margin: 0;
 }
 
 /* Admin modal glass — dark */
 .admin-glass-modal {
-  background: rgba(28,31,46,0.95);
+  background: rgba(44,47,62,0.95);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
 }
 
 /* Admin status badge — dark */
