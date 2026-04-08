@@ -33,14 +33,14 @@ const secondaryNav = [
 const C = {
   teal: '#2DD4B8',
   tealDim: '#2A9D8F',
-  tealSoft: 'rgba(45,212,184,0.10)',
-  tealGlow: 'rgba(45,212,184,0.22)',
+  tealSoft: 'rgba(45,212,184,0.12)',
+  tealGlow: 'rgba(45,212,184,0.25)',
   coral: '#F07067',
-  coralGlow: 'rgba(240,112,103,0.15)',
+  coralGlow: 'rgba(240,112,103,0.18)',
   textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.65)',
-  textMuted: 'rgba(245,240,232,0.38)',
-  border: 'rgba(255,255,255,0.10)',
+  textSecondary: 'rgba(245,240,232,0.70)',
+  textMuted: 'rgba(245,240,232,0.42)',
+  border: 'rgba(255,255,255,0.12)',
 };
 
 const AdminLayout = () => {
@@ -225,7 +225,7 @@ const AdminLayout = () => {
           className="hidden md:flex flex-col flex-shrink-0 sticky top-0 h-screen transition-all duration-200"
           style={{
             width: collapsed ? 72 : 256,
-            background: 'rgba(44,47,62,0.65)',
+            background: 'rgba(53,56,73,0.70)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
             borderRight: `1px solid ${C.border}`,
@@ -239,7 +239,7 @@ const AdminLayout = () => {
           <header
             className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-40"
             style={{
-              background: 'rgba(44,47,62,0.85)',
+              background: 'rgba(53,56,73,0.88)',
               backdropFilter: 'blur(20px)',
               borderBottom: `1px solid ${C.border}`,
             }}
@@ -256,7 +256,7 @@ const AdminLayout = () => {
             <div className="fixed inset-0 z-50 md:hidden flex">
               <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
               <div className="relative w-[260px] h-full flex flex-col" style={{
-                background: 'rgba(44,47,62,0.92)',
+                background: 'rgba(53,56,73,0.94)',
                 backdropFilter: 'blur(24px)',
               }}>
                 <button
