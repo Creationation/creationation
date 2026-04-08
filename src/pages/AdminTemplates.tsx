@@ -247,11 +247,13 @@ const AdminTemplates = () => {
   );
 };
 
-const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplicate, onDelete }: {
+const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplicate, onDelete, onRefresh }: {
   template: Template; demoCount: number; onClose: () => void; onEdit: () => void;
-  onDuplicate: () => void; onDelete: () => void;
+  onDuplicate: () => void; onDelete: () => void; onRefresh: () => void;
 }) => {
   const [demos, setDemos] = useState<any[]>([]);
+  const [generatingThumb, setGeneratingThumb] = useState(false);
+  const [thumbUrl, setThumbUrl] = useState(t.preview_url);
   const cat = CATEGORIES.find(c => c.value === t.category);
   const hasColors = t.primary_color !== '#2DD4B8' || t.secondary_color !== '#E9C46A';
 
@@ -260,6 +262,19 @@ const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplic
       .eq('template_id', t.id).order('created_at', { ascending: false }).limit(20)
       .then(({ data }) => setDemos(data || []));
   }, [t.id]);
+
+  const handleGenerateThumb = async () => {
+    setGeneratingThumb(true);
+    try {
+      const url = await generateThumbnail(t);
+      setThumbUrl(url);
+      toast.success('Thumbnail générée !');
+      onRefresh();
+    } catch (err: any) {
+      toast.error('Erreur génération : ' + (err.message || 'Inconnu'));
+    }
+    setGeneratingThumb(false);
+  };
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center">
