@@ -61,7 +61,7 @@ const SparkLine = ({ data, color = C.teal, height = 200 }: { data: { l: string; 
         <filter id={glowId}><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
       </defs>
       {[0.25, 0.5, 0.75].map((r, i) => (
-        <line key={i} x1={pad} y1={pad + r * (h - pad * 2)} x2={w - pad} y2={pad + r * (h - pad * 2)} stroke="rgba(255,255,255,0.04)" strokeDasharray="4 4" />
+        <line key={i} x1={pad} y1={pad + r * (h - pad * 2)} x2={w - pad} y2={pad + r * (h - pad * 2)} stroke="rgba(0,0,0,0.06)" strokeDasharray="4 4" />
       ))}
       <path d={area} fill={`url(#${gradId})`} />
       <path d={line} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" filter={`url(#${glowId})`} />
