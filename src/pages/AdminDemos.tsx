@@ -26,6 +26,12 @@ const STATUS_COLORS: Record<string, string> = {
 const STATUS_LABELS: Record<string, string> = {
   draft: 'Brouillon', sent: 'Envoyé', viewed: 'Consulté', converted: 'Converti', expired: 'Expiré',
 };
+const GEN_STATUS_COLORS: Record<string, string> = {
+  draft: '#8896A6', generating: '#E9C46A', ready: TEAL, failed: CORAL,
+};
+const GEN_STATUS_LABELS: Record<string, string> = {
+  draft: '—', generating: '⏳ Génération...', ready: '✅ Prêt', failed: '❌ Erreur',
+};
 
 const GlassCard = ({ children, style, className = '' }: any) => (
   <div className={className} style={{
