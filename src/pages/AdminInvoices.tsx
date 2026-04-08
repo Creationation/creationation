@@ -393,7 +393,7 @@ const AdminInvoices = () => {
                         <td className="px-4 py-3">
                           <span style={{
                             padding: '3px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-m)',
-                            background: (inv as any).source === 'stripe' ? 'rgba(99,91,255,0.12)' : 'rgba(26,35,50,0.06)',
+                            background: (inv as any).source === 'stripe' ? 'rgba(99,91,255,0.12)' : 'rgba(255,255,255,0.06)',
                             color: (inv as any).source === 'stripe' ? '#635BFF' : 'var(--text-light)',
                           }}>{(inv as any).source === 'stripe' ? '⚡ Stripe' : 'Manuel'}</span>
                         </td>

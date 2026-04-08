@@ -16,7 +16,7 @@ const STATUS_COLS = [
   { key: 'in_progress', label: 'En cours', color: GOLD },
   { key: 'waiting_client', label: 'Attente client', color: PURPLE },
   { key: 'resolved', label: 'Résolu', color: TEAL },
-  { key: 'closed', label: 'Fermé', color: 'rgba(26,35,50,0.35)' },
+  { key: 'closed', label: 'Fermé', color: 'rgba(242,237,228,0.28)' },
 ];
 
 const PRIORITY_COLORS: Record<string, string> = { urgent: '#CC3333', high: CORAL, medium: GOLD, low: TEXT_MUTED };

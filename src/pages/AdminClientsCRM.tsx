@@ -15,8 +15,8 @@ type Client = {
   company_address: string | null;
 };
 
-const SUB_COLORS: Record<string, string> = { trial: '#D4A843', active: TEAL, past_due: CORAL, cancelled: 'rgba(26,35,50,0.35)' };
-const STATUS_COLORS: Record<string, string> = { active: TEAL, inactive: 'rgba(26,35,50,0.35)', onboarding: '#D4A843' };
+const SUB_COLORS: Record<string, string> = { trial: '#F0C95C', active: TEAL, past_due: CORAL, cancelled: 'rgba(242,237,228,0.28)' };
+const STATUS_COLORS: Record<string, string> = { active: TEAL, inactive: 'rgba(242,237,228,0.28)', onboarding: '#F0C95C' };
 
 const AdminClientsCRM = () => {
   const navigate = useNavigate();
@@ -244,7 +244,7 @@ const AdminClientsCRM = () => {
                       <div className="relative z-[1] flex items-center gap-3 flex-1">
                         <div className="flex-1">
                           <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_PRIMARY }}>{inv.invoice_number}</span>
-                          <span className="admin-status-badge ml-2" style={{ background: inv.status === 'paid' ? 'rgba(42,157,143,0.12)' : inv.status === 'overdue' ? 'rgba(231,111,81,0.12)' : 'rgba(139,109,176,0.12)', color: inv.status === 'paid' ? TEAL : inv.status === 'overdue' ? CORAL : '#8B6DB0' }}>{inv.status}</span>
+                          <span className="admin-status-badge ml-2" style={{ background: inv.status === 'paid' ? 'rgba(42,157,143,0.12)' : inv.status === 'overdue' ? 'rgba(231,111,81,0.12)' : 'rgba(139,109,176,0.12)', color: inv.status === 'paid' ? TEAL : inv.status === 'overdue' ? CORAL : '#A78BDB' }}>{inv.status}</span>
                         </div>
                         <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(inv.total)}</span>
                       </div>
@@ -339,7 +339,7 @@ const AdminClientsCRM = () => {
                           <p style={{ fontSize: 13, color: TEXT_PRIMARY }}>{n.content}</p>
                           <p style={{ fontSize: 9, color: TEXT_MUTED, marginTop: 4 }}>{new Date(n.created_at).toLocaleString('fr-FR')}</p>
                         </div>
-                        <button onClick={() => togglePin(n.id, n.is_pinned)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: n.is_pinned ? '#D4A843' : TEXT_MUTED }}>
+                        <button onClick={() => togglePin(n.id, n.is_pinned)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: n.is_pinned ? '#F0C95C' : TEXT_MUTED }}>
                           {n.is_pinned ? <PinOff size={14} /> : <Pin size={14} />}
                         </button>
                         <button onClick={() => deleteNote(n.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CORAL }}><Trash2 size={14} /></button>
@@ -356,7 +356,7 @@ const AdminClientsCRM = () => {
                       <div className="relative z-[1]">
                         <div className="flex items-center gap-2 mb-2">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <span key={i} style={{ color: i < f.rating ? '#D4A843' : TEXT_MUTED, fontSize: 16 }}>★</span>
+                            <span key={i} style={{ color: i < f.rating ? '#F0C95C' : TEXT_MUTED, fontSize: 16 }}>★</span>
                           ))}
                         </div>
                         {f.comment && <p style={{ fontSize: 13, color: TEXT_PRIMARY }}>{f.comment}</p>}

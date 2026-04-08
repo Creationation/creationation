@@ -55,7 +55,7 @@ const Toggle = ({ checked, onChange, label }: { checked: boolean; onChange: (v: 
       onClick={() => onChange(!checked)}
       style={{
         width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
-        background: checked ? TEAL : 'rgba(26,35,50,0.15)',
+        background: checked ? TEAL : 'rgba(255,255,255,0.12)',
         position: 'relative', transition: 'background 0.2s',
       }}
     >

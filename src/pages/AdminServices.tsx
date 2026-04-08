@@ -75,7 +75,7 @@ const AdminServices = () => {
                 <td className="px-5 py-3" style={{ color: TEXT_SECONDARY }}>{s.description || '—'}</td>
                 <td className="px-5 py-3" style={{ color: TEAL, fontWeight: 600 }}>{fmt(s.default_price || 0)}</td>
                 <td className="px-5 py-3">
-                  <span className="admin-status-badge" style={{ background: s.is_active ? 'rgba(42,157,143,0.12)' : 'rgba(26,35,50,0.06)', color: s.is_active ? TEAL : TEXT_MUTED }}>
+                  <span className="admin-status-badge" style={{ background: s.is_active ? 'rgba(42,157,143,0.12)' : 'rgba(255,255,255,0.06)', color: s.is_active ? TEAL : TEXT_MUTED }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.is_active ? TEAL : TEXT_MUTED }} />
                     {s.is_active ? 'Actif' : 'Inactif'}
                   </span>

@@ -11,10 +11,10 @@ const FREQUENCIES = ['one_time', 'monthly', 'yearly'] as const;
 const STATUSES = ['active', 'paused', 'cancelled'] as const;
 
 const CAT_LABELS: Record<string, { label: string; color: string }> = {
-  hosting: { label: 'Hosting', color: '#2A9D8F' },
+  hosting: { label: 'Hosting', color: '#2DD4B8' },
   domain: { label: 'Domaine', color: '#8b5cf6' },
-  api_service: { label: 'API / Service', color: '#D4A843' },
-  software: { label: 'Software', color: '#E76F51' },
+  api_service: { label: 'API / Service', color: '#F0C95C' },
+  software: { label: 'Software', color: '#F07067' },
   design: { label: 'Design', color: '#ec4899' },
   marketing: { label: 'Marketing', color: '#ef4444' },
   legal: { label: 'Juridique', color: '#6366f1' },
@@ -25,7 +25,7 @@ const CAT_LABELS: Record<string, { label: string; color: string }> = {
 const FREQ_LABELS: Record<string, string> = { one_time: 'Unique', monthly: 'Mensuel', yearly: 'Annuel' };
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   active: { label: 'Actif', color: TEAL },
-  paused: { label: 'En pause', color: '#D4A843' },
+  paused: { label: 'En pause', color: '#F0C95C' },
   cancelled: { label: 'Annulé', color: CORAL },
 };
 
@@ -399,7 +399,7 @@ const AdminExpenses = () => {
                         <td className="px-4 py-3" style={{ fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(e.amount)}</td>
                         <td className="px-4 py-3">
                           <span className="admin-status-badge" style={{
-                            background: e.frequency === 'monthly' ? 'rgba(42,157,143,0.12)' : e.frequency === 'yearly' ? 'rgba(139,92,246,0.12)' : 'rgba(26,35,50,0.08)',
+                            background: e.frequency === 'monthly' ? 'rgba(42,157,143,0.12)' : e.frequency === 'yearly' ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.06)',
                             color: e.frequency === 'monthly' ? TEAL : e.frequency === 'yearly' ? '#8b5cf6' : TEXT_SECONDARY,
                           }}>
                             {FREQ_LABELS[e.frequency]}
@@ -409,7 +409,7 @@ const AdminExpenses = () => {
                           <button onClick={ev => { ev.stopPropagation(); toggleBillable(e); }}
                             style={{
                               width: 36, height: 20, borderRadius: 10, border: 'none', cursor: 'pointer',
-                              background: e.is_billable ? TEAL : 'rgba(26,35,50,0.15)', position: 'relative', transition: 'background 0.2s',
+                              background: e.is_billable ? TEAL : 'rgba(255,255,255,0.12)', position: 'relative', transition: 'background 0.2s',
                             }}>
                             <span style={{
                               position: 'absolute', top: 2, left: e.is_billable ? 18 : 2,
@@ -709,7 +709,7 @@ const AdminExpenses = () => {
                 <button type="button" onClick={() => setForm({ ...form, is_billable: !form.is_billable })}
                   style={{
                     width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
-                    background: form.is_billable ? TEAL : 'rgba(26,35,50,0.15)',
+                    background: form.is_billable ? TEAL : 'rgba(255,255,255,0.12)',
                     position: 'relative', transition: 'background 0.2s',
                   }}>
                   <span style={{

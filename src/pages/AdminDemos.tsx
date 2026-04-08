@@ -245,7 +245,7 @@ const AdminDemos = () => {
 const btnStyle: React.CSSProperties = {
   width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
   background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-  color: '#1A2332',
+  color: '#F2EDE4',
 };
 
 export default AdminDemos;
