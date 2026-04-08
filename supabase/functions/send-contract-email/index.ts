@@ -25,10 +25,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { contractId, recipientEmail, businessName, customMessage } = await req.json();
+    const { contractId, recipientEmail, businessName, customMessage, subject } = await req.json();
 
     if (!contractId || !recipientEmail || !businessName) {
-      return new Response(JSON.stringify({ error: 'Missing required fields: contractId, recipientEmail, businessName' }), {
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -36,14 +36,12 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Fetch the contract to get document_url
-    const { data: contract, error: contractError } = await supabase
-      .from('contracts')
-      .select('*')
-      .eq('id', contractId)
-      .single();
+    const [{ data: contract }, { data: settings }] = await Promise.all([
+      supabase.from('contracts').select('*').eq('id', contractId).single(),
+      supabase.from('company_settings').select('*').limit(1).single(),
+    ]);
 
-    if (contractError || !contract) {
+    if (!contract) {
       return new Response(JSON.stringify({ error: 'Contract not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -51,7 +49,15 @@ Deno.serve(async (req) => {
     }
 
     const pdfUrl = contract.document_url;
-    const defaultMessage = customMessage || `Bonjour,\n\nVeuillez trouver ci-joint votre contrat de prestation de services web avec Creationation.\n\nN'hésitez pas à nous contacter pour toute question.\n\nCordialement,\nL'équipe Creationation`;
+    const companyName = settings?.company_name || 'Creationation';
+    const legalName = settings?.legal_name || 'Diego Renard';
+    const companyEmail = settings?.email || 'hello@creationation.app';
+    const companyCity = settings?.city || 'Wien';
+    const companyCountry = settings?.country || 'Österreich';
+    const companyWebsite = settings?.website || 'creationation.app';
+
+    const defaultMessage = customMessage || `Sehr geehrte Damen und Herren,\n\nanbei finden Sie Ihre Honorarnote.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${legalName}\n${companyName}`;
+    const emailSubject = subject || `Ihre Honorarnote von ${companyName} - ${businessName}`;
 
     const emailHtml = `
 <!DOCTYPE html>
@@ -61,24 +67,23 @@ Deno.serve(async (req) => {
   <div style="background: white; border-radius: 16px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
     <div style="text-align: center; margin-bottom: 24px; border-bottom: 2px solid #2A9D8F; padding-bottom: 16px;">
       <div style="display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #2A9D8F, #264653); color: white; font-size: 22px; font-weight: bold; line-height: 48px; text-align: center;">C</div>
-      <h1 style="margin: 8px 0 0; font-size: 20px; color: #1A2332;">Creationation</h1>
+      <h1 style="margin: 8px 0 0; font-size: 20px; color: #1A2332;">${companyName}</h1>
     </div>
-    <h2 style="font-size: 18px; color: #1A2332; margin-bottom: 16px;">Votre contrat</h2>
+    <h2 style="font-size: 18px; color: #1A2332; margin-bottom: 16px;">Ihre Honorarnote</h2>
     <div style="white-space: pre-line; font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 24px;">${defaultMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
     ${pdfUrl ? `
     <div style="text-align: center; margin: 24px 0;">
-      <a href="${pdfUrl}" style="display: inline-block; padding: 12px 32px; background: linear-gradient(135deg, #2A9D8F, #264653); color: white; text-decoration: none; border-radius: 999px; font-weight: 600; font-size: 14px;">📄 Voir le contrat PDF</a>
+      <a href="${pdfUrl}" style="display: inline-block; padding: 12px 32px; background: linear-gradient(135deg, #2A9D8F, #264653); color: white; text-decoration: none; border-radius: 999px; font-weight: 600; font-size: 14px;">📄 Honorarnote ansehen</a>
     </div>
     ` : ''}
     <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; text-align: center; font-size: 12px; color: #999;">
-      <p>Creationation — Vienne, Autriche</p>
-      <p>hello@creationation.app — <a href="https://creationation.app" style="color: #2A9D8F;">creationation.app</a></p>
+      <p>${companyName} — ${companyCity}, ${companyCountry}</p>
+      <p>${companyEmail} — <a href="https://${companyWebsite}" style="color: #2A9D8F;">${companyWebsite}</a></p>
     </div>
   </div>
 </body>
 </html>`;
 
-    // Send via Resend
     const emailResponse = await fetch(`${GATEWAY_URL}/emails`, {
       method: 'POST',
       headers: {
@@ -87,9 +92,9 @@ Deno.serve(async (req) => {
         'X-Connection-Api-Key': RESEND_API_KEY,
       },
       body: JSON.stringify({
-        from: 'Creationation <hello@creationation.app>',
+        from: `${companyName} <${companyEmail}>`,
         to: [recipientEmail],
-        subject: `Votre contrat Creationation - ${businessName}`,
+        subject: emailSubject,
         html: emailHtml,
       }),
     });
@@ -104,13 +109,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Update contract status to 'sent' and set sent_at
     await supabase
       .from('contracts')
       .update({ status: 'sent', sent_at: new Date().toISOString() })
       .eq('id', contractId);
 
-    // Log the activity
     const { data: clientData } = await supabase
       .from('contracts')
       .select('client_id')
