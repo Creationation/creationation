@@ -368,7 +368,7 @@ const AdminInvoices = () => {
               <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
-                    {['N°', 'Client', 'Projet', 'Date', 'Échéance', 'Montant', 'Statut', 'Actions'].map(h => (
+                    {['N°', 'Client', 'Projet', 'Source', 'Date', 'Échéance', 'Montant', 'Statut', 'Actions'].map(h => (
                       <th key={h} className="text-left px-4 py-3" style={{
                         fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-light)', fontWeight: 600,
                       }}>{h}</th>
