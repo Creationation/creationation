@@ -89,7 +89,7 @@ const PortalTickets = () => {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: 0 }}>Mes tickets</h1>
-        <button onClick={() => setShowNew(true)} style={{
+        {!simulationMode && <button onClick={() => setShowNew(true)} style={{
           display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px',
           background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)',
           fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
