@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, X, FileText, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 const statusColors: Record<string, string> = {
@@ -29,6 +29,8 @@ const PortalTicketDetail = () => {
   const [newMsg, setNewMsg] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [chatFile, setChatFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const fetchData = async () => {
@@ -61,16 +63,47 @@ const PortalTicketDetail = () => {
   }, [id]);
 
   const handleSend = async () => {
-    if (!newMsg.trim() || !ticket) return;
+    if ((!newMsg.trim() && !chatFile) || !ticket) return;
     setSending(true);
+
+    let fileUrl: string | null = null;
+    let fileName: string | null = null;
+
+    // Upload file if attached
+    if (chatFile) {
+      const path = `${client?.id || 'anon'}/${ticket.id}/msg_${Date.now()}_${chatFile.name}`;
+      const { data: uploadData, error: uploadErr } = await supabase.storage.from('client-uploads').upload(path, chatFile);
+      if (uploadErr) { toast.error('Erreur upload fichier'); setSending(false); return; }
+      const { data: urlData } = supabase.storage.from('client-uploads').getPublicUrl(path);
+      fileUrl = urlData.publicUrl || path;
+      fileName = chatFile.name;
+    }
+
+    const content = newMsg.trim() || (fileName ? `📎 ${fileName}` : '');
+
     const { error } = await supabase.from('ticket_messages').insert({
       ticket_id: ticket.id,
       author_type: 'client' as any,
       author_name: client?.contact_name || client?.business_name || 'Client',
-      content: newMsg.trim(),
+      content,
     } as any);
     if (error) { toast.error('Erreur envoi'); setSending(false); return; }
+
+    // Save file record
+    if (fileUrl && fileName) {
+      await supabase.from('support_files').insert({
+        client_id: client?.id,
+        ticket_id: ticket.id,
+        file_name: fileName,
+        file_url: fileUrl,
+        file_type: chatFile?.type || null,
+        file_size: chatFile?.size || null,
+        uploaded_by: 'client' as any,
+      } as any);
+    }
+
     setNewMsg('');
+    setChatFile(null);
     setSending(false);
   };
 
@@ -158,27 +191,48 @@ const PortalTicketDetail = () => {
 
       {/* Input */}
       {ticket.status !== 'closed' && !simulationMode && (
-        <div className="flex items-center gap-2" style={{
-          background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 16,
-          border: '1px solid var(--glass-border)', padding: '8px 12px',
-        }}>
-          <input
-            value={newMsg} onChange={e => setNewMsg(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-            placeholder="Votre message..."
-            style={{
-              flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--charcoal)', padding: '8px 4px',
-            }}
-          />
-          <button onClick={handleSend} disabled={sending || !newMsg.trim()} style={{
-            width: 40, height: 40, borderRadius: 12, background: newMsg.trim() ? 'var(--teal)' : 'var(--glass-bg)',
-            border: 'none', cursor: newMsg.trim() ? 'pointer' : 'default',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: newMsg.trim() ? '#fff' : 'var(--text-light)', transition: 'all 0.15s',
+        <div>
+          {chatFile && (
+            <div className="flex items-center gap-2 mb-1" style={{ padding: '6px 12px', background: 'rgba(13,138,111,0.08)', borderRadius: 10 }}>
+              {chatFile.type.startsWith('image/') ? <ImageIcon size={14} style={{ color: 'var(--teal)' }} /> : <FileText size={14} style={{ color: 'var(--teal)' }} />}
+              <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--teal)', flex: 1 }}>
+                {chatFile.name.length > 30 ? chatFile.name.slice(0, 27) + '...' : chatFile.name}
+              </span>
+              <button onClick={() => setChatFile(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)', padding: 0 }}>
+                <X size={14} />
+              </button>
+            </div>
+          )}
+          <div className="flex items-center gap-2" style={{
+            background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 16,
+            border: '1px solid var(--glass-border)', padding: '8px 12px',
           }}>
-            <Send size={18} />
-          </button>
+            <button onClick={() => fileInputRef.current?.click()} style={{
+              width: 36, height: 36, borderRadius: 10, background: 'var(--glass-bg)',
+              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'var(--text-mid)',
+            }}>
+              <Paperclip size={16} />
+            </button>
+            <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={e => { if (e.target.files?.[0]) setChatFile(e.target.files[0]); e.target.value = ''; }} />
+            <input
+              value={newMsg} onChange={e => setNewMsg(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+              placeholder="Votre message..."
+              style={{
+                flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--charcoal)', padding: '8px 4px',
+              }}
+            />
+            <button onClick={handleSend} disabled={sending || (!newMsg.trim() && !chatFile)} style={{
+              width: 40, height: 40, borderRadius: 12, background: (newMsg.trim() || chatFile) ? 'var(--teal)' : 'var(--glass-bg)',
+              border: 'none', cursor: (newMsg.trim() || chatFile) ? 'pointer' : 'default',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: (newMsg.trim() || chatFile) ? '#fff' : 'var(--text-light)', transition: 'all 0.15s',
+            }}>
+              <Send size={18} />
+            </button>
+          </div>
         </div>
       )}
     </div>
