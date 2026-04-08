@@ -731,7 +731,7 @@ const AdminProspects = () => {
                         <div className='flex flex-wrap gap-1 mt-1'>
                           {countries.map(c => {
                             const done = coveredCountries.has(c);
-                            return <span key={c} style={{ padding:'1px 6px', borderRadius:'100px', fontSize:10, fontFamily:"'Outfit', sans-serif", background: done ? 'rgba(13,138,111,0.12)' : 'transparent', color: done ? '#2DD4B8' : 'rgba(242,237,228,0.20)', fontWeight: done ? 600 : 400 }}>{done ? '✓ ' : ''}{c}</span>;
+                            return <span key={c} style={{ padding:'1px 6px', borderRadius:'100px', fontSize:10, fontFamily:"'Outfit', sans-serif", background: done ? 'rgba(13,138,111,0.12)' : 'transparent', color: done ? '#2DD4B8' : '#c0bbb5', fontWeight: done ? 600 : 400 }}>{done ? '✓ ' : ''}{c}</span>;
                           })}
                         </div>
                       </div>
@@ -764,7 +764,7 @@ const AdminProspects = () => {
                       <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'#2DD4B8', fontWeight:600, textAlign:'center', minWidth:40 }}>{c.results_count}</span>
                       <span style={{ padding:'2px 8px', borderRadius:'100px', background: c.mode === 'eco' ? 'rgba(212,165,90,0.15)' : 'rgba(13,138,111,0.1)', color: c.mode === 'eco' ? '#F0C95C' : '#2DD4B8', fontFamily:"'Outfit', sans-serif", fontSize:11, fontWeight:600, textAlign:'center' }}>{c.mode === 'eco' ? '⚡ Éco' : '🔍 Std'}</span>
                       <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:11, color:'#9a9490', whiteSpace:'nowrap' }}>{new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
-                      <button onClick={async () => { await supabase.from('search_chunks' as any).delete().eq('id', c.id); fetchChunks(); toast.success('Chunk réinitialisé — tu peux relancer cette recherche'); }} style={{ background:'none', border:'none', cursor:'pointer', color:'rgba(242,237,228,0.20)', padding:4 }} title='Supprimer ce chunk pour relancer la recherche'><RefreshCw size={13}/></button>
+                      <button onClick={async () => { await supabase.from('search_chunks' as any).delete().eq('id', c.id); fetchChunks(); toast.success('Chunk réinitialisé — tu peux relancer cette recherche'); }} style={{ background:'none', border:'none', cursor:'pointer', color:'#c0bbb5', padding:4 }} title='Supprimer ce chunk pour relancer la recherche'><RefreshCw size={13}/></button>
                     </div>
                   ))}
                   <div style={{ padding:'10px 12px', background:'rgba(13,138,111,0.04)', borderRadius:'12px', fontFamily:"'Outfit', sans-serif", fontSize:12, color:'#6b6560', display:'flex', justifyContent:'space-between' }}>
@@ -1036,7 +1036,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
           <tr style={{ borderBottom:'1px solid rgba(0,0,0,0.08)' }}>
             <th className='px-4 py-3' style={{ width:40 }}>
               <button onClick={onToggleSelectAll} style={{ background:'none', border:'none', cursor:'pointer' }}>
-                {prospects.every(p => selectedIds.has(p.id)) ? <CheckSquare size={16} style={{ color:'#2DD4B8' }}/> : <Square size={16} style={{ color:'rgba(242,237,228,0.20)' }}/>}
+                {prospects.every(p => selectedIds.has(p.id)) ? <CheckSquare size={16} style={{ color:'#2DD4B8' }}/> : <Square size={16} style={{ color:'#c0bbb5' }}/>}
               </button>
             </th>
             {['Commerce','Contact','Email','Ville / Langue','Site','Statut','Envois',''].map(h => (
@@ -1051,7 +1051,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
       {prospects.map(p => (
         <div key={p.id} className='flex items-start gap-3 p-4' style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', cursor:'pointer' }} onClick={() => onViewDetail(p)}>
           <button onClick={(e) => { e.stopPropagation(); onToggleSelect(p.id); }} style={{ background:'none', border:'none', cursor:'pointer', marginTop:2 }}>
-            {selectedIds.has(p.id) ? <CheckSquare size={16} style={{ color:'#2DD4B8' }}/> : <Square size={16} style={{ color:'rgba(242,237,228,0.20)' }}/>}
+            {selectedIds.has(p.id) ? <CheckSquare size={16} style={{ color:'#2DD4B8' }}/> : <Square size={16} style={{ color:'#c0bbb5' }}/>}
           </button>
           <div style={{ flex:1 }}>
             <div className='flex items-center gap-2 mb-1'>
@@ -1080,7 +1080,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
     <tr style={{ borderBottom:'1px solid rgba(0,0,0,0.04)', background:selected?'rgba(13,138,111,0.04)':'transparent', cursor:'pointer' }} onClick={onViewDetail}>
       <td className='px-4 py-3'>
         <button onClick={(e) => { e.stopPropagation(); onToggle(); }} style={{ background:'none', border:'none', cursor:'pointer' }}>
-          {selected ? <CheckSquare size={16} style={{ color:'#2DD4B8' }}/> : <Square size={16} style={{ color:'rgba(242,237,228,0.20)' }}/>}
+          {selected ? <CheckSquare size={16} style={{ color:'#2DD4B8' }}/> : <Square size={16} style={{ color:'#c0bbb5' }}/>}
         </button>
       </td>
       <td className='px-4 py-3'>
@@ -1106,8 +1106,8 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
           </div>
         ) : (
           <div className='flex items-center gap-2'>
-            <span style={{ fontSize:13, color:p.email?'#6b6560':'rgba(242,237,228,0.20)', fontStyle:p.email?'normal':'italic' }}>{p.email || 'Pas d\'email'}</span>
-            <button onClick={(e) => { e.stopPropagation(); setEditingEmail(true); }} style={{ background:'none', border:'none', cursor:'pointer', color:'rgba(242,237,228,0.20)', opacity:0.6 }}><Pencil size={11}/></button>
+            <span style={{ fontSize:13, color:p.email?'#6b6560':'#c0bbb5', fontStyle:p.email?'normal':'italic' }}>{p.email || 'Pas d\'email'}</span>
+            <button onClick={(e) => { e.stopPropagation(); setEditingEmail(true); }} style={{ background:'none', border:'none', cursor:'pointer', color:'#c0bbb5', opacity:0.6 }}><Pencil size={11}/></button>
           </div>
         )}
       </td>
@@ -1127,7 +1127,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
       </td>
       <td className='px-4 py-3' style={{ fontSize:12, color:'#9a9490' }}>{p.email_count}x</td>
       <td className='px-4 py-3'>
-        <button onClick={(e) => { e.stopPropagation(); onDelete(); }} style={{ background:'none', border:'none', cursor:'pointer', color:'rgba(242,237,228,0.20)' }}><Trash2 size={14}/></button>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(); }} style={{ background:'none', border:'none', cursor:'pointer', color:'#c0bbb5' }}><Trash2 size={14}/></button>
       </td>
     </tr>
   );
@@ -1159,7 +1159,7 @@ const BulkEmailModal = ({ prospects, generatedEmails, generatingAll, sending, on
               return (
                 <button key={p.id} onClick={() => setActiveIdx(i)} style={{ width:'100%', padding:'12px 16px', textAlign:'left', background:activeIdx===i?'rgba(13,138,111,0.1)':'transparent', border:'none', borderBottom:'1px solid rgba(0,0,0,0.08)', cursor:'pointer', borderLeft:activeIdx===i?'3px solid #2DD4B8':'3px solid transparent' }}>
                   <div style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, fontWeight:600, color:'#2a2722', marginBottom:2 }}>{p.business_name}</div>
-                  <div style={{ fontSize:11, color:email?.loading?'#4da6d9':email?.error?'#F07067':email?.subject?'#2DD4B8':'rgba(242,237,228,0.20)' }}>
+                  <div style={{ fontSize:11, color:email?.loading?'#4da6d9':email?.error?'#F07067':email?.subject?'#2DD4B8':'#c0bbb5' }}>
                     {email?.loading ? 'Generation...' : email?.error ? 'Erreur' : email?.subject ? 'Pret' : 'En attente'}
                   </div>
                 </button>

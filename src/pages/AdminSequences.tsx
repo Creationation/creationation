@@ -200,9 +200,9 @@ const AdminSequences = () => {
                     <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#2a2722', margin: 0 }}>{seq.name}</h3>
                     <div className="flex items-center gap-2">
                       <button onClick={(e) => { e.stopPropagation(); toggleActive(seq); }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                        {seq.is_active ? <Play size={14} style={{ color: '#2DD4B8' }} /> : <Pause size={14} style={{ color: 'rgba(242,237,228,0.20)' }} />}
+                        {seq.is_active ? <Play size={14} style={{ color: '#2DD4B8' }} /> : <Pause size={14} style={{ color: '#c0bbb5' }} />}
                       </button>
-                      <button onClick={(e) => { e.stopPropagation(); deleteSequence(seq.id); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.20)' }}>
+                      <button onClick={(e) => { e.stopPropagation(); deleteSequence(seq.id); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c0bbb5' }}>
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -312,7 +312,7 @@ const AdminSequences = () => {
                               <button onClick={() => togglePause(p)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: p.sequence_paused ? '#2DD4B8' : '#F59E0B' }}>
                                 {p.sequence_paused ? <Play size={14} /> : <Pause size={14} />}
                               </button>
-                              <button onClick={() => removeFromSequence(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.20)' }}>
+                              <button onClick={() => removeFromSequence(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c0bbb5' }}>
                                 <X size={14} />
                               </button>
                             </div>

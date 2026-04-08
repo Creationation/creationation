@@ -273,7 +273,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                 </>
               ) : (
                 <div style={{ textAlign: 'center', padding: 24 }}>
-                  <FileText size={32} style={{ color: 'rgba(242,237,228,0.20)', margin: '0 auto 12px' }} />
+                  <FileText size={32} style={{ color: '#c0bbb5', margin: '0 auto 12px' }} />
                   <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490', marginBottom: 16 }}>Aucun audit. Entrez l'URL du site concurrent pour lancer l'audit.</p>
                   <input value={auditUrl} onChange={e => setAuditUrl(e.target.value)} placeholder='https://concurrent.com' style={{ width: '100%', padding: '10px 14px', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
                   <button onClick={handleLaunchAudit} disabled={auditing || !auditUrl} style={{ padding: '10px 20px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: 100, fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, cursor: auditing ? 'not-allowed' : 'pointer', opacity: auditing ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 6, margin: '0 auto' }}>
