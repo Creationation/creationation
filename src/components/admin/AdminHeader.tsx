@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Menu, X, Target, Users, Wallet, DollarSign, LayoutDashboard, LogOut, ExternalLink, FolderKanban, FileText, Mail, Image } from 'lucide-react';
 
 const navItems = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, color: '#F2EDE4' },
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, color: '#2a2722' },
   { to: '/admin/prospects', label: 'Prospection', icon: Target, color: '#2DD4B8' },
   { to: '/admin/sequences', label: 'Séquences', icon: Mail, color: '#8B5CF6' },
   { to: '/admin/clients', label: 'Clients', icon: Users, color: '#A78BDB' },
@@ -43,9 +43,9 @@ const AdminHeader = () => {
     <header
       className="flex items-center justify-between px-5 py-3 sticky top-0 z-50"
       style={{
-        background: 'rgba(255,255,255,0.10)',
+        background: 'rgba(255,255,255,0.45)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.12)',
+        borderBottom: '1px solid rgba(0,0,0,0.08)',
       }}
     >
       <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ const AdminHeader = () => {
             style={{
               width: 38, height: 38,
               background: open ? '#2DD4B8' : 'rgba(0,0,0,0.05)',
-              color: open ? '#fff' : '#F2EDE4',
+              color: open ? '#fff' : '#2a2722',
               border: 'none',
               borderRadius: 12,
               cursor: 'pointer',
@@ -76,7 +76,7 @@ const AdminHeader = () => {
               background: 'rgba(255,255,255,0.95)',
               backdropFilter: 'blur(24px)',
               borderRadius: 16,
-              border: '1px solid rgba(255,255,255,0.12)',
+              border: '1px solid rgba(0,0,0,0.08)',
               boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
               padding: '8px',
               opacity: open ? 1 : 0,
@@ -97,7 +97,7 @@ const AdminHeader = () => {
                     padding: '10px 14px',
                     borderRadius: 10,
                     background: isActive ? `${item.color}12` : 'transparent',
-                    color: isActive ? item.color : 'rgba(242,237,228,0.55)',
+                    color: isActive ? item.color : '#6b6560',
                     fontFamily: "'Outfit', sans-serif",
                     fontSize: 14,
                     fontWeight: isActive ? 600 : 400,
@@ -113,7 +113,7 @@ const AdminHeader = () => {
               );
             })}
 
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.12)', margin: '6px 8px' }} />
+            <div style={{ height: 1, background: 'rgba(0,0,0,0.08)', margin: '6px 8px' }} />
 
             <Link
               to="/"
@@ -158,7 +158,7 @@ const AdminHeader = () => {
           </div>
         </div>
 
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#F2EDE4', margin: 0 }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#2a2722', margin: 0 }}>
           CRM
         </h1>
         {currentPage && currentPage.to !== '/admin' && (

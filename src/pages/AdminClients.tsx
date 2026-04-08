@@ -187,7 +187,7 @@ const AdminClients = () => {
             { label: 'MRR', value: `${f(stats.mrr)} €`, color: '#4da6d9' },
             { label: 'Revenu total', value: `${f(stats.totalRevenue)} €`, color: '#d4a55a' },
           ].map((s, i) => (
-            <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid rgba(255,255,255,0.12)' }}>
+            <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
               <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>{s.label}</div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: s.color }}>{s.value}</div>
             </div>
@@ -196,7 +196,7 @@ const AdminClients = () => {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 items-center">
-          <div className="flex items-center gap-2 flex-1 min-w-[200px]" style={{ background: 'white', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', padding: '8px 16px' }}>
+          <div className="flex items-center gap-2 flex-1 min-w-[200px]" style={{ background: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '100px', padding: '8px 16px' }}>
             <Search size={16} style={{ color: 'var(--muted-foreground)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un client..." style={{ border: 'none', outline: 'none', fontFamily: "'Outfit', sans-serif", fontSize: 14, flex: 1, background: 'transparent' }} />
           </div>
@@ -210,7 +210,7 @@ const AdminClients = () => {
             { key: 'business_name', label: 'Entreprise' }, { key: 'contact_name', label: 'Contact' }, { key: 'email', label: 'Email' },
             { key: 'phone', label: 'Téléphone' }, { key: 'plan', label: 'Plan' }, { key: 'status', label: 'Statut' },
             { key: 'monthly_amount', label: 'Montant mensuel' }, { key: 'total_paid', label: 'Total payé' },
-          ])} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer', color: 'rgba(242,237,228,0.55)' }}>
+          ])} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer', color: '#6b6560' }}>
             <Download size={14} /> CSV
           </button>
         </div>
@@ -223,14 +223,14 @@ const AdminClients = () => {
         ) : (
           <div className="space-y-3">
             {filtered.map(c => (
-              <div key={c.id} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <div key={c.id} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
                 {editId === c.id ? (
                   <EditRow client={c} editData={editData} setEditData={setEditData} onSave={() => updateClient(c.id, editData)} onCancel={() => setEditId(null)} />
                 ) : (
                   <div className="flex flex-col md:flex-row md:items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4' }}>{c.business_name}</span>
+                        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#2a2722' }}>{c.business_name}</span>
                         <span style={{ padding: '2px 10px', borderRadius: '100px', fontSize: 11, fontWeight: 700, fontFamily: "'Outfit', sans-serif", color: 'white', background: STATUS_COLORS[c.status] || '#999' }}>{STATUS_LABELS[c.status] || c.status}</span>
                         <span style={{ padding: '2px 10px', borderRadius: '100px', fontSize: 11, fontWeight: 600, fontFamily: "'Outfit', sans-serif", color: '#A78BDB', background: 'rgba(124,92,191,0.12)' }}>{c.plan}</span>
                         {c.portal_enabled && <span style={{ padding: '2px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: "'Outfit', sans-serif", color: '#2DD4B8', background: 'rgba(13,138,111,0.1)' }}>🌐 Portail</span>}
@@ -263,8 +263,8 @@ const AdminClients = () => {
                 )}
                 {/* Invoice summary row */}
                 {clientInvoices[c.id] && editId !== c.id && (
-                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-                    <button onClick={() => setExpandedClient(expandedClient === c.id ? null : c.id)} className="flex items-center gap-2 w-full" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.55)' }}>
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+                    <button onClick={() => setExpandedClient(expandedClient === c.id ? null : c.id)} className="flex items-center gap-2 w-full" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#6b6560' }}>
                       <FileText size={13} />
                       <span>{clientInvoices[c.id].count} facture{clientInvoices[c.id].count > 1 ? 's' : ''}</span>
                       <span style={{ color: '#2DD4B8', fontWeight: 600 }}>Facturé : {f(clientInvoices[c.id].total)} €</span>
@@ -276,7 +276,7 @@ const AdminClients = () => {
                     </button>
                     {expandedClient === c.id && (
                       <div className="mt-2 flex gap-2">
-                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#F2EDE4' }}>
+                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#2a2722' }}>
                           Voir les factures →
                         </button>
                         <button onClick={() => navigate(`/admin/invoices?clientId=${c.id}`)} style={{ padding: '6px 14px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
@@ -288,10 +288,10 @@ const AdminClients = () => {
                 )}
                 {/* Projects section */}
                 {editId !== c.id && (
-                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
                     <div className="flex items-center gap-2 mb-2">
-                      <FolderKanban size={13} style={{ color: 'rgba(242,237,228,0.55)' }} />
-                      <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.55)' }}>
+                      <FolderKanban size={13} style={{ color: '#6b6560' }} />
+                      <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#6b6560' }}>
                         {(clientProjects[c.id] || []).length} projet{(clientProjects[c.id] || []).length !== 1 ? 's' : ''}
                       </span>
                     </div>
@@ -303,7 +303,7 @@ const AdminClients = () => {
                             <button key={p.id} onClick={() => setProjectDetailId(p.id)} style={{
                               display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 99,
                               border: `1px solid ${statusCol}30`, background: `${statusCol}08`,
-                              fontFamily: "'Outfit', sans-serif", fontSize: 12, cursor: 'pointer', color: '#F2EDE4',
+                              fontFamily: "'Outfit', sans-serif", fontSize: 12, cursor: 'pointer', color: '#2a2722',
                             }}>
                               <span style={{ width: 8, height: 8, borderRadius: '50%', background: statusCol }} />
                               {p.title}
@@ -312,7 +312,7 @@ const AdminClients = () => {
                         })}
                       </div>
                     ) : (
-                      <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>Aucun projet</span>
+                      <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>Aucun projet</span>
                     )}
                   </div>
                 )}
@@ -336,7 +336,7 @@ const AdminClients = () => {
               <>
                 <div className="space-y-2 mb-4">
                   {prospects.map(p => (
-                    <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer" style={{ background: selectedProspects.includes(p.id) ? 'rgba(13,138,111,0.08)' : 'var(--warm)', border: `1px solid ${selectedProspects.includes(p.id) ? '#2DD4B8' : 'rgba(255,255,255,0.12)'}` }}>
+                    <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer" style={{ background: selectedProspects.includes(p.id) ? 'rgba(13,138,111,0.08)' : 'var(--warm)', border: `1px solid ${selectedProspects.includes(p.id) ? '#2DD4B8' : 'rgba(0,0,0,0.08)'}` }}>
                       <input type="checkbox" checked={selectedProspects.includes(p.id)} onChange={() => setSelectedProspects(s => s.includes(p.id) ? s.filter(x => x !== p.id) : [...s, p.id])} />
                       <div>
                         <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600 }}>{p.business_name}</div>
@@ -365,32 +365,32 @@ const EditRow = ({ client, editData, setEditData, onSave, onCancel }: { client: 
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div>
         <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'var(--muted-foreground)' }}>Plan</label>
-        <select value={editData.plan || ''} onChange={e => setEditData({ ...editData, plan: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
+        <select value={editData.plan || ''} onChange={e => setEditData({ ...editData, plan: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
           {PLAN_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
         </select>
       </div>
       <div>
         <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'var(--muted-foreground)' }}>Statut</label>
-        <select value={editData.status || ''} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
+        <select value={editData.status || ''} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
           {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
       </div>
       <div>
         <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'var(--muted-foreground)' }}>€/mois</label>
-        <input type="number" value={editData.monthly_amount || 0} onChange={e => setEditData({ ...editData, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }} />
+        <input type="number" value={editData.monthly_amount || 0} onChange={e => setEditData({ ...editData, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }} />
       </div>
       <div>
         <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'var(--muted-foreground)' }}>Total payé</label>
-        <input type="number" value={editData.total_paid || 0} onChange={e => setEditData({ ...editData, total_paid: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }} />
+        <input type="number" value={editData.total_paid || 0} onChange={e => setEditData({ ...editData, total_paid: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }} />
       </div>
     </div>
     <div>
       <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'var(--muted-foreground)' }}>Notes</label>
-      <textarea value={editData.notes || ''} onChange={e => setEditData({ ...editData, notes: e.target.value })} rows={2} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, resize: 'vertical' }} />
+      <textarea value={editData.notes || ''} onChange={e => setEditData({ ...editData, notes: e.target.value })} rows={2} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, resize: 'vertical' }} />
     </div>
     <div className="flex gap-2">
       <button onClick={onSave} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 16px', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}><Check size={14} /> Sauvegarder</button>
-      <button onClick={onCancel} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}><X size={14} /></button>
+      <button onClick={onCancel} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer' }}><X size={14} /></button>
     </div>
   </div>
 );
@@ -423,19 +423,19 @@ const AddClientModal = ({ onClose, onAdded }: { onClose: () => void; onAdded: ()
           ].map(f => (
             <div key={f.key}>
               <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>{f.label}</label>
-              <input type={f.type} value={(form as any)[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
+              <input type={f.type} value={(form as any)[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
             </div>
           ))}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Plan</label>
-              <select value={form.plan} onChange={e => setForm({ ...form, plan: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
+              <select value={form.plan} onChange={e => setForm({ ...form, plan: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                 {PLAN_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
               <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>€/mois</label>
-              <input type="number" value={form.monthly_amount} onChange={e => setForm({ ...form, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
+              <input type="number" value={form.monthly_amount} onChange={e => setForm({ ...form, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
             </div>
           </div>
           <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Ajouter le client</button>

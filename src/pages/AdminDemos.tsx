@@ -184,7 +184,7 @@ const AdminDemos = () => {
               ) : filteredDemos.length === 0 ? (
                 <tr><td colSpan={7} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Aucune démo</td></tr>
               ) : filteredDemos.map(d => (
-                <tr key={d.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                <tr key={d.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                   <td style={{ padding: '12px 16px', fontWeight: 600, color: TEXT_PRIMARY }}>
                     <div className="flex items-center gap-2">
                       <div style={{
@@ -245,7 +245,7 @@ const AdminDemos = () => {
 const btnStyle: React.CSSProperties = {
   width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
   background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-  color: '#F2EDE4',
+  color: '#2a2722',
 };
 
 export default AdminDemos;

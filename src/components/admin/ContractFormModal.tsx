@@ -282,7 +282,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
               </thead>
               <tbody>
                 {lineItems.map((item, i) => (
-                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                     <td className="py-2 pr-2">
                       <input value={item.leistung} onChange={e => updateLine(i, 'leistung', e.target.value)} style={editableStyle} />
                     </td>
@@ -315,7 +315,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
           </div>
 
           {/* Hinweis (tax note) */}
-          <div className="mb-6" style={{ padding: 12, borderRadius: 8, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)' }}>
+          <div className="mb-6" style={{ padding: 12, borderRadius: 8, background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(255,255,255,0.2)' }}>
             <div style={{ fontSize: 10, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6, fontWeight: 600 }}>Hinweis</div>
             {settings?.has_tax_number ? (
               <div style={{ fontSize: 12, color: TEXT_PRIMARY, lineHeight: 1.6 }}>
@@ -331,7 +331,7 @@ const ContractFormModal = ({ onClose, onCreated, editContract }: ContractFormMod
           </div>
 
           {/* Zahlungsbedingungen */}
-          <div className="mb-6" style={{ padding: 12, borderRadius: 8, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)' }}>
+          <div className="mb-6" style={{ padding: 12, borderRadius: 8, background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(255,255,255,0.2)' }}>
             <div style={{ fontSize: 10, color: TEXT_MUTED, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6, fontWeight: 600 }}>Zahlungsbedingungen</div>
             {hasBankInfo ? (
               <div style={{ fontSize: 12, color: TEXT_PRIMARY, lineHeight: 1.8 }}>

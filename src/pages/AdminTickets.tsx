@@ -16,7 +16,7 @@ const STATUS_COLS = [
   { key: 'in_progress', label: 'En cours', color: GOLD },
   { key: 'waiting_client', label: 'Attente client', color: PURPLE },
   { key: 'resolved', label: 'Résolu', color: TEAL },
-  { key: 'closed', label: 'Fermé', color: 'rgba(242,237,228,0.28)' },
+  { key: 'closed', label: 'Fermé', color: '#9a9490' },
 ];
 
 const PRIORITY_COLORS: Record<string, string> = { urgent: '#CC3333', high: CORAL, medium: GOLD, low: TEXT_MUTED };
@@ -191,7 +191,7 @@ const AdminTickets = () => {
       {detail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
           <div className="w-full max-w-2xl max-h-[90vh] flex flex-col admin-glass-modal">
-            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: TEXT_PRIMARY }}>{detail.title}</h2>
               <button onClick={() => setDetail(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY }}><X size={20} /></button>
             </div>
@@ -218,7 +218,7 @@ const AdminTickets = () => {
             </div>
             {detail.description && (
               <div className="px-5 pb-3">
-                <p style={{ fontSize: 13, color: TEXT_SECONDARY, background: 'rgba(255,255,255,0.15)', padding: 12, borderRadius: 12, backdropFilter: 'blur(8px)' }}>{detail.description}</p>
+                <p style={{ fontSize: 13, color: TEXT_SECONDARY, background: 'rgba(255,255,255,0.55)', padding: 12, borderRadius: 12, backdropFilter: 'blur(8px)' }}>{detail.description}</p>
               </div>
             )}
             <div className="flex-1 overflow-y-auto px-5 py-3 space-y-3" style={{ minHeight: 150, maxHeight: 300 }}>
@@ -238,7 +238,7 @@ const AdminTickets = () => {
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-2 p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="flex items-center gap-2 p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.55)' }}>
               <input value={newMsg} onChange={e => setNewMsg(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendMessage()} placeholder="Répondre..." className="admin-glass-input" style={{ flex: 1 }} />
               <button onClick={sendMessage} className="admin-glass-btn" style={{ padding: '10px 16px' }}><Send size={16} /></button>
             </div>

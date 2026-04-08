@@ -13,7 +13,7 @@ const STATUS_COLORS: Record<string, { color: string; label: string }> = {
   sent: { color: '#3b82f6', label: 'Envoyé' },
   signed: { color: '#8b5cf6', label: 'Signé' },
   active: { color: '#2DD4B8', label: 'Actif' },
-  expired: { color: 'rgba(242,237,228,0.28)', label: 'Expiré' },
+  expired: { color: '#9a9490', label: 'Expiré' },
   cancelled: { color: '#F07067', label: 'Annulé' },
 };
 

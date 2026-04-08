@@ -146,7 +146,7 @@ const AdminRevenues = () => {
             { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: '#A78BDB' },
           ].map((s, i) => (
             <div key={i} className="admin-glass-card" style={{ padding: 16 }}>
-              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>{s.label}</div>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>{s.label}</div>
               <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: s.color }}>{s.value}</div>
             </div>
           ))}
@@ -184,12 +184,12 @@ const AdminRevenues = () => {
 
         {/* Filters + add */}
         <div className="flex flex-wrap gap-3 items-center">
-          <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ padding: '8px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'white' }}>
+          <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ padding: '8px 14px', borderRadius: '100px', border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'white' }}>
             <option value="all">Tous types</option>
             {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
-          <input type="month" value={filterMonth} onChange={e => setFilterMonth(e.target.value)} style={{ padding: '8px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'white' }} />
-          {filterMonth && <button onClick={() => setFilterMonth('')} style={{ padding: '6px 12px', background: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, cursor: 'pointer' }}>Tout</button>}
+          <input type="month" value={filterMonth} onChange={e => setFilterMonth(e.target.value)} style={{ padding: '8px 14px', borderRadius: '100px', border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 13, background: 'white' }} />
+          {filterMonth && <button onClick={() => setFilterMonth('')} style={{ padding: '6px 12px', background: 'none', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, cursor: 'pointer' }}>Tout</button>}
           <div className="flex-1" />
           <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, cursor: 'pointer' }}><Plus size={14} /> Ajouter paiement</button>
         </div>
@@ -255,7 +255,7 @@ const AddPaymentModal = ({ clients, onClose, onAdded }: { clients: Client[]; onC
         <div className="space-y-3">
           <div>
             <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Client *</label>
-            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
+            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
               <option value="">Sélectionner...</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
             </select>
@@ -263,22 +263,22 @@ const AddPaymentModal = ({ clients, onClose, onAdded }: { clients: Client[]; onC
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Montant (€) *</label>
-              <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
+              <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
             </div>
             <div>
               <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Type</label>
-              <select value={form.payment_type} onChange={e => setForm({ ...form, payment_type: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
+              <select value={form.payment_type} onChange={e => setForm({ ...form, payment_type: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                 {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
           </div>
           <div>
             <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Date</label>
-            <input type="date" value={form.payment_date} onChange={e => setForm({ ...form, payment_date: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
+            <input type="date" value={form.payment_date} onChange={e => setForm({ ...form, payment_date: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
           </div>
           <div>
             <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'var(--muted-foreground)' }}>Description</label>
-            <input type="text" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Ex: Paiement mensuel mars" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
+            <input type="text" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Ex: Paiement mensuel mars" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }} />
           </div>
           <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Enregistrer le paiement</button>
         </div>

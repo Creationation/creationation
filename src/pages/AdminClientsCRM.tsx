@@ -15,8 +15,8 @@ type Client = {
   company_address: string | null;
 };
 
-const SUB_COLORS: Record<string, string> = { trial: '#F0C95C', active: TEAL, past_due: CORAL, cancelled: 'rgba(242,237,228,0.28)' };
-const STATUS_COLORS: Record<string, string> = { active: TEAL, inactive: 'rgba(242,237,228,0.28)', onboarding: '#F0C95C' };
+const SUB_COLORS: Record<string, string> = { trial: '#F0C95C', active: TEAL, past_due: CORAL, cancelled: '#9a9490' };
+const STATUS_COLORS: Record<string, string> = { active: TEAL, inactive: '#9a9490', onboarding: '#F0C95C' };
 
 const AdminClientsCRM = () => {
   const navigate = useNavigate();
@@ -155,7 +155,7 @@ const AdminClientsCRM = () => {
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
           <div className="w-full max-w-4xl max-h-[90vh] flex flex-col admin-glass-modal">
-            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
               <div>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: TEXT_PRIMARY }}>{selected.business_name}</h2>
                 <p style={{ fontSize: 12, color: TEXT_MUTED }}>{selected.contact_name} · {selected.email}</p>
@@ -171,7 +171,7 @@ const AdminClientsCRM = () => {
               </div>
             </div>
 
-            <div className="flex gap-1 px-5 pt-3 overflow-x-auto" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="flex gap-1 px-5 pt-3 overflow-x-auto" style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
               {tabs.map(t => (
                 <button key={t} onClick={() => setTab(t)} style={{
                   padding: '8px 14px', borderRadius: '12px 12px 0 0', border: 'none',

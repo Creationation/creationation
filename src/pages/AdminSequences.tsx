@@ -192,12 +192,12 @@ const AdminSequences = () => {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sequences list */}
           <div style={{ flex: '0 0 360px' }} className="flex flex-col gap-3">
-            {loading ? <p style={{ fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.28)' }}>Chargement...</p> :
-              sequences.length === 0 ? <p style={{ fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.28)' }}>Aucune séquence créée.</p> :
+            {loading ? <p style={{ fontFamily: "'Outfit', sans-serif", color: '#9a9490' }}>Chargement...</p> :
+              sequences.length === 0 ? <p style={{ fontFamily: "'Outfit', sans-serif", color: '#9a9490' }}>Aucune séquence créée.</p> :
               sequences.map(seq => (
                 <div key={seq.id} onClick={() => selectSequence(seq)} className="admin-glass-card" style={{ ...gs.card, cursor: 'pointer', borderColor: selectedSequence?.id === seq.id ? '#2A9D8F' : 'rgba(255,255,255,0.30)', transition: 'border-color 0.2s' }}>
                   <div className="flex items-center justify-between mb-2">
-                    <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#F2EDE4', margin: 0 }}>{seq.name}</h3>
+                    <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#2a2722', margin: 0 }}>{seq.name}</h3>
                     <div className="flex items-center gap-2">
                       <button onClick={(e) => { e.stopPropagation(); toggleActive(seq); }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                         {seq.is_active ? <Play size={14} style={{ color: '#2DD4B8' }} /> : <Pause size={14} style={{ color: 'rgba(242,237,228,0.20)' }} />}
@@ -207,7 +207,7 @@ const AdminSequences = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)' }}>
+                  <div className="flex items-center gap-3" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490' }}>
                     {seq.sector && <span style={{ padding: '2px 8px', borderRadius: '100px', background: 'rgba(13,138,111,0.1)', color: '#2DD4B8', fontWeight: 600 }}>{seq.sector}</span>}
                     <span>{(seq.steps as any[])?.length || 0} étapes</span>
                     <span className="flex items-center gap-1"><Users size={11} /> {seq.total_enrolled}</span>
@@ -223,89 +223,89 @@ const AdminSequences = () => {
             {(selectedSequence || showForm) ? (
               <div className="admin-glass-card" style={gs.card}>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#F2EDE4', margin: 0 }}>
+                  <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#2a2722', margin: 0 }}>
                     {selectedSequence ? 'Modifier la séquence' : 'Nouvelle séquence'}
                   </h2>
-                  <button onClick={() => { setSelectedSequence(null); setShowForm(false); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)' }}><X size={18} /></button>
+                  <button onClick={() => { setSelectedSequence(null); setShowForm(false); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9490' }}><X size={18} /></button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                   <div>
-                    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>Nom *</label>
-                    <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} style={{ width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4', outline: 'none', boxSizing: 'border-box' }} />
+                    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>Nom *</label>
+                    <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} style={{ width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#2a2722', outline: 'none', boxSizing: 'border-box' }} />
                   </div>
                   <div>
-                    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>Secteur</label>
-                    <input value={form.sector} onChange={e => setForm(p => ({ ...p, sector: e.target.value }))} placeholder="ex: restaurant" style={{ width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4', outline: 'none', boxSizing: 'border-box' }} />
+                    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>Secteur</label>
+                    <input value={form.sector} onChange={e => setForm(p => ({ ...p, sector: e.target.value }))} placeholder="ex: restaurant" style={{ width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#2a2722', outline: 'none', boxSizing: 'border-box' }} />
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
-                    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>Description</label>
-                    <input value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} style={{ width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4', outline: 'none', boxSizing: 'border-box' }} />
+                    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>Description</label>
+                    <input value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} style={{ width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#2a2722', outline: 'none', boxSizing: 'border-box' }} />
                   </div>
                 </div>
 
                 {/* Steps editor */}
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#F2EDE4', margin: '0 0 12px' }}>Étapes de la séquence</h3>
-                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', margin: '0 0 12px' }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#2a2722', margin: '0 0 12px' }}>Étapes de la séquence</h3>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', margin: '0 0 12px' }}>
                   Variables : {'{{business_name}}'}, {'{{city}}'}, {'{{sector}}'}, {'{{owner_name}}'}, {'{{country}}'}
                 </p>
 
                 <div className="flex flex-col gap-4">
                   {form.steps.map((step, idx) => (
-                      <div key={idx} style={{ padding: 16, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', position: 'relative', borderLeft: `3px solid ${STEP_TYPES[step.type]?.color || '#6B7280'}` }}>
+                      <div key={idx} style={{ padding: 16, background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', position: 'relative', borderLeft: `3px solid ${STEP_TYPES[step.type]?.color || '#6B7280'}` }}>
                         <div className="flex items-center gap-3 mb-3">
                           <div className="flex flex-col gap-1">
-                            <button onClick={() => moveStep(idx, 'up')} disabled={idx === 0} style={{ background: 'none', border: 'none', cursor: idx === 0 ? 'default' : 'pointer', color: idx === 0 ? 'rgba(255,255,255,0.12)' : 'rgba(242,237,228,0.55)', padding: 0 }}><ArrowUp size={12} /></button>
-                            <button onClick={() => moveStep(idx, 'down')} disabled={idx === form.steps.length - 1} style={{ background: 'none', border: 'none', cursor: idx === form.steps.length - 1 ? 'default' : 'pointer', color: idx === form.steps.length - 1 ? 'rgba(255,255,255,0.12)' : 'rgba(242,237,228,0.55)', padding: 0 }}><ArrowDown size={12} /></button>
+                            <button onClick={() => moveStep(idx, 'up')} disabled={idx === 0} style={{ background: 'none', border: 'none', cursor: idx === 0 ? 'default' : 'pointer', color: idx === 0 ? 'rgba(0,0,0,0.08)' : '#6b6560', padding: 0 }}><ArrowUp size={12} /></button>
+                            <button onClick={() => moveStep(idx, 'down')} disabled={idx === form.steps.length - 1} style={{ background: 'none', border: 'none', cursor: idx === form.steps.length - 1 ? 'default' : 'pointer', color: idx === form.steps.length - 1 ? 'rgba(0,0,0,0.08)' : '#6b6560', padding: 0 }}><ArrowDown size={12} /></button>
                           </div>
-                        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, color: '#F2EDE4' }}>Étape {step.step_number}</span>
-                        <select value={step.type} onChange={e => updateStep(idx, 'type', e.target.value)} style={{ padding: '4px 10px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', background: (STEP_TYPES[step.type]?.color || '#6B7280') + '18', color: STEP_TYPES[step.type]?.color || '#6B7280', fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
+                        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, color: '#2a2722' }}>Étape {step.step_number}</span>
+                        <select value={step.type} onChange={e => updateStep(idx, 'type', e.target.value)} style={{ padding: '4px 10px', borderRadius: '100px', border: '1px solid rgba(0,0,0,0.08)', background: (STEP_TYPES[step.type]?.color || '#6B7280') + '18', color: STEP_TYPES[step.type]?.color || '#6B7280', fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
                           {Object.entries(STEP_TYPES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                         </select>
                         <div className="flex items-center gap-1 ml-auto">
-                          <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>Délai:</label>
-                          <input type="number" min={0} value={step.delay_days} onChange={e => updateStep(idx, 'delay_days', Number(e.target.value))} style={{ width: 50, padding: '4px 8px', background: 'white', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 6, fontSize: 13, fontFamily: "'Outfit', sans-serif", textAlign: 'center', outline: 'none' }} />
-                          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>jours</span>
+                          <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>Délai:</label>
+                          <input type="number" min={0} value={step.delay_days} onChange={e => updateStep(idx, 'delay_days', Number(e.target.value))} style={{ width: 50, padding: '4px 8px', background: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 6, fontSize: 13, fontFamily: "'Outfit', sans-serif", textAlign: 'center', outline: 'none' }} />
+                          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>jours</span>
                         </div>
                         {form.steps.length > 1 && (
                           <button onClick={() => removeStep(idx)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067' }}><Trash2 size={14} /></button>
                         )}
                       </div>
                       <div className="flex flex-col gap-2">
-                        <input value={step.subject_template} onChange={e => updateStep(idx, 'subject_template', e.target.value)} placeholder="Sujet de l'email..." style={{ width: '100%', padding: '8px 12px', background: 'white', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', outline: 'none', boxSizing: 'border-box' }} />
-                        <textarea value={step.body_template} onChange={e => updateStep(idx, 'body_template', e.target.value)} placeholder="Corps de l'email..." rows={5} style={{ width: '100%', padding: '8px 12px', background: 'white', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
+                        <input value={step.subject_template} onChange={e => updateStep(idx, 'subject_template', e.target.value)} placeholder="Sujet de l'email..." style={{ width: '100%', padding: '8px 12px', background: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', outline: 'none', boxSizing: 'border-box' }} />
+                        <textarea value={step.body_template} onChange={e => updateStep(idx, 'body_template', e.target.value)} placeholder="Corps de l'email..." rows={5} style={{ width: '100%', padding: '8px 12px', background: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <button onClick={addStep} style={{ marginTop: 12, padding: '10px 20px', background: 'rgba(255,255,255,0.06)', border: '1px dashed rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                <button onClick={addStep} style={{ marginTop: 12, padding: '10px 20px', background: 'rgba(255,255,255,0.5)', border: '1px dashed rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#6b6560', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                   <Plus size={14} /> Ajouter une étape
                 </button>
 
                 <div className="flex gap-3 mt-6">
-                  <button onClick={() => { setSelectedSequence(null); setShowForm(false); }} style={{ flex: 1, padding: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, cursor: 'pointer', color: 'rgba(242,237,228,0.55)' }}>Annuler</button>
+                  <button onClick={() => { setSelectedSequence(null); setShowForm(false); }} style={{ flex: 1, padding: 12, background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, cursor: 'pointer', color: '#6b6560' }}>Annuler</button>
                   <button onClick={saveSequence} style={{ flex: 1, padding: 12, background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Sauvegarder</button>
                 </div>
 
                 {/* Enrolled prospects */}
                 {selectedSequence && (
-                  <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+                  <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#F2EDE4', margin: 0 }}>Prospects inscrits ({enrolledProspects.length})</h3>
+                      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, color: '#2a2722', margin: 0 }}>Prospects inscrits ({enrolledProspects.length})</h3>
                       <button onClick={openEnrollModal} style={{ padding: '8px 16px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: '100px', fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
                         <Plus size={12} /> Inscrire
                       </button>
                     </div>
                     {enrolledProspects.length === 0 ? (
-                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.28)' }}>Aucun prospect inscrit dans cette séquence.</p>
+                      <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#9a9490' }}>Aucun prospect inscrit dans cette séquence.</p>
                     ) : (
                       <div className="flex flex-col gap-2">
                         {enrolledProspects.map(p => (
-                          <div key={p.id} className="flex items-center justify-between" style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)' }}>
+                          <div key={p.id} className="flex items-center justify-between" style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.5)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
                             <div>
-                              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', fontWeight: 600 }}>{p.business_name}</span>
-                              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', marginLeft: 8 }}>Étape {p.sequence_step}/{(selectedSequence.steps as any[]).length}</span>
+                              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', fontWeight: 600 }}>{p.business_name}</span>
+                              <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', marginLeft: 8 }}>Étape {p.sequence_step}/{(selectedSequence.steps as any[]).length}</span>
                               {p.sequence_paused && <span style={{ marginLeft: 8, padding: '2px 8px', borderRadius: '100px', background: '#F59E0B18', color: '#F59E0B', fontSize: 11, fontWeight: 600 }}>Pausé</span>}
                             </div>
                             <div className="flex items-center gap-2">
@@ -325,7 +325,7 @@ const AdminSequences = () => {
               </div>
             ) : (
               <div style={{ ...gs.card, textAlign: 'center', padding: 60 }}>
-                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, color: 'rgba(242,237,228,0.28)' }}>Sélectionnez une séquence ou créez-en une nouvelle.</p>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, color: '#9a9490' }}>Sélectionnez une séquence ou créez-en une nouvelle.</p>
               </div>
             )}
           </div>
@@ -337,10 +337,10 @@ const AdminSequences = () => {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <div style={{ width: '100%', maxWidth: 600, background: 'white', borderRadius: '28px', padding: 24, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#F2EDE4', margin: 0 }}>Inscrire des prospects</h2>
-              <button onClick={() => setShowEnrollModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)' }}><X size={20} /></button>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#2a2722', margin: 0 }}>Inscrire des prospects</h2>
+              <button onClick={() => setShowEnrollModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9490' }}><X size={20} /></button>
             </div>
-            <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '0 0 12px' }}>
+            <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', margin: '0 0 12px' }}>
               {availableProspects.length} prospects disponibles (avec email, pas déjà dans une séquence)
             </p>
             <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -348,15 +348,15 @@ const AdminSequences = () => {
                 <label key={p.id} className="flex items-center gap-3" style={{ padding: '10px 12px', borderBottom: '1px solid rgba(0,0,0,0.04)', cursor: 'pointer' }}>
                   <input type="checkbox" checked={enrollSelection.has(p.id)} onChange={() => setEnrollSelection(prev => { const n = new Set(prev); n.has(p.id) ? n.delete(p.id) : n.add(p.id); return n; })} />
                   <div style={{ flex: 1 }}>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', fontWeight: 600 }}>{p.business_name}</span>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', marginLeft: 8 }}>{p.email}</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#2a2722', fontWeight: 600 }}>{p.business_name}</span>
+                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', marginLeft: 8 }}>{p.email}</span>
                   </div>
                   {p.score > 0 && <span style={{ padding: '2px 8px', borderRadius: '100px', background: p.score > 60 ? 'rgba(16,185,129,0.1)' : p.score > 30 ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)', color: p.score > 60 ? '#10B981' : p.score > 30 ? '#F59E0B' : '#EF4444', fontSize: 11, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}>{p.score}</span>}
                 </label>
               ))}
             </div>
             <div className="flex gap-3 mt-4">
-              <button onClick={() => setShowEnrollModal(false)} style={{ flex: 1, padding: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, cursor: 'pointer', color: 'rgba(242,237,228,0.55)' }}>Annuler</button>
+              <button onClick={() => setShowEnrollModal(false)} style={{ flex: 1, padding: 12, background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, cursor: 'pointer', color: '#6b6560' }}>Annuler</button>
               <button onClick={enrollProspects} disabled={!enrollSelection.size} style={{ flex: 1, padding: 12, background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, cursor: enrollSelection.size ? 'pointer' : 'not-allowed', opacity: enrollSelection.size ? 1 : 0.5 }}>
                 Inscrire {enrollSelection.size} prospect(s)
               </button>

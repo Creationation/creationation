@@ -46,12 +46,12 @@ const ProjectKPIs = () => {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {items.map((s, i) => (
         <div key={i} style={{
-          padding: 20, background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(20px)',
-          borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)',
+          padding: 20, background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(20px)',
+          borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)',
         }}>
           <div className="flex items-center gap-2 mb-1">
             <s.icon size={14} style={{ color: s.color }} />
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{s.label}</span>
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490' }}>{s.label}</span>
           </div>
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: s.color, margin: 0 }}>{s.value}</p>
         </div>

@@ -36,7 +36,7 @@ const PROJECT_TYPES = ['app_ios_android', 'site_vitrine', 'landing_page', 'webap
 const TYPE_LABELS: Record<string, string> = { app_ios_android: 'App iOS/Android', site_vitrine: 'Site vitrine', landing_page: 'Landing page', webapp: 'Web app', autre: 'Autre' };
 
 const deadlineColor = (deadline: string | null) => {
-  if (!deadline) return 'rgba(242,237,228,0.28)';
+  if (!deadline) return '#9a9490';
   const diff = (new Date(deadline).getTime() - Date.now()) / 86400000;
   if (diff < 0) return '#ef4444';
   if (diff < 3) return '#f97316';
@@ -75,15 +75,15 @@ const ProjectCard = ({ project, onClick, dragListeners }: { project: Project; on
           <GripVertical size={14} />
         </button>
         <div className="flex-1 min-w-0">
-          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, color: '#F2EDE4', marginBottom: 4 }}>{project.title}</div>
-          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', marginBottom: 6 }}>{project.client_name}</div>
+          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, color: '#2a2722', marginBottom: 4 }}>{project.title}</div>
+          <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', marginBottom: 6 }}>{project.client_name}</div>
           <div className="flex items-center gap-2 flex-wrap mb-2">
             <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, fontFamily: "'Outfit', sans-serif", color: '#fff', background: PRIORITY_COLORS[project.priority] }}>{PRIORITY_LABELS[project.priority]}</span>
-            {project.project_type && <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.55)', background: 'rgba(0,0,0,0.05)' }}>{TYPE_LABELS[project.project_type] || project.project_type}</span>}
+            {project.project_type && <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, fontFamily: "'Outfit', sans-serif", color: '#6b6560', background: 'rgba(0,0,0,0.05)' }}>{TYPE_LABELS[project.project_type] || project.project_type}</span>}
           </div>
           {project.task_total ? (
             <div className="mb-2">
-              <div className="flex justify-between" style={{ fontSize: 10, fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.28)', marginBottom: 2 }}>
+              <div className="flex justify-between" style={{ fontSize: 10, fontFamily: "'Outfit', sans-serif", color: '#9a9490', marginBottom: 2 }}>
                 <span>{project.task_done}/{project.task_total} tâches</span>
                 <span>{progress}%</span>
               </div>
@@ -216,7 +216,7 @@ const AdminProjects = () => {
       <div className="p-4 md:p-6 max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#F2EDE4', margin: 0 }}>Projets</h2>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#2a2722', margin: 0 }}>Projets</h2>
           <div className="flex-1" />
           {/* View toggle */}
           <div className="flex" style={{ background: 'rgba(255,255,255,0.20)', borderRadius: 10, padding: 2, backdropFilter: 'blur(10px)' }}>
@@ -225,7 +225,7 @@ const AdminProjects = () => {
                 display: 'flex', alignItems: 'center', gap: 4, padding: '6px 12px', borderRadius: 8,
                 background: view === v ? 'rgba(255,255,255,0.5)' : 'transparent', border: 'none', cursor: 'pointer',
                 fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: view === v ? 600 : 400,
-                color: view === v ? '#F2EDE4' : 'rgba(242,237,228,0.28)',
+                color: view === v ? '#2a2722' : '#9a9490',
                 boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
                 transition: 'all 0.15s',
               }}>
@@ -245,7 +245,7 @@ const AdminProjects = () => {
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
           <div className="flex items-center gap-2 flex-1 min-w-[180px]" style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.30)', borderRadius: '100px', padding: '6px 14px', backdropFilter: 'blur(10px)' }}>
-            <Search size={14} style={{ color: 'rgba(242,237,228,0.28)' }} />
+            <Search size={14} style={{ color: '#9a9490' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ border: 'none', outline: 'none', fontFamily: "'Outfit', sans-serif", fontSize: 13, flex: 1, background: 'transparent' }} />
           </div>
           {/* Multi-select status */}
@@ -255,7 +255,7 @@ const AdminProjects = () => {
                 padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
                 fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600,
                 background: filterStatus.includes(s.key) ? `${s.color}20` : 'transparent',
-                color: filterStatus.includes(s.key) ? s.color : 'rgba(242,237,228,0.28)',
+                color: filterStatus.includes(s.key) ? s.color : '#9a9490',
               }}>{s.label}</button>
             ))}
           </div>
@@ -266,7 +266,7 @@ const AdminProjects = () => {
                 padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
                 fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 600,
                 background: filterPriority.includes(p) ? `${PRIORITY_COLORS[p]}20` : 'transparent',
-                color: filterPriority.includes(p) ? PRIORITY_COLORS[p] : 'rgba(242,237,228,0.28)',
+                color: filterPriority.includes(p) ? PRIORITY_COLORS[p] : '#9a9490',
               }}>{PRIORITY_LABELS[p]}</button>
             ))}
           </div>
@@ -278,7 +278,7 @@ const AdminProjects = () => {
             <option value="">Tous les clients</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
           </select>
-          <label className="flex items-center gap-2 cursor-pointer" style={{ padding: '6px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)', fontFamily: "'Outfit', sans-serif", fontSize: 12, background: onlyLate ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.20)', color: onlyLate ? '#ef4444' : 'rgba(242,237,228,0.55)', backdropFilter: 'blur(10px)' }}>
+          <label className="flex items-center gap-2 cursor-pointer" style={{ padding: '6px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)', fontFamily: "'Outfit', sans-serif", fontSize: 12, background: onlyLate ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.20)', color: onlyLate ? '#ef4444' : '#6b6560', backdropFilter: 'blur(10px)' }}>
             <AlertTriangle size={12} />
             <input type="checkbox" checked={onlyLate} onChange={e => setOnlyLate(e.target.checked)} className="hidden" />
             En retard
@@ -286,14 +286,14 @@ const AdminProjects = () => {
           {(filterStatus.length > 0 || filterPriority.length > 0 || filterClient || onlyLate) && (
             <button onClick={() => { setFilterStatus([]); setFilterPriority([]); setFilterClient(''); setOnlyLate(false); }} style={{
               padding: '6px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)',
-              fontFamily: "'Outfit', sans-serif", fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', color: 'rgba(242,237,228,0.28)',
+              fontFamily: "'Outfit', sans-serif", fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', color: '#9a9490',
               display: 'flex', alignItems: 'center', gap: 4,
             }}><X size={12} /> Réinitialiser</button>
           )}
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60, fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.28)' }}>Chargement...</div>
+          <div style={{ textAlign: 'center', padding: 60, fontFamily: "'Outfit', sans-serif", color: '#9a9490' }}>Chargement...</div>
         ) : view === 'kanban' ? (
           <KanbanView projects={filtered} sensors={sensors} activeProject={activeProject}
             onDragStart={handleDragStart} onDragEnd={handleDragEnd} onCardClick={id => setDetailId(id)} />
@@ -326,7 +326,7 @@ const KanbanView = ({ projects, sensors, activeProject, onDragStart, onDragEnd, 
               <div className="flex items-center gap-2 mb-3 px-1">
                 <span style={{ fontSize: 16 }}>{col.icon}</span>
                 <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: col.color }}>{col.label}</span>
-                <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', background: 'rgba(0,0,0,0.05)', borderRadius: 99, padding: '1px 8px' }}>{colProjects.length}</span>
+                <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: '#9a9490', background: 'rgba(0,0,0,0.05)', borderRadius: 99, padding: '1px 8px' }}>{colProjects.length}</span>
               </div>
               <div style={{ minHeight: 60, padding: 4, borderRadius: 12, background: `${col.color}08` }}>
                 {colProjects.map((p: Project) => (
@@ -346,13 +346,13 @@ const KanbanView = ({ projects, sensors, activeProject, onDragStart, onDragEnd, 
 
 // ─── List ───
 const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick: (id: string) => void }) => (
-  <div style={{ background: 'white', borderRadius: 16, border: '1px solid rgba(255,255,255,0.12)', overflow: 'hidden' }}>
+  <div style={{ background: 'white', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)', overflow: 'hidden' }}>
     <div className="overflow-x-auto">
       <table className="w-full" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
         <thead>
-          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+          <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
             {['Projet', 'Client', 'Statut', 'Priorité', 'Progression', 'Deadline', 'Budget'].map(h => (
-              <th key={h} className="text-left px-4 py-3" style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600 }}>{h}</th>
+              <th key={h} className="text-left px-4 py-3" style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#9a9490', fontWeight: 600 }}>{h}</th>
             ))}
           </tr>
         </thead>
@@ -365,8 +365,8 @@ const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick:
                 onClick={() => onCardClick(p.id)}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.02)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                <td className="px-4 py-3 font-medium" style={{ color: '#F2EDE4' }}>{p.title}</td>
-                <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)' }}>{p.client_name}</td>
+                <td className="px-4 py-3 font-medium" style={{ color: '#2a2722' }}>{p.title}</td>
+                <td className="px-4 py-3" style={{ color: '#6b6560' }}>{p.client_name}</td>
                 <td className="px-4 py-3"><span style={{ padding: '2px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, color: col?.color, background: `${col?.color}15` }}>{col?.icon} {col?.label}</span></td>
                 <td className="px-4 py-3"><span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, color: '#fff', background: PRIORITY_COLORS[p.priority] }}>{PRIORITY_LABELS[p.priority]}</span></td>
                 <td className="px-4 py-3">
@@ -374,11 +374,11 @@ const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick:
                     <div style={{ width: 60, height: 4, borderRadius: 2, background: 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                       <div style={{ width: `${progress}%`, height: '100%', background: '#2DD4B8', borderRadius: 2 }} />
                     </div>
-                    <span style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{progress}%</span>
+                    <span style={{ fontSize: 11, color: '#9a9490' }}>{progress}%</span>
                   </div>
                 </td>
                 <td className="px-4 py-3" style={{ fontSize: 12, color: deadlineColor(p.deadline) }}>{p.deadline ? new Date(p.deadline).toLocaleDateString('fr-FR') : '—'}</td>
-                <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)' }}>{p.budget ? `${p.budget} ${p.currency}` : '—'}</td>
+                <td className="px-4 py-3" style={{ color: '#6b6560' }}>{p.budget ? `${p.budget} ${p.currency}` : '—'}</td>
               </tr>
             );
           })}
@@ -391,7 +391,7 @@ const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick:
 // ─── Timeline ───
 const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardClick: (id: string) => void }) => {
   const withDates = projects.filter(p => p.start_date || p.deadline);
-  if (!withDates.length) return <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.28)' }}>Aucun projet avec des dates définies.</div>;
+  if (!withDates.length) return <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Outfit', sans-serif", color: '#9a9490' }}>Aucun projet avec des dates définies.</div>;
 
   const allDates = withDates.flatMap(p => [p.start_date, p.deadline].filter(Boolean).map(d => new Date(d!).getTime()));
   const minDate = Math.min(...allDates);
@@ -401,7 +401,7 @@ const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardCl
   const todayPos = Math.max(0, Math.min(100, ((today - minDate) / range) * 100));
 
   return (
-    <div style={{ background: 'white', borderRadius: 16, border: '1px solid rgba(255,255,255,0.12)', padding: 20, overflow: 'auto' }}>
+    <div style={{ background: 'white', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)', padding: 20, overflow: 'auto' }}>
       <div style={{ position: 'relative', minWidth: 600, minHeight: withDates.length * 44 + 30 }}>
         {/* Today line */}
         <div style={{ position: 'absolute', left: `${todayPos}%`, top: 0, bottom: 0, width: 2, background: '#ef4444', opacity: 0.3, zIndex: 1 }} />
@@ -516,9 +516,9 @@ const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: 
             <div className="flex gap-2">
               {(['low', 'medium', 'high', 'urgent'] as const).map(p => (
                 <button key={p} onClick={() => setForm(f => ({ ...f, priority: p }))} style={{
-                  flex: 1, padding: '6px 0', borderRadius: 8, border: form.priority === p ? `2px solid ${PRIORITY_COLORS[p]}` : '1px solid rgba(255,255,255,0.12)',
+                  flex: 1, padding: '6px 0', borderRadius: 8, border: form.priority === p ? `2px solid ${PRIORITY_COLORS[p]}` : '1px solid rgba(0,0,0,0.08)',
                   background: form.priority === p ? `${PRIORITY_COLORS[p]}15` : 'transparent',
-                  color: form.priority === p ? PRIORITY_COLORS[p] : 'rgba(242,237,228,0.55)',
+                  color: form.priority === p ? PRIORITY_COLORS[p] : '#6b6560',
                   fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer',
                 }}>{PRIORITY_LABELS[p]}</button>
               ))}
@@ -549,13 +549,13 @@ const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: 
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div>
-    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', display: 'block', marginBottom: 4 }}>{label}</label>
+    <label style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#9a9490', display: 'block', marginBottom: 4 }}>{label}</label>
     {children}
   </div>
 );
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)',
+  width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)',
   fontFamily: "'Outfit', sans-serif", fontSize: 13, outline: 'none', background: 'white',
 };
 
