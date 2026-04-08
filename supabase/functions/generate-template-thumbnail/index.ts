@@ -10,12 +10,57 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { templateId, prompt, category, primaryColor, secondaryColor } = await req.json();
+    const { templateId, prompt, category, primaryColor, secondaryColor, screenshots, jsxContent } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not set");
 
-    const imagePrompt = `Create a sleek premium mobile app UI mockup thumbnail for a ${category} business app. The design should use ${primaryColor} as primary accent color and ${secondaryColor} as secondary accent color. Style: glassmorphism, dark elegant background, modern mobile app interface with rounded cards, beautiful typography. ${prompt || "Premium and luxurious feel."}. Show a phone screen with the app UI, NOT a real photo. Clean mockup style, dribbble quality, no text overlays.`;
+    // Build multimodal content array
+    const contentParts: any[] = [];
+
+    // Main text instruction
+    let textPrompt = `You are a premium UI designer. Generate a single polished mobile app screenshot/thumbnail that represents this app template.
+
+CATEGORY: ${category}
+PRIMARY COLOR: ${primaryColor}
+SECONDARY COLOR: ${secondaryColor}
+
+CREATIVE BRIEF / STYLE PROMPT:
+${prompt || "Premium glassmorphism mobile app, dark elegant background, modern UI"}
+
+INSTRUCTIONS:
+- Create a SINGLE clean mobile phone screen mockup showing the app's main interface
+- Use the exact colors specified (${primaryColor} and ${secondaryColor}) as accent colors throughout
+- Style: glassmorphism cards, dark elegant background, rounded corners, beautiful typography
+- Show realistic app content: navigation, cards, buttons, stats, service listings
+- Make it look like a real premium app, Dribbble/Behance quality
+- NO text overlays outside the phone screen, NO watermarks
+- The result should look like a polished app store screenshot`;
+
+    // Add JSX context if available
+    if (jsxContent) {
+      textPrompt += `\n\nREFERENCE JSX COMPONENT (use this as layout/structure guide):\n\`\`\`jsx\n${jsxContent.substring(0, 3000)}\n\`\`\``;
+    }
+
+    contentParts.push({ type: "text", text: textPrompt });
+
+    // Add reference screenshots as image inputs (max 3 to stay within limits)
+    if (screenshots && screenshots.length > 0) {
+      const screenshotsToUse = screenshots.slice(0, 3);
+      for (const url of screenshotsToUse) {
+        if (url && url.startsWith("http")) {
+          contentParts.push({
+            type: "image_url",
+            image_url: { url }
+          });
+        }
+      }
+      // Add instruction about screenshots
+      contentParts.push({
+        type: "text",
+        text: "The images above are reference screenshots. Use them as visual inspiration for layout, style, and content structure. Recreate a similar quality and feel in the generated thumbnail."
+      });
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -24,8 +69,8 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image",
-        messages: [{ role: "user", content: imagePrompt }],
+        model: "google/gemini-3-pro-image-preview",
+        messages: [{ role: "user", content: contentParts }],
         modalities: ["image", "text"],
       }),
     });
