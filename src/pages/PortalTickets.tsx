@@ -131,7 +131,7 @@ const PortalTickets = () => {
       ) : (
         <div className="flex flex-col gap-2">
           {filtered.map(t => (
-            <div key={t.id} onClick={() => navigate(`/portal/tickets/${t.id}`)}
+            <div key={t.id} onClick={() => { const base = simulationMode ? `/admin/view-as/${client.id}` : '/portal'; navigate(`${base}/tickets/${t.id}`); }}
               className="cursor-pointer transition-all"
               style={{
                 padding: '16px 20px', background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)',
