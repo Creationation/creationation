@@ -145,16 +145,16 @@ const AdminRevenues = () => {
             { label: 'Remboursements', value: `${f(totalRefunds)} €`, color: 'var(--coral)' },
             { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: 'var(--violet)' },
           ].map((s, i) => (
-            <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
-              <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{s.label}</div>
-              <div style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: s.color }}>{s.value}</div>
+            <div key={i} className="admin-glass-card" style={{ padding: 16 }}>
+              <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>{s.label}</div>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: s.color }}>{s.value}</div>
             </div>
           ))}
         </div>
 
         {/* Revenue chart */}
         {sortedMonths.length > 0 && (
-          <div className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+          <div className="admin-glass-card" style={{ padding: 16 }}>
             <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 12 }}>Revenus par mois</h3>
             <div className="flex items-end gap-2" style={{ height: 120 }}>
               {sortedMonths.map(([m, v]) => (
@@ -169,7 +169,7 @@ const AdminRevenues = () => {
 
         {/* Upcoming payments */}
         {upcoming.length > 0 && (
-          <div className="rounded-2xl p-4" style={{ background: 'rgba(212,165,90,0.08)', border: '1px solid rgba(212,165,90,0.3)' }}>
+          <div className="admin-glass-card" style={{ padding: 16, borderColor: 'rgba(212,165,90,0.3)' }}>
             <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 8, color: '#d4a55a' }}>Paiements attendus ce mois</h3>
             <div className="space-y-2">
               {upcoming.map(c => (
@@ -202,7 +202,7 @@ const AdminRevenues = () => {
         ) : (
           <div className="space-y-2">
             {filtered.map(p => (
-              <div key={p.id} className="flex items-center gap-4 rounded-xl p-3" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+              <div key={p.id} className="flex items-center gap-4 rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.30)' }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: TYPE_COLORS[p.payment_type] || '#999', flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -247,7 +247,7 @@ const AddPaymentModal = ({ clients, onClose, onAdded }: { clients: Client[]; onC
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-      <div className="rounded-3xl p-6 w-full max-w-md" style={{ background: 'white' }}>
+      <div className="rounded-3xl p-6 w-full max-w-md admin-glass-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20 }}>Nouveau paiement</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>

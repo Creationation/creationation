@@ -109,7 +109,7 @@ const AdminSupportDashboard = () => {
 
   return (
     <div className="p-4 md:p-6 max-w-[1400px] mx-auto space-y-6">
-      <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)' }}>Dashboard Support</h1>
+      <h1 className="admin-page-title">Dashboard Support</h1>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -119,7 +119,7 @@ const AdminSupportDashboard = () => {
           { label: 'MRR', value: fmt(kpis.mrr), icon: TrendingUp, color: 'var(--violet)' },
           { label: 'Revenus ce mois', value: fmt(kpis.monthRevenue), icon: DollarSign, color: '#d4a55a' },
         ].map((k, i) => (
-          <div key={i} className="rounded-2xl p-5" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+          <div key={i} className="admin-glass-card" style={{ padding: 20 }}>
             <div className="flex items-center gap-2 mb-2">
               <k.icon size={16} style={{ color: k.color }} />
               <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{k.label}</span>
@@ -132,7 +132,7 @@ const AdminSupportDashboard = () => {
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Revenue Chart */}
-        <div className="rounded-2xl p-5" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+        <div className="admin-glass-card" style={{ padding: 20 }}>
           <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>Revenus mensuels</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={revenueChart}>
@@ -145,7 +145,7 @@ const AdminSupportDashboard = () => {
         </div>
 
         {/* Ticket Donut */}
-        <div className="rounded-2xl p-5" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+        <div className="admin-glass-card" style={{ padding: 20 }}>
           <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>Tickets par statut</h3>
           {ticketDonut.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
@@ -166,14 +166,14 @@ const AdminSupportDashboard = () => {
       {/* Recent tickets + Alerts */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent tickets */}
-        <div className="rounded-2xl p-5" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+        <div className="admin-glass-card" style={{ padding: 20 }}>
           <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>Derniers tickets ouverts</h3>
           {recentTickets.length === 0 ? (
             <p style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-light)' }}>Aucun ticket ouvert</p>
           ) : (
             <div className="space-y-3">
               {recentTickets.map(t => (
-                <div key={t.id} className="flex items-center gap-3 cursor-pointer p-3 rounded-xl hover:bg-gray-50 transition-colors" onClick={() => navigate('/admin/tickets')}>
+                <div key={t.id} className="flex items-center gap-3 cursor-pointer p-3 rounded-xl transition-colors" style={{}} onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,157,143,0.04)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'} onClick={() => navigate('/admin/tickets')}>
                   <div style={{ width: 8, height: 8, borderRadius: 99, background: priorityColor(t.priority), flexShrink: 0 }} />
                   <div className="flex-1 min-w-0">
                     <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)' }} className="truncate">{t.title}</div>
@@ -189,7 +189,7 @@ const AdminSupportDashboard = () => {
         </div>
 
         {/* Alerts */}
-        <div className="rounded-2xl p-5" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+        <div className="admin-glass-card" style={{ padding: 20 }}>
           <h3 className="flex items-center gap-2" style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', marginBottom: 16 }}>
             <AlertTriangle size={16} style={{ color: 'var(--coral)' }} /> Alertes
           </h3>
