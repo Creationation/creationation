@@ -268,6 +268,40 @@ const AdminClientsCRM = () => {
                 </div>
               )}
 
+              {tab === 'depenses' && (
+                <div className="space-y-3">
+                  {clientExpenses.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucune dépense</p> : (
+                    <>
+                      <div className="admin-glass-card" style={{ padding: 12, background: 'rgba(231,111,81,0.08)' }}>
+                        <span className="relative z-[1]" style={{ fontSize: 12, color: CORAL, fontWeight: 600 }}>
+                          Total mensuel : {fmt(clientExpenses.filter((e: any) => e.status === 'active').reduce((s: number, e: any) => {
+                            if (e.frequency === 'monthly') return s + e.amount;
+                            if (e.frequency === 'yearly') return s + e.amount / 12;
+                            return s;
+                          }, 0))}
+                        </span>
+                      </div>
+                      {clientExpenses.map((e: any) => (
+                        <div key={e.id} className="admin-glass-card flex items-center gap-3" style={{ padding: 12 }}>
+                          <div className="relative z-[1] flex items-center gap-3 flex-1">
+                            <div className="flex-1">
+                              <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_PRIMARY }}>{e.name}</span>
+                              <div className="flex gap-2 mt-1">
+                                <span className="admin-status-badge" style={{ padding: '2px 8px', fontSize: 10 }}>{e.category}</span>
+                                <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, background: 'rgba(255,255,255,0.20)', color: TEXT_SECONDARY }}>
+                                  {e.frequency === 'monthly' ? 'Mensuel' : e.frequency === 'yearly' ? 'Annuel' : 'Ponctuel'}
+                                </span>
+                              </div>
+                            </div>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(e.amount)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
+
               {tab === 'time' && (
                 <div className="space-y-3">
                   {timeEntries.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucune entrée</p> : (
