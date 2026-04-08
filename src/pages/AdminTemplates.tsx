@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Layout, Copy, Trash2, Edit, X, Sparkles, Smartphone, Palette, Upload, Image, FileCode, Download } from 'lucide-react';
+import { Plus, Search, Layout, Copy, Trash2, Edit, X, Sparkles, Smartphone, Palette, Upload, Image, FileCode, Download, Loader2, Wand2 } from 'lucide-react';
 import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
 const CATEGORIES = [
@@ -49,6 +49,20 @@ type Template = {
   hero_media_url: string | null; gallery_images: string[]; tagline: string | null;
   style_tags: string[]; is_active: boolean; sort_order: number;
   created_at: string; updated_at: string;
+};
+
+const generateThumbnail = async (template: Template) => {
+  const { data, error } = await supabase.functions.invoke('generate-template-thumbnail', {
+    body: {
+      templateId: template.id,
+      prompt: template.style_prompt || '',
+      category: template.category,
+      primaryColor: template.primary_color,
+      secondaryColor: template.secondary_color,
+    },
+  });
+  if (error) throw error;
+  return data?.url as string;
 };
 
 const AdminTemplates = () => {
@@ -180,7 +194,11 @@ const AdminTemplates = () => {
                   boxShadow: `0 0 30px ${t.primary_color}40`, pointerEvents: 'none',
                 }} className="group-hover:!opacity-100" />
 
-                <div style={{ height: 8, background: `linear-gradient(90deg, ${t.primary_color}, ${t.secondary_color})` }} />
+                {t.preview_url ? (
+                  <img src={t.preview_url} alt={t.name} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
+                ) : (
+                  <div style={{ height: 8, background: `linear-gradient(90deg, ${t.primary_color}, ${t.secondary_color})` }} />
+                )}
 
                 <div style={{ padding: 16 }}>
                   <div className="flex items-center gap-2 mb-2">
@@ -196,7 +214,7 @@ const AdminTemplates = () => {
                   </div>
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: TEXT_PRIMARY, marginBottom: 6 }}>{t.name}</h3>
                   {t.style_prompt && (
-                    <p style={{ fontSize: 12, color: TEXT_SECONDARY, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ fontSize: 12, color: TEXT_SECONDARY, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {t.style_prompt}
                     </p>
                   )}
@@ -218,6 +236,7 @@ const AdminTemplates = () => {
           onEdit={() => { setEditingTemplate(detailTemplate); setShowForm(true); setDetailTemplate(null); }}
           onDuplicate={() => { duplicateTemplate(detailTemplate); setDetailTemplate(null); }}
           onDelete={() => { deleteTemplate(detailTemplate.id); setDetailTemplate(null); }}
+          onRefresh={fetchTemplates}
         />
       )}
 
@@ -229,11 +248,13 @@ const AdminTemplates = () => {
   );
 };
 
-const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplicate, onDelete }: {
+const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplicate, onDelete, onRefresh }: {
   template: Template; demoCount: number; onClose: () => void; onEdit: () => void;
-  onDuplicate: () => void; onDelete: () => void;
+  onDuplicate: () => void; onDelete: () => void; onRefresh: () => void;
 }) => {
   const [demos, setDemos] = useState<any[]>([]);
+  const [generatingThumb, setGeneratingThumb] = useState(false);
+  const [thumbUrl, setThumbUrl] = useState(t.preview_url);
   const cat = CATEGORIES.find(c => c.value === t.category);
   const hasColors = t.primary_color !== '#2DD4B8' || t.secondary_color !== '#E9C46A';
 
@@ -242,6 +263,19 @@ const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplic
       .eq('template_id', t.id).order('created_at', { ascending: false }).limit(20)
       .then(({ data }) => setDemos(data || []));
   }, [t.id]);
+
+  const handleGenerateThumb = async () => {
+    setGeneratingThumb(true);
+    try {
+      const url = await generateThumbnail(t);
+      setThumbUrl(url);
+      toast.success('Thumbnail générée !');
+      onRefresh();
+    } catch (err: any) {
+      toast.error('Erreur génération : ' + (err.message || 'Inconnu'));
+    }
+    setGeneratingThumb(false);
+  };
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center">
@@ -262,6 +296,32 @@ const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplic
         </div>
 
         <div className="p-5 space-y-5">
+          {/* Thumbnail */}
+          <div>
+            {thumbUrl ? (
+              <div className="relative">
+                <img src={thumbUrl} alt={t.name} style={{ width: '100%', maxHeight: 280, objectFit: 'cover', borderRadius: 12, border: '1px solid rgba(255,255,255,0.2)' }} />
+                <button onClick={handleGenerateThumb} disabled={generatingThumb}
+                  style={{ position: 'absolute', bottom: 8, right: 8, padding: '6px 12px', borderRadius: 8, border: 'none', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, backdropFilter: 'blur(8px)' }}>
+                  {generatingThumb ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} Régénérer
+                </button>
+              </div>
+            ) : (
+              <button onClick={handleGenerateThumb} disabled={generatingThumb}
+                style={{
+                  width: '100%', padding: '24px 16px', borderRadius: 12, cursor: generatingThumb ? 'not-allowed' : 'pointer',
+                  border: '2px dashed rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.05)',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, color: TEXT_SECONDARY,
+                }}>
+                {generatingThumb ? (
+                  <><Loader2 size={20} className="animate-spin" style={{ color: TEAL }} /><span style={{ fontSize: 13 }}>Génération en cours...</span></>
+                ) : (
+                  <><Wand2 size={20} style={{ color: GOLD }} /><span style={{ fontSize: 13, fontWeight: 600 }}>Générer la thumbnail IA</span><span style={{ fontSize: 11, color: TEXT_MUTED }}>Basée sur le prompt et les couleurs du template</span></>
+                )}
+              </button>
+            )}
+          </div>
+
           <div className="flex flex-wrap gap-2">
             <button onClick={onEdit} style={{ padding: '8px 16px', borderRadius: 10, border: 'none', background: `${TEAL}20`, color: TEAL, fontWeight: 600, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
               <Edit size={14} /> Modifier
