@@ -547,6 +547,72 @@ export type Database = {
           },
         ]
       }
+      expenses: {
+        Row: {
+          amount: number
+          category: Database["public"]["Enums"]["expense_category"]
+          client_id: string | null
+          created_at: string
+          end_date: string | null
+          frequency: Database["public"]["Enums"]["expense_frequency"]
+          id: string
+          is_billable: boolean
+          name: string
+          notes: string | null
+          project_id: string | null
+          start_date: string
+          status: Database["public"]["Enums"]["expense_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          client_id?: string | null
+          created_at?: string
+          end_date?: string | null
+          frequency?: Database["public"]["Enums"]["expense_frequency"]
+          id?: string
+          is_billable?: boolean
+          name: string
+          notes?: string | null
+          project_id?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["expense_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          client_id?: string | null
+          created_at?: string
+          end_date?: string | null
+          frequency?: Database["public"]["Enums"]["expense_frequency"]
+          id?: string
+          is_billable?: boolean
+          name?: string
+          notes?: string | null
+          project_id?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["expense_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expenses_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       internal_notes: {
         Row: {
           client_id: string
@@ -2157,6 +2223,17 @@ export type Database = {
         | "active"
         | "expired"
         | "cancelled"
+      expense_category:
+        | "hosting"
+        | "domain"
+        | "api_service"
+        | "software"
+        | "design"
+        | "marketing"
+        | "legal"
+        | "other"
+      expense_frequency: "one_time" | "monthly" | "yearly"
+      expense_status: "active" | "paused" | "cancelled"
       invoice_status:
         | "draft"
         | "sent"
@@ -2353,6 +2430,18 @@ export const Constants = {
         "expired",
         "cancelled",
       ],
+      expense_category: [
+        "hosting",
+        "domain",
+        "api_service",
+        "software",
+        "design",
+        "marketing",
+        "legal",
+        "other",
+      ],
+      expense_frequency: ["one_time", "monthly", "yearly"],
+      expense_status: ["active", "paused", "cancelled"],
       invoice_status: [
         "draft",
         "sent",

@@ -12,6 +12,7 @@ const mainNav = [
   { to: '/admin/clients-crm', label: 'Clients', icon: Users },
   { to: '/admin/tickets', label: 'Tickets', icon: Ticket, badge: 'tickets' as const },
   { to: '/admin/invoices', label: 'Facturation', icon: FileText, badge: 'overdue' as const },
+  { to: '/admin/expenses', label: 'Dépenses', icon: DollarSign },
   { to: '/admin/time-tracking', label: 'Time Tracking', icon: Clock },
   { to: '/admin/notes', label: 'Notes', icon: StickyNote },
   { to: '/admin/services', label: 'Services', icon: Briefcase },
@@ -24,7 +25,7 @@ const secondaryNav = [
   { to: '/admin/sequences', label: 'Séquences', icon: Mail },
   { to: '/admin/projects', label: 'Projets', icon: FolderKanban },
   { to: '/admin/revenues', label: 'Revenus', icon: Wallet },
-  { to: '/admin/costs', label: 'Coûts', icon: DollarSign },
+  { to: '/admin/costs', label: 'Coûts API', icon: DollarSign },
   { to: '/admin/portfolio', label: 'Portfolio', icon: Image },
 ];
 

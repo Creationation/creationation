@@ -19,6 +19,7 @@ import AdminProspects from "./pages/AdminProspects";
 import AdminSequences from "./pages/AdminSequences";
 import AdminProjects from "./pages/AdminProjects";
 import AdminCosts from "./pages/AdminCosts";
+import AdminExpenses from "./pages/AdminExpenses";
 import AdminClients from "./pages/AdminClients";
 import AdminClientsCRM from "./pages/AdminClientsCRM";
 import AdminRevenues from "./pages/AdminRevenues";
@@ -79,6 +80,7 @@ const App = () => (
                 <Route path="invoices" element={<AdminInvoices />} />
                 <Route path="revenues" element={<AdminRevenues />} />
                 <Route path="costs" element={<AdminCosts />} />
+                <Route path="expenses" element={<AdminExpenses />} />
                 <Route path="portfolio" element={<AdminPortfolio />} />
                 <Route path="tickets" element={<AdminTickets />} />
                 <Route path="time-tracking" element={<AdminTimeTracking />} />

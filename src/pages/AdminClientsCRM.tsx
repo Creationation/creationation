@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff } from 'lucide-react';
+import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet } from 'lucide-react';
 
 const TEXT_PRIMARY = '#1A2332';
 const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
@@ -38,6 +38,7 @@ const AdminClientsCRM = () => {
   const [timeEntries, setTimeEntries] = useState<any[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<any[]>([]);
+  const [clientExpenses, setClientExpenses] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');
 
   const fetchClients = useCallback(async () => {
@@ -57,7 +58,7 @@ const AdminClientsCRM = () => {
 
   const openClient = async (client: Client) => {
     setSelected(client); setTab('overview');
-    const [{ data: p }, { data: t }, { data: i }, { data: c }, { data: tt }, { data: n }, { data: f }] = await Promise.all([
+    const [{ data: p }, { data: t }, { data: i }, { data: c }, { data: tt }, { data: n }, { data: f }, { data: ex }] = await Promise.all([
       supabase.from('projects').select('*').eq('client_id', client.id),
       supabase.from('support_tickets').select('*').eq('client_id', client.id).order('created_at', { ascending: false }),
       supabase.from('invoices').select('*').eq('client_id', client.id).order('issue_date', { ascending: false }),
@@ -65,9 +66,11 @@ const AdminClientsCRM = () => {
       supabase.from('time_tracking').select('*').eq('client_id', client.id).order('date', { ascending: false }),
       supabase.from('internal_notes').select('*').eq('client_id', client.id).order('is_pinned', { ascending: false }).order('created_at', { ascending: false }),
       supabase.from('client_feedback').select('*').eq('client_id', client.id),
+      supabase.from('expenses').select('*').eq('client_id', client.id).order('created_at', { ascending: false }),
     ]);
     setProjects(p || []); setTickets(t || []); setInvoices(i || []);
     setContracts(c || []); setTimeEntries(tt || []); setNotes(n || []); setFeedback(f || []);
+    setClientExpenses((ex || []) as any[]);
   };
 
   const addNote = async () => {
@@ -100,8 +103,8 @@ const AdminClientsCRM = () => {
 
   if (loading) return <div className="p-8 text-center" style={{ fontFamily: "'Outfit', sans-serif", color: TEXT_MUTED }}>Chargement...</div>;
 
-  const tabs = ['overview', 'projets', 'tickets', 'factures', 'contrat', 'time', 'notes', 'feedback'];
-  const tabLabels: Record<string, string> = { overview: 'Overview', projets: 'Projets', tickets: 'Tickets', factures: 'Factures', contrat: 'Contrat', time: 'Time Tracking', notes: 'Notes', feedback: 'Feedback' };
+  const tabs = ['overview', 'projets', 'tickets', 'factures', 'contrat', 'depenses', 'time', 'notes', 'feedback'];
+  const tabLabels: Record<string, string> = { overview: 'Overview', projets: 'Projets', tickets: 'Tickets', factures: 'Factures', contrat: 'Contrat', depenses: 'Dépenses', time: 'Time Tracking', notes: 'Notes', feedback: 'Feedback' };
 
   return (
     <div className="p-4 md:p-6 max-w-[1400px] mx-auto" style={{ fontFamily: "'Outfit', sans-serif" }}>
@@ -262,6 +265,40 @@ const AdminClientsCRM = () => {
                       {c.special_conditions && <p className="relative z-[1]" style={{ fontSize: 12, color: TEXT_SECONDARY, marginTop: 8 }}>{c.special_conditions}</p>}
                     </div>
                   ))}
+                </div>
+              )}
+
+              {tab === 'depenses' && (
+                <div className="space-y-3">
+                  {clientExpenses.length === 0 ? <p style={{ fontSize: 13, color: TEXT_MUTED }}>Aucune dépense</p> : (
+                    <>
+                      <div className="admin-glass-card" style={{ padding: 12, background: 'rgba(231,111,81,0.08)' }}>
+                        <span className="relative z-[1]" style={{ fontSize: 12, color: CORAL, fontWeight: 600 }}>
+                          Total mensuel : {fmt(clientExpenses.filter((e: any) => e.status === 'active').reduce((s: number, e: any) => {
+                            if (e.frequency === 'monthly') return s + e.amount;
+                            if (e.frequency === 'yearly') return s + e.amount / 12;
+                            return s;
+                          }, 0))}
+                        </span>
+                      </div>
+                      {clientExpenses.map((e: any) => (
+                        <div key={e.id} className="admin-glass-card flex items-center gap-3" style={{ padding: 12 }}>
+                          <div className="relative z-[1] flex items-center gap-3 flex-1">
+                            <div className="flex-1">
+                              <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_PRIMARY }}>{e.name}</span>
+                              <div className="flex gap-2 mt-1">
+                                <span className="admin-status-badge" style={{ padding: '2px 8px', fontSize: 10 }}>{e.category}</span>
+                                <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, background: 'rgba(255,255,255,0.20)', color: TEXT_SECONDARY }}>
+                                  {e.frequency === 'monthly' ? 'Mensuel' : e.frequency === 'yearly' ? 'Annuel' : 'Ponctuel'}
+                                </span>
+                              </div>
+                            </div>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>{fmt(e.amount)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               )}
 
