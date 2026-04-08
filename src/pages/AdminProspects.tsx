@@ -960,8 +960,8 @@ const AdminProspects = () => {
       </div>
 
       {showManualAdd && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.4)', backdropFilter:'blur(6px)', zIndex:100, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
-          <div style={{ width:'100%', maxWidth:560, background:'white', borderRadius:'var(--r-xl)', padding:32, maxHeight:'90vh', overflowY:'auto' }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.45)', backdropFilter:'blur(12px)', zIndex:100, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
+          <div style={{ width:'100%', maxWidth:560, background:'rgba(255,255,255,0.18)', backdropFilter:'blur(24px) saturate(1.4)', borderRadius:28, padding:32, maxHeight:'90vh', overflowY:'auto', border:'1px solid rgba(255,255,255,0.35)', boxShadow:'0 8px 32px rgba(0,0,0,0.12)' }}>
             <div className='flex items-center justify-between mb-6'>
               <h2 style={{ fontFamily:'var(--font-h)', fontSize:20, color:'var(--charcoal)', margin:0 }}>Ajouter un prospect</h2>
               <button onClick={() => setShowManualAdd(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-light)' }}><X size={20}/></button>
@@ -978,13 +978,13 @@ const AdminProspects = () => {
               ].map(field => (
                 <div key={field.key} style={{ gridColumn:field.full ? '1 / -1' : undefined }}>
                   <label style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-light)', display:'block', marginBottom:4 }}>{field.label}</label>
-                  <input value={(manualForm as any)[field.key]} onChange={e => setManualForm(prev => ({ ...prev, [field.key]: e.target.value }))} style={{ width:'100%', padding:'10px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none', boxSizing:'border-box' }} />
+                  <input value={(manualForm as any)[field.key]} onChange={e => setManualForm(prev => ({ ...prev, [field.key]: e.target.value }))} style={{ width:'100%', padding:'10px 14px', background:'rgba(255,255,255,0.85)', border:'1px solid rgba(255,255,255,0.5)', borderRadius:12, fontFamily:'var(--font-b)', fontSize:14, color:'var(--text)', outline:'none', boxSizing:'border-box', boxShadow:'inset 0 1px 2px rgba(0,0,0,0.04)' }} />
                 </div>
               ))}
             </div>
             <div className='flex gap-3 mt-6'>
-              <button onClick={() => setShowManualAdd(false)} style={{ flex:1, padding:12, background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, cursor:'pointer', color:'var(--text-mid)' }}>Annuler</button>
-              <button onClick={handleManualAdd} style={{ flex:1, padding:12, background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:'pointer' }}>Ajouter</button>
+              <button onClick={() => setShowManualAdd(false)} style={{ flex:1, padding:12, background:'rgba(255,255,255,0.25)', border:'1px solid rgba(255,255,255,0.4)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:14, cursor:'pointer', color:'var(--text-mid)', backdropFilter:'blur(8px)' }}>Annuler</button>
+              <button onClick={handleManualAdd} style={{ flex:1, padding:12, background:'var(--teal)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:'pointer' }}>Ajouter</button>
             </div>
           </div>
         </div>
