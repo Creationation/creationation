@@ -10,7 +10,7 @@ import ProspectDetailEnriched from '@/components/admin/ProspectDetailEnriched';
 
 type ProspectStatus = 'new' | 'emailed' | 'replied' | 'converted' | 'rejected';
 type Prospect = { id: string; business_name: string; contact_name: string | null; email: string | null; phone: string | null; business_type: string | null; city: string | null; country: string | null; address: string | null; google_place_id: string | null; has_website: boolean; website_url: string | null; notes: string | null; source: string | null; status: ProspectStatus; email_count: number; last_emailed_at: string | null; created_at: string; language: string | null; score?: number; score_breakdown?: any; sector?: string | null; sequence_id?: string | null; sequence_step?: number; sequence_paused?: boolean; tags?: string[]; competitor_site_url?: string | null; competitor_audit?: any; };
-type SearchResult = { google_place_id: string; business_name: string; address: string; phone: string | null; has_website: boolean; website_url: string | null; rating: number | null; review_count: number; types: string[]; city: string; country: string; business_type: string; };
+type SearchResult = { google_place_id: string; business_name: string; address: string; phone: string | null; has_website: boolean; website_url: string | null; rating: number | null; review_count: number; types: string[]; city: string; country: string; business_type: string; email?: string | null; email_confidence?: string | null; };
 type GeneratedEmail = { prospectId: string; subject: string; body: string; loading?: boolean; error?: string; };
 type SearchChunk = { id: string; continent: string | null; country: string | null; city: string | null; business_type: string; results_count: number; mode: string; cost_eur: number; created_at: string; };
 
@@ -317,6 +317,7 @@ const AdminProspects = () => {
           country: r.country, business_type: r.business_type,
           google_place_id: r.google_place_id, source: 'google_maps',
           language: COUNTRY_LANG[r.country] || 'en',
+          email: r.email || null,
         }));
         // Insert in batches of 500 to avoid Supabase row limits
         const batchSize = 500;
@@ -337,11 +338,12 @@ const AdminProspects = () => {
       setSearchResults(allResults);
       const mode = skipDetails ? ' (mode éco)' : '';
       const countriesInfo = countries.length > 1 ? ` dans ${countries.length} pays` : '';
+      const emailsFound = allResults.filter(r => r.email).length;
       const skippedInfo = skippedChunks > 0 ? ` (${skippedChunks} chunks déjà faits, ignorés)` : '';
       if (skippedChunks === totalSearches) {
         toast.warning('Toutes ces recherches ont déjà été effectuées ! Change de localisation ou de type pour trouver de nouveaux prospects.', { id: 'search-progress', duration: 5000 });
       } else {
-        toast.success(allResults.length + ' nouveaux résultats' + mode + countriesInfo + skippedInfo, { id: 'search-progress' });
+        toast.success(allResults.length + ' nouveaux résultats' + mode + countriesInfo + skippedInfo + (emailsFound > 0 ? ` · ${emailsFound} emails trouvés` : ''), { id: 'search-progress' });
       }
       const actualSearches = totalSearches - skippedChunks;
       const gCost = skipDetails
@@ -698,6 +700,7 @@ const AdminProspects = () => {
                         </div>
                         <div style={{ fontSize:12, color:'var(--text-light)', fontFamily:'var(--font-b)' }}>{r.address}</div>
                         {r.phone && <div style={{ fontSize:12, color:'var(--text-mid)', fontFamily:'var(--font-b)' }}>{r.phone}</div>}
+                        {(r as any).email && <div style={{ fontSize:12, color:'var(--teal)', fontFamily:'var(--font-b)', display:'flex', alignItems:'center', gap:4 }}><Mail size={11}/> {(r as any).email} <span style={{ fontSize:10, opacity:0.7 }}>({(r as any).email_confidence})</span></div>}
                       </div>
                       <span style={{ padding:'6px 14px', background:'var(--glass-bg)', border:'1px solid var(--glass-border)', borderRadius:'var(--pill)', fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600 }}>
                         <Check size={12} style={{ marginRight:4, verticalAlign:'middle' }}/> Sauvegarde
