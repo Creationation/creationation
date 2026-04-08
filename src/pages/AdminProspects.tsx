@@ -43,11 +43,11 @@ const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emaile', 
 const BT = ['Barbershop','Salon de coiffure','Nail studio','Restaurant','Cafe','Boulangerie','Boucherie','Epicerie','Fleuriste','Pharmacie','Medecin','Dentiste','Kinesitherapeute','Photographe','Coach sportif','Tatoueur','Pressing','Plombier','Electricien','Autre'];
 
 const CONTINENTS: Record<string, string[]> = {
-  'Europe': ['France','Belgique','Suisse','Allemagne','Espagne','Italie','Portugal','Pays-Bas','Autriche','Royaume-Uni','Irlande','Luxembourg','Pologne','Republique tcheque','Suede','Norvege','Danemark','Finlande','Grece','Roumanie','Croatie'],
-  'Amerique du Nord': ['Etats-Unis','Canada','Mexique'],
-  'Amerique du Sud': ['Bresil','Argentine','Colombie','Chili','Perou'],
-  'Afrique': ['Maroc','Tunisie','Algerie','Senegal','Cote d\'Ivoire','Cameroun','Afrique du Sud','Nigeria','Egypte','RD Congo'],
-  'Asie': ['Japon','Coree du Sud','Chine','Inde','Thailande','Vietnam','Indonesie','Philippines','Malaisie','Emirats arabes unis','Turquie','Israel'],
+  'Europe': ['Allemagne','Autriche','Belgique','Croatie','Danemark','Espagne','Finlande','France','Grece','Irlande','Italie','Luxembourg','Norvege','Pays-Bas','Pologne','Portugal','Republique tcheque','Roumanie','Royaume-Uni','Suede','Suisse'],
+  'Amerique du Nord': ['Canada','Etats-Unis','Mexique'],
+  'Amerique du Sud': ['Argentine','Bresil','Chili','Colombie','Perou'],
+  'Afrique': ['Afrique du Sud','Algerie','Cameroun','Cote d\'Ivoire','Egypte','Maroc','Nigeria','RD Congo','Senegal','Tunisie'],
+  'Asie': ['Chine','Coree du Sud','Emirats arabes unis','Inde','Indonesie','Israel','Japon','Malaisie','Philippines','Thailande','Turquie','Vietnam'],
   'Oceanie': ['Australie','Nouvelle-Zelande'],
 };
 
