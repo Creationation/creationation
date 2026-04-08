@@ -239,7 +239,7 @@ const AdminLayout = () => {
           <header
             className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-40"
             style={{
-              background: 'rgba(69,72,96,0.90)',
+              background: 'rgba(246,241,233,0.90)',
               backdropFilter: 'blur(20px)',
               borderBottom: `1px solid ${C.border}`,
             }}
@@ -256,7 +256,7 @@ const AdminLayout = () => {
             <div className="fixed inset-0 z-50 md:hidden flex">
               <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
               <div className="relative w-[260px] h-full flex flex-col" style={{
-                background: 'rgba(69,72,96,0.95)',
+                background: 'rgba(246,241,233,0.95)',
                 backdropFilter: 'blur(24px)',
               }}>
                 <button
