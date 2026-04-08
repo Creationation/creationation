@@ -472,6 +472,104 @@ export type Database = {
           },
         ]
       }
+      demos: {
+        Row: {
+          access_token: string
+          address: string | null
+          business_name: string
+          business_type: string | null
+          city: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          converted_to_client_id: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          is_active: boolean
+          last_viewed_at: string | null
+          logo_url: string | null
+          notes: string | null
+          opening_hours: Json | null
+          phone: string | null
+          primary_color: string
+          prospect_id: string | null
+          secondary_color: string
+          services: Json | null
+          status: Database["public"]["Enums"]["demo_status"]
+          tagline: string | null
+          template_type: Database["public"]["Enums"]["demo_template_type"]
+          updated_at: string
+          viewed_count: number
+        }
+        Insert: {
+          access_token?: string
+          address?: string | null
+          business_name: string
+          business_type?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          converted_to_client_id?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          last_viewed_at?: string | null
+          logo_url?: string | null
+          notes?: string | null
+          opening_hours?: Json | null
+          phone?: string | null
+          primary_color?: string
+          prospect_id?: string | null
+          secondary_color?: string
+          services?: Json | null
+          status?: Database["public"]["Enums"]["demo_status"]
+          tagline?: string | null
+          template_type?: Database["public"]["Enums"]["demo_template_type"]
+          updated_at?: string
+          viewed_count?: number
+        }
+        Update: {
+          access_token?: string
+          address?: string | null
+          business_name?: string
+          business_type?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          converted_to_client_id?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          last_viewed_at?: string | null
+          logo_url?: string | null
+          notes?: string | null
+          opening_hours?: Json | null
+          phone?: string | null
+          primary_color?: string
+          prospect_id?: string | null
+          secondary_color?: string
+          services?: Json | null
+          status?: Database["public"]["Enums"]["demo_status"]
+          tagline?: string | null
+          template_type?: Database["public"]["Enums"]["demo_template_type"]
+          updated_at?: string
+          viewed_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demos_converted_to_client_id_fkey"
+            columns: ["converted_to_client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_sequences: {
         Row: {
           created_at: string | null
@@ -2238,6 +2336,13 @@ export type Database = {
         | "active"
         | "expired"
         | "cancelled"
+      demo_status: "draft" | "sent" | "viewed" | "converted" | "expired"
+      demo_template_type:
+        | "beauty"
+        | "coiffeur"
+        | "restaurant"
+        | "nail"
+        | "generic"
       expense_category:
         | "hosting"
         | "domain"
@@ -2446,6 +2551,14 @@ export const Constants = {
         "active",
         "expired",
         "cancelled",
+      ],
+      demo_status: ["draft", "sent", "viewed", "converted", "expired"],
+      demo_template_type: [
+        "beauty",
+        "coiffeur",
+        "restaurant",
+        "nail",
+        "generic",
       ],
       expense_category: [
         "hosting",
