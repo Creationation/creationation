@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Layout, Copy, Trash2, Edit, X, Sparkles, Smartphone, Palette, Upload, Image, FileCode, Download } from 'lucide-react';
+import { Plus, Search, Layout, Copy, Trash2, Edit, X, Sparkles, Smartphone, Palette, Upload, Image, FileCode, Download, Loader2, Wand2 } from 'lucide-react';
 import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
 const CATEGORIES = [
