@@ -85,6 +85,14 @@ const App = () => (
                 <Route path="services" element={<AdminServices />} />
                 <Route path="contracts" element={<AdminContracts />} />
               </Route>
+              {/* Admin View-as-Client */}
+              <Route path="/admin/view-as/:clientId" element={<AdminRoute><ViewAsClientLayout /></AdminRoute>}>
+                <Route index element={<PortalDashboard />} />
+                <Route path="tickets" element={<PortalTickets />} />
+                <Route path="tickets/:id" element={<PortalTicketDetail />} />
+                <Route path="project" element={<PortalProject />} />
+                <Route path="profile" element={<PortalProfile />} />
+              </Route>
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>
