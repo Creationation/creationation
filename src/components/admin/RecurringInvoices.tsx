@@ -90,35 +90,35 @@ const RecurringInvoices = ({ clients, onBack, onInvoiceCreated }: { clients: Cli
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <button onClick={onBack} style={{
-            padding: '8px 12px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
+            padding: '8px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: 10, cursor: 'pointer',
           }}><ArrowLeft size={16} /></button>
-          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)' }}>Factures récurrentes</h2>
+          <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 22, color: '#F2EDE4' }}>Factures récurrentes</h2>
         </div>
         <button onClick={() => setShowForm(true)} className="flex items-center gap-2" style={{
-          padding: '10px 18px', background: 'var(--teal)', color: '#fff', border: 'none',
-          borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+          padding: '10px 18px', background: '#2DD4B8', color: '#fff', border: 'none',
+          borderRadius: '12px', fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer',
         }}>
           <Plus size={14} /> Nouveau récurrent
         </button>
       </div>
 
       {loading ? (
-        <p style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Chargement...</p>
+        <p style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Chargement...</p>
       ) : items.length === 0 ? (
-        <p style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)', textAlign: 'center', padding: 40 }}>Aucune facture récurrente</p>
+        <p style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif', textAlign: 'center', padding: 40 }}>Aucune facture récurrente</p>
       ) : (
         <div style={{
-          background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)',
-          borderRadius: 'var(--r)', border: '1px solid var(--glass-border)', overflow: 'hidden',
+          background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(20px)',
+          borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)', overflow: 'hidden',
         }}>
           <div className="overflow-x-auto">
-            <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
+            <table className="w-full" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
                   {['Client', 'Description', 'Montant', 'Fréquence', 'Prochaine', 'Statut', 'Actions'].map(h => (
                     <th key={h} className="text-left px-4 py-3" style={{
-                      fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-light)', fontWeight: 600,
+                      fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600,
                     }}>{h}</th>
                   ))}
                 </tr>
@@ -126,19 +126,19 @@ const RecurringInvoices = ({ clients, onBack, onInvoiceCreated }: { clients: Cli
               <tbody>
                 {items.map(rec => (
                   <tr key={rec.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                    <td className="px-4 py-3" style={{ color: 'var(--charcoal)' }}>{rec.client_name}</td>
-                    <td className="px-4 py-3" style={{ color: 'var(--text-mid)' }}>{rec.description}</td>
+                    <td className="px-4 py-3" style={{ color: '#F2EDE4' }}>{rec.client_name}</td>
+                    <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)' }}>{rec.description}</td>
                     <td className="px-4 py-3 font-medium">{fmt(Number(rec.amount))}</td>
-                    <td className="px-4 py-3" style={{ color: 'var(--text-mid)' }}>{FREQ_LABELS[rec.frequency] || rec.frequency}</td>
-                    <td className="px-4 py-3" style={{ color: isDue(rec.next_invoice_date) ? '#ef4444' : 'var(--text-mid)', fontWeight: isDue(rec.next_invoice_date) ? 600 : 400 }}>
+                    <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)' }}>{FREQ_LABELS[rec.frequency] || rec.frequency}</td>
+                    <td className="px-4 py-3" style={{ color: isDue(rec.next_invoice_date) ? '#ef4444' : 'rgba(242,237,228,0.55)', fontWeight: isDue(rec.next_invoice_date) ? 600 : 400 }}>
                       {new Date(rec.next_invoice_date).toLocaleDateString('fr-FR')}
                       {isDue(rec.next_invoice_date) && <span style={{ marginLeft: 6, fontSize: 11, color: '#ef4444' }}>⚠️ À facturer</span>}
                     </td>
                     <td className="px-4 py-3">
                       <button onClick={() => toggleActive(rec.id, rec.is_active)} style={{
-                        padding: '4px 10px', borderRadius: 'var(--pill)', border: 'none', fontSize: 11, fontWeight: 600,
+                        padding: '4px 10px', borderRadius: '100px', border: 'none', fontSize: 11, fontWeight: 600,
                         background: rec.is_active ? 'rgba(16,185,129,0.15)' : 'rgba(0,0,0,0.06)',
-                        color: rec.is_active ? '#10b981' : '#999', cursor: 'pointer', fontFamily: 'var(--font-m)',
+                        color: rec.is_active ? '#10b981' : '#999', cursor: 'pointer', fontFamily: ''Space Mono', monospace',
                       }}>
                         {rec.is_active ? 'Actif' : 'Inactif'}
                       </button>
@@ -146,8 +146,8 @@ const RecurringInvoices = ({ clients, onBack, onInvoiceCreated }: { clients: Cli
                     <td className="px-4 py-3">
                       {isDue(rec.next_invoice_date) && rec.is_active && (
                         <button onClick={() => generateInvoice(rec)} className="flex items-center gap-1" style={{
-                          padding: '6px 12px', background: 'var(--teal)', color: '#fff', border: 'none',
-                          borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-b)',
+                          padding: '6px 12px', background: '#2DD4B8', color: '#fff', border: 'none',
+                          borderRadius: '100px', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: ''Outfit', sans-serif',
                         }}>
                           <RotateCcw size={12} /> Générer
                         </button>
@@ -193,8 +193,8 @@ const RecurringForm = ({ clients, onClose, onSaved }: { clients: Client[]; onClo
   };
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 14px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
-    borderRadius: 12, fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--text)', outline: 'none',
+    width: '100%', padding: '10px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: 12, fontFamily: ''Outfit', sans-serif', fontSize: 14, color: '#F2EDE4', outline: 'none',
   };
 
   return (
@@ -203,35 +203,35 @@ const RecurringForm = ({ clients, onClose, onSaved }: { clients: Client[]; onClo
       display: 'flex', justifyContent: 'center', alignItems: 'center',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 500, background: 'var(--warm)', borderRadius: 'var(--r-lg)',
-        padding: 28, border: '1px solid var(--glass-border)',
+        width: '100%', maxWidth: 500, background: 'var(--warm)', borderRadius: '20px',
+        padding: 28, border: '1px solid rgba(255,255,255,0.12)',
       }}>
-        <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 20, marginBottom: 20 }}>Nouveau récurrent</h3>
+        <h3 style={{ fontFamily: ''Playfair Display', serif', fontSize: 20, marginBottom: 20 }}>Nouveau récurrent</h3>
         <div className="flex flex-col gap-4">
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>Client *</label>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>Client *</label>
             <select value={clientId} onChange={e => setClientId(e.target.value)} style={inputStyle}>
               <option value="">Sélectionner...</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
             </select>
           </div>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>Description *</label>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>Description *</label>
             <input value={description} onChange={e => setDescription(e.target.value)} placeholder="Ex: Maintenance mensuelle" style={inputStyle} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>Montant *</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>Montant *</label>
               <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value))} style={inputStyle} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>TVA %</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>TVA %</label>
               <input type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} style={inputStyle} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>Fréquence</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>Fréquence</label>
               <select value={frequency} onChange={e => setFrequency(e.target.value)} style={inputStyle}>
                 <option value="weekly">Hebdomadaire</option>
                 <option value="monthly">Mensuel</option>
@@ -240,18 +240,18 @@ const RecurringForm = ({ clients, onClose, onSaved }: { clients: Client[]; onClo
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', fontFamily: 'var(--font-b)' }}>Première facture</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>Première facture</label>
               <input type="date" value={nextDate} onChange={e => setNextDate(e.target.value)} style={inputStyle} />
             </div>
           </div>
           <div className="flex gap-3 justify-end mt-2">
             <button onClick={onClose} style={{
-              padding: '10px 20px', background: 'transparent', border: '1px solid var(--glass-border)',
-              borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer',
+              padding: '10px 20px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '12px', fontFamily: ''Outfit', sans-serif', fontSize: 13, cursor: 'pointer',
             }}>Annuler</button>
             <button onClick={handleSave} disabled={saving} style={{
-              padding: '10px 20px', background: 'var(--teal)', color: '#fff', border: 'none',
-              borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              padding: '10px 20px', background: '#2DD4B8', color: '#fff', border: 'none',
+              borderRadius: '12px', fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer',
             }}>{saving ? '...' : 'Créer'}</button>
           </div>
         </div>

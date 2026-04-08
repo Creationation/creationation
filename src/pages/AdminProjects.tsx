@@ -36,7 +36,7 @@ const PROJECT_TYPES = ['app_ios_android', 'site_vitrine', 'landing_page', 'webap
 const TYPE_LABELS: Record<string, string> = { app_ios_android: 'App iOS/Android', site_vitrine: 'Site vitrine', landing_page: 'Landing page', webapp: 'Web app', autre: 'Autre' };
 
 const deadlineColor = (deadline: string | null) => {
-  if (!deadline) return 'var(--text-light)';
+  if (!deadline) return 'rgba(242,237,228,0.28)';
   const diff = (new Date(deadline).getTime() - Date.now()) / 86400000;
   if (diff < 0) return '#ef4444';
   if (diff < 3) return '#f97316';
@@ -75,25 +75,25 @@ const ProjectCard = ({ project, onClick, dragListeners }: { project: Project; on
           <GripVertical size={14} />
         </button>
         <div className="flex-1 min-w-0">
-          <div style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, color: 'var(--charcoal)', marginBottom: 4 }}>{project.title}</div>
-          <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', marginBottom: 6 }}>{project.client_name}</div>
+          <div style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14, fontWeight: 600, color: '#F2EDE4', marginBottom: 4 }}>{project.title}</div>
+          <div style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.28)', marginBottom: 6 }}>{project.client_name}</div>
           <div className="flex items-center gap-2 flex-wrap mb-2">
-            <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, fontFamily: 'var(--font-b)', color: '#fff', background: PRIORITY_COLORS[project.priority] }}>{PRIORITY_LABELS[project.priority]}</span>
-            {project.project_type && <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--text-mid)', background: 'rgba(0,0,0,0.05)' }}>{TYPE_LABELS[project.project_type] || project.project_type}</span>}
+            <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, fontFamily: ''Outfit', sans-serif', color: '#fff', background: PRIORITY_COLORS[project.priority] }}>{PRIORITY_LABELS[project.priority]}</span>
+            {project.project_type && <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 600, fontFamily: ''Outfit', sans-serif', color: 'rgba(242,237,228,0.55)', background: 'rgba(0,0,0,0.05)' }}>{TYPE_LABELS[project.project_type] || project.project_type}</span>}
           </div>
           {project.task_total ? (
             <div className="mb-2">
-              <div className="flex justify-between" style={{ fontSize: 10, fontFamily: 'var(--font-b)', color: 'var(--text-light)', marginBottom: 2 }}>
+              <div className="flex justify-between" style={{ fontSize: 10, fontFamily: ''Outfit', sans-serif', color: 'rgba(242,237,228,0.28)', marginBottom: 2 }}>
                 <span>{project.task_done}/{project.task_total} tâches</span>
                 <span>{progress}%</span>
               </div>
               <div style={{ height: 4, borderRadius: 2, background: 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-                <div style={{ width: `${progress}%`, height: '100%', background: 'var(--teal)', borderRadius: 2, transition: 'width 0.3s' }} />
+                <div style={{ width: `${progress}%`, height: '100%', background: '#2DD4B8', borderRadius: 2, transition: 'width 0.3s' }} />
               </div>
             </div>
           ) : null}
           {project.deadline && (
-            <div style={{ fontSize: 11, fontFamily: 'var(--font-b)', color: deadlineColor(project.deadline) }}>
+            <div style={{ fontSize: 11, fontFamily: ''Outfit', sans-serif', color: deadlineColor(project.deadline) }}>
               📅 {new Date(project.deadline).toLocaleDateString('fr-FR')}
             </div>
           )}
@@ -216,7 +216,7 @@ const AdminProjects = () => {
       <div className="p-4 md:p-6 max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
-          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: 0 }}>Projets</h2>
+          <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 24, color: '#F2EDE4', margin: 0 }}>Projets</h2>
           <div className="flex-1" />
           {/* View toggle */}
           <div className="flex" style={{ background: 'rgba(255,255,255,0.20)', borderRadius: 10, padding: 2, backdropFilter: 'blur(10px)' }}>
@@ -224,8 +224,8 @@ const AdminProjects = () => {
               <button key={v} onClick={() => setView(v)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '6px 12px', borderRadius: 8,
                 background: view === v ? 'rgba(255,255,255,0.5)' : 'transparent', border: 'none', cursor: 'pointer',
-                fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: view === v ? 600 : 400,
-                color: view === v ? 'var(--charcoal)' : 'var(--text-light)',
+                fontFamily: ''Outfit', sans-serif', fontSize: 12, fontWeight: view === v ? 600 : 400,
+                color: view === v ? '#F2EDE4' : 'rgba(242,237,228,0.28)',
                 boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
                 transition: 'all 0.15s',
               }}>
@@ -235,8 +235,8 @@ const AdminProjects = () => {
           </div>
           <button onClick={() => setShowNew(true)} style={{
             display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px',
-            background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)',
-            fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: '100px',
+            fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer',
           }}>
             <Plus size={14} /> Nouveau projet
           </button>
@@ -244,56 +244,56 @@ const AdminProjects = () => {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
-          <div className="flex items-center gap-2 flex-1 min-w-[180px]" style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.30)', borderRadius: 'var(--pill)', padding: '6px 14px', backdropFilter: 'blur(10px)' }}>
-            <Search size={14} style={{ color: 'var(--text-light)' }} />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 13, flex: 1, background: 'transparent' }} />
+          <div className="flex items-center gap-2 flex-1 min-w-[180px]" style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.30)', borderRadius: '100px', padding: '6px 14px', backdropFilter: 'blur(10px)' }}>
+            <Search size={14} style={{ color: 'rgba(242,237,228,0.28)' }} />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ border: 'none', outline: 'none', fontFamily: ''Outfit', sans-serif', fontSize: 13, flex: 1, background: 'transparent' }} />
           </div>
           {/* Multi-select status */}
-          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}>
+          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}>
             {STATUS_COLS.map(s => (
               <button key={s.key} onClick={() => setFilterStatus(prev => prev.includes(s.key) ? prev.filter(x => x !== s.key) : [...prev, s.key])} style={{
                 padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
-                fontFamily: 'var(--font-b)', fontSize: 11, fontWeight: 600,
+                fontFamily: ''Outfit', sans-serif', fontSize: 11, fontWeight: 600,
                 background: filterStatus.includes(s.key) ? `${s.color}20` : 'transparent',
-                color: filterStatus.includes(s.key) ? s.color : 'var(--text-light)',
+                color: filterStatus.includes(s.key) ? s.color : 'rgba(242,237,228,0.28)',
               }}>{s.label}</button>
             ))}
           </div>
           {/* Multi-select priority */}
-          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}>
+          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}>
             {(['urgent', 'high', 'medium', 'low'] as const).map(p => (
               <button key={p} onClick={() => setFilterPriority(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p])} style={{
                 padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
-                fontFamily: 'var(--font-b)', fontSize: 11, fontWeight: 600,
+                fontFamily: ''Outfit', sans-serif', fontSize: 11, fontWeight: 600,
                 background: filterPriority.includes(p) ? `${PRIORITY_COLORS[p]}20` : 'transparent',
-                color: filterPriority.includes(p) ? PRIORITY_COLORS[p] : 'var(--text-light)',
+                color: filterPriority.includes(p) ? PRIORITY_COLORS[p] : 'rgba(242,237,228,0.28)',
               }}>{PRIORITY_LABELS[p]}</button>
             ))}
           </div>
           <select
             value={filterClient}
             onChange={e => setFilterClient(e.target.value)}
-            style={{ padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', fontFamily: 'var(--font-b)', fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', backdropFilter: 'blur(10px)' }}
+            style={{ padding: '6px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)', fontFamily: ''Outfit', sans-serif', fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', backdropFilter: 'blur(10px)' }}
           >
             <option value="">Tous les clients</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
           </select>
-          <label className="flex items-center gap-2 cursor-pointer" style={{ padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', fontFamily: 'var(--font-b)', fontSize: 12, background: onlyLate ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.20)', color: onlyLate ? '#ef4444' : 'var(--text-mid)', backdropFilter: 'blur(10px)' }}>
+          <label className="flex items-center gap-2 cursor-pointer" style={{ padding: '6px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)', fontFamily: ''Outfit', sans-serif', fontSize: 12, background: onlyLate ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.20)', color: onlyLate ? '#ef4444' : 'rgba(242,237,228,0.55)', backdropFilter: 'blur(10px)' }}>
             <AlertTriangle size={12} />
             <input type="checkbox" checked={onlyLate} onChange={e => setOnlyLate(e.target.checked)} className="hidden" />
             En retard
           </label>
           {(filterStatus.length > 0 || filterPriority.length > 0 || filterClient || onlyLate) && (
             <button onClick={() => { setFilterStatus([]); setFilterPriority([]); setFilterClient(''); setOnlyLate(false); }} style={{
-              padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)',
-              fontFamily: 'var(--font-b)', fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', color: 'var(--text-light)',
+              padding: '6px 14px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.30)',
+              fontFamily: ''Outfit', sans-serif', fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', color: 'rgba(242,237,228,0.28)',
               display: 'flex', alignItems: 'center', gap: 4,
             }}><X size={12} /> Réinitialiser</button>
           )}
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60, fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Chargement...</div>
+          <div style={{ textAlign: 'center', padding: 60, fontFamily: ''Outfit', sans-serif', color: 'rgba(242,237,228,0.28)' }}>Chargement...</div>
         ) : view === 'kanban' ? (
           <KanbanView projects={filtered} sensors={sensors} activeProject={activeProject}
             onDragStart={handleDragStart} onDragEnd={handleDragEnd} onCardClick={id => setDetailId(id)} />
@@ -325,8 +325,8 @@ const KanbanView = ({ projects, sensors, activeProject, onDragStart, onDragEnd, 
             >
               <div className="flex items-center gap-2 mb-3 px-1">
                 <span style={{ fontSize: 16 }}>{col.icon}</span>
-                <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: col.color }}>{col.label}</span>
-                <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', background: 'rgba(0,0,0,0.05)', borderRadius: 99, padding: '1px 8px' }}>{colProjects.length}</span>
+                <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600, color: col.color }}>{col.label}</span>
+                <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)', background: 'rgba(0,0,0,0.05)', borderRadius: 99, padding: '1px 8px' }}>{colProjects.length}</span>
               </div>
               <div style={{ minHeight: 60, padding: 4, borderRadius: 12, background: `${col.color}08` }}>
                 {colProjects.map((p: Project) => (
@@ -346,13 +346,13 @@ const KanbanView = ({ projects, sensors, activeProject, onDragStart, onDragEnd, 
 
 // ─── List ───
 const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick: (id: string) => void }) => (
-  <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+  <div style={{ background: 'white', borderRadius: 16, border: '1px solid rgba(255,255,255,0.12)', overflow: 'hidden' }}>
     <div className="overflow-x-auto">
-      <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 13 }}>
+      <table className="w-full" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13 }}>
         <thead>
-          <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
+          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
             {['Projet', 'Client', 'Statut', 'Priorité', 'Progression', 'Deadline', 'Budget'].map(h => (
-              <th key={h} className="text-left px-4 py-3" style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-light)', fontWeight: 600 }}>{h}</th>
+              <th key={h} className="text-left px-4 py-3" style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600 }}>{h}</th>
             ))}
           </tr>
         </thead>
@@ -365,20 +365,20 @@ const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick:
                 onClick={() => onCardClick(p.id)}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.02)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                <td className="px-4 py-3 font-medium" style={{ color: 'var(--charcoal)' }}>{p.title}</td>
-                <td className="px-4 py-3" style={{ color: 'var(--text-mid)' }}>{p.client_name}</td>
+                <td className="px-4 py-3 font-medium" style={{ color: '#F2EDE4' }}>{p.title}</td>
+                <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)' }}>{p.client_name}</td>
                 <td className="px-4 py-3"><span style={{ padding: '2px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, color: col?.color, background: `${col?.color}15` }}>{col?.icon} {col?.label}</span></td>
                 <td className="px-4 py-3"><span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, color: '#fff', background: PRIORITY_COLORS[p.priority] }}>{PRIORITY_LABELS[p.priority]}</span></td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div style={{ width: 60, height: 4, borderRadius: 2, background: 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-                      <div style={{ width: `${progress}%`, height: '100%', background: 'var(--teal)', borderRadius: 2 }} />
+                      <div style={{ width: `${progress}%`, height: '100%', background: '#2DD4B8', borderRadius: 2 }} />
                     </div>
-                    <span style={{ fontSize: 11, color: 'var(--text-light)' }}>{progress}%</span>
+                    <span style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{progress}%</span>
                   </div>
                 </td>
                 <td className="px-4 py-3" style={{ fontSize: 12, color: deadlineColor(p.deadline) }}>{p.deadline ? new Date(p.deadline).toLocaleDateString('fr-FR') : '—'}</td>
-                <td className="px-4 py-3" style={{ color: 'var(--text-mid)' }}>{p.budget ? `${p.budget} ${p.currency}` : '—'}</td>
+                <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)' }}>{p.budget ? `${p.budget} ${p.currency}` : '—'}</td>
               </tr>
             );
           })}
@@ -391,7 +391,7 @@ const ListView = ({ projects, onCardClick }: { projects: Project[]; onCardClick:
 // ─── Timeline ───
 const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardClick: (id: string) => void }) => {
   const withDates = projects.filter(p => p.start_date || p.deadline);
-  if (!withDates.length) return <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--text-light)' }}>Aucun projet avec des dates définies.</div>;
+  if (!withDates.length) return <div style={{ textAlign: 'center', padding: 40, fontFamily: ''Outfit', sans-serif', color: 'rgba(242,237,228,0.28)' }}>Aucun projet avec des dates définies.</div>;
 
   const allDates = withDates.flatMap(p => [p.start_date, p.deadline].filter(Boolean).map(d => new Date(d!).getTime()));
   const minDate = Math.min(...allDates);
@@ -401,7 +401,7 @@ const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardCl
   const todayPos = Math.max(0, Math.min(100, ((today - minDate) / range) * 100));
 
   return (
-    <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--glass-border)', padding: 20, overflow: 'auto' }}>
+    <div style={{ background: 'white', borderRadius: 16, border: '1px solid rgba(255,255,255,0.12)', padding: 20, overflow: 'auto' }}>
       <div style={{ position: 'relative', minWidth: 600, minHeight: withDates.length * 44 + 30 }}>
         {/* Today line */}
         <div style={{ position: 'absolute', left: `${todayPos}%`, top: 0, bottom: 0, width: 2, background: '#ef4444', opacity: 0.3, zIndex: 1 }} />
@@ -415,7 +415,7 @@ const TimelineView = ({ projects, onCardClick }: { projects: Project[]; onCardCl
             <div key={p.id} onClick={() => onCardClick(p.id)} className="cursor-pointer" style={{ position: 'absolute', top: i * 44, left: `${left}%`, width: `${width}%`, height: 32, background: `${col?.color}20`, borderRadius: 8, border: `1px solid ${col?.color}40`, display: 'flex', alignItems: 'center', padding: '0 10px', gap: 6, minWidth: 100 }}
               onMouseEnter={e => e.currentTarget.style.background = `${col?.color}35`}
               onMouseLeave={e => e.currentTarget.style.background = `${col?.color}20`}>
-              <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, fontWeight: 600, color: col?.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.title}</span>
+              <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, fontWeight: 600, color: col?.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.title}</span>
             </div>
           );
         })}
@@ -482,7 +482,7 @@ const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
       <div className="rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" style={{ background: 'white' }}>
         <div className="flex items-center justify-between mb-5">
-          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 22 }}>Nouveau projet</h2>
+          <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 22 }}>Nouveau projet</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
         </div>
         <div className="space-y-3">
@@ -516,10 +516,10 @@ const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: 
             <div className="flex gap-2">
               {(['low', 'medium', 'high', 'urgent'] as const).map(p => (
                 <button key={p} onClick={() => setForm(f => ({ ...f, priority: p }))} style={{
-                  flex: 1, padding: '6px 0', borderRadius: 8, border: form.priority === p ? `2px solid ${PRIORITY_COLORS[p]}` : '1px solid var(--glass-border)',
+                  flex: 1, padding: '6px 0', borderRadius: 8, border: form.priority === p ? `2px solid ${PRIORITY_COLORS[p]}` : '1px solid rgba(255,255,255,0.12)',
                   background: form.priority === p ? `${PRIORITY_COLORS[p]}15` : 'transparent',
-                  color: form.priority === p ? PRIORITY_COLORS[p] : 'var(--text-mid)',
-                  fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                  color: form.priority === p ? PRIORITY_COLORS[p] : 'rgba(242,237,228,0.55)',
+                  fontFamily: ''Outfit', sans-serif', fontSize: 12, fontWeight: 600, cursor: 'pointer',
                 }}>{PRIORITY_LABELS[p]}</button>
               ))}
             </div>
@@ -536,8 +536,8 @@ const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: 
             </Field>
           </div>
           <button onClick={handleCreate} disabled={saving} style={{
-            width: '100%', padding: '12px 0', background: 'var(--teal)', color: '#fff', border: 'none',
-            borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8, opacity: saving ? 0.6 : 1,
+            width: '100%', padding: '12px 0', background: '#2DD4B8', color: '#fff', border: 'none',
+            borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8, opacity: saving ? 0.6 : 1,
           }}>
             {saving ? 'Création...' : 'Créer le projet'}
           </button>
@@ -549,14 +549,14 @@ const NewProjectModal = ({ clients, templates, onClose, onCreated }: { clients: 
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div>
-    <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', display: 'block', marginBottom: 4 }}>{label}</label>
+    <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.28)', display: 'block', marginBottom: 4 }}>{label}</label>
     {children}
   </div>
 );
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid var(--glass-border)',
-  fontFamily: 'var(--font-b)', fontSize: 13, outline: 'none', background: 'white',
+  width: '100%', padding: '8px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)',
+  fontFamily: ''Outfit', sans-serif', fontSize: 13, outline: 'none', background: 'white',
 };
 
 export default AdminProjects;

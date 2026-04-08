@@ -214,7 +214,7 @@ const AdminInvoices = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <FileText size={24} style={{ color: 'var(--teal)' }} />
+            <FileText size={24} style={{ color: '#2DD4B8' }} />
             <h1 className="admin-page-title">Factures</h1>
           </div>
           <div className="flex gap-2">
@@ -229,8 +229,8 @@ const AdminInvoices = () => {
               { key: 'issue_date', label: 'Date émission' }, { key: 'due_date', label: 'Échéance' },
               { key: 'total', label: 'Total' }, { key: 'amount_paid', label: 'Payé' }, { key: 'currency', label: 'Devise' },
             ])} className="flex items-center gap-2" style={{
-              padding: '10px 14px', background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)',
-              borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer', color: 'var(--text-mid)',
+              padding: '10px 14px', background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '12px', fontFamily: ''Outfit', sans-serif', fontSize: 13, cursor: 'pointer', color: 'rgba(242,237,228,0.55)',
             }}>
               <Download size={14} /> CSV
             </button>
@@ -240,15 +240,15 @@ const AdminInvoices = () => {
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
           {[
-            { label: 'Total facturé', value: fmt(kpis.totalBilled), color: 'var(--charcoal)' },
-            { label: 'Encaissé', value: fmt(kpis.collected), color: 'var(--teal)' },
+            { label: 'Total facturé', value: fmt(kpis.totalBilled), color: '#F2EDE4' },
+            { label: 'Encaissé', value: fmt(kpis.collected), color: '#2DD4B8' },
             { label: 'En attente', value: fmt(kpis.pending), color: '#f59e0b' },
-            { label: 'En retard', value: fmt(kpis.overdue), color: 'var(--coral)' },
-            { label: 'Ce mois', value: fmt(kpis.thisMonth), color: 'var(--sky)' },
+            { label: 'En retard', value: fmt(kpis.overdue), color: '#F07067' },
+            { label: 'Ce mois', value: fmt(kpis.thisMonth), color: '#4da6d9' },
           ].map((k, i) => (
             <div key={i} className="admin-glass-card" style={{ padding: 16 }}>
-              <p style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', marginBottom: 4 }}>{k.label}</p>
-              <p style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: k.color }}>{k.value}</p>
+              <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)', marginBottom: 4 }}>{k.label}</p>
+              <p style={{ fontFamily: ''Playfair Display', serif', fontSize: 22, color: k.color }}>{k.value}</p>
             </div>
           ))}
         </div>
@@ -258,16 +258,16 @@ const AdminInvoices = () => {
           {/* Search + client + overdue + refresh */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex items-center gap-2 flex-1" style={{
-              padding: '10px 16px', background: 'var(--glass-bg)', borderRadius: 'var(--r)',
-              border: '1px solid var(--glass-border)',
+              padding: '10px 16px', background: 'rgba(255,255,255,0.06)', borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.12)',
             }}>
-              <Search size={16} style={{ color: 'var(--text-light)' }} />
+              <Search size={16} style={{ color: 'rgba(242,237,228,0.28)' }} />
               <input placeholder="Rechercher (n° facture, client)..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--text)' }} />
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontFamily: ''Outfit', sans-serif', fontSize: 14, color: '#F2EDE4' }} />
             </div>
             <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} style={{
-              padding: '10px 16px', background: 'var(--glass-bg)', borderRadius: 'var(--r)',
-              border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--text)', cursor: 'pointer',
+              padding: '10px 16px', background: 'rgba(255,255,255,0.06)', borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 14, color: '#F2EDE4', cursor: 'pointer',
             }}>
               <option value="all">Tous les clients</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
@@ -277,9 +277,9 @@ const AdminInvoices = () => {
             <Popover>
               <PopoverTrigger asChild>
                 <button style={{
-                  padding: '10px 16px', background: dateFrom || dateTo ? 'rgba(13,138,111,0.08)' : 'var(--glass-bg)',
-                  borderRadius: 'var(--r)', border: '1px solid var(--glass-border)',
-                  fontFamily: 'var(--font-b)', fontSize: 13, color: dateFrom || dateTo ? 'var(--teal)' : 'var(--text-mid)',
+                  padding: '10px 16px', background: dateFrom || dateTo ? 'rgba(13,138,111,0.08)' : 'rgba(255,255,255,0.06)',
+                  borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)',
+                  fontFamily: ''Outfit', sans-serif', fontSize: 13, color: dateFrom || dateTo ? '#2DD4B8' : 'rgba(242,237,228,0.55)',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
                 }}>
                   <CalendarIcon size={14} />
@@ -289,22 +289,22 @@ const AdminInvoices = () => {
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start" style={{ zIndex: 200 }}>
-                <div className="p-3" style={{ fontFamily: 'var(--font-b)', fontSize: 12 }}>
-                  <p style={{ fontWeight: 600, marginBottom: 8, color: 'var(--charcoal)' }}>Date d'émission</p>
+                <div className="p-3" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12 }}>
+                  <p style={{ fontWeight: 600, marginBottom: 8, color: '#F2EDE4' }}>Date d'émission</p>
                   <div className="flex flex-col gap-2">
                     <div>
-                      <p style={{ fontSize: 11, color: 'var(--text-light)', marginBottom: 4 }}>Du</p>
+                      <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', marginBottom: 4 }}>Du</p>
                       <Calendar mode="single" selected={dateFrom} onSelect={setDateFrom} locale={fr}
                         className={cn("p-2 pointer-events-auto")} />
                     </div>
                     <div>
-                      <p style={{ fontSize: 11, color: 'var(--text-light)', marginBottom: 4 }}>Au</p>
+                      <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', marginBottom: 4 }}>Au</p>
                       <Calendar mode="single" selected={dateTo} onSelect={setDateTo} locale={fr}
                         className={cn("p-2 pointer-events-auto")} />
                     </div>
                     {(dateFrom || dateTo) && (
                       <button onClick={() => { setDateFrom(undefined); setDateTo(undefined); }}
-                        style={{ padding: '4px 8px', fontSize: 11, color: 'var(--coral)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-b)' }}>
+                        style={{ padding: '4px 8px', fontSize: 11, color: '#F07067', background: 'none', border: 'none', cursor: 'pointer', fontFamily: ''Outfit', sans-serif' }}>
                         Effacer les dates
                       </button>
                     )}
@@ -314,31 +314,31 @@ const AdminInvoices = () => {
             </Popover>
 
             <label className="flex items-center gap-2 cursor-pointer" style={{
-              padding: '10px 16px', background: overdueOnly ? 'rgba(239,68,68,0.1)' : 'var(--glass-bg)',
-              borderRadius: 'var(--r)', border: '1px solid var(--glass-border)',
-              fontFamily: 'var(--font-b)', fontSize: 13, color: overdueOnly ? '#ef4444' : 'var(--text-mid)',
+              padding: '10px 16px', background: overdueOnly ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.06)',
+              borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)',
+              fontFamily: ''Outfit', sans-serif', fontSize: 13, color: overdueOnly ? '#ef4444' : 'rgba(242,237,228,0.55)',
             }}>
               <input type="checkbox" checked={overdueOnly} onChange={e => setOverdueOnly(e.target.checked)} style={{ display: 'none' }} />
               ⚠️ En retard
             </label>
             <button onClick={fetchData} style={{
-              padding: '10px 16px', background: 'var(--teal)', color: '#fff', border: 'none',
-              borderRadius: 'var(--r)', cursor: 'pointer',
+              padding: '10px 16px', background: '#2DD4B8', color: '#fff', border: 'none',
+              borderRadius: '12px', cursor: 'pointer',
             }}><RefreshCw size={14} /></button>
           </div>
 
           {/* Status multi-select chips */}
           <div className="flex flex-wrap gap-2 items-center">
-            <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', marginRight: 4 }}>Statuts :</span>
+            <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.28)', marginRight: 4 }}>Statuts :</span>
             {Object.entries(STATUS_CONFIG).map(([key, cfg]) => {
               const active = statusFilters.includes(key);
               return (
                 <button key={key} onClick={() => toggleStatusFilter(key)} style={{
-                  padding: '5px 12px', borderRadius: 'var(--pill)',
-                  border: active ? `2px solid ${cfg.color}` : '1px solid var(--glass-border)',
-                  background: active ? `${cfg.color}18` : 'var(--glass-bg)',
-                  color: active ? cfg.color : 'var(--text-mid)',
-                  fontFamily: 'var(--font-m)', fontSize: 12, fontWeight: active ? 600 : 400,
+                  padding: '5px 12px', borderRadius: '100px',
+                  border: active ? `2px solid ${cfg.color}` : '1px solid rgba(255,255,255,0.12)',
+                  background: active ? `${cfg.color}18` : 'rgba(255,255,255,0.06)',
+                  color: active ? cfg.color : 'rgba(242,237,228,0.55)',
+                  fontFamily: ''Space Mono', monospace', fontSize: 12, fontWeight: active ? 600 : 400,
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}>
                   {cfg.label}
@@ -347,9 +347,9 @@ const AdminInvoices = () => {
             })}
             {hasActiveFilters && (
               <button onClick={clearFilters} className="flex items-center gap-1" style={{
-                padding: '5px 12px', borderRadius: 'var(--pill)', background: 'rgba(232,115,90,0.08)',
-                border: '1px solid rgba(232,115,90,0.2)', color: 'var(--coral)',
-                fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                padding: '5px 12px', borderRadius: '100px', background: 'rgba(232,115,90,0.08)',
+                border: '1px solid rgba(232,115,90,0.2)', color: '#F07067',
+                fontFamily: ''Outfit', sans-serif', fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}>
                 <XIcon size={12} /> Réinitialiser
               </button>
@@ -359,18 +359,18 @@ const AdminInvoices = () => {
 
         {/* Table */}
         {loading ? (
-          <div className="text-center py-20" style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Chargement...</div>
+          <div className="text-center py-20" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Chargement...</div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20" style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Aucune facture trouvée</div>
+          <div className="text-center py-20" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Aucune facture trouvée</div>
         ) : (
           <div className="admin-glass-table">
             <div className="overflow-x-auto">
-              <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
+              <table className="w-full" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                     {['N°', 'Client', 'Projet', 'Source', 'Date', 'Échéance', 'Montant', 'Statut', 'Actions'].map(h => (
                       <th key={h} className="text-left px-4 py-3" style={{
-                        fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-light)', fontWeight: 600,
+                        fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(242,237,228,0.28)', fontWeight: 600,
                       }}>{h}</th>
                     ))}
                   </tr>
@@ -385,30 +385,30 @@ const AdminInvoices = () => {
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,157,143,0.04)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                       >
-                        <td className="px-4 py-3 font-medium" style={{ color: 'var(--teal)', fontFamily: 'var(--font-m)', fontSize: 12 }}>
+                        <td className="px-4 py-3 font-medium" style={{ color: '#2DD4B8', fontFamily: ''Space Mono', monospace', fontSize: 12 }}>
                           {inv.invoice_number}
                         </td>
-                        <td className="px-4 py-3" style={{ color: 'var(--charcoal)' }}>{inv.client_name}</td>
-                        <td className="px-4 py-3" style={{ color: 'var(--text-mid)', fontSize: 13 }}>{inv.project_title || '—'}</td>
+                        <td className="px-4 py-3" style={{ color: '#F2EDE4' }}>{inv.client_name}</td>
+                        <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)', fontSize: 13 }}>{inv.project_title || '—'}</td>
                         <td className="px-4 py-3">
                           <span style={{
-                            padding: '3px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-m)',
+                            padding: '3px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: ''Space Mono', monospace',
                             background: (inv as any).source === 'stripe' ? 'rgba(99,91,255,0.12)' : 'rgba(255,255,255,0.06)',
-                            color: (inv as any).source === 'stripe' ? '#635BFF' : 'var(--text-light)',
+                            color: (inv as any).source === 'stripe' ? '#635BFF' : 'rgba(242,237,228,0.28)',
                           }}>{(inv as any).source === 'stripe' ? '⚡ Stripe' : 'Manuel'}</span>
                         </td>
-                        <td className="px-4 py-3" style={{ color: 'var(--text-mid)', fontSize: 13 }}>
+                        <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)', fontSize: 13 }}>
                           {new Date(inv.issue_date).toLocaleDateString('fr-FR')}
                         </td>
-                        <td className="px-4 py-3" style={{ color: isOverdue ? '#ef4444' : 'var(--text-mid)', fontSize: 13, fontWeight: isOverdue ? 600 : 400 }}>
+                        <td className="px-4 py-3" style={{ color: isOverdue ? '#ef4444' : 'rgba(242,237,228,0.55)', fontSize: 13, fontWeight: isOverdue ? 600 : 400 }}>
                           {new Date(inv.due_date).toLocaleDateString('fr-FR')}
                         </td>
-                        <td className="px-4 py-3 font-medium" style={{ color: 'var(--charcoal)' }}>{fmt(Number(inv.total))}</td>
+                        <td className="px-4 py-3 font-medium" style={{ color: '#F2EDE4' }}>{fmt(Number(inv.total))}</td>
                         <td className="px-4 py-3">
                           <span style={{
-                            padding: '4px 10px', borderRadius: 'var(--pill)',
+                            padding: '4px 10px', borderRadius: '100px',
                             background: `${sc.color}18`, color: sc.color,
-                            fontWeight: 600, fontSize: 11, fontFamily: 'var(--font-m)',
+                            fontWeight: 600, fontSize: 11, fontFamily: ''Space Mono', monospace',
                           }}>{sc.label}</span>
                         </td>
                         <td className="px-4 py-3">

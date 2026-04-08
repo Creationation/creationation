@@ -605,7 +605,7 @@ const AdminProspects = () => {
             <div key={s.label} style={{ padding:'10px 12px', background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:16, display:'flex', alignItems:'center', gap:8 }}>
               <s.icon size={14} style={{ color:'#2DD4B8', flexShrink:0 }}/>
               <div style={{ minWidth:0 }}>
-                <div style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'var(--charcoal)', lineHeight:1.1 }}>{s.value}</div>
+                <div style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'#F2EDE4', lineHeight:1.1 }}>{s.value}</div>
                 <div style={{ fontFamily:"'Outfit', sans-serif", fontSize:9, color:'rgba(242,237,228,0.28)', textTransform:'uppercase', letterSpacing:0.5, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.label}</div>
               </div>
             </div>
@@ -626,8 +626,8 @@ const AdminProspects = () => {
 
         {tab === 'search' && (
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            <div style={{ padding:24, background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'var(--r-xl)' }}>
-              <h3 style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'var(--charcoal)', margin:'0 0 8px' }}>Recherche Google Maps — Mondiale</h3>
+            <div style={{ padding:24, background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'28px' }}>
+              <h3 style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'#F2EDE4', margin:'0 0 8px' }}>Recherche Google Maps — Mondiale</h3>
               <p style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'rgba(242,237,228,0.28)', margin:'0 0 16px' }}>Choisis un continent, un pays, une ville — ou combine-les. Seul le type est obligatoire.</p>
               <div className='flex flex-col gap-3'>
                 <div className='flex flex-col sm:flex-row gap-3'>
@@ -675,9 +675,9 @@ const AdminProspects = () => {
             </div>
 
             {searchResults && (
-              <div style={{ background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'var(--r-xl)', padding:20 }}>
+              <div style={{ background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'28px', padding:20 }}>
                 <div className='flex items-center justify-between mb-4'>
-                  <h4 style={{ fontFamily:"'Playfair Display', serif", fontSize:15, color:'var(--charcoal)', margin:0 }}>{searchResults.length} resultats</h4>
+                  <h4 style={{ fontFamily:"'Playfair Display', serif", fontSize:15, color:'#F2EDE4', margin:0 }}>{searchResults.length} resultats</h4>
                   <button onClick={addAllNoWebsite} style={{ padding:'8px 16px', background:'#2DD4B8', color:'#fff', border:'none', borderRadius:'100px', fontFamily:"'Outfit', sans-serif", fontSize:12, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
                     <UserPlus size={13}/> Importer sans site ({searchResults.filter(r => !r.has_website).length})
                   </button>
@@ -687,7 +687,7 @@ const AdminProspects = () => {
                     <div key={r.google_place_id} className='flex items-center gap-4' style={{ padding:'12px 16px', background:r.has_website?'transparent':'rgba(13,138,111,0.04)', borderRadius:'12px', border:'1px solid rgba(255,255,255,0.12)' }}>
                       <div style={{ flex:1 }}>
                         <div className='flex items-center gap-2'>
-                          <span style={{ fontWeight:600, fontFamily:"'Outfit', sans-serif", color:'var(--charcoal)' }}>{r.business_name}</span>
+                          <span style={{ fontWeight:600, fontFamily:"'Outfit', sans-serif", color:'#F2EDE4' }}>{r.business_name}</span>
                           {r.rating && <span style={{ fontSize:11, color:'rgba(242,237,228,0.28)', display:'flex', alignItems:'center', gap:2 }}><Star size={10}/> {r.rating} ({r.review_count})</span>}
                           {r.has_website ? <Globe size={12} style={{ color:'rgba(242,237,228,0.28)' }}/> : <GlobeLock size={12} style={{ color:'#2DD4B8' }}/>}
                         </div>
@@ -706,10 +706,10 @@ const AdminProspects = () => {
 
             {/* Coverage Summary */}
             {searchChunks.length > 0 && (
-              <div style={{ background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'var(--r-xl)', padding:20 }}>
+              <div style={{ background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'28px', padding:20 }}>
                 <div className='flex items-center gap-2 mb-4'>
                   <MapPin size={16} style={{ color:'#2DD4B8' }}/>
-                  <h4 style={{ fontFamily:"'Playfair Display', serif", fontSize:15, color:'var(--charcoal)', margin:0 }}>Couverture par continent</h4>
+                  <h4 style={{ fontFamily:"'Playfair Display', serif", fontSize:15, color:'#F2EDE4', margin:0 }}>Couverture par continent</h4>
                 </div>
                 <div className='flex flex-col gap-3'>
                   {Object.entries(CONTINENTS).map(([continent, countries]) => {
@@ -722,7 +722,7 @@ const AdminProspects = () => {
                     return (
                       <div key={continent}>
                         <div className='flex items-center justify-between mb-1'>
-                          <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'var(--charcoal)', fontWeight:600 }}>{continent}</span>
+                          <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'#F2EDE4', fontWeight:600 }}>{continent}</span>
                           <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'rgba(242,237,228,0.55)' }}>{covered}/{total} pays · {totalResults} prospects</span>
                         </div>
                         <div style={{ height:8, background:'rgba(255,255,255,0.06)', borderRadius:99, overflow:'hidden' }}>
@@ -742,11 +742,11 @@ const AdminProspects = () => {
             )}
 
             {/* Chunk History */}
-            <div style={{ background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'var(--r-xl)', padding:20 }}>
+            <div style={{ background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'28px', padding:20 }}>
               <button onClick={() => setShowChunkHistory(!showChunkHistory)} className='flex items-center justify-between w-full' style={{ background:'none', border:'none', cursor:'pointer', padding:0 }}>
                 <div className='flex items-center gap-2'>
                   <History size={16} style={{ color:'#2DD4B8' }}/>
-                  <h4 style={{ fontFamily:"'Playfair Display', serif", fontSize:15, color:'var(--charcoal)', margin:0 }}>Historique des recherches</h4>
+                  <h4 style={{ fontFamily:"'Playfair Display', serif", fontSize:15, color:'#F2EDE4', margin:0 }}>Historique des recherches</h4>
                   <span style={{ padding:'2px 10px', borderRadius:'100px', background:'rgba(13,138,111,0.1)', color:'#2DD4B8', fontFamily:"'Outfit', sans-serif", fontSize:12, fontWeight:600 }}>{searchChunks.length} chunks</span>
                 </div>
                 <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'rgba(242,237,228,0.28)' }}>{showChunkHistory ? '▲ Masquer' : '▼ Voir'}</span>
@@ -758,7 +758,7 @@ const AdminProspects = () => {
                   </div>
                   {searchChunks.map(c => (
                     <div key={c.id} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto auto auto', gap:8, padding:'8px 12px', background:'rgba(255,255,255,0.06)', borderRadius:'12px', border:'1px solid rgba(255,255,255,0.12)', alignItems:'center' }}>
-                      <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'var(--charcoal)', fontWeight:600 }}>{c.business_type}</span>
+                      <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'#F2EDE4', fontWeight:600 }}>{c.business_type}</span>
                       <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'rgba(242,237,228,0.55)' }}>{c.country || '—'}</span>
                       <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'rgba(242,237,228,0.55)' }}>{c.city || '—'}</span>
                       <span style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'#2DD4B8', fontWeight:600, textAlign:'center', minWidth:40 }}>{c.results_count}</span>
@@ -859,7 +859,7 @@ const AdminProspects = () => {
                       <label style={{ fontFamily:"'Outfit', sans-serif", fontSize:10, color:'rgba(242,237,228,0.28)', textTransform:'uppercase', letterSpacing:0.5, display:'block', marginBottom:4 }}>Tags</label>
                       <div className='flex flex-wrap gap-1'>
                         {allTags.map(t => (
-                          <button key={t} onClick={() => setTagFilter(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} style={{ padding:'3px 10px', borderRadius:100, border:'1px solid', borderColor: tagFilter.includes(t) ? 'var(--violet)' : 'rgba(255,255,255,0.12)', background: tagFilter.includes(t) ? 'rgba(124,92,191,0.1)' : 'transparent', color: tagFilter.includes(t) ? 'var(--violet)' : 'rgba(242,237,228,0.55)', fontFamily:"'Outfit', sans-serif", fontSize:11, cursor:'pointer' }}>{t}</button>
+                          <button key={t} onClick={() => setTagFilter(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} style={{ padding:'3px 10px', borderRadius:100, border:'1px solid', borderColor: tagFilter.includes(t) ? '#A78BDB' : 'rgba(255,255,255,0.12)', background: tagFilter.includes(t) ? 'rgba(124,92,191,0.1)' : 'transparent', color: tagFilter.includes(t) ? '#A78BDB' : 'rgba(242,237,228,0.55)', fontFamily:"'Outfit', sans-serif", fontSize:11, cursor:'pointer' }}>{t}</button>
                         ))}
                       </div>
                     </div>
@@ -921,7 +921,7 @@ const AdminProspects = () => {
                 <button onClick={openEmailModal} style={{ padding:'6px 12px', background:'#2DD4B8', color:'#fff', border:'none', borderRadius:100, fontFamily:"'Outfit', sans-serif", fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
                   <Mail size={12}/> Emails IA
                 </button>
-                <button onClick={transferToClients} disabled={transferring} style={{ padding:'6px 12px', background:'var(--violet)', color:'#fff', border:'none', borderRadius:100, fontFamily:"'Outfit', sans-serif", fontSize:11, fontWeight:600, cursor:transferring?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:transferring?0.7:1 }}>
+                <button onClick={transferToClients} disabled={transferring} style={{ padding:'6px 12px', background:'#A78BDB', color:'#fff', border:'none', borderRadius:100, fontFamily:"'Outfit', sans-serif", fontSize:11, fontWeight:600, cursor:transferring?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:transferring?0.7:1 }}>
                   {transferring ? <Loader2 size={12} className='animate-spin'/> : <ArrowRightLeft size={12}/>} Vers Clients
                 </button>
               </div>
@@ -935,7 +935,7 @@ const AdminProspects = () => {
                   <div>
                     <div className='flex items-center gap-2 mb-3'>
                       <GlobeLock size={16} style={{ color:'#2DD4B8' }}/>
-                      <h3 style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'var(--charcoal)', margin:0 }}>Sans site internet</h3>
+                      <h3 style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'#F2EDE4', margin:0 }}>Sans site internet</h3>
                       <span style={{ padding:'2px 10px', borderRadius:'100px', background:'rgba(13,138,111,0.1)', color:'#2DD4B8', fontFamily:"'Outfit', sans-serif", fontSize:12, fontWeight:600 }}>{prospectsNoSite.length}</span>
                     </div>
                     <ProspectTable prospects={prospectsNoSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsNoSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} onViewDetail={setDetailProspect} />
@@ -947,7 +947,7 @@ const AdminProspects = () => {
                   <div>
                     <div className='flex items-center gap-2 mb-3'>
                       <Globe size={16} style={{ color:'rgba(242,237,228,0.28)' }}/>
-                      <h3 style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'var(--charcoal)', margin:0 }}>Avec site internet</h3>
+                      <h3 style={{ fontFamily:"'Playfair Display', serif", fontSize:16, color:'#F2EDE4', margin:0 }}>Avec site internet</h3>
                       <span style={{ padding:'2px 10px', borderRadius:'100px', background:'rgba(255,255,255,0.06)', color:'rgba(242,237,228,0.55)', fontFamily:"'Outfit', sans-serif", fontSize:12, fontWeight:600 }}>{prospectsWithSite.length}</span>
                     </div>
                     <ProspectTable prospects={prospectsWithSite} selectedIds={selectedIds} onToggleSelect={toggleSelect} onToggleSelectAll={() => { const ids = prospectsWithSite.map(p=>p.id); const all = ids.every(id=>selectedIds.has(id)); setSelectedIds(prev => { const n = new Set(prev); ids.forEach(id => all ? n.delete(id) : n.add(id)); return n; }); }} onDelete={deleteProspect} onUpdateEmail={updateEmail} onUpdateStatus={updateStatus} onViewDetail={setDetailProspect} />
@@ -963,7 +963,7 @@ const AdminProspects = () => {
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.45)', backdropFilter:'blur(12px)', zIndex:100, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
           <div style={{ width:'100%', maxWidth:560, background:'rgba(255,255,255,0.18)', backdropFilter:'blur(24px) saturate(1.4)', borderRadius:28, padding:32, maxHeight:'90vh', overflowY:'auto', border:'1px solid rgba(255,255,255,0.35)', boxShadow:'0 8px 32px rgba(0,0,0,0.12)' }}>
             <div className='flex items-center justify-between mb-6'>
-              <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:20, color:'var(--charcoal)', margin:0 }}>Ajouter un prospect</h2>
+              <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:20, color:'#F2EDE4', margin:0 }}>Ajouter un prospect</h2>
               <button onClick={() => setShowManualAdd(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'rgba(242,237,228,0.28)' }}><X size={20}/></button>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
@@ -1055,7 +1055,7 @@ const ProspectTable = ({ prospects, selectedIds, onToggleSelect, onToggleSelectA
           </button>
           <div style={{ flex:1 }}>
             <div className='flex items-center gap-2 mb-1'>
-              <span style={{ fontWeight:600, color:'var(--charcoal)', fontFamily:"'Outfit', sans-serif" }}>{p.business_name}</span>
+              <span style={{ fontWeight:600, color:'#F2EDE4', fontFamily:"'Outfit', sans-serif" }}>{p.business_name}</span>
               <span style={{ padding:'2px 8px', borderRadius:'100px', background:SC[p.status]+'18', color:SC[p.status], fontSize:11, fontWeight:600 }}>{SL[p.status]}</span>
             </div>
             <p style={{ fontSize:12, color:'rgba(242,237,228,0.55)', margin:'2px 0', fontFamily:"'Outfit', sans-serif" }}>{p.email || 'Pas d\'email'}</p>
@@ -1085,7 +1085,7 @@ const ProspectRow = ({ prospect: p, selected, onToggle, onDelete, onUpdateEmail,
       </td>
       <td className='px-4 py-3'>
         <div className='flex items-center gap-2'>
-          <div style={{ fontWeight:600, color:'var(--charcoal)', fontSize:14 }}>{p.business_name}</div>
+          <div style={{ fontWeight:600, color:'#F2EDE4', fontSize:14 }}>{p.business_name}</div>
           {(p.score || 0) > 0 && <span style={{ padding:'1px 6px', borderRadius:'100px', fontSize:10, fontWeight:700, fontFamily:"'Outfit', sans-serif", background: (p.score || 0) > 60 ? 'rgba(16,185,129,0.15)' : (p.score || 0) > 30 ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)', color: (p.score || 0) > 60 ? '#10B981' : (p.score || 0) > 30 ? '#F59E0B' : '#EF4444' }}>{p.score}</span>}
         </div>
         <div className='flex items-center gap-1'>
@@ -1142,10 +1142,10 @@ const BulkEmailModal = ({ prospects, generatedEmails, generatingAll, sending, on
   const ready = generatedEmails.filter(e => e.subject && e.body && !e.error && !e.loading);
   return (
     <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', backdropFilter:'blur(8px)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
-      <div style={{ width:'100%', maxWidth:800, background:'rgba(255,255,255,0.06)', borderRadius:'var(--r-xl)', overflow:'hidden', maxHeight:'92vh', display:'flex', flexDirection:'column' }}>
+      <div style={{ width:'100%', maxWidth:800, background:'rgba(255,255,255,0.06)', borderRadius:'28px', overflow:'hidden', maxHeight:'92vh', display:'flex', flexDirection:'column' }}>
         <div style={{ padding:'20px 28px', borderBottom:'1px solid rgba(255,255,255,0.12)', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(255,255,255,0.10)' }}>
           <div>
-            <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:18, color:'var(--charcoal)', margin:0 }}>Emails generes par Claude AI</h2>
+            <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:18, color:'#F2EDE4', margin:0 }}>Emails generes par Claude AI</h2>
             <p style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, color:'rgba(242,237,228,0.55)', margin:'4px 0 0' }}>
               {generatingAll ? 'Generation en cours...' : ready.length + '/' + prospects.length + ' prets'}
             </p>
@@ -1158,7 +1158,7 @@ const BulkEmailModal = ({ prospects, generatedEmails, generatingAll, sending, on
               const email = generatedEmails[i];
               return (
                 <button key={p.id} onClick={() => setActiveIdx(i)} style={{ width:'100%', padding:'12px 16px', textAlign:'left', background:activeIdx===i?'rgba(13,138,111,0.1)':'transparent', border:'none', borderBottom:'1px solid rgba(255,255,255,0.12)', cursor:'pointer', borderLeft:activeIdx===i?'3px solid #2DD4B8':'3px solid transparent' }}>
-                  <div style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, fontWeight:600, color:'var(--charcoal)', marginBottom:2 }}>{p.business_name}</div>
+                  <div style={{ fontFamily:"'Outfit', sans-serif", fontSize:13, fontWeight:600, color:'#F2EDE4', marginBottom:2 }}>{p.business_name}</div>
                   <div style={{ fontSize:11, color:email?.loading?'#4da6d9':email?.error?'#F07067':email?.subject?'#2DD4B8':'rgba(242,237,228,0.20)' }}>
                     {email?.loading ? 'Generation...' : email?.error ? 'Erreur' : email?.subject ? 'Pret' : 'En attente'}
                   </div>
@@ -1189,11 +1189,11 @@ const BulkEmailModal = ({ prospects, generatedEmails, generatingAll, sending, on
                   </div>
                   <div>
                     <label style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'rgba(242,237,228,0.28)', display:'block', marginBottom:6 }}>OBJET</label>
-                    <input value={e.subject} onChange={ev => onUpdateEmail(activeIdx,'subject',ev.target.value)} style={{ width:'100%', padding:'10px 14px', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'12px', fontFamily:"'Outfit', sans-serif", fontSize:14, color:'var(--charcoal)', outline:'none', boxSizing:'border-box' }} />
+                    <input value={e.subject} onChange={ev => onUpdateEmail(activeIdx,'subject',ev.target.value)} style={{ width:'100%', padding:'10px 14px', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'12px', fontFamily:"'Outfit', sans-serif", fontSize:14, color:'#F2EDE4', outline:'none', boxSizing:'border-box' }} />
                   </div>
                   <div>
                     <label style={{ fontFamily:"'Outfit', sans-serif", fontSize:12, color:'rgba(242,237,228,0.28)', display:'block', marginBottom:6 }}>CORPS EMAIL (HTML editable)</label>
-                    <textarea value={e.body} onChange={ev => onUpdateEmail(activeIdx,'body',ev.target.value)} rows={14} style={{ width:'100%', padding:'12px 14px', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'12px', fontFamily:"'Outfit', sans-serif", fontSize:13, color:'var(--charcoal)', outline:'none', resize:'vertical', lineHeight:1.7, boxSizing:'border-box' }} />
+                    <textarea value={e.body} onChange={ev => onUpdateEmail(activeIdx,'body',ev.target.value)} rows={14} style={{ width:'100%', padding:'12px 14px', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'12px', fontFamily:"'Outfit', sans-serif", fontSize:13, color:'#F2EDE4', outline:'none', resize:'vertical', lineHeight:1.7, boxSizing:'border-box' }} />
                   </div>
                 </div>
               );

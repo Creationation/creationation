@@ -182,104 +182,104 @@ const AdminClients = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Total clients', value: stats.total, color: 'var(--violet)' },
-            { label: 'Actifs', value: stats.active, color: 'var(--teal)' },
-            { label: 'MRR', value: `${f(stats.mrr)} €`, color: 'var(--sky)' },
+            { label: 'Total clients', value: stats.total, color: '#A78BDB' },
+            { label: 'Actifs', value: stats.active, color: '#2DD4B8' },
+            { label: 'MRR', value: `${f(stats.mrr)} €`, color: '#4da6d9' },
             { label: 'Revenu total', value: `${f(stats.totalRevenue)} €`, color: '#d4a55a' },
           ].map((s, i) => (
-            <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
-              <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{s.label}</div>
-              <div style={{ fontFamily: 'var(--font-h)', fontSize: 28, color: s.color }}>{s.value}</div>
+            <div key={i} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <div style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'var(--muted-foreground)' }}>{s.label}</div>
+              <div style={{ fontFamily: ''Playfair Display', serif', fontSize: 28, color: s.color }}>{s.value}</div>
             </div>
           ))}
         </div>
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 items-center">
-          <div className="flex items-center gap-2 flex-1 min-w-[200px]" style={{ background: 'white', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', padding: '8px 16px' }}>
+          <div className="flex items-center gap-2 flex-1 min-w-[200px]" style={{ background: 'white', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', padding: '8px 16px' }}>
             <Search size={16} style={{ color: 'var(--muted-foreground)' }} />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un client..." style={{ border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 14, flex: 1, background: 'transparent' }} />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un client..." style={{ border: 'none', outline: 'none', fontFamily: ''Outfit', sans-serif', fontSize: 14, flex: 1, background: 'transparent' }} />
           </div>
-          <button onClick={() => { setShowImport(true); fetchConvertedProspects(); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={() => { setShowImport(true); fetchConvertedProspects(); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
             <ArrowRightLeft size={14} /> Importer prospects
           </button>
-          <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--violet)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={() => setShowAdd(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#A78BDB', color: 'white', border: 'none', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
             <Plus size={14} /> Ajouter manuellement
           </button>
           <button onClick={() => exportToCSV(clients, 'clients', [
             { key: 'business_name', label: 'Entreprise' }, { key: 'contact_name', label: 'Contact' }, { key: 'email', label: 'Email' },
             { key: 'phone', label: 'Téléphone' }, { key: 'plan', label: 'Plan' }, { key: 'status', label: 'Statut' },
             { key: 'monthly_amount', label: 'Montant mensuel' }, { key: 'total_paid', label: 'Total payé' },
-          ])} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer', color: 'var(--text-mid)' }}>
+          ])} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 13, cursor: 'pointer', color: 'rgba(242,237,228,0.55)' }}>
             <Download size={14} /> CSV
           </button>
         </div>
 
         {/* Client list */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Chargement...</div>
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: ''Outfit', sans-serif', color: 'var(--muted-foreground)' }}>Chargement...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--font-b)', color: 'var(--muted-foreground)' }}>Aucun client trouvé.</div>
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: ''Outfit', sans-serif', color: 'var(--muted-foreground)' }}>Aucun client trouvé.</div>
         ) : (
           <div className="space-y-3">
             {filtered.map(c => (
-              <div key={c.id} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid var(--glass-border)' }}>
+              <div key={c.id} className="rounded-2xl p-4" style={{ background: 'white', border: '1px solid rgba(255,255,255,0.12)' }}>
                 {editId === c.id ? (
                   <EditRow client={c} editData={editData} setEditData={setEditData} onSave={() => updateClient(c.id, editData)} onCancel={() => setEditId(null)} />
                 ) : (
                   <div className="flex flex-col md:flex-row md:items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)' }}>{c.business_name}</span>
-                        <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-b)', color: 'white', background: STATUS_COLORS[c.status] || '#999' }}>{STATUS_LABELS[c.status] || c.status}</span>
-                        <span style={{ padding: '2px 10px', borderRadius: 'var(--pill)', fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--violet)', background: 'rgba(124,92,191,0.12)' }}>{c.plan}</span>
-                        {c.portal_enabled && <span style={{ padding: '2px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: 'var(--teal)', background: 'rgba(13,138,111,0.1)' }}>🌐 Portail</span>}
+                        <span style={{ fontFamily: ''Playfair Display', serif', fontSize: 16, color: '#F2EDE4' }}>{c.business_name}</span>
+                        <span style={{ padding: '2px 10px', borderRadius: '100px', fontSize: 11, fontWeight: 700, fontFamily: ''Outfit', sans-serif', color: 'white', background: STATUS_COLORS[c.status] || '#999' }}>{STATUS_LABELS[c.status] || c.status}</span>
+                        <span style={{ padding: '2px 10px', borderRadius: '100px', fontSize: 11, fontWeight: 600, fontFamily: ''Outfit', sans-serif', color: '#A78BDB', background: 'rgba(124,92,191,0.12)' }}>{c.plan}</span>
+                        {c.portal_enabled && <span style={{ padding: '2px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: ''Outfit', sans-serif', color: '#2DD4B8', background: 'rgba(13,138,111,0.1)' }}>🌐 Portail</span>}
                         {prospectSources[c.id] && (
-                          <span style={{ padding: '2px 8px', borderRadius: 'var(--pill)', fontSize: 10, fontWeight: 600, fontFamily: 'var(--font-b)', color: '#d4a55a', background: 'rgba(212,165,90,0.12)' }}>
+                          <span style={{ padding: '2px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: ''Outfit', sans-serif', color: '#d4a55a', background: 'rgba(212,165,90,0.12)' }}>
                             🎯 Prospection · Score {prospectSources[c.id].score}
                           </span>
                         )}
                       </div>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1" style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'var(--muted-foreground)' }}>
                         {c.contact_name && <span>{c.contact_name}</span>}
                         {c.email && <span>{c.email}</span>}
                         {c.phone && <span>{c.phone}</span>}
                       </div>
                     </div>
-                    <div className="flex items-center gap-4" style={{ fontFamily: 'var(--font-b)', fontSize: 13 }}>
+                    <div className="flex items-center gap-4" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13 }}>
                       <div className="text-center">
                         <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Mensuel</div>
-                        <div style={{ color: 'var(--teal)', fontWeight: 700 }}>{f(c.monthly_amount)} €</div>
+                        <div style={{ color: '#2DD4B8', fontWeight: 700 }}>{f(c.monthly_amount)} €</div>
                       </div>
                       <div className="text-center">
                         <div style={{ color: 'var(--muted-foreground)', fontSize: 11 }}>Total payé</div>
                         <div style={{ color: '#d4a55a', fontWeight: 700 }}>{f(c.total_paid)} €</div>
                       </div>
-                      <button onClick={() => { setEditId(c.id); setEditData({ plan: c.plan, status: c.status, monthly_amount: c.monthly_amount, total_paid: c.total_paid, notes: c.notes }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--teal)' }}><Pencil size={15} /></button>
+                      <button onClick={() => { setEditId(c.id); setEditData({ plan: c.plan, status: c.status, monthly_amount: c.monthly_amount, total_paid: c.total_paid, notes: c.notes }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2DD4B8' }}><Pencil size={15} /></button>
                       <PortalInviteButton client={c} onRefresh={fetchClients} />
-                      <button onClick={() => deleteClient(c.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)' }}><Trash2 size={15} /></button>
+                      <button onClick={() => deleteClient(c.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067' }}><Trash2 size={15} /></button>
                     </div>
                   </div>
                 )}
                 {/* Invoice summary row */}
                 {clientInvoices[c.id] && editId !== c.id && (
-                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--glass-border)' }}>
-                    <button onClick={() => setExpandedClient(expandedClient === c.id ? null : c.id)} className="flex items-center gap-2 w-full" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)' }}>
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+                    <button onClick={() => setExpandedClient(expandedClient === c.id ? null : c.id)} className="flex items-center gap-2 w-full" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.55)' }}>
                       <FileText size={13} />
                       <span>{clientInvoices[c.id].count} facture{clientInvoices[c.id].count > 1 ? 's' : ''}</span>
-                      <span style={{ color: 'var(--teal)', fontWeight: 600 }}>Facturé : {f(clientInvoices[c.id].total)} €</span>
+                      <span style={{ color: '#2DD4B8', fontWeight: 600 }}>Facturé : {f(clientInvoices[c.id].total)} €</span>
                       <span style={{ color: '#d4a55a', fontWeight: 600 }}>Encaissé : {f(clientInvoices[c.id].paid)} €</span>
                       {clientInvoices[c.id].total - clientInvoices[c.id].paid > 0 && (
-                        <span style={{ color: 'var(--coral)', fontWeight: 600 }}>Solde : {f(clientInvoices[c.id].total - clientInvoices[c.id].paid)} €</span>
+                        <span style={{ color: '#F07067', fontWeight: 600 }}>Solde : {f(clientInvoices[c.id].total - clientInvoices[c.id].paid)} €</span>
                       )}
                       <span className="ml-auto">{expandedClient === c.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</span>
                     </button>
                     {expandedClient === c.id && (
                       <div className="mt-2 flex gap-2">
-                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--charcoal)' }}>
+                        <button onClick={() => navigate('/admin/invoices')} style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#F2EDE4' }}>
                           Voir les factures →
                         </button>
-                        <button onClick={() => navigate(`/admin/invoices?clientId=${c.id}`)} style={{ padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                        <button onClick={() => navigate(`/admin/invoices?clientId=${c.id}`)} style={{ padding: '6px 14px', background: '#2DD4B8', color: '#fff', border: 'none', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
                           + Nouvelle facture
                         </button>
                       </div>
@@ -288,10 +288,10 @@ const AdminClients = () => {
                 )}
                 {/* Projects section */}
                 {editId !== c.id && (
-                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--glass-border)' }}>
+                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
                     <div className="flex items-center gap-2 mb-2">
-                      <FolderKanban size={13} style={{ color: 'var(--text-mid)' }} />
-                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-mid)' }}>
+                      <FolderKanban size={13} style={{ color: 'rgba(242,237,228,0.55)' }} />
+                      <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.55)' }}>
                         {(clientProjects[c.id] || []).length} projet{(clientProjects[c.id] || []).length !== 1 ? 's' : ''}
                       </span>
                     </div>
@@ -303,7 +303,7 @@ const AdminClients = () => {
                             <button key={p.id} onClick={() => setProjectDetailId(p.id)} style={{
                               display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 99,
                               border: `1px solid ${statusCol}30`, background: `${statusCol}08`,
-                              fontFamily: 'var(--font-b)', fontSize: 12, cursor: 'pointer', color: 'var(--charcoal)',
+                              fontFamily: ''Outfit', sans-serif', fontSize: 12, cursor: 'pointer', color: '#F2EDE4',
                             }}>
                               <span style={{ width: 8, height: 8, borderRadius: '50%', background: statusCol }} />
                               {p.title}
@@ -312,7 +312,7 @@ const AdminClients = () => {
                         })}
                       </div>
                     ) : (
-                      <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>Aucun projet</span>
+                      <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>Aucun projet</span>
                     )}
                   </div>
                 )}
@@ -327,25 +327,25 @@ const AdminClients = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
           <div className="rounded-3xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto" style={{ background: 'white' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20 }}>Importer des prospects convertis</h2>
+              <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 20 }}>Importer des prospects convertis</h2>
               <button onClick={() => setShowImport(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
             </div>
             {prospects.length === 0 ? (
-              <p style={{ fontFamily: 'var(--font-b)', fontSize: 14, color: 'var(--muted-foreground)' }}>Aucun prospect converti disponible.</p>
+              <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14, color: 'var(--muted-foreground)' }}>Aucun prospect converti disponible.</p>
             ) : (
               <>
                 <div className="space-y-2 mb-4">
                   {prospects.map(p => (
-                    <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer" style={{ background: selectedProspects.includes(p.id) ? 'rgba(13,138,111,0.08)' : 'var(--warm)', border: `1px solid ${selectedProspects.includes(p.id) ? 'var(--teal)' : 'var(--glass-border)'}` }}>
+                    <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer" style={{ background: selectedProspects.includes(p.id) ? 'rgba(13,138,111,0.08)' : 'var(--warm)', border: `1px solid ${selectedProspects.includes(p.id) ? '#2DD4B8' : 'rgba(255,255,255,0.12)'}` }}>
                       <input type="checkbox" checked={selectedProspects.includes(p.id)} onChange={() => setSelectedProspects(s => s.includes(p.id) ? s.filter(x => x !== p.id) : [...s, p.id])} />
                       <div>
-                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600 }}>{p.business_name}</div>
-                        <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{p.email || 'Pas d\'email'}</div>
+                        <div style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14, fontWeight: 600 }}>{p.business_name}</div>
+                        <div style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'var(--muted-foreground)' }}>{p.email || 'Pas d\'email'}</div>
                       </div>
                     </label>
                   ))}
                 </div>
-                <button onClick={importProspects} disabled={!selectedProspects.length} style={{ width: '100%', padding: '10px 0', background: selectedProspects.length ? 'var(--teal)' : '#ccc', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: selectedProspects.length ? 'pointer' : 'default' }}>
+                <button onClick={importProspects} disabled={!selectedProspects.length} style={{ width: '100%', padding: '10px 0', background: selectedProspects.length ? '#2DD4B8' : '#ccc', color: 'white', border: 'none', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 14, fontWeight: 600, cursor: selectedProspects.length ? 'pointer' : 'default' }}>
                   Importer {selectedProspects.length} prospect(s)
                 </button>
               </>
@@ -364,33 +364,33 @@ const EditRow = ({ client, editData, setEditData, onSave, onCancel }: { client: 
   <div className="space-y-3">
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div>
-        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Plan</label>
-        <select value={editData.plan || ''} onChange={e => setEditData({ ...editData, plan: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+        <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'var(--muted-foreground)' }}>Plan</label>
+        <select value={editData.plan || ''} onChange={e => setEditData({ ...editData, plan: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 13 }}>
           {PLAN_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
         </select>
       </div>
       <div>
-        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Statut</label>
-        <select value={editData.status || ''} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }}>
+        <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'var(--muted-foreground)' }}>Statut</label>
+        <select value={editData.status || ''} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 13 }}>
           {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
       </div>
       <div>
-        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>€/mois</label>
-        <input type="number" value={editData.monthly_amount || 0} onChange={e => setEditData({ ...editData, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }} />
+        <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'var(--muted-foreground)' }}>€/mois</label>
+        <input type="number" value={editData.monthly_amount || 0} onChange={e => setEditData({ ...editData, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 13 }} />
       </div>
       <div>
-        <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Total payé</label>
-        <input type="number" value={editData.total_paid || 0} onChange={e => setEditData({ ...editData, total_paid: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13 }} />
+        <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'var(--muted-foreground)' }}>Total payé</label>
+        <input type="number" value={editData.total_paid || 0} onChange={e => setEditData({ ...editData, total_paid: +e.target.value })} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 13 }} />
       </div>
     </div>
     <div>
-      <label style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--muted-foreground)' }}>Notes</label>
-      <textarea value={editData.notes || ''} onChange={e => setEditData({ ...editData, notes: e.target.value })} rows={2} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 13, resize: 'vertical' }} />
+      <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'var(--muted-foreground)' }}>Notes</label>
+      <textarea value={editData.notes || ''} onChange={e => setEditData({ ...editData, notes: e.target.value })} rows={2} style={{ width: '100%', padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 13, resize: 'vertical' }} />
     </div>
     <div className="flex gap-2">
-      <button onClick={onSave} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 16px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer' }}><Check size={14} /> Sauvegarder</button>
-      <button onClick={onCancel} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 13, cursor: 'pointer' }}><X size={14} /></button>
+      <button onClick={onSave} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 16px', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 13, cursor: 'pointer' }}><Check size={14} /> Sauvegarder</button>
+      <button onClick={onCancel} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 13, cursor: 'pointer' }}><X size={14} /></button>
     </div>
   </div>
 );
@@ -410,7 +410,7 @@ const AddClientModal = ({ onClose, onAdded }: { onClose: () => void; onAdded: ()
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
       <div className="rounded-3xl p-6 w-full max-w-md" style={{ background: 'white' }}>
         <div className="flex items-center justify-between mb-4">
-          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 20 }}>Nouveau client</h2>
+          <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 20 }}>Nouveau client</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
         </div>
         <div className="space-y-3">
@@ -422,23 +422,23 @@ const AddClientModal = ({ onClose, onAdded }: { onClose: () => void; onAdded: ()
             { key: 'website_url', label: 'Site web', type: 'url' },
           ].map(f => (
             <div key={f.key}>
-              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>{f.label}</label>
-              <input type={f.type} value={(form as any)[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+              <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'var(--muted-foreground)' }}>{f.label}</label>
+              <input type={f.type} value={(form as any)[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 14 }} />
             </div>
           ))}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>Plan</label>
-              <select value={form.plan} onChange={e => setForm({ ...form, plan: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }}>
+              <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'var(--muted-foreground)' }}>Plan</label>
+              <select value={form.plan} onChange={e => setForm({ ...form, plan: e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
                 {PLAN_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--muted-foreground)' }}>€/mois</label>
-              <input type="number" value={form.monthly_amount} onChange={e => setForm({ ...form, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 14 }} />
+              <label style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'var(--muted-foreground)' }}>€/mois</label>
+              <input type="number" value={form.monthly_amount} onChange={e => setForm({ ...form, monthly_amount: +e.target.value })} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 14 }} />
             </div>
           </div>
-          <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Ajouter le client</button>
+          <button onClick={handleAdd} style={{ width: '100%', padding: '10px 0', background: '#2DD4B8', color: 'white', border: 'none', borderRadius: '100px', fontFamily: ''Outfit', sans-serif', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Ajouter le client</button>
         </div>
       </div>
     </div>
@@ -500,15 +500,15 @@ const PortalInviteButton = ({ client, onRefresh }: { client: Client; onRefresh: 
   if (client.portal_enabled) {
     return (
       <div className="flex items-center gap-1">
-        <span title={`Portail actif${client.portal_invited_at ? ' — Invité le ' + new Date(client.portal_invited_at).toLocaleDateString('fr-FR') : ''}${client.portal_last_login ? '\nDernière connexion : ' + new Date(client.portal_last_login).toLocaleDateString('fr-FR') : ''}`} style={{ color: 'var(--teal)', cursor: 'help' }}><Shield size={15} /></span>
-        <button onClick={resendInvite} disabled={loading} title="Renvoyer l'invitation" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--sky)', opacity: loading ? 0.5 : 1 }}><RefreshCw size={13} /></button>
-        <button onClick={disablePortal} title="Désactiver l'accès" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--coral)', fontSize: 11, fontFamily: 'var(--font-b)' }}>✕</button>
+        <span title={`Portail actif${client.portal_invited_at ? ' — Invité le ' + new Date(client.portal_invited_at).toLocaleDateString('fr-FR') : ''}${client.portal_last_login ? '\nDernière connexion : ' + new Date(client.portal_last_login).toLocaleDateString('fr-FR') : ''}`} style={{ color: '#2DD4B8', cursor: 'help' }}><Shield size={15} /></span>
+        <button onClick={resendInvite} disabled={loading} title="Renvoyer l'invitation" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4da6d9', opacity: loading ? 0.5 : 1 }}><RefreshCw size={13} /></button>
+        <button onClick={disablePortal} title="Désactiver l'accès" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067', fontSize: 11, fontFamily: ''Outfit', sans-serif' }}>✕</button>
       </div>
     );
   }
 
   return (
-    <button onClick={inviteToPortal} disabled={loading || !client.email} title={client.email ? 'Inviter au portail client' : 'Email requis'} style={{ background: 'none', border: 'none', cursor: client.email ? 'pointer' : 'default', color: client.email ? 'var(--violet)' : 'var(--muted-foreground)', opacity: loading ? 0.5 : 1 }}>
+    <button onClick={inviteToPortal} disabled={loading || !client.email} title={client.email ? 'Inviter au portail client' : 'Email requis'} style={{ background: 'none', border: 'none', cursor: client.email ? 'pointer' : 'default', color: client.email ? '#A78BDB' : 'var(--muted-foreground)', opacity: loading ? 0.5 : 1 }}>
       <UserPlus size={15} />
     </button>
   );
