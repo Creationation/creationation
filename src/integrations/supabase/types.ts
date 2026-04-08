@@ -560,6 +560,7 @@ export type Database = {
           name: string
           notes: string | null
           project_id: string | null
+          receipt_url: string | null
           start_date: string
           status: Database["public"]["Enums"]["expense_status"]
           updated_at: string
@@ -576,6 +577,7 @@ export type Database = {
           name: string
           notes?: string | null
           project_id?: string | null
+          receipt_url?: string | null
           start_date?: string
           status?: Database["public"]["Enums"]["expense_status"]
           updated_at?: string
@@ -592,6 +594,7 @@ export type Database = {
           name?: string
           notes?: string | null
           project_id?: string | null
+          receipt_url?: string | null
           start_date?: string
           status?: Database["public"]["Enums"]["expense_status"]
           updated_at?: string
@@ -2232,6 +2235,8 @@ export type Database = {
         | "marketing"
         | "legal"
         | "other"
+        | "accounting"
+        | "tools"
       expense_frequency: "one_time" | "monthly" | "yearly"
       expense_status: "active" | "paused" | "cancelled"
       invoice_status:
@@ -2439,6 +2444,8 @@ export const Constants = {
         "marketing",
         "legal",
         "other",
+        "accounting",
+        "tools",
       ],
       expense_frequency: ["one_time", "monthly", "yearly"],
       expense_status: ["active", "paused", "cancelled"],
