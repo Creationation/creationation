@@ -10,8 +10,8 @@ import { RefreshCw, Search } from 'lucide-react';
 
 const C = {
   textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.65)',
-  textMuted: 'rgba(245,240,232,0.38)',
+  textSecondary: 'rgba(245,240,232,0.70)',
+  textMuted: 'rgba(245,240,232,0.42)',
   teal: '#2DD4B8',
 };
 
