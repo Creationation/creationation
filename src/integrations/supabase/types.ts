@@ -259,11 +259,14 @@ export type Database = {
       contracts: {
         Row: {
           client_id: string
+          content: string | null
           created_at: string
           document_url: string | null
           end_date: string | null
           id: string
           monthly_price: number | null
+          project_id: string | null
+          sent_at: string | null
           setup_price: number | null
           special_conditions: string | null
           start_date: string | null
@@ -272,11 +275,14 @@ export type Database = {
         }
         Insert: {
           client_id: string
+          content?: string | null
           created_at?: string
           document_url?: string | null
           end_date?: string | null
           id?: string
           monthly_price?: number | null
+          project_id?: string | null
+          sent_at?: string | null
           setup_price?: number | null
           special_conditions?: string | null
           start_date?: string | null
@@ -285,11 +291,14 @@ export type Database = {
         }
         Update: {
           client_id?: string
+          content?: string | null
           created_at?: string
           document_url?: string | null
           end_date?: string | null
           id?: string
           monthly_price?: number | null
+          project_id?: string | null
+          sent_at?: string | null
           setup_price?: number | null
           special_conditions?: string | null
           start_date?: string | null
@@ -302,6 +311,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
@@ -2050,7 +2066,13 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user" | "client"
       author_type: "client" | "admin" | "system"
-      contract_status: "pending" | "signed" | "active" | "expired" | "cancelled"
+      contract_status:
+        | "pending"
+        | "sent"
+        | "signed"
+        | "active"
+        | "expired"
+        | "cancelled"
       invoice_status:
         | "draft"
         | "sent"
@@ -2239,7 +2261,14 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user", "client"],
       author_type: ["client", "admin", "system"],
-      contract_status: ["pending", "signed", "active", "expired", "cancelled"],
+      contract_status: [
+        "pending",
+        "sent",
+        "signed",
+        "active",
+        "expired",
+        "cancelled",
+      ],
       invoice_status: [
         "draft",
         "sent",
