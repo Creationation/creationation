@@ -277,6 +277,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
       background_video_url: bgVideoUrl || null,
       gallery_images: galleryImages,
       design_prompt: designPrompt || null,
+      template_id: selectedTemplateId || null,
     };
 
     if (demo?.id) {
