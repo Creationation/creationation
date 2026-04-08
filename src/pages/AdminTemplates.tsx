@@ -292,6 +292,36 @@ const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplic
             </div>
           )}
 
+          {/* Reference photos */}
+          {t.screenshots.length > 0 && (
+            <div>
+              <p style={{ fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Image size={14} /> Photos de référence
+              </p>
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {t.screenshots.map((url, i) => (
+                  <img key={i} src={url} alt={`Ref ${i + 1}`} style={{
+                    height: 100, borderRadius: 10, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)', flexShrink: 0,
+                  }} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* JSX file */}
+          {t.jsx_file_url && (
+            <div className="flex items-center gap-3">
+              <FileCode size={14} style={{ color: PURPLE }} />
+              <span style={{ fontSize: 13, color: TEXT_SECONDARY }}>Fichier JSX attaché</span>
+              <a href={t.jsx_file_url} download style={{
+                padding: '4px 12px', borderRadius: 8, background: `${PURPLE}15`, color: PURPLE,
+                fontSize: 12, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4,
+              }}>
+                <Download size={12} /> Télécharger
+              </a>
+            </div>
+          )}
+
           {t.style_prompt && (
             <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.2)' }}>
               <p style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>
