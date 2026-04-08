@@ -552,6 +552,8 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
             </div>
           </div>
 
+          {/* Color toggle */}
+          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.15)' }}>
             <label className="flex items-center gap-3 cursor-pointer" onClick={() => setColorsEnabled(!colorsEnabled)}>
               <div style={{
                 width: 40, height: 22, borderRadius: 99, position: 'relative', cursor: 'pointer', transition: 'background 0.2s',
