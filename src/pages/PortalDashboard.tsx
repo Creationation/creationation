@@ -15,7 +15,7 @@ const projectStatusLabels: Record<string, string> = {
 };
 
 const PortalDashboard = () => {
-  const { client } = useOutletContext<{ client: any }>();
+  const { client, simulationMode } = useOutletContext<{ client: any; simulationMode?: boolean }>();
   const navigate = useNavigate();
   const [openTickets, setOpenTickets] = useState(0);
   const [lastTicket, setLastTicket] = useState<any>(null);
