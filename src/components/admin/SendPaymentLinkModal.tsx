@@ -59,18 +59,18 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
           <CreditCard size={22} color={TEAL} />
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1A2332', margin: 0 }}>Envoyer lien de paiement</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#F2EDE4', margin: 0 }}>Envoyer lien de paiement</h2>
         </div>
 
         {/* Client info */}
         <div style={{ background: 'rgba(42,157,143,0.08)', borderRadius: 12, padding: 14, marginBottom: 20 }}>
-          <div style={{ fontWeight: 600, color: '#1A2332' }}>{client.business_name}</div>
+          <div style={{ fontWeight: 600, color: '#F2EDE4' }}>{client.business_name}</div>
           <div style={{ fontSize: 13, color: 'rgba(26,35,50,0.55)' }}>{client.email || 'Pas d\'email'}</div>
         </div>
 
         {/* Include setup toggle */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <span style={{ fontSize: 14, fontWeight: 500, color: '#1A2332' }}>Inclure le setup</span>
+          <span style={{ fontSize: 14, fontWeight: 500, color: '#F2EDE4' }}>Inclure le setup</span>
           <button onClick={() => setIncludeSetup(!includeSetup)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             {includeSetup ? <ToggleRight size={28} color={TEAL} /> : <ToggleLeft size={28} color="rgba(26,35,50,0.3)" />}
           </button>
@@ -84,7 +84,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
               style={{
                 width: '100%', padding: '10px 14px', borderRadius: 10,
                 border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)',
-                color: '#1A2332', fontSize: 14, outline: 'none',
+                color: '#F2EDE4', fontSize: 14, outline: 'none',
               }}
             />
           </div>
@@ -97,7 +97,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
             style={{
               width: '100%', padding: '10px 14px', borderRadius: 10,
               border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)',
-              color: '#1A2332', fontSize: 14, outline: 'none',
+              color: '#F2EDE4', fontSize: 14, outline: 'none',
             }}
           />
         </div>
@@ -109,7 +109,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
             style={{
               width: '100%', padding: '10px 14px', borderRadius: 10, resize: 'vertical',
               border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)',
-              color: '#1A2332', fontSize: 14, outline: 'none', fontFamily: 'inherit',
+              color: '#F2EDE4', fontSize: 14, outline: 'none', fontFamily: 'inherit',
             }}
           />
         </div>
@@ -119,7 +119,7 @@ const SendPaymentLinkModal = ({ client, onClose }: Props) => {
           background: 'rgba(42,157,143,0.12)', borderRadius: 12, padding: 14, marginBottom: 20,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         }}>
-          <span style={{ fontWeight: 600, color: '#1A2332' }}>Premier paiement</span>
+          <span style={{ fontWeight: 600, color: '#F2EDE4' }}>Premier paiement</span>
           <span style={{ fontWeight: 700, fontSize: 20, color: TEAL }}>{total}€</span>
         </div>
         <div style={{ fontSize: 12, color: 'rgba(26,35,50,0.4)', marginBottom: 20, textAlign: 'center' }}>
