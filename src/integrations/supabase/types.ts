@@ -175,6 +175,9 @@ export type Database = {
           prospect_id: string | null
           started_at: string | null
           status: string | null
+          stripe_customer_id: string | null
+          stripe_next_payment_date: string | null
+          stripe_subscription_id: string | null
           subscription_status:
             | Database["public"]["Enums"]["subscription_status"]
             | null
@@ -207,6 +210,9 @@ export type Database = {
           prospect_id?: string | null
           started_at?: string | null
           status?: string | null
+          stripe_customer_id?: string | null
+          stripe_next_payment_date?: string | null
+          stripe_subscription_id?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
             | null
@@ -239,6 +245,9 @@ export type Database = {
           prospect_id?: string | null
           started_at?: string | null
           status?: string | null
+          stripe_customer_id?: string | null
+          stripe_next_payment_date?: string | null
+          stripe_subscription_id?: string | null
           subscription_status?:
             | Database["public"]["Enums"]["subscription_status"]
             | null
@@ -739,6 +748,7 @@ export type Database = {
           project_id: string | null
           reminder_count: number | null
           reminder_sent_at: string | null
+          source: string | null
           status: Database["public"]["Enums"]["invoice_status"]
           stripe_hosted_url: string | null
           stripe_invoice_id: string | null
@@ -765,6 +775,7 @@ export type Database = {
           project_id?: string | null
           reminder_count?: number | null
           reminder_sent_at?: string | null
+          source?: string | null
           status?: Database["public"]["Enums"]["invoice_status"]
           stripe_hosted_url?: string | null
           stripe_invoice_id?: string | null
@@ -791,6 +802,7 @@ export type Database = {
           project_id?: string | null
           reminder_count?: number | null
           reminder_sent_at?: string | null
+          source?: string | null
           status?: Database["public"]["Enums"]["invoice_status"]
           stripe_hosted_url?: string | null
           stripe_invoice_id?: string | null
