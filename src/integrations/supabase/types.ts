@@ -472,6 +472,78 @@ export type Database = {
           },
         ]
       }
+      demo_templates: {
+        Row: {
+          category: Database["public"]["Enums"]["demo_template_category"]
+          created_at: string
+          default_opening_hours: Json
+          default_services: Json
+          description: string | null
+          gallery_images: Json
+          hero_media_type: Database["public"]["Enums"]["hero_media_type"]
+          hero_media_url: string | null
+          id: string
+          is_active: boolean
+          jsx_file_url: string | null
+          name: string
+          preview_url: string | null
+          primary_color: string
+          screenshots: Json
+          secondary_color: string
+          sort_order: number
+          style_prompt: string | null
+          style_tags: Json
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["demo_template_category"]
+          created_at?: string
+          default_opening_hours?: Json
+          default_services?: Json
+          description?: string | null
+          gallery_images?: Json
+          hero_media_type?: Database["public"]["Enums"]["hero_media_type"]
+          hero_media_url?: string | null
+          id?: string
+          is_active?: boolean
+          jsx_file_url?: string | null
+          name: string
+          preview_url?: string | null
+          primary_color?: string
+          screenshots?: Json
+          secondary_color?: string
+          sort_order?: number
+          style_prompt?: string | null
+          style_tags?: Json
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["demo_template_category"]
+          created_at?: string
+          default_opening_hours?: Json
+          default_services?: Json
+          description?: string | null
+          gallery_images?: Json
+          hero_media_type?: Database["public"]["Enums"]["hero_media_type"]
+          hero_media_url?: string | null
+          id?: string
+          is_active?: boolean
+          jsx_file_url?: string | null
+          name?: string
+          preview_url?: string | null
+          primary_color?: string
+          screenshots?: Json
+          secondary_color?: string
+          sort_order?: number
+          style_prompt?: string | null
+          style_tags?: Json
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       demos: {
         Row: {
           access_token: string
@@ -506,6 +578,7 @@ export type Database = {
           services: Json | null
           status: Database["public"]["Enums"]["demo_status"]
           tagline: string | null
+          template_id: string | null
           template_type: Database["public"]["Enums"]["demo_template_type"]
           updated_at: string
           viewed_count: number
@@ -543,6 +616,7 @@ export type Database = {
           services?: Json | null
           status?: Database["public"]["Enums"]["demo_status"]
           tagline?: string | null
+          template_id?: string | null
           template_type?: Database["public"]["Enums"]["demo_template_type"]
           updated_at?: string
           viewed_count?: number
@@ -580,6 +654,7 @@ export type Database = {
           services?: Json | null
           status?: Database["public"]["Enums"]["demo_status"]
           tagline?: string | null
+          template_id?: string | null
           template_type?: Database["public"]["Enums"]["demo_template_type"]
           updated_at?: string
           viewed_count?: number
@@ -590,6 +665,13 @@ export type Database = {
             columns: ["converted_to_client_id"]
             isOneToOne: false
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demos_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "demo_templates"
             referencedColumns: ["id"]
           },
         ]
@@ -2361,6 +2443,15 @@ export type Database = {
         | "expired"
         | "cancelled"
       demo_status: "draft" | "sent" | "viewed" | "converted" | "expired"
+      demo_template_category:
+        | "beauty"
+        | "coiffeur"
+        | "restaurant"
+        | "nail"
+        | "spa"
+        | "barber"
+        | "fitness"
+        | "other"
       demo_template_type:
         | "beauty"
         | "coiffeur"
@@ -2380,6 +2471,7 @@ export type Database = {
         | "tools"
       expense_frequency: "one_time" | "monthly" | "yearly"
       expense_status: "active" | "paused" | "cancelled"
+      hero_media_type: "none" | "photo" | "youtube" | "mp4" | "ai_generated"
       invoice_status:
         | "draft"
         | "sent"
@@ -2577,6 +2669,16 @@ export const Constants = {
         "cancelled",
       ],
       demo_status: ["draft", "sent", "viewed", "converted", "expired"],
+      demo_template_category: [
+        "beauty",
+        "coiffeur",
+        "restaurant",
+        "nail",
+        "spa",
+        "barber",
+        "fitness",
+        "other",
+      ],
       demo_template_type: [
         "beauty",
         "coiffeur",
@@ -2598,6 +2700,7 @@ export const Constants = {
       ],
       expense_frequency: ["one_time", "monthly", "yearly"],
       expense_status: ["active", "paused", "cancelled"],
+      hero_media_type: ["none", "photo", "youtube", "mp4", "ai_generated"],
       invoice_status: [
         "draft",
         "sent",

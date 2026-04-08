@@ -35,6 +35,7 @@ import ViewAsClientLayout from "./components/admin/ViewAsClientLayout";
 import CaseStudy from "./pages/CaseStudy";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AdminDemos from "./pages/AdminDemos";
+import AdminTemplates from "./pages/AdminTemplates";
 import PublicDemo from "./pages/PublicDemo";
 
 // Portal (lazy loaded)
@@ -79,6 +80,7 @@ const App = () => (
                 <Route index element={<AdminSupportDashboard />} />
                 <Route path="prospects" element={<AdminProspects />} />
                 <Route path="demos" element={<AdminDemos />} />
+                <Route path="templates" element={<AdminTemplates />} />
                 <Route path="sequences" element={<AdminSequences />} />
                 <Route path="projects" element={<AdminProjects />} />
                 <Route path="clients" element={<AdminClients />} />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X, ChevronRight, ChevronLeft, Copy, Send, Upload, Plus, Trash2, Sparkles, Video, Image, Loader2 } from 'lucide-react';
@@ -88,16 +88,46 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   const [designPrompt, setDesignPrompt] = useState(demo?.design_prompt || '');
 
   // Generation
-  const [generating, setGenerating] = useState<string | null>(null); // 'texts' | 'hero' | 'gallery' | null
+  const [generating, setGenerating] = useState<string | null>(null);
 
   // Step 3
   const [expiryDays, setExpiryDays] = useState(7);
   const [generatedToken, setGeneratedToken] = useState(demo?.access_token || '');
   const [savedDemoId, setSavedDemoId] = useState(demo?.id || '');
 
-  // Pre-fill services when business type changes (only for new demos)
+  // Template selection
+  const [selectedTemplateId, setSelectedTemplateId] = useState(demo?.template_id || '');
+  const [dbTemplates, setDbTemplates] = useState<any[]>([]);
+
+  // Load templates from DB
   useEffect(() => {
-    if (!demo) {
+    supabase.from('demo_templates').select('*').eq('is_active', true).order('sort_order')
+      .then(({ data }) => setDbTemplates(data || []));
+  }, []);
+
+  // Apply template when selected
+  const applyTemplate = useCallback((templateId: string) => {
+    const tmpl = dbTemplates.find((t: any) => t.id === templateId);
+    if (!tmpl) return;
+    setPrimaryColor(tmpl.primary_color);
+    setSecondaryColor(tmpl.secondary_color);
+    setTagline(tmpl.tagline || '');
+    setServices(Array.isArray(tmpl.default_services) ? tmpl.default_services : []);
+    setOpeningHours(tmpl.default_opening_hours && Object.keys(tmpl.default_opening_hours).length > 0
+      ? tmpl.default_opening_hours
+      : DAYS.reduce((acc: any, d: string) => ({ ...acc, [d]: { open: '09:00', close: '18:00', closed: d === 'Sonntag' } }), {}));
+    setHeroMediaType(tmpl.hero_media_type || 'none');
+    setHeroMediaUrl(tmpl.hero_media_url || '');
+    setGalleryImages(Array.isArray(tmpl.gallery_images) ? tmpl.gallery_images : []);
+    setDesignPrompt(tmpl.style_prompt || '');
+    setTemplateType(tmpl.category || 'beauty');
+    setBusinessType(tmpl.category || 'beauty');
+    toast.success(`Template "${tmpl.name}" appliqué`);
+  }, [dbTemplates]);
+
+  // Pre-fill services when business type changes (only for new demos without template)
+  useEffect(() => {
+    if (!demo && !selectedTemplateId) {
       const defaultServices = BUSINESS_SERVICES[businessType] || BUSINESS_SERVICES.generic;
       setServices(defaultServices);
       setTemplateType(businessType);
@@ -247,6 +277,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
       background_video_url: bgVideoUrl || null,
       gallery_images: galleryImages,
       design_prompt: designPrompt || null,
+      template_id: selectedTemplateId || null,
     };
 
     if (demo?.id) {
@@ -392,12 +423,19 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                   </div>
                 </div>
 
-                {/* Template type */}
+                {/* Template */}
                 <div>
                   <label style={labelStyle}>Template</label>
-                  <select value={templateType} onChange={e => setTemplateType(e.target.value)} style={inputStyle}>
-                    {TEMPLATE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                  </select>
+                  {dbTemplates.length > 0 ? (
+                    <select value={selectedTemplateId} onChange={e => { setSelectedTemplateId(e.target.value); if (e.target.value) applyTemplate(e.target.value); }} style={inputStyle}>
+                      <option value="">— Aucun template —</option>
+                      {dbTemplates.map((t: any) => <option key={t.id} value={t.id}>{t.name} ({t.category})</option>)}
+                    </select>
+                  ) : (
+                    <select value={templateType} onChange={e => setTemplateType(e.target.value)} style={inputStyle}>
+                      {TEMPLATE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                    </select>
+                  )}
                 </div>
 
                 {/* Primary color */}
