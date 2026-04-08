@@ -9,9 +9,9 @@ import DashboardCharts from '@/components/admin/DashboardCharts';
 import { RefreshCw, Search } from 'lucide-react';
 
 const C = {
-  textPrimary: '#F2EDE4',
-  textSecondary: 'rgba(242,237,228,0.55)',
-  textMuted: 'rgba(242,237,228,0.28)',
+  textPrimary: '#F5F0E8',
+  textSecondary: 'rgba(245,240,232,0.65)',
+  textMuted: 'rgba(245,240,232,0.38)',
   teal: '#2DD4B8',
 };
 
