@@ -33,7 +33,7 @@ type Invoice = {
 };
 
 const TYPE_LABELS: Record<string, string> = { monthly: 'Mensuel', one_time: 'Unique', setup: 'Setup', refund: 'Remboursement' };
-const TYPE_COLORS: Record<string, string> = { monthly: '#0d8a6f', one_time: '#4da6d9', setup: '#7c5cbf', refund: '#e8735a' };
+const TYPE_COLORS: Record<string, string> = { monthly: '#2DD4B8', one_time: '#4da6d9', setup: '#A78BDB', refund: '#F07067' };
 
 const AdminRevenues = () => {
   const navigate = useNavigate();
@@ -141,7 +141,7 @@ const AdminRevenues = () => {
           {[
             { label: 'Revenus nets', value: `${f(net)} €`, color: 'var(--teal)' },
             { label: 'MRR (récurrents)', value: `${f(mrr)} €`, color: 'var(--sky)' },
-            { label: 'Factures en attente', value: `${f(invoicePending)} €`, color: '#d4a55a' },
+            { label: 'Factures en attente', value: `${f(invoicePending)} €`, color: '#F0C95C' },
             { label: 'Remboursements', value: `${f(totalRefunds)} €`, color: 'var(--coral)' },
             { label: 'À venir ce mois', value: `${f(upcoming.reduce((s, c) => s + c.monthly_amount, 0))} €`, color: 'var(--violet)' },
           ].map((s, i) => (
@@ -170,12 +170,12 @@ const AdminRevenues = () => {
         {/* Upcoming payments */}
         {upcoming.length > 0 && (
           <div className="admin-glass-card" style={{ padding: 16, borderColor: 'rgba(212,165,90,0.3)' }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 8, color: '#d4a55a' }}>Paiements attendus ce mois</h3>
+            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: 16, marginBottom: 8, color: '#F0C95C' }}>Paiements attendus ce mois</h3>
             <div className="space-y-2">
               {upcoming.map(c => (
                 <div key={c.id} className="flex justify-between items-center" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
                   <span>{c.business_name}</span>
-                  <span style={{ fontWeight: 700, color: '#d4a55a' }}>{f(c.monthly_amount)} €</span>
+                  <span style={{ fontWeight: 700, color: '#F0C95C' }}>{f(c.monthly_amount)} €</span>
                 </div>
               ))}
             </div>

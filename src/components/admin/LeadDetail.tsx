@@ -37,11 +37,11 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  new: '#0d8a6f',
+  new: '#2DD4B8',
   contacted: '#4da6d9',
-  qualified: '#d4a55a',
-  converted: '#7c5cbf',
-  lost: '#e8735a',
+  qualified: '#F0C95C',
+  converted: '#A78BDB',
+  lost: '#F07067',
 };
 
 interface Props {

@@ -11,7 +11,7 @@ const navItems = [
   { to: '/admin/projects', label: 'Projets', icon: FolderKanban, color: '#3B82F6' },
   { to: '/admin/invoices', label: 'Factures', icon: FileText, color: '#f59e0b' },
   { to: '/admin/revenues', label: 'Revenus', icon: Wallet, color: 'var(--sky)' },
-  { to: '/admin/costs', label: 'Coûts', icon: DollarSign, color: '#d4a55a' },
+  { to: '/admin/costs', label: 'Coûts', icon: DollarSign, color: '#F0C95C' },
   { to: '/admin/portfolio', label: 'Portfolio', icon: Image, color: 'var(--coral)' },
 ];
 

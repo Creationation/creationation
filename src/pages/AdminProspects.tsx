@@ -37,7 +37,7 @@ const LANG_LABELS: Record<string, string> = {
   ja: '🇯🇵 JA', ko: '🇰🇷 KO', zh: '🇨🇳 ZH', th: '🇹🇭 TH', vi: '🇻🇳 VI', id: '🇮🇩 ID', he: '🇮🇱 HE',
 };
 
-const SC: Record<ProspectStatus, string> = { new: '#0d8a6f', emailed: '#4da6d9', replied: '#d4a55a', converted: '#7c5cbf', rejected: '#e8735a' };
+const SC: Record<ProspectStatus, string> = { new: '#2DD4B8', emailed: '#4da6d9', replied: '#F0C95C', converted: '#A78BDB', rejected: '#F07067' };
 const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emaile', replied: 'A repondu', converted: 'Converti', rejected: 'Rejete' };
 const BT = ['Barbershop','Salon de coiffure','Nail studio','Restaurant','Cafe','Boulangerie','Boucherie','Epicerie','Fleuriste','Pharmacie','Medecin','Dentiste','Kinesitherapeute','Photographe','Coach sportif','Tatoueur','Pressing','Plombier','Electricien','Autre'];
 
@@ -662,7 +662,7 @@ const AdminProspects = () => {
                       <Phone size={13}/> {fetchPhone ? '✓ Avec téléphone' : 'Sans téléphone'}
                       <span style={{ fontSize:10, opacity:0.7 }}>{fetchPhone ? '(+$0.02/prospect)' : '(économique)'}</span>
                     </button>
-                    <button onClick={() => setForceResearch(!forceResearch)} style={{ padding:'10px 14px', background: forceResearch ? 'rgba(232,115,90,0.12)' : 'var(--glass-bg)', border:'1px solid', borderColor: forceResearch ? '#e8735a' : 'var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, fontWeight: forceResearch ? 600 : 400, cursor:'pointer', display:'flex', alignItems:'center', gap:6, color: forceResearch ? '#e8735a' : 'var(--text-mid)', flex:'0 0 auto' }}>
+                    <button onClick={() => setForceResearch(!forceResearch)} style={{ padding:'10px 14px', background: forceResearch ? 'rgba(232,115,90,0.12)' : 'var(--glass-bg)', border:'1px solid', borderColor: forceResearch ? '#F07067' : 'var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, fontWeight: forceResearch ? 600 : 400, cursor:'pointer', display:'flex', alignItems:'center', gap:6, color: forceResearch ? '#F07067' : 'var(--text-mid)', flex:'0 0 auto' }}>
                       <RefreshCw size={13}/> {forceResearch ? '✓ Forcer re-recherche' : 'Forcer re-recherche'}
                     </button>
                     <button onClick={() => handleSearch(false)} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
@@ -762,7 +762,7 @@ const AdminProspects = () => {
                       <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.country || '—'}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--text-mid)' }}>{c.city || '—'}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--teal)', fontWeight:600, textAlign:'center', minWidth:40 }}>{c.results_count}</span>
-                      <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background: c.mode === 'eco' ? 'rgba(212,165,90,0.15)' : 'rgba(13,138,111,0.1)', color: c.mode === 'eco' ? '#d4a55a' : 'var(--teal)', fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, textAlign:'center' }}>{c.mode === 'eco' ? '⚡ Éco' : '🔍 Std'}</span>
+                      <span style={{ padding:'2px 8px', borderRadius:'var(--pill)', background: c.mode === 'eco' ? 'rgba(212,165,90,0.15)' : 'rgba(13,138,111,0.1)', color: c.mode === 'eco' ? '#F0C95C' : 'var(--teal)', fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, textAlign:'center' }}>{c.mode === 'eco' ? '⚡ Éco' : '🔍 Std'}</span>
                       <span style={{ fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-light)', whiteSpace:'nowrap' }}>{new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
                       <button onClick={async () => { await supabase.from('search_chunks' as any).delete().eq('id', c.id); fetchChunks(); toast.success('Chunk réinitialisé — tu peux relancer cette recherche'); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-ghost)', padding:4 }} title='Supprimer ce chunk pour relancer la recherche'><RefreshCw size={13}/></button>
                     </div>
@@ -881,10 +881,10 @@ const AdminProspects = () => {
             {/* AI Email Finder bar */}
             <div style={{ padding:'10px 14px', background:'rgba(212,165,90,0.08)', border:'1px solid rgba(212,165,90,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
               <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
-                <Sparkles size={13} style={{ color:'#d4a55a' }}/>
+                <Sparkles size={13} style={{ color:'#F0C95C' }}/>
                 {stats.withEmail} / {stats.total} ont un email
               </span>
-              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'6px 14px', background:'#d4a55a', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingEmails?0.7:1, whiteSpace:'nowrap' }}>
+              <button onClick={findEmails} disabled={findingEmails} style={{ padding:'6px 14px', background:'#F0C95C', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingEmails?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingEmails?0.7:1, whiteSpace:'nowrap' }}>
                 {findingEmails ? <Loader2 size={12} className='animate-spin'/> : <Sparkles size={12}/>}
                 {findingEmails ? 'Recherche...' : selectedIds.size > 0 ? `Trouver emails (${selectedIds.size} sel.)` : 'Trouver emails IA'}
               </button>
@@ -892,10 +892,10 @@ const AdminProspects = () => {
             {/* AI Info Finder bar */}
             <div style={{ padding:'10px 14px', background:'rgba(124,92,191,0.08)', border:'1px solid rgba(124,92,191,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:8 }}>
               <span style={{ fontFamily:'var(--font-b)', fontSize:12, color:'var(--text-mid)', display:'flex', alignItems:'center', gap:4 }}>
-                <Globe size={13} style={{ color:'#7c5cbf' }}/>
+                <Globe size={13} style={{ color:'#A78BDB' }}/>
                 {prospects.filter(p => p.website_url).length} / {prospects.length} ont un site — {prospects.filter(p => p.phone).length} / {prospects.length} ont un tel
               </span>
-              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'6px 14px', background:'#7c5cbf', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingInfo?0.7:1, whiteSpace:'nowrap' }}>
+              <button onClick={findProspectInfo} disabled={findingInfo} style={{ padding:'6px 14px', background:'#A78BDB', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:findingInfo?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:4, opacity:findingInfo?0.7:1, whiteSpace:'nowrap' }}>
                 {findingInfo ? <Loader2 size={12} className='animate-spin'/> : <Sparkles size={12}/>}
                 {findingInfo ? 'Recherche...' : selectedIds.size > 0 ? `Trouver site+tel IA (${selectedIds.size} sel.)` : 'Trouver site+tel IA'}
               </button>
@@ -915,7 +915,7 @@ const AdminProspects = () => {
               <div style={{ padding:'10px 14px', background:'rgba(13,138,111,0.08)', border:'1px solid rgba(13,138,111,0.3)', borderRadius:16, display:'flex', flexWrap:'wrap', alignItems:'center', gap:8 }}>
                 <span style={{ fontFamily:'var(--font-b)', fontSize:13, color:'var(--teal)', fontWeight:600, marginRight:'auto' }}>{selectedIds.size} prospect(s) sélectionné(s)</span>
                 <button onClick={() => setSelectedIds(new Set())} style={{ padding:'6px 12px', background:'transparent', border:'1px solid var(--glass-border)', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, color:'var(--text-mid)', cursor:'pointer' }}>Désélectionner</button>
-                <button onClick={deleteSelected} style={{ padding:'6px 12px', background:'#e8735a', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
+                <button onClick={deleteSelected} style={{ padding:'6px 12px', background:'#F07067', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
                   <Trash2 size={12}/> Supprimer ({selectedIds.size})
                 </button>
                 <button onClick={openEmailModal} style={{ padding:'6px 12px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:100, fontFamily:'var(--font-b)', fontSize:11, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}>
@@ -1159,7 +1159,7 @@ const BulkEmailModal = ({ prospects, generatedEmails, generatingAll, sending, on
               return (
                 <button key={p.id} onClick={() => setActiveIdx(i)} style={{ width:'100%', padding:'12px 16px', textAlign:'left', background:activeIdx===i?'rgba(13,138,111,0.1)':'transparent', border:'none', borderBottom:'1px solid var(--glass-border)', cursor:'pointer', borderLeft:activeIdx===i?'3px solid var(--teal)':'3px solid transparent' }}>
                   <div style={{ fontFamily:'var(--font-b)', fontSize:13, fontWeight:600, color:'var(--charcoal)', marginBottom:2 }}>{p.business_name}</div>
-                  <div style={{ fontSize:11, color:email?.loading?'#4da6d9':email?.error?'#e8735a':email?.subject?'var(--teal)':'var(--text-ghost)' }}>
+                  <div style={{ fontSize:11, color:email?.loading?'#4da6d9':email?.error?'#F07067':email?.subject?'var(--teal)':'var(--text-ghost)' }}>
                     {email?.loading ? 'Generation...' : email?.error ? 'Erreur' : email?.subject ? 'Pret' : 'En attente'}
                   </div>
                 </button>
@@ -1178,7 +1178,7 @@ const BulkEmailModal = ({ prospects, generatedEmails, generatingAll, sending, on
                 </div>
               );
               if (e.error) return (
-                <div style={{ padding:20, background:'rgba(232,115,90,0.1)', border:'1px solid rgba(232,115,90,0.3)', borderRadius:'var(--r)', color:'#e8735a', fontFamily:'var(--font-b)', fontSize:14 }}>
+                <div style={{ padding:20, background:'rgba(232,115,90,0.1)', border:'1px solid rgba(232,115,90,0.3)', borderRadius:'var(--r)', color:'#F07067', fontFamily:'var(--font-b)', fontSize:14 }}>
                   Erreur: {e.error}
                 </div>
               );

@@ -14,16 +14,16 @@ type Prospect = {
   sequence_id?: string | null; sequence_step?: number; sequence_paused?: boolean; tags?: string[];
 };
 
-const SC: Record<ProspectStatus, string> = { new: '#0d8a6f', emailed: '#4da6d9', replied: '#d4a55a', converted: '#7c5cbf', rejected: '#e8735a' };
+const SC: Record<ProspectStatus, string> = { new: '#2DD4B8', emailed: '#4da6d9', replied: '#F0C95C', converted: '#A78BDB', rejected: '#F07067' };
 const SL: Record<ProspectStatus, string> = { new: 'Nouveau', emailed: 'Emailé', replied: 'A répondu', converted: 'Converti', rejected: 'Rejeté' };
 
 const TRACKING_ICONS: Record<string, { icon: typeof Mail; color: string; label: string }> = {
   sent: { icon: Mail, color: '#4da6d9', label: 'Envoyé' },
-  opened: { icon: Eye, color: '#0d8a6f', label: 'Ouvert' },
-  clicked: { icon: MousePointerClick, color: '#7c5cbf', label: 'Cliqué' },
-  replied: { icon: Reply, color: '#d4a55a', label: 'Répondu' },
-  bounced: { icon: AlertTriangle, color: '#e8735a', label: 'Rebond' },
-  unsubscribed: { icon: Ban, color: '#e8735a', label: 'Désinscrit' },
+  opened: { icon: Eye, color: '#2DD4B8', label: 'Ouvert' },
+  clicked: { icon: MousePointerClick, color: '#A78BDB', label: 'Cliqué' },
+  replied: { icon: Reply, color: '#F0C95C', label: 'Répondu' },
+  bounced: { icon: AlertTriangle, color: '#F07067', label: 'Rebond' },
+  unsubscribed: { icon: Ban, color: '#F07067', label: 'Désinscrit' },
 };
 
 type TrackingEvent = { id: string; event_type: string; created_at: string; event_data: any };
@@ -216,7 +216,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                       <div style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)', textTransform: 'capitalize' }}>{key.replace(/_/g, ' ')}</div>
                     </div>
                     <div style={{ width: 80, height: 6, background: 'var(--glass-border)', borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{ width: `${Math.min(100, numVal)}%`, height: '100%', background: numVal >= 70 ? 'var(--teal)' : numVal >= 40 ? '#d4a55a' : '#e8735a', borderRadius: 3 }} />
+                      <div style={{ width: `${Math.min(100, numVal)}%`, height: '100%', background: numVal >= 70 ? 'var(--teal)' : numVal >= 40 ? '#F0C95C' : '#F07067', borderRadius: 3 }} />
                     </div>
                     <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, color: 'var(--charcoal)', width: 30, textAlign: 'right' }}>{numVal}</span>
                   </div>
@@ -233,7 +233,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
               {hasAudit ? (
                 <>
                   <div style={{ textAlign: 'center', padding: 16, background: 'var(--glass-bg)', borderRadius: 16 }}>
-                    <div style={{ fontFamily: 'var(--font-h)', fontSize: 40, color: (audit.score || 0) >= 60 ? '#d4a55a' : '#e8735a' }}>{audit.score || '?'}/100</div>
+                    <div style={{ fontFamily: 'var(--font-h)', fontSize: 40, color: (audit.score || 0) >= 60 ? '#F0C95C' : '#F07067' }}>{audit.score || '?'}/100</div>
                     <div style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)' }}>Score du site concurrent</div>
                   </div>
                   {['design_score', 'mobile_score', 'performance_score', 'seo_score', 'content_score'].map(key => {
@@ -243,7 +243,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                       <div key={key} className="flex items-center gap-3" style={{ padding: '6px 0' }}>
                         <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--charcoal)', flex: 1, textTransform: 'capitalize' }}>{label}</span>
                         <div style={{ width: 80, height: 6, background: 'var(--glass-border)', borderRadius: 3, overflow: 'hidden' }}>
-                          <div style={{ width: `${(val / 20) * 100}%`, height: '100%', background: val >= 14 ? 'var(--teal)' : val >= 10 ? '#d4a55a' : '#e8735a', borderRadius: 3 }} />
+                          <div style={{ width: `${(val / 20) * 100}%`, height: '100%', background: val >= 14 ? 'var(--teal)' : val >= 10 ? '#F0C95C' : '#F07067', borderRadius: 3 }} />
                         </div>
                         <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, width: 36, textAlign: 'right' }}>{val}/20</span>
                       </div>
@@ -251,7 +251,7 @@ const ProspectDetailEnriched = ({ prospect, onClose, onTransfer, onRefresh }: Pr
                   })}
                   {audit.weaknesses?.length > 0 && (
                     <div>
-                      <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: '#e8735a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>⚠️ Points faibles</h4>
+                      <h4 style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: '#F07067', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>⚠️ Points faibles</h4>
                       {audit.weaknesses.map((w: string, i: number) => (
                         <div key={i} style={{ padding: '6px 12px', background: 'rgba(232,115,90,0.06)', borderRadius: 10, fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)', marginBottom: 4 }}>• {w}</div>
                       ))}

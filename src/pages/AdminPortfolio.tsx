@@ -41,7 +41,7 @@ interface PortfolioProject {
 
 const COLORS = ['teal', 'coral', 'gold', 'sky', 'violet'];
 const COLOR_MAP: Record<string, string> = {
-  teal: '#0d8a6f', coral: '#e8614d', gold: '#d4a55a', sky: '#4a9eca', violet: '#8B5CF6',
+  teal: '#2DD4B8', coral: '#e8614d', gold: '#F0C95C', sky: '#4a9eca', violet: '#8B5CF6',
 };
 
 const emptyProject: Omit<PortfolioProject, 'id'> = {

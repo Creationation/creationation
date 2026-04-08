@@ -268,7 +268,7 @@ const AdminSequences = () => {
                           <span style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)' }}>jours</span>
                         </div>
                         {form.steps.length > 1 && (
-                          <button onClick={() => removeStep(idx)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e8735a' }}><Trash2 size={14} /></button>
+                          <button onClick={() => removeStep(idx)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#F07067' }}><Trash2 size={14} /></button>
                         )}
                       </div>
                       <div className="flex flex-col gap-2">

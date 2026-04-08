@@ -24,9 +24,9 @@ type OperationLog = {
 
 const OP_LABELS: Record<string, { label: string; icon: typeof Search; color: string }> = {
   google_search: { label: 'Recherche Google', icon: Search, color: '#4285F4' },
-  ai_info_find: { label: 'IA — Site + Tél', icon: Globe, color: '#d4a55a' },
-  ai_email_find: { label: 'IA — Emails', icon: Mail, color: '#0d8a6f' },
-  email_send: { label: 'Envoi emails', icon: Mail, color: '#7c5cbf' },
+  ai_info_find: { label: 'IA — Site + Tél', icon: Globe, color: '#F0C95C' },
+  ai_email_find: { label: 'IA — Emails', icon: Mail, color: '#2DD4B8' },
+  email_send: { label: 'Envoi emails', icon: Mail, color: '#A78BDB' },
 };
 
 const AdminCosts = () => {
@@ -107,7 +107,7 @@ const AdminCosts = () => {
               {[
                 { label: 'Coût total réel', value: fmt(totalFromLogs), icon: DollarSign, accent: 'var(--teal)' },
                 { label: 'Google API', value: fmt(googleLogsTotal), icon: Search, accent: '#4285F4' },
-                { label: 'IA (enrichissement + emails)', value: fmt(aiLogsTotal), icon: Sparkles, accent: '#d4a55a' },
+                { label: 'IA (enrichissement + emails)', value: fmt(aiLogsTotal), icon: Sparkles, accent: '#F0C95C' },
                 { label: 'Coût / prospect', value: stats.totalProspects > 0 ? fmt(totalFromLogs / stats.totalProspects) : '—', icon: TrendingUp, accent: 'var(--charcoal)' },
               ].map(c => (
                 <div key={c.label} className="admin-glass-card" style={{ flex: '1 1 180px', padding: 20 }}>
@@ -186,9 +186,9 @@ const AdminCosts = () => {
                     { icon: Search, label: 'Google Text Search', cost: `${COST_EUR.GOOGLE_TEXT_SEARCH} € / requête (20 résultats)`, note: 'Utilisé en standard + éco', color: '#4285F4' },
                     { icon: MapPin, label: 'Google Place Details (site web)', cost: `${COST_EUR.GOOGLE_WEBSITE_CHECK} € / appel`, note: 'Standard uniquement', color: '#34A853' },
                     { icon: Phone, label: 'Google Place Details (téléphone)', cost: `${COST_EUR.GOOGLE_PHONE_DETAIL} € / appel`, note: 'Option "avec téléphone"', color: '#FBBC04' },
-                    { icon: Globe, label: 'IA — Recherche site + tél', cost: `${COST_EUR.AI_INFO_FIND} € / prospect`, note: 'Mode éco uniquement', color: '#d4a55a' },
-                    { icon: Mail, label: 'IA — Recherche emails', cost: `${COST_EUR.AI_EMAIL_FIND} € / prospect`, note: 'Enrichissement', color: '#0d8a6f' },
-                    { icon: Sparkles, label: 'IA — Génération emails', cost: `${COST_EUR.AI_EMAIL_GEN} € / email`, note: 'Envoi personnalisé', color: '#7c5cbf' },
+                    { icon: Globe, label: 'IA — Recherche site + tél', cost: `${COST_EUR.AI_INFO_FIND} € / prospect`, note: 'Mode éco uniquement', color: '#F0C95C' },
+                    { icon: Mail, label: 'IA — Recherche emails', cost: `${COST_EUR.AI_EMAIL_FIND} € / prospect`, note: 'Enrichissement', color: '#2DD4B8' },
+                    { icon: Sparkles, label: 'IA — Génération emails', cost: `${COST_EUR.AI_EMAIL_GEN} € / email`, note: 'Envoi personnalisé', color: '#A78BDB' },
                   ].map(r => (
                     <tr key={r.label} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                       <td className='px-6 py-3'>
