@@ -61,14 +61,14 @@ const ProjectCard = ({ project, onClick, dragListeners }: { project: Project; on
       onClick={onClick}
       className="cursor-pointer group"
       style={{
-        background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,255,255,0.8)', borderRadius: 14,
+        background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(20px) saturate(1.4)',
+        border: '1px solid rgba(255,255,255,0.30)', borderRadius: 14,
         padding: 14, marginBottom: 8,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+        boxShadow: '0 4px 20px rgba(42,157,143,0.04), 0 1px 3px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.4)',
         transition: 'box-shadow 0.2s, transform 0.15s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(42,157,143,0.08)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(42,157,143,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
       <div className="flex items-start gap-2">
         <button {...dragListeners} className="mt-1 cursor-grab opacity-0 group-hover:opacity-40 transition-opacity" style={{ background: 'none', border: 'none', padding: 0 }} onClick={e => e.stopPropagation()}>
@@ -219,11 +219,11 @@ const AdminProjects = () => {
           <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)', margin: 0 }}>Projets</h2>
           <div className="flex-1" />
           {/* View toggle */}
-          <div className="flex" style={{ background: 'rgba(0,0,0,0.04)', borderRadius: 10, padding: 2 }}>
+          <div className="flex" style={{ background: 'rgba(255,255,255,0.20)', borderRadius: 10, padding: 2, backdropFilter: 'blur(10px)' }}>
             {([['kanban', LayoutGrid], ['list', List], ['timeline', CalendarRange]] as const).map(([v, Icon]) => (
               <button key={v} onClick={() => setView(v)} style={{
                 display: 'flex', alignItems: 'center', gap: 4, padding: '6px 12px', borderRadius: 8,
-                background: view === v ? '#fff' : 'transparent', border: 'none', cursor: 'pointer',
+                background: view === v ? 'rgba(255,255,255,0.5)' : 'transparent', border: 'none', cursor: 'pointer',
                 fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: view === v ? 600 : 400,
                 color: view === v ? 'var(--charcoal)' : 'var(--text-light)',
                 boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
@@ -244,12 +244,12 @@ const AdminProjects = () => {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
-          <div className="flex items-center gap-2 flex-1 min-w-[180px]" style={{ background: 'white', border: '1px solid var(--glass-border)', borderRadius: 'var(--pill)', padding: '6px 14px' }}>
+          <div className="flex items-center gap-2 flex-1 min-w-[180px]" style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.30)', borderRadius: 'var(--pill)', padding: '6px 14px', backdropFilter: 'blur(10px)' }}>
             <Search size={14} style={{ color: 'var(--text-light)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher..." style={{ border: 'none', outline: 'none', fontFamily: 'var(--font-b)', fontSize: 13, flex: 1, background: 'transparent' }} />
           </div>
           {/* Multi-select status */}
-          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', background: 'white' }}>
+          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}>
             {STATUS_COLS.map(s => (
               <button key={s.key} onClick={() => setFilterStatus(prev => prev.includes(s.key) ? prev.filter(x => x !== s.key) : [...prev, s.key])} style={{
                 padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
@@ -260,7 +260,7 @@ const AdminProjects = () => {
             ))}
           </div>
           {/* Multi-select priority */}
-          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', background: 'white' }}>
+          <div className="flex flex-wrap gap-1" style={{ padding: '4px 8px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}>
             {(['urgent', 'high', 'medium', 'low'] as const).map(p => (
               <button key={p} onClick={() => setFilterPriority(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p])} style={{
                 padding: '3px 10px', borderRadius: 99, border: 'none', cursor: 'pointer',
@@ -273,20 +273,20 @@ const AdminProjects = () => {
           <select
             value={filterClient}
             onChange={e => setFilterClient(e.target.value)}
-            style={{ padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 12, background: 'white', cursor: 'pointer' }}
+            style={{ padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', fontFamily: 'var(--font-b)', fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', backdropFilter: 'blur(10px)' }}
           >
             <option value="">Tous les clients</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
           </select>
-          <label className="flex items-center gap-2 cursor-pointer" style={{ padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)', fontFamily: 'var(--font-b)', fontSize: 12, background: onlyLate ? 'rgba(239,68,68,0.08)' : 'white', color: onlyLate ? '#ef4444' : 'var(--text-mid)' }}>
+          <label className="flex items-center gap-2 cursor-pointer" style={{ padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)', fontFamily: 'var(--font-b)', fontSize: 12, background: onlyLate ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.20)', color: onlyLate ? '#ef4444' : 'var(--text-mid)', backdropFilter: 'blur(10px)' }}>
             <AlertTriangle size={12} />
             <input type="checkbox" checked={onlyLate} onChange={e => setOnlyLate(e.target.checked)} className="hidden" />
             En retard
           </label>
           {(filterStatus.length > 0 || filterPriority.length > 0 || filterClient || onlyLate) && (
             <button onClick={() => { setFilterStatus([]); setFilterPriority([]); setFilterClient(''); setOnlyLate(false); }} style={{
-              padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid var(--glass-border)',
-              fontFamily: 'var(--font-b)', fontSize: 12, background: 'white', cursor: 'pointer', color: 'var(--text-light)',
+              padding: '6px 14px', borderRadius: 'var(--pill)', border: '1px solid rgba(255,255,255,0.30)',
+              fontFamily: 'var(--font-b)', fontSize: 12, background: 'rgba(255,255,255,0.20)', cursor: 'pointer', color: 'var(--text-light)',
               display: 'flex', alignItems: 'center', gap: 4,
             }}><X size={12} /> Réinitialiser</button>
           )}

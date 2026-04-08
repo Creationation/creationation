@@ -215,20 +215,13 @@ const AdminInvoices = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             <FileText size={24} style={{ color: 'var(--teal)' }} />
-            <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)' }}>Factures</h1>
+            <h1 className="admin-page-title">Factures</h1>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setShowRecurring(true)} className="flex items-center gap-2" style={{
-              padding: '10px 18px', background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)',
-              borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600,
-              color: 'var(--charcoal)', cursor: 'pointer',
-            }}>
+            <button onClick={() => setShowRecurring(true)} className="admin-glass-btn-secondary flex items-center gap-2">
               <RotateCcw size={14} /> Récurrents
             </button>
-            <button onClick={() => { setEditInvoice(null); setPrefillClientId(undefined); setPrefillProjectId(undefined); setShowForm(true); }} className="flex items-center gap-2" style={{
-              padding: '10px 18px', background: 'var(--teal)', color: '#fff', border: 'none',
-              borderRadius: 'var(--r)', fontFamily: 'var(--font-b)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-            }}>
+            <button onClick={() => { setEditInvoice(null); setPrefillClientId(undefined); setPrefillProjectId(undefined); setShowForm(true); }} className="admin-glass-btn flex items-center gap-2">
               <Plus size={14} /> Nouvelle facture
             </button>
             <button onClick={() => exportToCSV(filtered.map(i => ({ ...i })), 'factures', [
@@ -253,10 +246,7 @@ const AdminInvoices = () => {
             { label: 'En retard', value: fmt(kpis.overdue), color: 'var(--coral)' },
             { label: 'Ce mois', value: fmt(kpis.thisMonth), color: 'var(--sky)' },
           ].map((k, i) => (
-            <div key={i} style={{
-              padding: '16px', background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)',
-              borderRadius: 'var(--r)', border: '1px solid var(--glass-border)',
-            }}>
+            <div key={i} className="admin-glass-card" style={{ padding: 16 }}>
               <p style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', marginBottom: 4 }}>{k.label}</p>
               <p style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: k.color }}>{k.value}</p>
             </div>
@@ -373,14 +363,11 @@ const AdminInvoices = () => {
         ) : filtered.length === 0 ? (
           <div className="text-center py-20" style={{ color: 'var(--text-light)', fontFamily: 'var(--font-b)' }}>Aucune facture trouvée</div>
         ) : (
-          <div style={{
-            background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)',
-            borderRadius: 'var(--r)', border: '1px solid var(--glass-border)', overflow: 'hidden',
-          }}>
+          <div className="admin-glass-table">
             <div className="overflow-x-auto">
               <table className="w-full" style={{ fontFamily: 'var(--font-b)', fontSize: 14 }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                     {['N°', 'Client', 'Projet', 'Date', 'Échéance', 'Montant', 'Statut', 'Actions'].map(h => (
                       <th key={h} className="text-left px-4 py-3" style={{
                         fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-light)', fontWeight: 600,
@@ -393,9 +380,9 @@ const AdminInvoices = () => {
                     const sc = STATUS_CONFIG[inv.status] || { label: inv.status, color: '#999' };
                     const isOverdue = new Date(inv.due_date) < new Date() && !['paid', 'cancelled', 'refunded'].includes(inv.status);
                     return (
-                      <tr key={inv.id} className="cursor-pointer" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}
+                      <tr key={inv.id} className="cursor-pointer" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}
                         onClick={() => setDetailInvoice(inv)}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(13,138,111,0.04)'}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,157,143,0.04)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                       >
                         <td className="px-4 py-3 font-medium" style={{ color: 'var(--teal)', fontFamily: 'var(--font-m)', fontSize: 12 }}>

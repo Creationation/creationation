@@ -95,7 +95,7 @@ const AdminCosts = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px' }}>
 
         {loading ? (
@@ -110,7 +110,7 @@ const AdminCosts = () => {
                 { label: 'IA (enrichissement + emails)', value: fmt(aiLogsTotal), icon: Sparkles, accent: '#d4a55a' },
                 { label: 'Coût / prospect', value: stats.totalProspects > 0 ? fmt(totalFromLogs / stats.totalProspects) : '—', icon: TrendingUp, accent: 'var(--charcoal)' },
               ].map(c => (
-                <div key={c.label} style={{ flex: '1 1 180px', padding: '20px', background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r-xl)' }}>
+                <div key={c.label} className="admin-glass-card" style={{ flex: '1 1 180px', padding: 20 }}>
                   <c.icon size={18} style={{ color: c.accent, marginBottom: 8 }} />
                   <div style={{ fontFamily: 'var(--font-h)', fontSize: 24, color: 'var(--charcoal)' }}>{c.value}</div>
                   <div style={{ fontFamily: 'var(--font-b)', fontSize: 11, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: 1 }}>{c.label}</div>
@@ -119,7 +119,7 @@ const AdminCosts = () => {
             </div>
 
             {/* Operation History */}
-            <div style={{ background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r-xl)', overflow: 'hidden' }}>
+            <div className="admin-glass-table">
               <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--glass-border)' }}>
                 <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Clock size={16} /> Historique des opérations
@@ -148,7 +148,7 @@ const AdminCosts = () => {
                         const op = OP_LABELS[log.operation_type] || { label: log.operation_type, icon: Info, color: 'var(--text-mid)' };
                         const Icon = op.icon;
                         return (
-                          <tr key={log.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                          <tr key={log.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                             <td className='px-4 py-3' style={{ color: 'var(--text-light)', fontSize: 12, whiteSpace: 'nowrap' }}>{formatDate(log.created_at)}</td>
                             <td className='px-4 py-3'>
                               <div className='flex items-center gap-2'>
@@ -169,7 +169,7 @@ const AdminCosts = () => {
             </div>
 
             {/* Tarifs de référence */}
-            <div style={{ background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r-xl)', overflow: 'hidden' }}>
+            <div className="admin-glass-table">
               <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--glass-border)' }}>
                 <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', margin: 0 }}>Grille tarifaire (€)</h2>
               </div>
@@ -190,7 +190,7 @@ const AdminCosts = () => {
                     { icon: Mail, label: 'IA — Recherche emails', cost: `${COST_EUR.AI_EMAIL_FIND} € / prospect`, note: 'Enrichissement', color: '#0d8a6f' },
                     { icon: Sparkles, label: 'IA — Génération emails', cost: `${COST_EUR.AI_EMAIL_GEN} € / email`, note: 'Envoi personnalisé', color: '#7c5cbf' },
                   ].map(r => (
-                    <tr key={r.label} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                    <tr key={r.label} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                       <td className='px-6 py-3'>
                         <div className='flex items-center gap-3'>
                           <r.icon size={16} style={{ color: r.color }} />
@@ -206,7 +206,7 @@ const AdminCosts = () => {
             </div>
 
             {/* Projections */}
-            <div style={{ background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 'var(--r-xl)', overflow: 'hidden' }}>
+            <div className="admin-glass-table">
               <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--glass-border)' }}>
                 <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 16, color: 'var(--charcoal)', margin: 0 }}>Projections de coûts (€)</h2>
                 <p style={{ fontFamily: 'var(--font-b)', fontSize: 12, color: 'var(--text-light)', margin: '4px 0 0' }}>
@@ -226,7 +226,7 @@ const AdminCosts = () => {
                     const saving = p.standard.total - p.eco.total;
                     const savingPct = p.standard.total > 0 ? Math.round((saving / p.standard.total) * 100) : 0;
                     return (
-                      <tr key={p.n} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                      <tr key={p.n} style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                         <td className='px-5 py-3' style={{ fontWeight: 600, color: 'var(--charcoal)' }}>{p.n.toLocaleString('fr-FR')}</td>
                         <td className='px-5 py-3' style={{ color: 'var(--text-mid)' }}>{fmt(p.standard.total)}</td>
                         <td className='px-5 py-3' style={{ fontWeight: 700, color: 'var(--teal)' }}>{fmt(p.eco.total)}</td>
