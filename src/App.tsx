@@ -12,15 +12,23 @@ import TermsOfService from "./pages/TermsOfService";
 import Impressum from "./pages/Impressum";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRoute from "./components/admin/AdminRoute";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminSupportDashboard from "./pages/AdminSupportDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProspects from "./pages/AdminProspects";
 import AdminSequences from "./pages/AdminSequences";
 import AdminProjects from "./pages/AdminProjects";
 import AdminCosts from "./pages/AdminCosts";
 import AdminClients from "./pages/AdminClients";
+import AdminClientsCRM from "./pages/AdminClientsCRM";
 import AdminRevenues from "./pages/AdminRevenues";
 import AdminInvoices from "./pages/AdminInvoices";
 import AdminPortfolio from "./pages/AdminPortfolio";
+import AdminTickets from "./pages/AdminTickets";
+import AdminTimeTracking from "./pages/AdminTimeTracking";
+import AdminNotes from "./pages/AdminNotes";
+import AdminServices from "./pages/AdminServices";
+import AdminContracts from "./pages/AdminContracts";
 import CaseStudy from "./pages/CaseStudy";
 
 // Portal (lazy loaded)
@@ -58,15 +66,24 @@ const App = () => (
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/portfolio/:slug" element={<CaseStudy />} />
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-              <Route path="/admin/prospects" element={<AdminRoute><AdminProspects /></AdminRoute>} />
-              <Route path="/admin/sequences" element={<AdminRoute><AdminSequences /></AdminRoute>} />
-              <Route path="/admin/projects" element={<AdminRoute><AdminProjects /></AdminRoute>} />
-              <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
-              <Route path="/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
-              <Route path="/admin/revenues" element={<AdminRoute><AdminRevenues /></AdminRoute>} />
-              <Route path="/admin/costs" element={<AdminRoute><AdminCosts /></AdminRoute>} />
-              <Route path="/admin/portfolio" element={<AdminRoute><AdminPortfolio /></AdminRoute>} />
+              {/* Admin with sidebar layout */}
+              <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+                <Route index element={<AdminSupportDashboard />} />
+                <Route path="prospects" element={<AdminProspects />} />
+                <Route path="sequences" element={<AdminSequences />} />
+                <Route path="projects" element={<AdminProjects />} />
+                <Route path="clients" element={<AdminClients />} />
+                <Route path="clients-crm" element={<AdminClientsCRM />} />
+                <Route path="invoices" element={<AdminInvoices />} />
+                <Route path="revenues" element={<AdminRevenues />} />
+                <Route path="costs" element={<AdminCosts />} />
+                <Route path="portfolio" element={<AdminPortfolio />} />
+                <Route path="tickets" element={<AdminTickets />} />
+                <Route path="time-tracking" element={<AdminTimeTracking />} />
+                <Route path="notes" element={<AdminNotes />} />
+                <Route path="services" element={<AdminServices />} />
+                <Route path="contracts" element={<AdminContracts />} />
+              </Route>
               {/* Portal */}
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>
