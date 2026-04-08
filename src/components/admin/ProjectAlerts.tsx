@@ -48,7 +48,7 @@ const ProjectAlerts = ({ onClickProject }: { onClickProject?: (id: string) => vo
   const alertStyles = {
     overdue: { bg: C.coralGlow, border: `rgba(240,112,103,0.15)`, color: C.coral, emoji: '⚠️', label: 'En retard' },
     soon: { bg: C.goldGlow, border: `rgba(240,201,92,0.15)`, color: C.gold, emoji: '⏰', label: 'Bientôt' },
-    stalled: { bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.08)', color: C.muted, emoji: '💤', label: 'Bloqué' },
+    stalled: { bg: 'rgba(0,0,0,0.03)', border: 'rgba(0,0,0,0.06)', color: C.muted, emoji: '💤', label: 'Bloqué' },
   };
 
   return (
