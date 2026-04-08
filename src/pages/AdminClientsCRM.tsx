@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet } from 'lucide-react';
+import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet, CreditCard } from 'lucide-react';
+import SendPaymentLinkModal from '@/components/admin/SendPaymentLinkModal';
 
 const TEXT_PRIMARY = '#1A2332';
 const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
@@ -40,6 +41,7 @@ const AdminClientsCRM = () => {
   const [feedback, setFeedback] = useState<any[]>([]);
   const [clientExpenses, setClientExpenses] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
