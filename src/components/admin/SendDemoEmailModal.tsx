@@ -17,7 +17,7 @@ type Props = {
 };
 
 const SendDemoEmailModal = ({ demoId, contactName, contactEmail, businessName, accessToken, expiryDays, onClose, onSent }: Props) => {
-  const link = `https://creationation.lovable.app/demo/${accessToken}`;
+  const link = `https://creationation.app/demo/${accessToken}`;
   const [to, setTo] = useState(contactEmail);
   const [subject, setSubject] = useState(`Ihre App-Demo – ${businessName}`);
   const [body, setBody] = useState(

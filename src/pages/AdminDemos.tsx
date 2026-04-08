@@ -74,7 +74,7 @@ const AdminDemos = () => {
   });
 
   const copyLink = (token: string) => {
-    navigator.clipboard.writeText(`https://creationation.lovable.app/demo/${token}`);
+    navigator.clipboard.writeText(`https://creationation.app/demo/${token}`);
     toast.success('Lien copié !');
   };
 
