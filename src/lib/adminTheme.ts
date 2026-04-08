@@ -2,8 +2,8 @@
 // Import this in all admin pages instead of defining colors locally
 
 export const C = {
-  bg: '#353849',
-  bgSoft: '#3B3F52',
+  bg: '#454860',
+  bgSoft: '#4A4D66',
   bgCard: 'rgba(255,255,255,0.10)',
   bgCardHover: 'rgba(255,255,255,0.15)',
   border: 'rgba(255,255,255,0.12)',

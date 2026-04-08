@@ -1,6 +1,6 @@
 const AdminMeshBackground = () => (
   <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" style={{
-    background: 'linear-gradient(145deg, #353849 0%, #2F3344 50%, #3B3F52 100%)',
+    background: 'linear-gradient(145deg, #454860 0%, #3E4158 50%, #4A4D66 100%)',
   }}>
     {/* Warm amber orb — top right */}
     <div style={{

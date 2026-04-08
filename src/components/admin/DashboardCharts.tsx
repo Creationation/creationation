@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const C = {
-  bg: '#353849',
+  bg: '#454860',
   teal: '#2DD4B8',
   tealDim: '#2A9D8F',
   tealGlow: 'rgba(45,212,184,0.25)',
