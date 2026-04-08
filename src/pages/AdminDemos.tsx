@@ -186,9 +186,9 @@ const AdminDemos = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={7} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Chargement...</td></tr>
+                <tr><td colSpan={8} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Chargement...</td></tr>
               ) : filteredDemos.length === 0 ? (
-                <tr><td colSpan={7} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Aucune démo</td></tr>
+                <tr><td colSpan={8} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Aucune démo</td></tr>
               ) : filteredDemos.map(d => (
                 <tr key={d.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                   <td style={{ padding: '12px 16px', fontWeight: 600, color: TEXT_PRIMARY }}>
