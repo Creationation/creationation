@@ -71,6 +71,8 @@ const App = () => (
               <Route path="/portal/login" element={<PortalLogin />} />
               <Route path="/portal" element={<PortalLayout />}>
                 <Route index element={<PortalDashboard />} />
+                <Route path="tickets" element={<PortalTickets />} />
+                <Route path="tickets/:id" element={<PortalTicketDetail />} />
                 <Route path="project" element={<PortalProject />} />
                 <Route path="messages" element={<PortalMessages />} />
                 <Route path="invoices" element={<PortalInvoices />} />
