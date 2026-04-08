@@ -98,6 +98,7 @@ const AdminProspects = () => {
   const [tab, setTab] = useState<'search' | 'prospects'>('prospects');
   const [searchChunks, setSearchChunks] = useState<SearchChunk[]>([]);
   const [showChunkHistory, setShowChunkHistory] = useState(false);
+  const [forceResearch, setForceResearch] = useState(false);
   const [detailProspect, setDetailProspect] = useState<Prospect | null>(null);
   const [transferring, setTransferring] = useState(false);
   const [scoring, setScoring] = useState(false);
@@ -253,7 +254,7 @@ const AdminProspects = () => {
           if (globalLimitReached) break;
           completedSearches++;
           // Skip already-searched chunks
-          if (isChunkDone(country, searchCity, type)) {
+          if (!forceResearch && isChunkDone(country, searchCity, type)) {
             skippedChunks++;
             if (countries.length > 1) {
               toast.info(`⏭️ Déjà cherché: ${type} en ${country}${searchCity ? ' / ' + searchCity : ''} — ignoré (${completedSearches}/${totalSearches})`, { id: 'search-progress', duration: 1500 });
@@ -660,6 +661,9 @@ const AdminProspects = () => {
                     <button onClick={() => setFetchPhone(!fetchPhone)} style={{ padding:'10px 14px', background: fetchPhone ? 'rgba(13,138,111,0.12)' : 'var(--glass-bg)', border:'1px solid', borderColor: fetchPhone ? 'var(--teal)' : 'var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, fontWeight: fetchPhone ? 600 : 400, cursor:'pointer', display:'flex', alignItems:'center', gap:6, color: fetchPhone ? 'var(--teal)' : 'var(--text-mid)', flex:'0 0 auto' }}>
                       <Phone size={13}/> {fetchPhone ? '✓ Avec téléphone' : 'Sans téléphone'}
                       <span style={{ fontSize:10, opacity:0.7 }}>{fetchPhone ? '(+$0.02/prospect)' : '(économique)'}</span>
+                    </button>
+                    <button onClick={() => setForceResearch(!forceResearch)} style={{ padding:'10px 14px', background: forceResearch ? 'rgba(232,115,90,0.12)' : 'var(--glass-bg)', border:'1px solid', borderColor: forceResearch ? '#e8735a' : 'var(--glass-border)', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:12, fontWeight: forceResearch ? 600 : 400, cursor:'pointer', display:'flex', alignItems:'center', gap:6, color: forceResearch ? '#e8735a' : 'var(--text-mid)', flex:'0 0 auto' }}>
+                      <RefreshCw size={13}/> {forceResearch ? '✓ Forcer re-recherche' : 'Forcer re-recherche'}
                     </button>
                     <button onClick={() => handleSearch(false)} disabled={searching} style={{ padding:'10px 24px', background:'var(--teal)', color:'#fff', border:'none', borderRadius:'var(--r)', fontFamily:'var(--font-b)', fontSize:14, fontWeight:600, cursor:searching?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:6, opacity:searching?0.7:1, whiteSpace:'nowrap', flex:'0 0 auto' }}>
                       {searching ? <Loader2 size={14} className='animate-spin'/> : <Search size={14}/>}
