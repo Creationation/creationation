@@ -26,9 +26,9 @@ export const C = {
   purpleGlow: 'rgba(167,139,219,0.18)',
 
   cream: '#F5F0E8',
-  textPrimary: '#F5F0E8',
-  textSecondary: 'rgba(245,240,232,0.70)',
-  textMuted: 'rgba(245,240,232,0.42)',
+  textPrimary: '#2a2722',
+  textSecondary: '#6b6560',
+  textMuted: '#9a9490',
 };
 
 // Re-export individual constants for backward compatibility
