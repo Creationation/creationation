@@ -31,21 +31,10 @@ const SendDemoEmailModal = ({ demoId, contactName, contactEmail, businessName, a
     if (!to) { toast.error('Email requis'); return; }
     setSending(true);
     try {
-      const { error } = await supabase.functions.invoke('send-contract-email', {
-        body: { to, subject, html: body.replace(/\n/g, '<br/>'), from_name: 'Creationation' },
+      const { error } = await supabase.functions.invoke('send-demo-email', {
+        body: { demoId, to, subject, body },
       });
       if (error) throw error;
-
-      // Update demo status
-      await supabase.from('demos').update({ status: 'sent' } as any).eq('id', demoId);
-
-      // Log activity
-      const { data: { user } } = await supabase.auth.getUser();
-      await supabase.from('activity_log').insert({
-        action: `Demo envoyée à ${businessName} (${to})`,
-        performed_by: 'admin',
-        details: { demo_id: demoId, email: to },
-      } as any);
 
       toast.success('Email envoyé !');
       onSent();
