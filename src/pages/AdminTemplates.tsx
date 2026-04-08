@@ -296,6 +296,32 @@ const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplic
         </div>
 
         <div className="p-5 space-y-5">
+          {/* Thumbnail */}
+          <div>
+            {thumbUrl ? (
+              <div className="relative">
+                <img src={thumbUrl} alt={t.name} style={{ width: '100%', maxHeight: 280, objectFit: 'cover', borderRadius: 12, border: '1px solid rgba(255,255,255,0.2)' }} />
+                <button onClick={handleGenerateThumb} disabled={generatingThumb}
+                  style={{ position: 'absolute', bottom: 8, right: 8, padding: '6px 12px', borderRadius: 8, border: 'none', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, backdropFilter: 'blur(8px)' }}>
+                  {generatingThumb ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} Régénérer
+                </button>
+              </div>
+            ) : (
+              <button onClick={handleGenerateThumb} disabled={generatingThumb}
+                style={{
+                  width: '100%', padding: '24px 16px', borderRadius: 12, cursor: generatingThumb ? 'not-allowed' : 'pointer',
+                  border: '2px dashed rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.05)',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, color: TEXT_SECONDARY,
+                }}>
+                {generatingThumb ? (
+                  <><Loader2 size={20} className="animate-spin" style={{ color: TEAL }} /><span style={{ fontSize: 13 }}>Génération en cours...</span></>
+                ) : (
+                  <><Wand2 size={20} style={{ color: GOLD }} /><span style={{ fontSize: 13, fontWeight: 600 }}>Générer la thumbnail IA</span><span style={{ fontSize: 11, color: TEXT_MUTED }}>Basée sur le prompt et les couleurs du template</span></>
+                )}
+              </button>
+            )}
+          </div>
+
           <div className="flex flex-wrap gap-2">
             <button onClick={onEdit} style={{ padding: '8px 16px', borderRadius: 10, border: 'none', background: `${TEAL}20`, color: TEAL, fontWeight: 600, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
               <Edit size={14} /> Modifier
