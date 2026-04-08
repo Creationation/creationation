@@ -336,10 +336,46 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
   const [stylePrompt, setStylePrompt] = useState(template?.style_prompt || '');
   const [isActive, setIsActive] = useState(template?.is_active ?? true);
 
+  // Colors
   const hasExistingColors = template ? (template.primary_color !== '#2DD4B8' || template.secondary_color !== '#E9C46A') : false;
   const [colorsEnabled, setColorsEnabled] = useState(hasExistingColors);
   const [primaryColor, setPrimaryColor] = useState(template?.primary_color || '#2DD4B8');
   const [secondaryColor, setSecondaryColor] = useState(template?.secondary_color || '#E9C46A');
+
+  // Reference photos & JSX
+  const [screenshots, setScreenshots] = useState<string[]>(template?.screenshots || []);
+  const [jsxFileUrl, setJsxFileUrl] = useState(template?.jsx_file_url || '');
+  const [uploading, setUploading] = useState(false);
+
+  const uploadFile = async (file: File, prefix: string) => {
+    const ext = file.name.split('.').pop();
+    const path = `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from('demo-templates').upload(path, file);
+    if (error) { toast.error('Erreur upload'); return null; }
+    const { data: { publicUrl } } = supabase.storage.from('demo-templates').getPublicUrl(path);
+    return publicUrl;
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    setUploading(true);
+    for (const file of Array.from(files)) {
+      const url = await uploadFile(file, 'ref');
+      if (url) setScreenshots(prev => [...prev, url]);
+    }
+    setUploading(false);
+    toast.success('Photos de référence ajoutées');
+  };
+
+  const handleJsxUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const url = await uploadFile(file, 'jsx');
+    if (url) { setJsxFileUrl(url); toast.success('Fichier JSX uploadé'); }
+    setUploading(false);
+  };
 
   const save = async () => {
     if (!name.trim()) { toast.error('Nom requis'); return; }
@@ -353,9 +389,9 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
       is_active: isActive,
       primary_color: colorsEnabled ? primaryColor : '#2DD4B8',
       secondary_color: colorsEnabled ? secondaryColor : '#E9C46A',
+      screenshots,
+      jsx_file_url: jsxFileUrl || null,
       description: null,
-      jsx_file_url: null,
-      screenshots: [] as string[],
       preview_url: null,
       default_services: [] as string[],
       default_opening_hours: {},
