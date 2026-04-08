@@ -163,7 +163,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`https://creationation.lovable.app/demo/${generatedToken}`);
+    navigator.clipboard.writeText(`https://creationation.app/demo/${generatedToken}`);
     toast.success('Lien copié !');
   };
 
@@ -434,7 +434,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                 <div className="space-y-3">
                   <div style={{ ...inputStyle, display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(42,157,143,0.08)' }}>
                     <span style={{ flex: 1, fontSize: 13, color: TEAL, wordBreak: 'break-all' }}>
-                      creationation.lovable.app/demo/{generatedToken}
+                      creationation.app/demo/{generatedToken}
                     </span>
                   </div>
                   <div className="flex gap-3">
