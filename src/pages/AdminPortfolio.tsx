@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import AdminHeader from '@/components/admin/AdminHeader';
 import { Eye, EyeOff, GripVertical, Pencil, Plus, Save, Trash2, X, Image, Video } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -158,8 +157,7 @@ const AdminPortfolio = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream)', fontFamily: 'var(--font-b)' }}>
-      <AdminHeader />
+    <div>
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>

@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import AdminHeader from '@/components/admin/AdminHeader';
 import InvoiceFormModal from '@/components/admin/InvoiceFormModal';
 import InvoiceDetailModal from '@/components/admin/InvoiceDetailModal';
 import RecurringInvoices from '@/components/admin/RecurringInvoices';
@@ -203,16 +202,14 @@ const AdminInvoices = () => {
 
   if (showRecurring) {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-        <AdminHeader />
+      <div>
         <RecurringInvoices clients={clients} onBack={() => setShowRecurring(false)} onInvoiceCreated={fetchData} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-      <AdminHeader />
+    <div>
       <div className="p-4 md:p-6 max-w-[1400px] mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">

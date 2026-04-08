@@ -4,7 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Search, Pencil, Check, X, ArrowRightLeft, Trash2, UserPlus, Shield, RefreshCw, FileText, ChevronDown, ChevronUp, FolderKanban, Download } from 'lucide-react';
 import { exportToCSV } from '@/lib/csvExport';
-import AdminHeader from '@/components/admin/AdminHeader';
 import ProjectDetailModal from '@/components/admin/ProjectDetailModal';
 
 type Client = {
@@ -177,8 +176,7 @@ const AdminClients = () => {
   const f = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-      <AdminHeader />
+    <div>
 
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         {/* Stats */}

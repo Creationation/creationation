@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import AdminHeader from '@/components/admin/AdminHeader';
 import { Plus, X, Loader2, Play, Pause, Trash2, Users, TrendingUp, GripVertical, ChevronDown, ChevronUp, ArrowUp, ArrowDown } from 'lucide-react';
 
 type Sequence = {
@@ -182,7 +181,6 @@ const AdminSequences = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
-      <AdminHeader />
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: 16 }}>
         <div className="flex items-center justify-between mb-6">
           <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 22, color: 'var(--charcoal)', margin: 0 }}>Séquences d'emails</h1>

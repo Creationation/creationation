@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, X, Trash2 } from 'lucide-react';
-import AdminHeader from '@/components/admin/AdminHeader';
 
 type Client = {
   id: string;
@@ -134,8 +133,7 @@ const AdminRevenues = () => {
   const maxMonth = Math.max(...sortedMonths.map(([, v]) => Math.abs(v)), 1);
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
-      <AdminHeader />
+    <div>
 
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         {/* Stats */}
