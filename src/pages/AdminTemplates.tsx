@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Search, Layout, Copy, Trash2, Edit, X, Sparkles, Smartphone, Palette } from 'lucide-react';
+import { Plus, Search, Layout, Copy, Trash2, Edit, X, Sparkles, Smartphone, Palette, Upload, Image, FileCode, Download } from 'lucide-react';
 import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
 const CATEGORIES = [
@@ -292,6 +292,36 @@ const TemplateDetailModal = ({ template: t, demoCount, onClose, onEdit, onDuplic
             </div>
           )}
 
+          {/* Reference photos */}
+          {t.screenshots.length > 0 && (
+            <div>
+              <p style={{ fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Image size={14} /> Photos de référence
+              </p>
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {t.screenshots.map((url, i) => (
+                  <img key={i} src={url} alt={`Ref ${i + 1}`} style={{
+                    height: 100, borderRadius: 10, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)', flexShrink: 0,
+                  }} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* JSX file */}
+          {t.jsx_file_url && (
+            <div className="flex items-center gap-3">
+              <FileCode size={14} style={{ color: PURPLE }} />
+              <span style={{ fontSize: 13, color: TEXT_SECONDARY }}>Fichier JSX attaché</span>
+              <a href={t.jsx_file_url} download style={{
+                padding: '4px 12px', borderRadius: 8, background: `${PURPLE}15`, color: PURPLE,
+                fontSize: 12, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4,
+              }}>
+                <Download size={12} /> Télécharger
+              </a>
+            </div>
+          )}
+
           {t.style_prompt && (
             <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.2)' }}>
               <p style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -336,10 +366,46 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
   const [stylePrompt, setStylePrompt] = useState(template?.style_prompt || '');
   const [isActive, setIsActive] = useState(template?.is_active ?? true);
 
+  // Colors
   const hasExistingColors = template ? (template.primary_color !== '#2DD4B8' || template.secondary_color !== '#E9C46A') : false;
   const [colorsEnabled, setColorsEnabled] = useState(hasExistingColors);
   const [primaryColor, setPrimaryColor] = useState(template?.primary_color || '#2DD4B8');
   const [secondaryColor, setSecondaryColor] = useState(template?.secondary_color || '#E9C46A');
+
+  // Reference photos & JSX
+  const [screenshots, setScreenshots] = useState<string[]>(template?.screenshots || []);
+  const [jsxFileUrl, setJsxFileUrl] = useState(template?.jsx_file_url || '');
+  const [uploading, setUploading] = useState(false);
+
+  const uploadFile = async (file: File, prefix: string) => {
+    const ext = file.name.split('.').pop();
+    const path = `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from('demo-templates').upload(path, file);
+    if (error) { toast.error('Erreur upload'); return null; }
+    const { data: { publicUrl } } = supabase.storage.from('demo-templates').getPublicUrl(path);
+    return publicUrl;
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    setUploading(true);
+    for (const file of Array.from(files)) {
+      const url = await uploadFile(file, 'ref');
+      if (url) setScreenshots(prev => [...prev, url]);
+    }
+    setUploading(false);
+    toast.success('Photos de référence ajoutées');
+  };
+
+  const handleJsxUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const url = await uploadFile(file, 'jsx');
+    if (url) { setJsxFileUrl(url); toast.success('Fichier JSX uploadé'); }
+    setUploading(false);
+  };
 
   const save = async () => {
     if (!name.trim()) { toast.error('Nom requis'); return; }
@@ -353,9 +419,9 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
       is_active: isActive,
       primary_color: colorsEnabled ? primaryColor : '#2DD4B8',
       secondary_color: colorsEnabled ? secondaryColor : '#E9C46A',
+      screenshots,
+      jsx_file_url: jsxFileUrl || null,
       description: null,
-      jsx_file_url: null,
-      screenshots: [] as string[],
       preview_url: null,
       default_services: [] as string[],
       default_opening_hours: {},
@@ -465,6 +531,58 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
             )}
           </div>
 
+          {/* Reference photos */}
+          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.15)' }}>
+            <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <Image size={14} style={{ color: TEAL }} />
+              Photos de référence
+              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Inspirations visuelles pour guider l'IA</span>
+            </label>
+            {screenshots.length > 0 && (
+              <div className="flex gap-2 flex-wrap mb-3">
+                {screenshots.map((url, i) => (
+                  <div key={i} className="relative group/img">
+                    <img src={url} alt="" style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 8, border: '1px solid rgba(255,255,255,0.2)' }} />
+                    <button onClick={() => setScreenshots(prev => prev.filter((_, j) => j !== i))}
+                      className="absolute -top-1 -right-1 opacity-0 group-hover/img:opacity-100" style={{
+                        width: 18, height: 18, borderRadius: 99, background: CORAL, border: 'none', cursor: 'pointer',
+                        color: '#fff', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}><X size={10} /></button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <label style={{ ...inputStyle, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px', fontSize: 13 }}>
+              <Upload size={14} /> {screenshots.length > 0 ? 'Ajouter' : 'Upload photos'}
+              <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} style={{ display: 'none' }} />
+            </label>
+            {uploading && <span style={{ fontSize: 12, color: TEXT_MUTED, marginLeft: 8 }}>Upload en cours...</span>}
+          </div>
+
+          {/* JSX file */}
+          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.15)' }}>
+            <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <FileCode size={14} style={{ color: PURPLE }} />
+              Fichier JSX
+              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Composant React de référence pour le design</span>
+            </label>
+            <div className="flex items-center gap-3">
+              {jsxFileUrl && (
+                <span style={{ fontSize: 12, color: TEAL, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  ✓ Fichier uploadé
+                  <button onClick={() => setJsxFileUrl('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CORAL, padding: 0 }}>
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+              <label style={{ ...inputStyle, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px', fontSize: 13 }}>
+                <Upload size={14} /> {jsxFileUrl ? 'Remplacer' : 'Upload JSX'}
+                <input type="file" accept=".jsx,.tsx,.js,.ts" onChange={handleJsxUpload} style={{ display: 'none' }} />
+              </label>
+            </div>
+          </div>
+
+          {/* Color toggle */}
           <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.15)' }}>
             <label className="flex items-center gap-3 cursor-pointer" onClick={() => setColorsEnabled(!colorsEnabled)}>
               <div style={{
