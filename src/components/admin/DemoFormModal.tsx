@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, ChevronRight, ChevronLeft, Copy, Send, Upload, Plus, Trash2 } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Copy, Send, Upload, Plus, Trash2, Sparkles, Video, Image, Loader2 } from 'lucide-react';
 import SendDemoEmailModal from './SendDemoEmailModal';
 import { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, TEAL, CORAL, GOLD, PURPLE } from '@/lib/adminTheme';
 
@@ -32,6 +32,14 @@ const TEMPLATE_TYPES = [
 ];
 
 const DAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+
+const HERO_MEDIA_OPTIONS = [
+  { value: 'none', label: 'Aucun', icon: '🚫' },
+  { value: 'image', label: 'Photo uploadée', icon: '📷' },
+  { value: 'video_url', label: 'Vidéo YouTube', icon: '🎬' },
+  { value: 'video_upload', label: 'Vidéo MP4', icon: '📹' },
+  { value: 'ai_generated', label: 'Générer par IA', icon: '✨' },
+];
 
 type Props = {
   demo: any | null;
@@ -69,6 +77,16 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   );
   const [templateType, setTemplateType] = useState(demo?.template_type || 'beauty');
 
+  // Media options
+  const [heroMediaType, setHeroMediaType] = useState(demo?.hero_media_type || 'none');
+  const [heroMediaUrl, setHeroMediaUrl] = useState(demo?.hero_media_url || '');
+  const [bgVideoEnabled, setBgVideoEnabled] = useState(demo?.background_video_enabled || false);
+  const [bgVideoUrl, setBgVideoUrl] = useState(demo?.background_video_url || '');
+  const [galleryImages, setGalleryImages] = useState<string[]>(demo?.gallery_images || []);
+
+  // Generation
+  const [generating, setGenerating] = useState<string | null>(null); // 'texts' | 'hero' | 'gallery' | null
+
   // Step 3
   const [expiryDays, setExpiryDays] = useState(7);
   const [generatedToken, setGeneratedToken] = useState(demo?.access_token || '');
@@ -79,7 +97,6 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
     if (!demo) {
       const defaultServices = BUSINESS_SERVICES[businessType] || BUSINESS_SERVICES.generic;
       setServices(defaultServices);
-      // Sync template type with business type
       setTemplateType(businessType);
     }
   }, [businessType]);
@@ -122,6 +139,83 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
     toast.success('Logo uploadé');
   };
 
+  const handleHeroImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const ext = file.name.split('.').pop();
+    const path = `hero-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('demo-logos').upload(path, file);
+    if (error) { toast.error('Erreur upload'); return; }
+    const { data: { publicUrl } } = supabase.storage.from('demo-logos').getPublicUrl(path);
+    setHeroMediaUrl(publicUrl);
+    toast.success('Image hero uploadée');
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'hero' | 'bg') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 20 * 1024 * 1024) { toast.error('Fichier trop volumineux (max 20MB)'); return; }
+    const path = `video-${target}-${Date.now()}.mp4`;
+    const { error } = await supabase.storage.from('demo-logos').upload(path, file);
+    if (error) { toast.error('Erreur upload vidéo'); return; }
+    const { data: { publicUrl } } = supabase.storage.from('demo-logos').getPublicUrl(path);
+    if (target === 'hero') setHeroMediaUrl(publicUrl);
+    else setBgVideoUrl(publicUrl);
+    toast.success('Vidéo uploadée');
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    for (const file of Array.from(files)) {
+      const ext = file.name.split('.').pop();
+      const path = `gallery-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from('demo-logos').upload(path, file);
+      if (error) continue;
+      const { data: { publicUrl } } = supabase.storage.from('demo-logos').getPublicUrl(path);
+      setGalleryImages(prev => [...prev, publicUrl]);
+    }
+    toast.success('Photos ajoutées à la galerie');
+  };
+
+  const generateContent = async (type: 'texts' | 'hero' | 'gallery') => {
+    // Need to save demo first if new
+    let demoId = savedDemoId;
+    if (!demoId) {
+      toast.error('Veuillez d\'abord sauvegarder la démo (étape 3)');
+      return;
+    }
+    setGenerating(type);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-demo-content', {
+        body: {
+          demoId,
+          generateTexts: type === 'texts',
+          generateHeroImage: type === 'hero',
+          generateGallery: type === 'gallery',
+        },
+      });
+      if (error) throw error;
+      const results = (data as any)?.results;
+      if (type === 'texts' && results?.texts) {
+        if (results.texts.tagline) setTagline(results.texts.tagline);
+        toast.success('Textes générés !');
+      }
+      if (type === 'hero' && results?.heroImageUrl) {
+        setHeroMediaUrl(results.heroImageUrl);
+        setHeroMediaType('ai_generated');
+        toast.success('Image hero générée !');
+      }
+      if (type === 'gallery' && results?.galleryUrls) {
+        setGalleryImages(prev => [...prev, ...results.galleryUrls]);
+        toast.success(`${results.galleryUrls.length} photos générées !`);
+      }
+    } catch (e: any) {
+      toast.error(`Erreur génération: ${e.message || 'Erreur inconnue'}`);
+    }
+    setGenerating(null);
+  };
+
   const saveDemo = async () => {
     if (!businessName.trim()) { toast.error('Nom du business requis'); return; }
     setSaving(true);
@@ -144,6 +238,11 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
       template_type: templateType,
       prospect_id: prospectId,
       expires_at: new Date(Date.now() + expiryDays * 86400000).toISOString(),
+      hero_media_type: heroMediaType,
+      hero_media_url: heroMediaUrl || null,
+      background_video_enabled: bgVideoEnabled,
+      background_video_url: bgVideoUrl || null,
+      gallery_images: galleryImages,
     };
 
     if (demo?.id) {
@@ -175,6 +274,12 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
 
   const labelStyle: React.CSSProperties = {
     fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY, marginBottom: 4, display: 'block',
+  };
+
+  const genBtnStyle: React.CSSProperties = {
+    padding: '6px 14px', borderRadius: 99, border: 'none', cursor: 'pointer',
+    background: 'linear-gradient(135deg, #7c5cbf, #E8739A)', color: '#fff',
+    fontWeight: 600, fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
   };
 
   return (
@@ -322,8 +427,128 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
 
               {/* Tagline */}
               <div>
-                <label style={labelStyle}>Tagline</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>Tagline</label>
+                  {savedDemoId && (
+                    <button onClick={() => generateContent('texts')} disabled={!!generating} style={genBtnStyle}>
+                      {generating === 'texts' ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      Générer par IA
+                    </button>
+                  )}
+                </div>
                 <input value={tagline} onChange={e => setTagline(e.target.value)} style={inputStyle} placeholder={`Ihr ${businessType === 'coiffeur' ? 'Friseur' : 'Beauty Studio'} in ${city}`} />
+              </div>
+
+              {/* Hero Media */}
+              <div>
+                <label style={labelStyle}>Média Hero</label>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {HERO_MEDIA_OPTIONS.map(opt => (
+                    <button key={opt.value} onClick={() => setHeroMediaType(opt.value)}
+                      style={{
+                        padding: '6px 14px', borderRadius: 10, border: heroMediaType === opt.value ? `2px solid ${TEAL}` : '1px solid rgba(255,255,255,0.3)',
+                        background: heroMediaType === opt.value ? `${TEAL}15` : 'rgba(255,255,255,0.2)',
+                        cursor: 'pointer', fontSize: 12, fontWeight: 600, color: TEXT_PRIMARY,
+                        display: 'flex', alignItems: 'center', gap: 4,
+                      }}>
+                      <span>{opt.icon}</span> {opt.label}
+                    </button>
+                  ))}
+                </div>
+
+                {heroMediaType === 'image' && (
+                  <div className="flex items-center gap-3">
+                    {heroMediaUrl && <img src={heroMediaUrl} alt="Hero" style={{ width: 80, height: 45, borderRadius: 8, objectFit: 'cover' }} />}
+                    <label style={{ ...inputStyle, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px' }}>
+                      <Image size={14} /> Upload image
+                      <input type="file" accept="image/*" onChange={handleHeroImageUpload} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                )}
+
+                {heroMediaType === 'video_url' && (
+                  <input value={heroMediaUrl} onChange={e => setHeroMediaUrl(e.target.value)} style={inputStyle} placeholder="https://youtube.com/watch?v=..." />
+                )}
+
+                {heroMediaType === 'video_upload' && (
+                  <div className="flex items-center gap-3">
+                    {heroMediaUrl && <span className="text-xs" style={{ color: TEAL }}>✓ Vidéo uploadée</span>}
+                    <label style={{ ...inputStyle, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px' }}>
+                      <Video size={14} /> Upload MP4
+                      <input type="file" accept="video/mp4" onChange={e => handleVideoUpload(e, 'hero')} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                )}
+
+                {heroMediaType === 'ai_generated' && (
+                  <div className="flex items-center gap-3">
+                    {heroMediaUrl && <img src={heroMediaUrl} alt="Hero AI" style={{ width: 80, height: 45, borderRadius: 8, objectFit: 'cover' }} />}
+                    {savedDemoId ? (
+                      <button onClick={() => generateContent('hero')} disabled={!!generating} style={genBtnStyle}>
+                        {generating === 'hero' ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                        {heroMediaUrl ? 'Régénérer' : 'Générer image'}
+                      </button>
+                    ) : (
+                      <span className="text-xs" style={{ color: TEXT_MUTED }}>Sauvegardez d'abord la démo</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Background Video */}
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <label className="flex items-center gap-2 cursor-pointer" style={{ fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY }}>
+                    <input type="checkbox" checked={bgVideoEnabled} onChange={e => setBgVideoEnabled(e.target.checked)} />
+                    Vidéo en arrière-plan (toute la page)
+                  </label>
+                </div>
+                {bgVideoEnabled && (
+                  <div className="space-y-2">
+                    <input value={bgVideoUrl} onChange={e => setBgVideoUrl(e.target.value)} style={inputStyle}
+                      placeholder="URL YouTube ou lien direct MP4" />
+                    <label style={{ ...inputStyle, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, width: 'auto', padding: '8px 14px' }}>
+                      <Video size={14} /> Ou uploader MP4
+                      <input type="file" accept="video/mp4" onChange={e => handleVideoUpload(e, 'bg')} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              {/* Gallery */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>Galerie photos</label>
+                  <div className="flex gap-2">
+                    {savedDemoId && (
+                      <button onClick={() => generateContent('gallery')} disabled={!!generating} style={genBtnStyle}>
+                        {generating === 'gallery' ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                        Générer par IA
+                      </button>
+                    )}
+                    <label style={{ ...genBtnStyle, background: 'rgba(255,255,255,0.3)', color: TEXT_PRIMARY, cursor: 'pointer' }}>
+                      <Upload size={12} /> Upload
+                      <input type="file" accept="image/*" multiple onChange={handleGalleryUpload} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                </div>
+                {galleryImages.length > 0 && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {galleryImages.map((url, i) => (
+                      <div key={i} className="relative group">
+                        <img src={url} alt="" className="w-full aspect-square object-cover rounded-lg" />
+                        <button onClick={() => setGalleryImages(galleryImages.filter((_, j) => j !== i))}
+                          className="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ background: 'rgba(0,0,0,0.6)', border: 'none', cursor: 'pointer', color: '#fff' }}>
+                          <X size={10} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {galleryImages.length === 0 && (
+                  <p className="text-xs" style={{ color: TEXT_MUTED }}>Aucune photo. Uploadez ou générez par IA.</p>
+                )}
               </div>
 
               {/* Services */}
@@ -406,7 +631,38 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                     <span key={i} style={{ padding: '4px 12px', borderRadius: 99, background: 'rgba(255,255,255,0.2)', fontSize: 12 }}>{s}</span>
                   ))}
                 </div>
+                {heroMediaUrl && heroMediaType !== 'none' && (
+                  <div className="mt-3 text-xs opacity-70 flex items-center gap-1">
+                    {heroMediaType.includes('video') ? <Video size={12} /> : <Image size={12} />}
+                    Média hero configuré ✓
+                  </div>
+                )}
+                {galleryImages.length > 0 && (
+                  <div className="mt-1 text-xs opacity-70">📷 {galleryImages.length} photos en galerie</div>
+                )}
               </div>
+
+              {/* Generation buttons for new demos */}
+              {savedDemoId && (
+                <div style={{ padding: 16, borderRadius: 12, background: 'rgba(124,92,191,0.08)', border: '1px solid rgba(124,92,191,0.15)' }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: PURPLE, marginBottom: 8 }}>✨ Génération IA</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button onClick={() => generateContent('texts')} disabled={!!generating} style={genBtnStyle}>
+                      {generating === 'texts' ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      Textes
+                    </button>
+                    <button onClick={() => generateContent('hero')} disabled={!!generating} style={genBtnStyle}>
+                      {generating === 'hero' ? <Loader2 size={12} className="animate-spin" /> : <Image size={12} />}
+                      Image Hero
+                    </button>
+                    <button onClick={() => generateContent('gallery')} disabled={!!generating} style={genBtnStyle}>
+                      {generating === 'gallery' ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      Galerie (4 photos)
+                    </button>
+                  </div>
+                  {generating && <p className="text-xs mt-2" style={{ color: PURPLE }}>⏳ Génération en cours, patientez...</p>}
+                </div>
+              )}
 
               {/* Expiry */}
               <div>

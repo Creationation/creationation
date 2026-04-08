@@ -26,6 +26,12 @@ const STATUS_COLORS: Record<string, string> = {
 const STATUS_LABELS: Record<string, string> = {
   draft: 'Brouillon', sent: 'Envoyé', viewed: 'Consulté', converted: 'Converti', expired: 'Expiré',
 };
+const GEN_STATUS_COLORS: Record<string, string> = {
+  draft: '#8896A6', generating: '#E9C46A', ready: TEAL, failed: CORAL,
+};
+const GEN_STATUS_LABELS: Record<string, string> = {
+  draft: '—', generating: '⏳ Génération...', ready: '✅ Prêt', failed: '❌ Erreur',
+};
 
 const GlassCard = ({ children, style, className = '' }: any) => (
   <div className={className} style={{
@@ -173,16 +179,16 @@ const AdminDemos = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.25)' }}>
-                {['Business', 'Type', 'Statut', 'Vues', 'Créée le', 'Expire le', 'Actions'].map(h => (
+                {['Business', 'Type', 'Statut', 'Contenu', 'Vues', 'Créée le', 'Expire le', 'Actions'].map(h => (
                   <th key={h} style={{ padding: '14px 16px', textAlign: 'left', fontWeight: 600, color: TEXT_SECONDARY, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={7} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Chargement...</td></tr>
+                <tr><td colSpan={8} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Chargement...</td></tr>
               ) : filteredDemos.length === 0 ? (
-                <tr><td colSpan={7} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Aucune démo</td></tr>
+                <tr><td colSpan={8} style={{ padding: 40, textAlign: 'center', color: TEXT_SECONDARY }}>Aucune démo</td></tr>
               ) : filteredDemos.map(d => (
                 <tr key={d.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.55)' }}>
                   <td style={{ padding: '12px 16px', fontWeight: 600, color: TEXT_PRIMARY }}>
@@ -203,6 +209,12 @@ const AdminDemos = () => {
                       background: `${STATUS_COLORS[d.status] || '#888'}20`,
                       color: STATUS_COLORS[d.status] || '#888',
                     }}>{STATUS_LABELS[d.status] || d.status}</span>
+                  </td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600,
+                      color: GEN_STATUS_COLORS[(d as any).generation_status] || '#888',
+                    }}>{GEN_STATUS_LABELS[(d as any).generation_status] || '—'}</span>
                   </td>
                   <td style={{ padding: '12px 16px', color: TEXT_PRIMARY, fontWeight: 600 }}>
                     <div className="flex items-center gap-1"><Eye size={14} style={{ color: TEAL }} />{d.viewed_count}</div>

@@ -476,6 +476,8 @@ export type Database = {
         Row: {
           access_token: string
           address: string | null
+          background_video_enabled: boolean
+          background_video_url: string | null
           business_name: string
           business_type: string | null
           city: string | null
@@ -485,6 +487,11 @@ export type Database = {
           converted_to_client_id: string | null
           created_at: string
           expires_at: string
+          gallery_images: Json | null
+          generated_descriptions: Json | null
+          generation_status: string
+          hero_media_type: string
+          hero_media_url: string | null
           id: string
           is_active: boolean
           last_viewed_at: string | null
@@ -505,6 +512,8 @@ export type Database = {
         Insert: {
           access_token?: string
           address?: string | null
+          background_video_enabled?: boolean
+          background_video_url?: string | null
           business_name: string
           business_type?: string | null
           city?: string | null
@@ -514,6 +523,11 @@ export type Database = {
           converted_to_client_id?: string | null
           created_at?: string
           expires_at?: string
+          gallery_images?: Json | null
+          generated_descriptions?: Json | null
+          generation_status?: string
+          hero_media_type?: string
+          hero_media_url?: string | null
           id?: string
           is_active?: boolean
           last_viewed_at?: string | null
@@ -534,6 +548,8 @@ export type Database = {
         Update: {
           access_token?: string
           address?: string | null
+          background_video_enabled?: boolean
+          background_video_url?: string | null
           business_name?: string
           business_type?: string | null
           city?: string | null
@@ -543,6 +559,11 @@ export type Database = {
           converted_to_client_id?: string | null
           created_at?: string
           expires_at?: string
+          gallery_images?: Json | null
+          generated_descriptions?: Json | null
+          generation_status?: string
+          hero_media_type?: string
+          hero_media_url?: string | null
           id?: string
           is_active?: boolean
           last_viewed_at?: string | null

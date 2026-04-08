@@ -11,23 +11,48 @@ type Demo = {
   city: string | null; phone: string | null;
   opening_hours: Record<string, { open: string; close: string; closed: boolean }>;
   contact_email: string | null; viewed_count: number; status: string;
+  hero_media_type?: string; hero_media_url?: string;
+  background_video_enabled?: boolean; background_video_url?: string;
+  gallery_images?: string[];
 };
 
+/* ─── YouTube embed helper ─── */
+const getYoutubeEmbedUrl = (url: string) => {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&loop=1&playlist=${match[1]}&controls=0&showinfo=0` : null;
+};
+
+const isYoutubeUrl = (url: string) => /youtube\.com|youtu\.be/.test(url || '');
+
 /* ─── Animated mesh background ─── */
-const MeshBg = ({ pc, sc }: { pc: string; sc: string }) => (
+const MeshBg = ({ pc, sc, videoUrl }: { pc: string; sc: string; videoUrl?: string }) => (
   <div className="fixed inset-0 -z-10 overflow-hidden" style={{ background: '#f6f1e9' }}>
-    {[
-      { color: pc, w: 500, h: 500, top: '-10%', left: '-10%', dur: '18s' },
-      { color: sc, w: 400, h: 400, top: '50%', right: '-8%', dur: '22s' },
-      { color: pc, w: 350, h: 350, bottom: '5%', left: '20%', dur: '25s' },
-      { color: sc, w: 300, h: 300, top: '20%', left: '60%', dur: '20s' },
-    ].map((o, i) => (
-      <div key={i} className="absolute rounded-full" style={{
-        width: o.w, height: o.h, background: o.color, opacity: 0.12,
-        filter: 'blur(100px)', top: o.top, left: o.left, right: (o as any).right, bottom: (o as any).bottom,
-        animation: `float${i} ${o.dur} ease-in-out infinite alternate`,
-      }} />
-    ))}
+    {videoUrl && isYoutubeUrl(videoUrl) ? (
+      <iframe
+        src={getYoutubeEmbedUrl(videoUrl) || ''}
+        className="absolute inset-0 w-full h-full"
+        style={{ opacity: 0.15, pointerEvents: 'none', border: 'none', transform: 'scale(1.2)' }}
+        allow="autoplay; muted"
+      />
+    ) : videoUrl ? (
+      <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0.15, pointerEvents: 'none' }} src={videoUrl} />
+    ) : (
+      <>
+        {[
+          { color: pc, w: 500, h: 500, top: '-10%', left: '-10%', dur: '18s' },
+          { color: sc, w: 400, h: 400, top: '50%', right: '-8%', dur: '22s' },
+          { color: pc, w: 350, h: 350, bottom: '5%', left: '20%', dur: '25s' },
+          { color: sc, w: 300, h: 300, top: '20%', left: '60%', dur: '20s' },
+        ].map((o, i) => (
+          <div key={i} className="absolute rounded-full" style={{
+            width: o.w, height: o.h, background: o.color, opacity: 0.12,
+            filter: 'blur(100px)', top: o.top, left: o.left, right: (o as any).right, bottom: (o as any).bottom,
+            animation: `float${i} ${o.dur} ease-in-out infinite alternate`,
+          }} />
+        ))}
+      </>
+    )}
     <style>{`
       @keyframes float0 { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,30px) scale(1.1)} }
       @keyframes float1 { from{transform:translate(0,0) scale(1)} to{transform:translate(-30px,40px) scale(1.05)} }
@@ -81,8 +106,48 @@ const StatCard = ({ label, value, suffix = '', pc }: { label: string; value: num
 
 /* ─── Day name map ─── */
 const dayOrder = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-const todayIndex = (new Date().getDay() + 6) % 7; // Mon=0
+const todayIndex = (new Date().getDay() + 6) % 7;
 const todayName = dayOrder[todayIndex];
+
+/* ─── Hero Media Component ─── */
+const HeroMedia = ({ demo, pc, sc }: { demo: Demo; pc: string; sc: string }) => {
+  const type = demo.hero_media_type || 'none';
+  const url = demo.hero_media_url || '';
+
+  if (type === 'none' || !url) return null;
+
+  if (type === 'video_url' && isYoutubeUrl(url)) {
+    const embedUrl = getYoutubeEmbedUrl(url);
+    if (!embedUrl) return null;
+    return (
+      <div className="w-full aspect-video rounded-3xl overflow-hidden mb-8 mx-auto max-w-md"
+        style={{ border: '2px solid rgba(255,255,255,0.3)', boxShadow: `0 20px 60px ${pc}30` }}>
+        <iframe src={embedUrl} className="w-full h-full" style={{ border: 'none' }}
+          allow="autoplay; muted; fullscreen" />
+      </div>
+    );
+  }
+
+  if (type === 'video_upload') {
+    return (
+      <div className="w-full aspect-video rounded-3xl overflow-hidden mb-8 mx-auto max-w-md"
+        style={{ border: '2px solid rgba(255,255,255,0.3)', boxShadow: `0 20px 60px ${pc}30` }}>
+        <video autoPlay muted loop playsInline className="w-full h-full object-cover" src={url} />
+      </div>
+    );
+  }
+
+  if (type === 'image' || type === 'ai_generated') {
+    return (
+      <div className="w-full aspect-video rounded-3xl overflow-hidden mb-8 mx-auto max-w-md"
+        style={{ border: '2px solid rgba(255,255,255,0.3)', boxShadow: `0 20px 60px ${pc}30` }}>
+        <img src={url} alt={demo.business_name} className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+
+  return null;
+};
 
 const PublicDemo = () => {
   const { token } = useParams<{ token: string }>();
@@ -126,20 +191,22 @@ const PublicDemo = () => {
   const services = Array.isArray(demo.services) ? demo.services : [];
   const hours = demo.opening_hours || {};
   const initials = demo.business_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const galleryImages = Array.isArray(demo.gallery_images) ? demo.gallery_images : [];
 
   const sortedHours = dayOrder
     .filter(d => hours[d])
     .map(d => ({ day: d, ...hours[d] }));
 
-  // Mini calendar slots
   const slots = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
   const slotAvail = [true, true, false, true, false, true, true, false];
 
   const serviceEmojis = ['✂️', '💆', '💅', '🧖', '💇', '🪮', '🧴', '💄', '🌿', '⭐'];
 
+  const bgVideoUrl = demo.background_video_enabled ? demo.background_video_url : undefined;
+
   return (
     <div className="min-h-screen relative" style={{ fontFamily: "'Outfit',sans-serif" }}>
-      <MeshBg pc={pc} sc={sc} />
+      <MeshBg pc={pc} sc={sc} videoUrl={bgVideoUrl} />
 
       {/* ─── Top banner ─── */}
       <div className="sticky top-0 z-50 backdrop-blur-xl border-b border-white/30" style={{ background: 'rgba(255,255,255,0.35)' }}>
@@ -155,7 +222,6 @@ const PublicDemo = () => {
         background: `linear-gradient(135deg, ${pc}, ${pc}cc, ${sc}88)`,
         borderRadius: '0 0 40px 40px',
       }}>
-        {/* Floating shapes */}
         <div className="absolute top-10 right-10 w-24 h-24 rounded-full opacity-20" style={{ background: sc, animation: 'float0 12s ease-in-out infinite alternate' }} />
         <div className="absolute bottom-10 left-10 w-32 h-32 rounded-3xl rotate-45 opacity-10" style={{ background: '#fff', animation: 'float1 15s ease-in-out infinite alternate' }} />
 
@@ -171,6 +237,9 @@ const PublicDemo = () => {
 
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display',serif" }}>{demo.business_name}</h1>
         {demo.tagline && <p className="text-base text-white/80 mb-8 max-w-md mx-auto">{demo.tagline}</p>}
+
+        {/* Hero Media */}
+        <HeroMedia demo={demo} pc={pc} sc={sc} />
 
         {/* CTA */}
         <button onClick={() => setBookingSlot('open')} className="relative px-10 py-4 rounded-full text-white font-bold text-lg transition-all hover:scale-105"
@@ -207,19 +276,29 @@ const PublicDemo = () => {
           </RevealSection>
         )}
 
-        {/* Gallery placeholder */}
+        {/* Gallery */}
         <RevealSection>
           <h2 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display',serif", color: '#2a2722' }}>
             <Camera size={18} className="inline mr-2" style={{ color: pc }} />Unsere Arbeit
           </h2>
-          <div className="grid grid-cols-3 gap-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Glass key={i} className="aspect-square flex flex-col items-center justify-center gap-1 opacity-60">
-                <Camera size={20} style={{ color: pc }} />
-                <span className="text-[10px]" style={{ color: '#9a9490' }}>Foto</span>
-              </Glass>
-            ))}
-          </div>
+          {galleryImages.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3">
+              {galleryImages.map((url, i) => (
+                <div key={i} className="aspect-square rounded-2xl overflow-hidden" style={{ border: '2px solid rgba(255,255,255,0.4)' }}>
+                  <img src={url} alt="" className="w-full h-full object-cover transition-transform hover:scale-110" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Glass key={i} className="aspect-square flex flex-col items-center justify-center gap-1 opacity-60">
+                  <Camera size={20} style={{ color: pc }} />
+                  <span className="text-[10px]" style={{ color: '#9a9490' }}>Foto</span>
+                </Glass>
+              ))}
+            </div>
+          )}
         </RevealSection>
 
         {/* Reviews */}
@@ -375,16 +454,18 @@ const PublicDemo = () => {
           </Glass>
         </RevealSection>
 
-        {/* Promo video placeholder */}
-        <RevealSection>
-          <Glass className="p-8 text-center">
-            <div className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: `${pc}15` }}>
-              <Play size={28} style={{ color: pc }} />
-            </div>
-            <p className="text-sm font-semibold" style={{ color: '#2a2722' }}>Ihr Promo-Video hier</p>
-            <p className="text-xs mt-1" style={{ color: '#9a9490' }}>Präsentieren Sie Ihr Geschäft in 30 Sekunden</p>
-          </Glass>
-        </RevealSection>
+        {/* Promo video placeholder (only show if no hero video) */}
+        {(!demo.hero_media_type || demo.hero_media_type === 'none') && (
+          <RevealSection>
+            <Glass className="p-8 text-center">
+              <div className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: `${pc}15` }}>
+                <Play size={28} style={{ color: pc }} />
+              </div>
+              <p className="text-sm font-semibold" style={{ color: '#2a2722' }}>Ihr Promo-Video hier</p>
+              <p className="text-xs mt-1" style={{ color: '#9a9490' }}>Präsentieren Sie Ihr Geschäft in 30 Sekunden</p>
+            </Glass>
+          </RevealSection>
+        )}
       </div>
 
       {/* ─── Footer ─── */}
