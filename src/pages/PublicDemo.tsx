@@ -21,26 +21,25 @@ const PublicDemo = () => {
   useEffect(() => {
     const load = async () => {
       if (!token) return;
-      const { data, error } = await supabase.from('demos').select('*').eq('access_token', token).maybeSingle();
-      if (error || !data) { setExpired(true); setLoading(false); return; }
 
-      const d = data as any;
-      if (!d.is_active || new Date(d.expires_at) < new Date()) {
-        setExpired(true); setLoading(false); return;
-      }
-
-      setDemo(d);
-      setLoading(false);
-
-      // Track view (only increment, don't need auth)
+      // Use edge function for tracking (handles activity log + status update server-side)
       try {
-        await supabase.from('demos').update({
-          viewed_count: (d.viewed_count || 0) + 1,
-          last_viewed_at: new Date().toISOString(),
-          status: d.status === 'sent' || d.status === 'draft' ? 'viewed' : d.status,
-        } as any).eq('id', d.id);
+        const { data, error } = await supabase.functions.invoke('track-demo-view', {
+          body: { accessToken: token },
+        });
+
+        if (error) { setExpired(true); setLoading(false); return; }
+        const result = data as any;
+
+        if (result?.expired) { setExpired(true); setLoading(false); return; }
+        if (!result?.demo) { setExpired(true); setLoading(false); return; }
+
+        setDemo(result.demo);
+        setLoading(false);
       } catch (e) {
-        console.warn('Could not track view', e);
+        console.error('Error loading demo:', e);
+        setExpired(true);
+        setLoading(false);
       }
     };
     load();

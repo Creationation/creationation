@@ -76,16 +76,13 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   const [generatedToken, setGeneratedToken] = useState(demo?.access_token || '');
   const [savedDemoId, setSavedDemoId] = useState(demo?.id || '');
 
-  // Pre-fill services when business type changes
+  // Pre-fill services when business type changes (only for new demos)
   useEffect(() => {
-    if (!demo && services.length === 0) {
-      setServices(BUSINESS_SERVICES[businessType] || BUSINESS_SERVICES.generic);
-      // Map business type to template type
-      const typeMap: Record<string, string> = {
-        'coiffure': 'coiffeur', 'beauté': 'beauty', 'restaurant': 'restaurant',
-        'nail studio': 'nail', 'beauty': 'beauty', 'coiffeur': 'coiffeur',
-      };
-      setTemplateType(typeMap[businessType] || 'generic');
+    if (!demo) {
+      const defaultServices = BUSINESS_SERVICES[businessType] || BUSINESS_SERVICES.generic;
+      setServices(defaultServices);
+      // Sync template type with business type
+      setTemplateType(businessType);
     }
   }, [businessType]);
 
