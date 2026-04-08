@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet } from 'lucide-react';
+import { Search, Plus, Users, Eye, Pencil, Trash2, X, Pin, PinOff, Wallet, CreditCard } from 'lucide-react';
+import SendPaymentLinkModal from '@/components/admin/SendPaymentLinkModal';
 
 const TEXT_PRIMARY = '#1A2332';
 const TEXT_SECONDARY = 'rgba(26,35,50,0.55)';
@@ -40,6 +41,7 @@ const AdminClientsCRM = () => {
   const [feedback, setFeedback] = useState<any[]>([]);
   const [clientExpenses, setClientExpenses] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
@@ -163,6 +165,9 @@ const AdminClientsCRM = () => {
                 <p style={{ fontSize: 12, color: TEXT_MUTED }}>{selected.contact_name} · {selected.email}</p>
               </div>
               <div className="flex items-center gap-2">
+                <button onClick={() => setShowPaymentModal(true)} className="admin-glass-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', fontSize: 12, background: 'rgba(42,157,143,0.15)', color: TEAL }}>
+                  <CreditCard size={14} /> Lien de paiement
+                </button>
                 <button onClick={() => navigate(`/admin/view-as/${selected.id}`)} className="admin-glass-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', fontSize: 12 }}>
                   <Eye size={14} /> Voir comme client
                 </button>
@@ -368,6 +373,13 @@ const AdminClientsCRM = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showPaymentModal && selected && (
+        <SendPaymentLinkModal
+          client={{ id: selected.id, business_name: selected.business_name, email: selected.email, contact_name: selected.contact_name }}
+          onClose={() => setShowPaymentModal(false)}
+        />
       )}
     </div>
   );

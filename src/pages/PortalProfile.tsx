@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Save, ExternalLink, Camera } from 'lucide-react';
+import { Save, ExternalLink, Camera, CreditCard } from 'lucide-react';
 
 const invoiceStatusConfig: Record<string, { label: string; color: string }> = {
   draft: { label: 'Brouillon', color: '#9b9590' },
@@ -150,9 +150,25 @@ const PortalProfile = () => {
       {/* Subscription */}
       <div style={{ background: 'var(--glass-bg-strong)', backdropFilter: 'blur(20px)', borderRadius: 'var(--r)', border: '1px solid var(--glass-border)', padding: 24, marginBottom: 24 }}>
         <h3 style={{ fontFamily: 'var(--font-b)', fontSize: 15, fontWeight: 600, color: 'var(--charcoal)', margin: '0 0 12px' }}>Abonnement</h3>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <span style={{ padding: '6px 16px', borderRadius: 'var(--pill)', background: `${subCfg.color}18`, color: subCfg.color, fontFamily: 'var(--font-m)', fontSize: 12, fontWeight: 600 }}>{subCfg.label}</span>
           {client?.plan && <span style={{ fontFamily: 'var(--font-b)', fontSize: 13, color: 'var(--text-mid)' }}>Plan {client.plan}</span>}
+          {!simulationMode && client?.subscription_status === 'active' && (
+            <button onClick={async () => {
+              try {
+                const { data, error } = await supabase.functions.invoke('customer-portal');
+                if (error) throw error;
+                if (data?.url) window.open(data.url, '_blank');
+                else toast.error('Impossible de créer la session');
+              } catch { toast.error('Erreur de connexion au portail de paiement'); }
+            }} style={{
+              display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px',
+              background: 'var(--teal)', color: '#fff', border: 'none',
+              borderRadius: 'var(--pill)', fontFamily: 'var(--font-b)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            }}>
+              <CreditCard size={14} /> Gérer mon abonnement
+            </button>
+          )}
         </div>
       </div>
 

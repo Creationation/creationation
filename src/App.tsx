@@ -33,6 +33,7 @@ import AdminContracts from "./pages/AdminContracts";
 import AdminSettings from "./pages/AdminSettings";
 import ViewAsClientLayout from "./components/admin/ViewAsClientLayout";
 import CaseStudy from "./pages/CaseStudy";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 // Portal (lazy loaded)
 const PortalLogin = lazy(() => import("./pages/PortalLogin"));
@@ -68,6 +69,7 @@ const App = () => (
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/portfolio/:slug" element={<CaseStudy />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               {/* Admin with sidebar layout */}
               <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
