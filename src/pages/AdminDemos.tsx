@@ -179,7 +179,7 @@ const AdminDemos = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.25)' }}>
-                {['Business', 'Type', 'Statut', 'Vues', 'Créée le', 'Expire le', 'Actions'].map(h => (
+                {['Business', 'Type', 'Statut', 'Contenu', 'Vues', 'Créée le', 'Expire le', 'Actions'].map(h => (
                   <th key={h} style={{ padding: '14px 16px', textAlign: 'left', fontWeight: 600, color: TEXT_SECONDARY, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>{h}</th>
                 ))}
               </tr>
