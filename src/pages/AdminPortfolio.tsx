@@ -152,7 +152,7 @@ const AdminPortfolio = () => {
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: 12,
     background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(0,0,0,0.08)',
-    fontFamily: ''Outfit', sans-serif', fontSize: 14, color: '#F2EDE4',
+    fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4',
     outline: 'none',
   };
 
@@ -252,7 +252,7 @@ const AdminPortfolio = () => {
               className="admin-glass-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 22, color: '#F2EDE4' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#F2EDE4' }}>
                   {isNew ? 'Nouveau projet' : `Modifier — ${editing.name}`}
                 </h2>
                 <button onClick={() => { setEditing(null); setIsNew(false); }} className="p-2 rounded-xl hover:bg-black/5">

@@ -230,7 +230,7 @@ const AdminInvoices = () => {
               { key: 'total', label: 'Total' }, { key: 'amount_paid', label: 'Payé' }, { key: 'currency', label: 'Devise' },
             ])} className="flex items-center gap-2" style={{
               padding: '10px 14px', background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: '12px', fontFamily: ''Outfit', sans-serif', fontSize: 13, cursor: 'pointer', color: 'rgba(242,237,228,0.55)',
+              borderRadius: '12px', fontFamily: "'Outfit', sans-serif", fontSize: 13, cursor: 'pointer', color: 'rgba(242,237,228,0.55)',
             }}>
               <Download size={14} /> CSV
             </button>
@@ -247,8 +247,8 @@ const AdminInvoices = () => {
             { label: 'Ce mois', value: fmt(kpis.thisMonth), color: '#4da6d9' },
           ].map((k, i) => (
             <div key={i} className="admin-glass-card" style={{ padding: 16 }}>
-              <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)', marginBottom: 4 }}>{k.label}</p>
-              <p style={{ fontFamily: ''Playfair Display', serif', fontSize: 22, color: k.color }}>{k.value}</p>
+              <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', marginBottom: 4 }}>{k.label}</p>
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: k.color }}>{k.value}</p>
             </div>
           ))}
         </div>
@@ -263,11 +263,11 @@ const AdminInvoices = () => {
             }}>
               <Search size={16} style={{ color: 'rgba(242,237,228,0.28)' }} />
               <input placeholder="Rechercher (n° facture, client)..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontFamily: ''Outfit', sans-serif', fontSize: 14, color: '#F2EDE4' }} />
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4' }} />
             </div>
             <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} style={{
               padding: '10px 16px', background: 'rgba(255,255,255,0.06)', borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.12)', fontFamily: ''Outfit', sans-serif', fontSize: 14, color: '#F2EDE4', cursor: 'pointer',
+              border: '1px solid rgba(255,255,255,0.12)', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#F2EDE4', cursor: 'pointer',
             }}>
               <option value="all">Tous les clients</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
@@ -279,7 +279,7 @@ const AdminInvoices = () => {
                 <button style={{
                   padding: '10px 16px', background: dateFrom || dateTo ? 'rgba(13,138,111,0.08)' : 'rgba(255,255,255,0.06)',
                   borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)',
-                  fontFamily: ''Outfit', sans-serif', fontSize: 13, color: dateFrom || dateTo ? '#2DD4B8' : 'rgba(242,237,228,0.55)',
+                  fontFamily: "'Outfit', sans-serif", fontSize: 13, color: dateFrom || dateTo ? '#2DD4B8' : 'rgba(242,237,228,0.55)',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
                 }}>
                   <CalendarIcon size={14} />
@@ -289,7 +289,7 @@ const AdminInvoices = () => {
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start" style={{ zIndex: 200 }}>
-                <div className="p-3" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12 }}>
+                <div className="p-3" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12 }}>
                   <p style={{ fontWeight: 600, marginBottom: 8, color: '#F2EDE4' }}>Date d'émission</p>
                   <div className="flex flex-col gap-2">
                     <div>
@@ -304,7 +304,7 @@ const AdminInvoices = () => {
                     </div>
                     {(dateFrom || dateTo) && (
                       <button onClick={() => { setDateFrom(undefined); setDateTo(undefined); }}
-                        style={{ padding: '4px 8px', fontSize: 11, color: '#F07067', background: 'none', border: 'none', cursor: 'pointer', fontFamily: ''Outfit', sans-serif' }}>
+                        style={{ padding: '4px 8px', fontSize: 11, color: '#F07067', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Outfit', sans-serif" }}>
                         Effacer les dates
                       </button>
                     )}
@@ -316,7 +316,7 @@ const AdminInvoices = () => {
             <label className="flex items-center gap-2 cursor-pointer" style={{
               padding: '10px 16px', background: overdueOnly ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.06)',
               borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)',
-              fontFamily: ''Outfit', sans-serif', fontSize: 13, color: overdueOnly ? '#ef4444' : 'rgba(242,237,228,0.55)',
+              fontFamily: "'Outfit', sans-serif", fontSize: 13, color: overdueOnly ? '#ef4444' : 'rgba(242,237,228,0.55)',
             }}>
               <input type="checkbox" checked={overdueOnly} onChange={e => setOverdueOnly(e.target.checked)} style={{ display: 'none' }} />
               ⚠️ En retard
@@ -329,7 +329,7 @@ const AdminInvoices = () => {
 
           {/* Status multi-select chips */}
           <div className="flex flex-wrap gap-2 items-center">
-            <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.28)', marginRight: 4 }}>Statuts :</span>
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', marginRight: 4 }}>Statuts :</span>
             {Object.entries(STATUS_CONFIG).map(([key, cfg]) => {
               const active = statusFilters.includes(key);
               return (
@@ -338,7 +338,7 @@ const AdminInvoices = () => {
                   border: active ? `2px solid ${cfg.color}` : '1px solid rgba(255,255,255,0.12)',
                   background: active ? `${cfg.color}18` : 'rgba(255,255,255,0.06)',
                   color: active ? cfg.color : 'rgba(242,237,228,0.55)',
-                  fontFamily: ''Space Mono', monospace', fontSize: 12, fontWeight: active ? 600 : 400,
+                  fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: active ? 600 : 400,
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}>
                   {cfg.label}
@@ -349,7 +349,7 @@ const AdminInvoices = () => {
               <button onClick={clearFilters} className="flex items-center gap-1" style={{
                 padding: '5px 12px', borderRadius: '100px', background: 'rgba(232,115,90,0.08)',
                 border: '1px solid rgba(232,115,90,0.2)', color: '#F07067',
-                fontFamily: ''Outfit', sans-serif', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}>
                 <XIcon size={12} /> Réinitialiser
               </button>
@@ -359,13 +359,13 @@ const AdminInvoices = () => {
 
         {/* Table */}
         {loading ? (
-          <div className="text-center py-20" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Chargement...</div>
+          <div className="text-center py-20" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Chargement...</div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Aucune facture trouvée</div>
+          <div className="text-center py-20" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Aucune facture trouvée</div>
         ) : (
           <div className="admin-glass-table">
             <div className="overflow-x-auto">
-              <table className="w-full" style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
+              <table className="w-full" style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                     {['N°', 'Client', 'Projet', 'Source', 'Date', 'Échéance', 'Montant', 'Statut', 'Actions'].map(h => (
@@ -385,14 +385,14 @@ const AdminInvoices = () => {
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,157,143,0.04)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                       >
-                        <td className="px-4 py-3 font-medium" style={{ color: '#2DD4B8', fontFamily: ''Space Mono', monospace', fontSize: 12 }}>
+                        <td className="px-4 py-3 font-medium" style={{ color: '#2DD4B8', fontFamily: "'Space Mono', monospace", fontSize: 12 }}>
                           {inv.invoice_number}
                         </td>
                         <td className="px-4 py-3" style={{ color: '#F2EDE4' }}>{inv.client_name}</td>
                         <td className="px-4 py-3" style={{ color: 'rgba(242,237,228,0.55)', fontSize: 13 }}>{inv.project_title || '—'}</td>
                         <td className="px-4 py-3">
                           <span style={{
-                            padding: '3px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: ''Space Mono', monospace',
+                            padding: '3px 8px', borderRadius: '100px', fontSize: 10, fontWeight: 600, fontFamily: "'Space Mono', monospace",
                             background: (inv as any).source === 'stripe' ? 'rgba(99,91,255,0.12)' : 'rgba(255,255,255,0.06)',
                             color: (inv as any).source === 'stripe' ? '#635BFF' : 'rgba(242,237,228,0.28)',
                           }}>{(inv as any).source === 'stripe' ? '⚡ Stripe' : 'Manuel'}</span>
@@ -408,7 +408,7 @@ const AdminInvoices = () => {
                           <span style={{
                             padding: '4px 10px', borderRadius: '100px',
                             background: `${sc.color}18`, color: sc.color,
-                            fontWeight: 600, fontSize: 11, fontFamily: ''Space Mono', monospace',
+                            fontWeight: 600, fontSize: 11, fontFamily: "'Space Mono', monospace",
                           }}>{sc.label}</span>
                         </td>
                         <td className="px-4 py-3">

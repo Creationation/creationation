@@ -51,9 +51,9 @@ const ProjectKPIs = () => {
         }}>
           <div className="flex items-center gap-2 mb-1">
             <s.icon size={14} style={{ color: s.color }} />
-            <span style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{s.label}</span>
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>{s.label}</span>
           </div>
-          <p style={{ fontFamily: ''Playfair Display', serif', fontSize: 28, color: s.color, margin: 0 }}>{s.value}</p>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: s.color, margin: 0 }}>{s.value}</p>
         </div>
       ))}
     </div>

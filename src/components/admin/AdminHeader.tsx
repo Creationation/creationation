@@ -98,7 +98,7 @@ const AdminHeader = () => {
                     borderRadius: 10,
                     background: isActive ? `${item.color}12` : 'transparent',
                     color: isActive ? item.color : 'rgba(242,237,228,0.55)',
-                    fontFamily: ''Outfit', sans-serif',
+                    fontFamily: "'Outfit', sans-serif",
                     fontSize: 14,
                     fontWeight: isActive ? 600 : 400,
                     textDecoration: 'none',
@@ -122,7 +122,7 @@ const AdminHeader = () => {
                 padding: '10px 14px',
                 borderRadius: 10,
                 color: '#2DD4B8',
-                fontFamily: ''Outfit', sans-serif',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
                 textDecoration: 'none',
                 transition: 'background 0.15s ease',
@@ -144,7 +144,7 @@ const AdminHeader = () => {
                 background: 'transparent',
                 border: 'none',
                 color: '#F07067',
-                fontFamily: ''Outfit', sans-serif',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
@@ -158,12 +158,12 @@ const AdminHeader = () => {
           </div>
         </div>
 
-        <h1 style={{ fontFamily: ''Playfair Display', serif', fontSize: 20, color: '#F2EDE4', margin: 0 }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#F2EDE4', margin: 0 }}>
           CRM
         </h1>
         {currentPage && currentPage.to !== '/admin' && (
           <span style={{
-            fontFamily: ''Outfit', sans-serif',
+            fontFamily: "'Outfit', sans-serif",
             fontSize: 13,
             fontWeight: 600,
             color: currentPage.color,

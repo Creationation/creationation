@@ -138,22 +138,22 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 style={{ fontFamily: ''Space Mono', monospace', fontSize: 20, color: '#F2EDE4', marginBottom: 4 }}>
+            <h2 style={{ fontFamily: "'Space Mono', monospace", fontSize: 20, color: '#F2EDE4', marginBottom: 4 }}>
               {invoice.invoice_number}
             </h2>
             <div className="flex items-center gap-3 flex-wrap">
               <select value={invoice.status} onChange={e => handleStatusChange(e.target.value)} style={{
                 padding: '4px 12px', borderRadius: '100px', border: 'none',
                 background: `${sc.color}18`, color: sc.color, fontWeight: 600, fontSize: 12,
-                fontFamily: ''Space Mono', monospace', cursor: 'pointer',
+                fontFamily: "'Space Mono', monospace", cursor: 'pointer',
               }}>
                 {Object.entries(STATUS_CONFIG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
               </select>
-              <span style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif' }}>
+              <span style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', fontFamily: "'Outfit', sans-serif" }}>
                 {invoice.client_name}
               </span>
               {invoice.project_title && (
-                <span style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>
+                <span style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>
                   • {invoice.project_title}
                 </span>
               )}
@@ -191,16 +191,16 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         }}>
           <div className="flex justify-between items-start mb-8">
             <div>
-              <h3 style={{ fontFamily: ''Playfair Display', serif', fontSize: 22, color: '#2DD4B8' }}>CreationNation</h3>
-              <p style={{ fontSize: 12, color: '#888', fontFamily: ''Outfit', sans-serif' }}>Agence web créative</p>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#2DD4B8' }}>CreationNation</h3>
+              <p style={{ fontSize: 12, color: '#888', fontFamily: "'Outfit', sans-serif" }}>Agence web créative</p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <p style={{ fontFamily: ''Space Mono', monospace', fontSize: 16, color: '#333' }}>FACTURE</p>
-              <p style={{ fontFamily: ''Space Mono', monospace', fontSize: 13, color: '#666' }}>{invoice.invoice_number}</p>
+              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 16, color: '#333' }}>FACTURE</p>
+              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 13, color: '#666' }}>{invoice.invoice_number}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 mb-8" style={{ fontSize: 13, fontFamily: ''Outfit', sans-serif', color: '#555' }}>
+          <div className="grid grid-cols-2 gap-8 mb-8" style={{ fontSize: 13, fontFamily: "'Outfit', sans-serif", color: '#555' }}>
             <div>
               <p style={{ fontWeight: 600, color: '#333', marginBottom: 4 }}>Facturé à :</p>
               <p>{invoice.client_name}</p>
@@ -213,7 +213,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
           </div>
 
           {/* Items table */}
-          <table className="w-full mb-6" style={{ fontSize: 13, fontFamily: ''Outfit', sans-serif' }}>
+          <table className="w-full mb-6" style={{ fontSize: 13, fontFamily: "'Outfit', sans-serif" }}>
             <thead>
               <tr style={{ borderBottom: '2px solid #e5e5e5' }}>
                 <th className="text-left py-2" style={{ color: '#888', fontWeight: 600 }}>Description</th>
@@ -234,7 +234,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
             </tbody>
           </table>
 
-          <div className="flex flex-col items-end gap-1" style={{ fontSize: 14, fontFamily: ''Outfit', sans-serif' }}>
+          <div className="flex flex-col items-end gap-1" style={{ fontSize: 14, fontFamily: "'Outfit', sans-serif" }}>
             <div className="flex gap-8"><span style={{ color: '#888' }}>Sous-total</span><span>{fmt(Number(invoice.subtotal))}</span></div>
             {Number(invoice.tax_rate) > 0 && (
               <div className="flex gap-8"><span style={{ color: '#888' }}>TVA ({invoice.tax_rate}%)</span><span>{fmt(Number(invoice.tax_amount))}</span></div>
@@ -245,12 +245,12 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
           </div>
 
           {invoice.notes && (
-            <div style={{ marginTop: 24, padding: 16, background: '#f9f9f9', borderRadius: 8, fontSize: 13, color: '#666', fontFamily: ''Outfit', sans-serif' }}>
+            <div style={{ marginTop: 24, padding: 16, background: '#f9f9f9', borderRadius: 8, fontSize: 13, color: '#666', fontFamily: "'Outfit', sans-serif" }}>
               {invoice.notes}
             </div>
           )}
 
-          <div style={{ marginTop: 24, textAlign: 'center', fontSize: 11, color: '#bbb', fontFamily: ''Outfit', sans-serif' }}>
+          <div style={{ marginTop: 24, textAlign: 'center', fontSize: 11, color: '#bbb', fontFamily: "'Outfit', sans-serif" }}>
             Merci pour votre confiance — CreationNation
           </div>
         </div>
@@ -259,13 +259,13 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         {!invoice.stripe_payment_url ? (
           <div style={{
             padding: 16, background: 'rgba(0,0,0,0.03)', borderRadius: 12, marginBottom: 24,
-            fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif', textAlign: 'center',
+            fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", textAlign: 'center',
           }}>
             💳 Stripe non configuré — le paiement en ligne sera disponible après configuration
           </div>
         ) : (
           <div className="flex items-center gap-3 mb-6" style={{ padding: 16, background: 'rgba(16,185,129,0.06)', borderRadius: 12 }}>
-            <span style={{ fontSize: 13, fontFamily: ''Outfit', sans-serif', color: '#2DD4B8' }}>Lien de paiement disponible</span>
+            <span style={{ fontSize: 13, fontFamily: "'Outfit', sans-serif", color: '#2DD4B8' }}>Lien de paiement disponible</span>
             <button onClick={() => { navigator.clipboard.writeText(invoice.stripe_payment_url!); toast.success('Lien copié'); }}
               className="flex items-center gap-1" style={{ ...btnOutline, padding: '4px 12px', fontSize: 12 }}>
               <Copy size={12} /> Copier
@@ -274,26 +274,26 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         )}
 
         {/* Payment history */}
-        <h3 style={{ fontFamily: ''Outfit', sans-serif', fontSize: 15, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>
+        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>
           Historique des paiements
         </h3>
         <div style={{ marginBottom: 12 }}>
           <div style={{ height: 8, background: 'rgba(0,0,0,0.06)', borderRadius: 4, overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${progressPct}%`, background: '#2DD4B8', borderRadius: 4, transition: 'width 0.3s' }} />
           </div>
-          <div className="flex justify-between mt-1" style={{ fontSize: 12, fontFamily: ''Outfit', sans-serif', color: 'rgba(242,237,228,0.55)' }}>
+          <div className="flex justify-between mt-1" style={{ fontSize: 12, fontFamily: "'Outfit', sans-serif", color: 'rgba(242,237,228,0.55)' }}>
             <span>Payé : {fmt(Number(invoice.amount_paid))}</span>
             <span>Reste : {fmt(remaining)}</span>
           </div>
         </div>
         {payments.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif', marginBottom: 16 }}>Aucun paiement enregistré</p>
+          <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", marginBottom: 16 }}>Aucun paiement enregistré</p>
         ) : (
           <div className="flex flex-col gap-2 mb-6">
             {payments.map(p => (
               <div key={p.id} className="flex items-center justify-between" style={{
                 padding: '10px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 10,
-                border: '1px solid rgba(255,255,255,0.12)', fontSize: 13, fontFamily: ''Outfit', sans-serif',
+                border: '1px solid rgba(255,255,255,0.12)', fontSize: 13, fontFamily: "'Outfit', sans-serif",
               }}>
                 <span style={{ color: 'rgba(242,237,228,0.55)' }}>{new Date(p.payment_date).toLocaleDateString('fr-FR')}</span>
                 <span style={{ fontWeight: 600, color: '#2DD4B8' }}>{fmt(Number(p.amount))}</span>
@@ -304,11 +304,11 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
         )}
 
         {/* Activity log */}
-        <h3 style={{ fontFamily: ''Outfit', sans-serif', fontSize: 15, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>
+        <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600, color: '#F2EDE4', marginBottom: 12 }}>
           Activité
         </h3>
         {activityLog.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif', marginBottom: 16 }}>Aucune activité</p>
+          <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", marginBottom: 16 }}>Aucune activité</p>
         ) : (
           <div className="flex flex-col gap-0 mb-6">
             {activityLog.map((ev, i) => {
@@ -323,8 +323,8 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
                     <Icon size={10} style={{ color: ev.color }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13, color: '#F2EDE4' }}>{ev.label}</p>
-                    <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>
+                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4' }}>{ev.label}</p>
+                    <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)' }}>
                       {new Date(ev.date).toLocaleDateString('fr-FR')} à {new Date(ev.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -340,14 +340,14 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
             padding: 20, background: 'rgba(255,255,255,0.10)', borderRadius: 16,
             border: '1px solid rgba(255,255,255,0.12)', marginBottom: 16,
           }}>
-            <h4 style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Enregistrer un paiement</h4>
+            <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Enregistrer un paiement</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Montant</label>
+                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Montant</label>
                 <input type="number" value={payAmount} onChange={e => setPayAmount(Number(e.target.value))} style={inputSm} />
               </div>
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Méthode</label>
+                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Méthode</label>
                 <select value={payMethod} onChange={e => setPayMethod(e.target.value)} style={inputSm}>
                   <option value="bank_transfer">Virement</option>
                   <option value="stripe">Stripe</option>
@@ -356,7 +356,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Notes</label>
+                <label style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Notes</label>
                 <input value={payNotes} onChange={e => setPayNotes(e.target.value)} placeholder="Optionnel" style={inputSm} />
               </div>
             </div>
@@ -364,7 +364,7 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
               <button onClick={() => setShowPayment(false)} style={{ ...btnOutline, padding: '8px 16px', fontSize: 12 }}>Annuler</button>
               <button onClick={handleRecordPayment} style={{
                 padding: '8px 16px', background: '#2DD4B8', color: '#fff', border: 'none',
-                borderRadius: 10, fontSize: 12, fontWeight: 600, fontFamily: ''Outfit', sans-serif', cursor: 'pointer',
+                borderRadius: 10, fontSize: 12, fontWeight: 600, fontFamily: "'Outfit', sans-serif", cursor: 'pointer',
               }}>Enregistrer</button>
             </div>
           </div>
@@ -376,12 +376,12 @@ const InvoiceDetailModal = ({ invoice, onClose, onUpdated }: Props) => {
 
 const btnOutline: React.CSSProperties = {
   padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)',
-  borderRadius: 10, fontFamily: ''Outfit', sans-serif', fontSize: 13, fontWeight: 600,
+  borderRadius: 10, fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600,
   color: '#F2EDE4', cursor: 'pointer',
 };
 const inputSm: React.CSSProperties = {
   width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-  borderRadius: 8, fontFamily: ''Outfit', sans-serif', fontSize: 13, color: '#F2EDE4', outline: 'none',
+  borderRadius: 8, fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#F2EDE4', outline: 'none',
 };
 
 export default InvoiceDetailModal;

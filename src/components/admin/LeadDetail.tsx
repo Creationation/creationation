@@ -105,7 +105,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
     color: active ? '#fff' : 'rgba(242,237,228,0.55)',
     border: active ? 'none' : '1px solid rgba(255,255,255,0.12)',
     borderRadius: '100px',
-    fontFamily: ''Outfit', sans-serif',
+    fontFamily: "'Outfit', sans-serif",
     fontSize: 12,
     fontWeight: 600,
     cursor: 'pointer',
@@ -130,7 +130,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 24, color: '#F2EDE4', marginBottom: 4 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#F2EDE4', marginBottom: 4 }}>
               {lead.name}
             </h2>
             <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                   color: statusColors[lead.status],
                   fontWeight: 600,
                   fontSize: 12,
-                  fontFamily: ''Space Mono', monospace',
+                  fontFamily: "'Space Mono', monospace",
                   cursor: 'pointer',
                 }}
               >
@@ -177,21 +177,21 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
         }}>
           <div className="flex items-center gap-3">
             <Mail size={14} style={{ color: '#2DD4B8' }} />
-            <a href={`mailto:${lead.email}`} style={{ color: '#F2EDE4', fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
+            <a href={`mailto:${lead.email}`} style={{ color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
               {lead.email}
             </a>
           </div>
           {lead.phone && (
             <div className="flex items-center gap-3">
               <Phone size={14} style={{ color: '#2DD4B8' }} />
-              <a href={`tel:${lead.phone}`} style={{ color: '#F2EDE4', fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
+              <a href={`tel:${lead.phone}`} style={{ color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
                 {lead.phone}
               </a>
             </div>
           )}
           <div className="flex items-center gap-3">
             <Calendar size={14} style={{ color: '#2DD4B8' }} />
-            <span style={{ color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif', fontSize: 14 }}>
+            <span style={{ color: 'rgba(242,237,228,0.55)', fontFamily: "'Outfit', sans-serif", fontSize: 14 }}>
               {new Date(lead.created_at).toLocaleDateString('fr-FR', {
                 day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
               })}
@@ -209,7 +209,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
             color: '#fff',
             border: 'none',
             borderRadius: '100px',
-            fontFamily: ''Outfit', sans-serif',
+            fontFamily: "'Outfit', sans-serif",
             fontSize: 14,
             fontWeight: 600,
             cursor: 'pointer',
@@ -233,26 +233,26 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
           <div className="flex flex-col gap-4">
             {lead.project_type && (
               <div>
-                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Space Mono', monospace', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                   Type de projet
                 </p>
-                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: ''Outfit', sans-serif' }}>{lead.project_type}</p>
+                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif" }}>{lead.project_type}</p>
               </div>
             )}
             {lead.budget && (
               <div>
-                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Space Mono', monospace', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                   Budget
                 </p>
-                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: ''Outfit', sans-serif' }}>{lead.budget}</p>
+                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif" }}>{lead.budget}</p>
               </div>
             )}
             {lead.message && (
               <div>
-                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Space Mono', monospace', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                   Message
                 </p>
-                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: ''Outfit', sans-serif', lineHeight: 1.6 }}>{lead.message}</p>
+                <p style={{ fontSize: 14, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", lineHeight: 1.6 }}>{lead.message}</p>
               </div>
             )}
           </div>
@@ -273,7 +273,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                   background: 'rgba(255,255,255,0.06)',
                   border: '1px solid rgba(255,255,255,0.12)',
                   borderRadius: '12px',
-                  fontFamily: ''Outfit', sans-serif',
+                  fontFamily: "'Outfit', sans-serif",
                   fontSize: 13,
                   color: '#F2EDE4',
                   outline: 'none',
@@ -300,10 +300,10 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                 borderRadius: '12px',
                 border: '1px solid rgba(255,255,255,0.12)',
               }}>
-                <p style={{ fontSize: 13, color: '#F2EDE4', fontFamily: ''Outfit', sans-serif', lineHeight: 1.5 }}>
+                <p style={{ fontSize: 13, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", lineHeight: 1.5 }}>
                   {note.content}
                 </p>
-                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Space Mono', monospace', marginTop: 8 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", marginTop: 8 }}>
                   {new Date(note.created_at).toLocaleDateString('fr-FR', {
                     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                   })}
@@ -311,7 +311,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
               </div>
             ))}
             {notes.length === 0 && (
-              <p className="text-center py-8" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif', fontSize: 13 }}>
+              <p className="text-center py-8" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
                 <MessageSquare size={24} className="mx-auto mb-2" style={{ opacity: 0.3 }} />
                 Aucune note pour ce prospect
               </p>
@@ -328,13 +328,13 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
                 borderRadius: '12px',
                 border: '1px solid rgba(255,255,255,0.12)',
               }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#F2EDE4', fontFamily: ''Outfit', sans-serif', marginBottom: 4 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#F2EDE4', fontFamily: "'Outfit', sans-serif", marginBottom: 4 }}>
                   {em.subject}
                 </p>
-                <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', fontFamily: ''Outfit', sans-serif', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                <p style={{ fontSize: 13, color: 'rgba(242,237,228,0.55)', fontFamily: "'Outfit', sans-serif", lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                   {em.body.substring(0, 200)}{em.body.length > 200 ? '...' : ''}
                 </p>
-                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: ''Space Mono', monospace', marginTop: 8 }}>
+                <p style={{ fontSize: 11, color: 'rgba(242,237,228,0.28)', fontFamily: "'Space Mono', monospace", marginTop: 8 }}>
                   {new Date(em.sent_at).toLocaleDateString('fr-FR', {
                     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                   })}
@@ -342,7 +342,7 @@ const LeadDetail = ({ lead, onClose, onStatusChange, onSendEmail }: Props) => {
               </div>
             ))}
             {emails.length === 0 && (
-              <p className="text-center py-8" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif', fontSize: 13 }}>
+              <p className="text-center py-8" style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif", fontSize: 13 }}>
                 <Mail size={24} className="mx-auto mb-2" style={{ opacity: 0.3 }} />
                 Aucun email envoyé à ce prospect
               </p>

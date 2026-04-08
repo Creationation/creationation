@@ -99,7 +99,7 @@ const AdminCosts = () => {
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px' }}>
 
         {loading ? (
-          <div className='text-center py-20' style={{ color: 'rgba(242,237,228,0.28)', fontFamily: ''Outfit', sans-serif' }}>Chargement...</div>
+          <div className='text-center py-20' style={{ color: 'rgba(242,237,228,0.28)', fontFamily: "'Outfit', sans-serif" }}>Chargement...</div>
         ) : (
           <div className='flex flex-col gap-6'>
             {/* Summary cards */}
@@ -112,8 +112,8 @@ const AdminCosts = () => {
               ].map(c => (
                 <div key={c.label} className="admin-glass-card" style={{ flex: '1 1 180px', padding: 20 }}>
                   <c.icon size={18} style={{ color: c.accent, marginBottom: 8 }} />
-                  <div style={{ fontFamily: ''Playfair Display', serif', fontSize: 24, color: '#F2EDE4' }}>{c.value}</div>
-                  <div style={{ fontFamily: ''Outfit', sans-serif', fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 1 }}>{c.label}</div>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#F2EDE4' }}>{c.value}</div>
+                  <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, color: 'rgba(242,237,228,0.28)', textTransform: 'uppercase', letterSpacing: 1 }}>{c.label}</div>
                 </div>
               ))}
             </div>
@@ -121,21 +121,21 @@ const AdminCosts = () => {
             {/* Operation History */}
             <div className="admin-glass-table">
               <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 16, color: '#F2EDE4', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Clock size={16} /> Historique des opérations
                 </h2>
-                <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '4px 0 0' }}>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '4px 0 0' }}>
                   {logs.length} opération(s) enregistrée(s)
                 </p>
               </div>
               {logs.length === 0 ? (
-                <div style={{ padding: '40px 24px', textAlign: 'center', fontFamily: ''Outfit', sans-serif', fontSize: 14, color: 'rgba(242,237,228,0.28)' }}>
+                <div style={{ padding: '40px 24px', textAlign: 'center', fontFamily: "'Outfit', sans-serif", fontSize: 14, color: 'rgba(242,237,228,0.28)' }}>
                   <Info size={24} style={{ margin: '0 auto 8px', opacity: 0.5 }} />
                   Aucune opération enregistrée. L'historique commencera à se remplir après vos prochaines recherches.
                 </div>
               ) : (
                 <div style={{ maxHeight: 400, overflowY: 'auto' }}>
-                  <table className='w-full' style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13, borderCollapse: 'collapse' }}>
+                  <table className='w-full' style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', position: 'sticky', top: 0, background: 'rgba(255,255,255,0.10)' }}>
                         {['Date', 'Opération', 'Description', 'Prospects', 'Coût'].map(h => (
@@ -171,9 +171,9 @@ const AdminCosts = () => {
             {/* Tarifs de référence */}
             <div className="admin-glass-table">
               <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 16, color: '#F2EDE4', margin: 0 }}>Grille tarifaire (€)</h2>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', margin: 0 }}>Grille tarifaire (€)</h2>
               </div>
-              <table className='w-full' style={{ fontFamily: ''Outfit', sans-serif', fontSize: 14, borderCollapse: 'collapse' }}>
+              <table className='w-full' style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
                     {['Service', 'Coût unitaire', 'Note'].map(h => (
@@ -208,12 +208,12 @@ const AdminCosts = () => {
             {/* Projections */}
             <div className="admin-glass-table">
               <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                <h2 style={{ fontFamily: ''Playfair Display', serif', fontSize: 16, color: '#F2EDE4', margin: 0 }}>Projections de coûts (€)</h2>
-                <p style={{ fontFamily: ''Outfit', sans-serif', fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '4px 0 0' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#F2EDE4', margin: 0 }}>Projections de coûts (€)</h2>
+                <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: 'rgba(242,237,228,0.28)', margin: '4px 0 0' }}>
                   Comparaison standard vs éco — recherche + enrichissement + envoi emails
                 </p>
               </div>
-              <table className='w-full' style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13, borderCollapse: 'collapse' }}>
+              <table className='w-full' style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
                     {['Prospects', 'Standard', 'Mode Éco', 'Économie', '€/prospect (éco)'].map(h => (
@@ -241,8 +241,8 @@ const AdminCosts = () => {
 
             {/* Notes */}
             <div style={{ padding: '20px 24px', background: 'rgba(13,138,111,0.04)', border: '1px solid rgba(13,138,111,0.15)', borderRadius: '28px' }}>
-              <h3 style={{ fontFamily: ''Playfair Display', serif', fontSize: 14, color: '#F2EDE4', margin: '0 0 8px' }}>📝 Notes</h3>
-              <ul style={{ fontFamily: ''Outfit', sans-serif', fontSize: 13, color: 'rgba(242,237,228,0.55)', margin: 0, paddingLeft: 20, lineHeight: 2 }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, color: '#F2EDE4', margin: '0 0 8px' }}>📝 Notes</h3>
+              <ul style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: 'rgba(242,237,228,0.55)', margin: 0, paddingLeft: 20, lineHeight: 2 }}>
                 <li>Tous les coûts sont en <strong>euros (€)</strong></li>
                 <li>Les coûts Google sont basés sur le <strong>Places API (New)</strong> — Text Search + Place Details</li>
                 <li>Les coûts IA sont estimatifs (Lovable AI facture à l'usage)</li>

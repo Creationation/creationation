@@ -124,7 +124,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 style={{ fontFamily: ''Playfair Display', serif', fontSize: 22, color: '#F2EDE4' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#F2EDE4' }}>
             Email à {lead.name}
           </h3>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(242,237,228,0.28)' }}>
@@ -143,7 +143,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: '100px',
-                fontFamily: ''Outfit', sans-serif',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 12,
                 color: 'rgba(242,237,228,0.55)',
                 cursor: 'pointer',
@@ -168,7 +168,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
         <div className="flex flex-col gap-4">
           <div>
             <label style={{
-              fontFamily: ''Outfit', sans-serif',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 11,
               fontWeight: 600,
               color: 'rgba(242,237,228,0.28)',
@@ -184,7 +184,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
               background: 'rgba(255,255,255,0.06)',
               borderRadius: '12px',
               border: '1px solid rgba(255,255,255,0.12)',
-              fontFamily: ''Outfit', sans-serif',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 14,
               color: 'rgba(242,237,228,0.55)',
             }}>
@@ -194,7 +194,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
 
           <div>
             <label style={{
-              fontFamily: ''Outfit', sans-serif',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 11,
               fontWeight: 600,
               color: 'rgba(242,237,228,0.28)',
@@ -215,7 +215,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
                 background: 'rgba(255,255,255,0.06)',
                 borderRadius: '12px',
                 border: '1px solid rgba(255,255,255,0.12)',
-                fontFamily: ''Outfit', sans-serif',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
                 color: '#F2EDE4',
                 outline: 'none',
@@ -225,7 +225,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
 
           <div>
             <label style={{
-              fontFamily: ''Outfit', sans-serif',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 11,
               fontWeight: 600,
               color: 'rgba(242,237,228,0.28)',
@@ -247,7 +247,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
                 background: 'rgba(255,255,255,0.06)',
                 borderRadius: '12px',
                 border: '1px solid rgba(255,255,255,0.12)',
-                fontFamily: ''Outfit', sans-serif',
+                fontFamily: "'Outfit', sans-serif",
                 fontSize: 14,
                 color: '#F2EDE4',
                 outline: 'none',
@@ -267,7 +267,7 @@ const SendEmailModal = ({ lead, onClose, onSent }: Props) => {
               color: '#fff',
               border: 'none',
               borderRadius: '100px',
-              fontFamily: ''Outfit', sans-serif',
+              fontFamily: "'Outfit', sans-serif",
               fontSize: 14,
               fontWeight: 600,
               cursor: loading ? 'not-allowed' : 'pointer',
