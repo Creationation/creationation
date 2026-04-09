@@ -140,7 +140,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   useEffect(() => {
     if (prospectSearch.length < 2) { setProspectResults([]); return; }
     const t = setTimeout(async () => {
-      const { data } = await supabase.from('prospects').select('id, business_name, contact_name, email, phone, business_type, city')
+      const { data } = await supabase.from('prospects').select('id, business_name, contact_name, email, phone, business_type, city, address')
         .ilike('business_name', `%${prospectSearch}%`).limit(5);
       setProspectResults(data || []);
     }, 300);
@@ -154,6 +154,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
     setContactPhone(p.phone || '');
     setBusinessType(p.business_type || 'beauty');
     setCity(p.city || 'Wien');
+    setAddress(p.address || '');
     setProspectId(p.id);
     setProspectSearch('');
     setProspectResults([]);
