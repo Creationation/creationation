@@ -539,10 +539,10 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
         border: '1px solid rgba(255,255,255,0.15)',
       }}>
         <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: TEXT_PRIMARY, fontFamily: "'Playfair Display', serif" }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>
             {template ? 'Modifier le template' : 'Nouveau template'}
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY }}><X size={20} /></button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: "rgba(255,255,255,0.7)" }}><X size={20} /></button>
         </div>
 
         <div className="p-5 space-y-5">
@@ -563,7 +563,7 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
             <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6 }}>
               <Sparkles size={14} style={{ color: GOLD }} />
               Prompt créatif *
-              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Ce prompt pilote tout le design de la démo</span>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>— Ce prompt pilote tout le design de la démo</span>
             </label>
 
             <div className="flex flex-wrap gap-1.5 mb-3">
@@ -571,7 +571,7 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
                 <button key={p.label} onClick={() => setStylePrompt(prev => prev ? `${prev}\n\n${p.text}` : p.text)}
                   style={{
                     padding: '4px 10px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                    border: 'none', background: 'rgba(0,0,0,0.06)', color: TEXT_SECONDARY,
+                    border: 'none', background: 'rgba(255,255,255,0.12)', color: "rgba(255,255,255,0.7)",
                     transition: 'all 0.15s',
                   }}
                   onMouseEnter={e => { e.currentTarget.style.background = `${GOLD}20`; e.currentTarget.style.color = '#B8941E'; }}
@@ -589,7 +589,7 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
 
             {promptQuality && (
               <div className="flex items-center gap-2 mt-2">
-                <div style={{ flex: 1, height: 3, borderRadius: 99, background: 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                <div style={{ flex: 1, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.12)', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', borderRadius: 99, background: promptColor, transition: 'width 0.3s',
                     width: promptQuality === 'excellent' ? '100%' : promptQuality === 'bon' ? '60%' : '25%',
@@ -607,7 +607,7 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
             <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
               <Image size={14} style={{ color: TEAL }} />
               Photos de référence
-              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Inspirations visuelles pour guider l'IA</span>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>— Inspirations visuelles pour guider l'IA</span>
             </label>
             {screenshots.length > 0 && (
               <div className="flex gap-2 flex-wrap mb-3">
@@ -627,7 +627,7 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
               <Upload size={14} /> {screenshots.length > 0 ? 'Ajouter' : 'Upload photos'}
               <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} style={{ display: 'none' }} />
             </label>
-            {uploading && <span style={{ fontSize: 12, color: TEXT_MUTED, marginLeft: 8 }}>Upload en cours...</span>}
+            {uploading && <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginLeft: 8 }}>Upload en cours...</span>}
           </div>
 
           {/* JSX file */}
@@ -635,7 +635,7 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
             <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
               <FileCode size={14} style={{ color: PURPLE }} />
               Fichier JSX
-              <span style={{ fontSize: 11, color: TEXT_MUTED, fontWeight: 400 }}>— Composant React de référence pour le design</span>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>— Composant React de référence pour le design</span>
             </label>
             <div className="flex items-center gap-3">
               {jsxFileUrl && (
@@ -666,10 +666,10 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
                 }} />
               </div>
               <div>
-                <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "#fff", display: 'flex', alignItems: 'center', gap: 4 }}>
                   <Palette size={14} /> Couleurs prédéfinies
                 </span>
-                <span style={{ fontSize: 12, color: TEXT_MUTED }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
                   {colorsEnabled ? 'Les couleurs du template seront suggérées lors de la création de la démo' : 'Les couleurs seront choisies lors de la création de la démo'}
                 </span>
               </div>
@@ -719,11 +719,11 @@ Exemple : STYLE : Zen et relaxant, tons naturels. PHOTOS : Éclairage tamisé, b
 
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} />
-            <span style={{ fontSize: 13, color: TEXT_SECONDARY }}>Template actif</span>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Template actif</span>
           </label>
 
           <div className="flex items-center justify-end gap-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-            <button onClick={onClose} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'rgba(0,0,0,0.06)', color: TEXT_SECONDARY, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+            <button onClick={onClose} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'rgba(255,255,255,0.12)', color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
               Annuler
             </button>
             <button onClick={save} disabled={saving} style={{
