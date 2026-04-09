@@ -762,7 +762,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
 
               {/* Generation buttons for new demos */}
               {savedDemoId && (
-                <div style={{ padding: 16, borderRadius: 12, background: 'rgba(124,92,191,0.08)', border: '1px solid rgba(124,92,191,0.15)' }}>
+                <div style={{ padding: 16, borderRadius: 12, background: 'rgba(124,92,191,0.12)', border: '1px solid rgba(124,92,191,0.2)' }}>
                   <p style={{ fontSize: 13, fontWeight: 600, color: PURPLE, marginBottom: 8 }}>✨ Génération IA</p>
                   <div className="flex flex-wrap gap-2">
                     <button onClick={() => generateContent('texts')} disabled={!!generating} style={genBtnStyle}>
@@ -776,6 +776,16 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                     <button onClick={() => generateContent('gallery')} disabled={!!generating} style={genBtnStyle}>
                       {generating === 'gallery' ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
                       Galerie (4 photos)
+                    </button>
+                    <button onClick={async () => {
+                      await generateContent('texts');
+                      await generateContent('hero');
+                      await generateContent('gallery');
+                    }} disabled={!!generating} style={{
+                      ...genBtnStyle, background: `linear-gradient(135deg, ${PURPLE}, ${GOLD})`,
+                    }}>
+                      {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      🔄 Tout régénérer
                     </button>
                   </div>
                   {generating && <p className="text-xs mt-2" style={{ color: PURPLE }}>⏳ Génération en cours, patientez...</p>}
@@ -793,20 +803,18 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                 </select>
               </div>
 
-              {/* Save & generate */}
-              {!generatedToken && (
-                <button onClick={saveDemo} disabled={saving} style={{
-                  width: '100%', padding: '12px', borderRadius: 12, border: 'none', cursor: 'pointer',
-                  background: `linear-gradient(135deg, ${TEAL}, #3EDDC7)`, color: '#fff',
-                  fontWeight: 600, fontSize: 15, opacity: saving ? 0.7 : 1,
-                }}>
-                  {saving ? 'Génération...' : 'Générer le lien'}
-                </button>
-              )}
+              {/* Save / Update */}
+              <button onClick={saveDemo} disabled={saving} style={{
+                width: '100%', padding: '12px', borderRadius: 12, border: 'none', cursor: 'pointer',
+                background: `linear-gradient(135deg, ${TEAL}, #3EDDC7)`, color: '#fff',
+                fontWeight: 600, fontSize: 15, opacity: saving ? 0.7 : 1,
+              }}>
+                {saving ? 'Sauvegarde...' : demo ? '💾 Mettre à jour la démo' : 'Générer le lien'}
+              </button>
 
               {generatedToken && (
                 <div className="space-y-3">
-                  <div style={{ ...inputStyle, display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(42,157,143,0.08)' }}>
+                  <div style={{ ...inputStyle, display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(42,157,143,0.15)' }}>
                     <span style={{ flex: 1, fontSize: 13, color: TEAL, wordBreak: 'break-all' }}>
                       creationation.app/demo/{generatedToken}
                     </span>
@@ -824,8 +832,8 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                     }}><Send size={14} /> Envoyer par email</button>
                   </div>
                   <button onClick={() => { onSaved(); }} style={{
-                    width: '100%', padding: '10px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.3)',
-                    background: 'rgba(255,255,255,0.2)', color: "#fff", fontWeight: 500, fontSize: 14, cursor: 'pointer',
+                    width: '100%', padding: '10px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.15)',
+                    background: 'rgba(255,255,255,0.1)', color: '#fff', fontWeight: 500, fontSize: 14, cursor: 'pointer',
                   }}>Fermer</button>
                 </div>
               )}
