@@ -359,9 +359,9 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                   <div style={{ marginTop: 4, background: 'rgba(255,255,255,0.5)', borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.3)' }}>
                     {prospectResults.map(p => (
                       <button key={p.id} onClick={() => fillFromProspect(p)} className="w-full text-left flex items-center gap-2"
-                        style={{ padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.2)', fontSize: 13, color: TEXT_PRIMARY }}>
+                        style={{ padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.2)', fontSize: 13, color: "#fff" }}>
                         <span style={{ fontWeight: 600 }}>{p.business_name}</span>
-                        <span style={{ color: TEXT_SECONDARY }}>{p.city}</span>
+                        <span style={{ color: "rgba(255,255,255,0.7)" }}>{p.city}</span>
                       </button>
                     ))}
                   </div>
@@ -410,7 +410,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
           {/* STEP 2 */}
           {step === 2 && (
             <>
-              <p style={{ fontSize: 16, fontWeight: 600, color: TEXT_PRIMARY }}>Personnalisation</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>Personnalisation</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Logo */}
@@ -490,7 +490,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                 <label style={{ ...labelStyle, fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
                   <Sparkles size={16} style={{ color: GOLD }} /> Prompt créatif (pilote toute la génération IA)
                 </label>
-                <p style={{ fontSize: 11, color: TEXT_SECONDARY, marginBottom: 8, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginBottom: 8, lineHeight: 1.5 }}>
                   Ce prompt influence <b>tout</b> : textes marketing, tagline, descriptions, images hero &amp; galerie, ambiance, ton de voix, et style photographique. Plus il est détaillé, meilleur sera le résultat.
                 </p>
 
@@ -508,7 +508,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                       style={{
                         padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
                         background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.3)',
-                        cursor: 'pointer', color: TEXT_PRIMARY, transition: 'all 0.2s',
+                        cursor: 'pointer', color: "#fff", transition: 'all 0.2s',
                       }}
                       onMouseEnter={e => { (e.target as HTMLElement).style.background = `${GOLD}30`; }}
                       onMouseLeave={e => { (e.target as HTMLElement).style.background = 'rgba(255,255,255,0.25)'; }}
@@ -528,7 +528,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
 💬 MESSAGE CLÉ : "Votre moment de détente méritée"`} />
                 
                 <div className="flex items-center justify-between mt-2">
-                  <span style={{ fontSize: 11, color: TEXT_MUTED }}>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
                     {designPrompt.length > 0 ? `${designPrompt.length} caractères — ` : ''}
                     {designPrompt.length === 0 ? '⚠️ Sans prompt, l\'IA génèrera du contenu générique' : 
                      designPrompt.length < 50 ? '💡 Ajoutez plus de détails pour un meilleur résultat' :
@@ -565,7 +565,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                       style={{
                         padding: '6px 14px', borderRadius: 10, border: heroMediaType === opt.value ? `2px solid ${TEAL}` : '1px solid rgba(255,255,255,0.3)',
                         background: heroMediaType === opt.value ? `${TEAL}15` : 'rgba(255,255,255,0.2)',
-                        cursor: 'pointer', fontSize: 12, fontWeight: 600, color: TEXT_PRIMARY,
+                        cursor: 'pointer', fontSize: 12, fontWeight: 600, color: "#fff",
                         display: 'flex', alignItems: 'center', gap: 4,
                       }}>
                       <span>{opt.icon}</span> {opt.label}
@@ -606,7 +606,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                         {heroMediaUrl ? 'Régénérer' : 'Générer image'}
                       </button>
                     ) : (
-                      <span className="text-xs" style={{ color: TEXT_MUTED }}>Sauvegardez d'abord la démo</span>
+                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Sauvegardez d'abord la démo</span>
                     )}
                   </div>
                 )}
@@ -615,7 +615,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
               {/* Background Video */}
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <label className="flex items-center gap-2 cursor-pointer" style={{ fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY }}>
+                  <label className="flex items-center gap-2 cursor-pointer" style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>
                     <input type="checkbox" checked={bgVideoEnabled} onChange={e => setBgVideoEnabled(e.target.checked)} />
                     Vidéo en arrière-plan (toute la page)
                   </label>
@@ -643,7 +643,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                         Générer par IA
                       </button>
                     )}
-                    <label style={{ ...genBtnStyle, background: 'rgba(255,255,255,0.3)', color: TEXT_PRIMARY, cursor: 'pointer' }}>
+                    <label style={{ ...genBtnStyle, background: 'rgba(255,255,255,0.3)', color: "#fff", cursor: 'pointer' }}>
                       <Upload size={12} /> Upload
                       <input type="file" accept="image/*" multiple onChange={handleGalleryUpload} style={{ display: 'none' }} />
                     </label>
@@ -664,7 +664,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                   </div>
                 )}
                 {galleryImages.length === 0 && (
-                  <p className="text-xs" style={{ color: TEXT_MUTED }}>Aucune photo. Uploadez ou générez par IA.</p>
+                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Aucune photo. Uploadez ou générez par IA.</p>
                 )}
               </div>
 
@@ -699,15 +699,15 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                     const h = openingHours[day] || { open: '09:00', close: '18:00', closed: false };
                     return (
                       <div key={day} className="flex items-center gap-3" style={{ fontSize: 13 }}>
-                        <span style={{ width: 90, fontWeight: 500, color: TEXT_PRIMARY }}>{day}</span>
-                        <label className="flex items-center gap-1" style={{ color: TEXT_SECONDARY }}>
+                        <span style={{ width: 90, fontWeight: 500, color: "#fff" }}>{day}</span>
+                        <label className="flex items-center gap-1" style={{ color: "rgba(255,255,255,0.7)" }}>
                           <input type="checkbox" checked={h.closed} onChange={e => setOpeningHours({ ...openingHours, [day]: { ...h, closed: e.target.checked } })} /> Fermé
                         </label>
                         {!h.closed && (
                           <>
                             <input type="time" value={h.open} onChange={e => setOpeningHours({ ...openingHours, [day]: { ...h, open: e.target.value } })}
                               style={{ ...inputStyle, width: 100, padding: '4px 8px' }} />
-                            <span style={{ color: TEXT_SECONDARY }}>-</span>
+                            <span style={{ color: "rgba(255,255,255,0.7)" }}>-</span>
                             <input type="time" value={h.close} onChange={e => setOpeningHours({ ...openingHours, [day]: { ...h, close: e.target.value } })}
                               style={{ ...inputStyle, width: 100, padding: '4px 8px' }} />
                           </>
@@ -723,7 +723,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
           {/* STEP 3 */}
           {step === 3 && (
             <>
-              <p style={{ fontSize: 16, fontWeight: 600, color: TEXT_PRIMARY }}>Preview & Envoi</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>Preview & Envoi</p>
 
               {/* Mini preview */}
               <div style={{
@@ -824,7 +824,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                   </div>
                   <button onClick={() => { onSaved(); }} style={{
                     width: '100%', padding: '10px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.3)',
-                    background: 'rgba(255,255,255,0.2)', color: TEXT_PRIMARY, fontWeight: 500, fontSize: 14, cursor: 'pointer',
+                    background: 'rgba(255,255,255,0.2)', color: "#fff", fontWeight: 500, fontSize: 14, cursor: 'pointer',
                   }}>Fermer</button>
                 </div>
               )}
@@ -835,7 +835,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
         {/* Footer nav */}
         <div className="flex items-center justify-between p-5" style={{ borderTop: '1px solid rgba(255,255,255,0.2)' }}>
           {step > 1 ? (
-            <button onClick={() => setStep(step - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY, fontSize: 14, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <button onClick={() => setStep(step - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: "rgba(255,255,255,0.7)", fontSize: 14, display: 'flex', alignItems: 'center', gap: 4 }}>
               <ChevronLeft size={16} /> Retour
             </button>
           ) : <div />}
