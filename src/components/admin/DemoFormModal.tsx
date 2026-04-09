@@ -447,45 +447,66 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                       {TEMPLATE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                     </select>
                   )}
-                </div>
+              </div>
 
-                {/* Primary color */}
-                <div>
-                  <label style={labelStyle}>Couleur principale</label>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {COLOR_PRESETS.map(c => (
-                      <button key={c.value} onClick={() => setPrimaryColor(c.value)} style={{
-                        width: 28, height: 28, borderRadius: 8, background: c.value, border: primaryColor === c.value ? '3px solid #fff' : '2px solid rgba(0,0,0,0.1)',
-                        cursor: 'pointer', boxShadow: primaryColor === c.value ? `0 0 0 2px ${c.value}` : 'none',
-                      }} title={c.label} />
-                    ))}
+              {/* Colors toggle */}
+              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.12)' }}>
+                <label className="flex items-center gap-3 cursor-pointer" onClick={() => setColorsEnabled(!colorsEnabled)}>
+                  <div style={{
+                    width: 40, height: 22, borderRadius: 99, position: 'relative', cursor: 'pointer', transition: 'background 0.2s',
+                    background: colorsEnabled ? TEAL : 'rgba(255,255,255,0.15)',
+                  }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: 99, background: '#fff', position: 'absolute', top: 2, transition: 'left 0.2s',
+                      left: colorsEnabled ? 20 : 2, boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }} />
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)}
-                      style={{ width: 32, height: 32, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
-                    <input value={primaryColor} onChange={e => setPrimaryColor(e.target.value)}
-                      style={{ ...inputStyle, width: 100, fontFamily: 'monospace', fontSize: 12 }} placeholder="#2DD4B8" />
+                  <div>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>🎨 Couleurs personnalisées</span>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', margin: 0 }}>
+                      {colorsEnabled ? 'Couleurs définies manuellement' : 'Couleurs par défaut (l\'IA choisira via le prompt)'}
+                    </p>
                   </div>
-                </div>
+                </label>
 
-                {/* Secondary color */}
-                <div>
-                  <label style={labelStyle}>Couleur secondaire</label>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {COLOR_PRESETS.map(c => (
-                      <button key={c.value} onClick={() => setSecondaryColor(c.value)} style={{
-                        width: 28, height: 28, borderRadius: 8, background: c.value, border: secondaryColor === c.value ? '3px solid #fff' : '2px solid rgba(0,0,0,0.1)',
-                        cursor: 'pointer', boxShadow: secondaryColor === c.value ? `0 0 0 2px ${c.value}` : 'none',
-                      }} title={c.label} />
-                    ))}
+                {colorsEnabled && (
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label style={labelStyle}>Couleur principale</label>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {COLOR_PRESETS.map(c => (
+                          <button key={c.value} onClick={() => setPrimaryColor(c.value)} style={{
+                            width: 28, height: 28, borderRadius: 8, background: c.value, border: primaryColor === c.value ? '3px solid #fff' : '2px solid rgba(255,255,255,0.15)',
+                            cursor: 'pointer', boxShadow: primaryColor === c.value ? `0 0 0 2px ${c.value}` : 'none',
+                          }} title={c.label} />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)}
+                          style={{ width: 32, height: 32, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
+                        <input value={primaryColor} onChange={e => setPrimaryColor(e.target.value)}
+                          style={{ ...inputStyle, width: 100, fontFamily: 'monospace', fontSize: 12 }} placeholder="#2DD4B8" />
+                      </div>
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Couleur secondaire</label>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {COLOR_PRESETS.map(c => (
+                          <button key={c.value} onClick={() => setSecondaryColor(c.value)} style={{
+                            width: 28, height: 28, borderRadius: 8, background: c.value, border: secondaryColor === c.value ? '3px solid #fff' : '2px solid rgba(255,255,255,0.15)',
+                            cursor: 'pointer', boxShadow: secondaryColor === c.value ? `0 0 0 2px ${c.value}` : 'none',
+                          }} title={c.label} />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <input type="color" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
+                          style={{ width: 32, height: 32, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
+                        <input value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
+                          style={{ ...inputStyle, width: 100, fontFamily: 'monospace', fontSize: 12 }} placeholder="#E9C46A" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <input type="color" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
-                      style={{ width: 32, height: 32, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
-                    <input value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
-                      style={{ ...inputStyle, width: 100, fontFamily: 'monospace', fontSize: 12 }} placeholder="#E9C46A" />
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Design Prompt — Enhanced */}
