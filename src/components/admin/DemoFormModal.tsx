@@ -65,6 +65,8 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
   const [logoUrl, setLogoUrl] = useState(demo?.logo_url || '');
   const [primaryColor, setPrimaryColor] = useState(demo?.primary_color || '#2DD4B8');
   const [secondaryColor, setSecondaryColor] = useState(demo?.secondary_color || '#E9C46A');
+  const hasCustomColors = demo ? (demo.primary_color !== '#2DD4B8' || demo.secondary_color !== '#E9C46A') : false;
+  const [colorsEnabled, setColorsEnabled] = useState(hasCustomColors);
   const [tagline, setTagline] = useState(demo?.tagline || '');
   const [services, setServices] = useState<string[]>(demo?.services || []);
   const [address, setAddress] = useState(demo?.address || '');
