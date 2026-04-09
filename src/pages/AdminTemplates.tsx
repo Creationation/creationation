@@ -519,11 +519,11 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: 10,
-    border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.2)',
-    fontSize: 14, color: TEXT_PRIMARY, outline: 'none',
+    border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.25)',
+    fontSize: 14, color: '#fff', outline: 'none',
   };
   const labelStyle: React.CSSProperties = {
-    fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY, marginBottom: 4, display: 'block',
+    fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.85)', marginBottom: 4, display: 'block',
   };
 
   const promptLength = stylePrompt.trim().length;
@@ -534,9 +534,9 @@ const TemplateFormModal = ({ template, onClose, onSaved }: { template: Template 
     <div className="fixed inset-0 z-[120] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto mx-4" style={{
-        background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(24px) saturate(1.4)',
+        background: 'rgba(30,28,25,0.85)', backdropFilter: 'blur(24px) saturate(1.4)',
         WebkitBackdropFilter: 'blur(24px) saturate(1.4)', borderRadius: 20,
-        border: '1px solid rgba(255,255,255,0.30)',
+        border: '1px solid rgba(255,255,255,0.15)',
       }}>
         <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: TEXT_PRIMARY, fontFamily: "'Playfair Display', serif" }}>
