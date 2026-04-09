@@ -447,6 +447,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                       {TEMPLATE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                     </select>
                   )}
+                </div>
               </div>
 
               {/* Colors toggle */}
