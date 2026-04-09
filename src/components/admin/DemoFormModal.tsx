@@ -321,13 +321,13 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
     <div className="fixed inset-0 z-[120] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto mx-4" style={{
-        background: 'rgba(255,255,255,0.20)', backdropFilter: 'blur(24px) saturate(1.4)',
+        background: 'rgba(30,28,25,0.85)', backdropFilter: 'blur(24px) saturate(1.4)',
         WebkitBackdropFilter: 'blur(24px) saturate(1.4)', borderRadius: 20,
-        border: '1px solid rgba(255,255,255,0.30)', padding: 0,
+        border: '1px solid rgba(255,255,255,0.15)', padding: 0,
       }}>
         {/* Header */}
         <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: TEXT_PRIMARY, fontFamily: "'Playfair Display', serif" }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', fontFamily: "'Playfair Display', serif" }}>
             {demo ? 'Modifier la démo' : 'Nouvelle démo'}
           </h2>
           <div className="flex items-center gap-3">
@@ -340,7 +340,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                 }} />
               ))}
             </div>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_SECONDARY }}><X size={20} /></button>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.6)' }}><X size={20} /></button>
           </div>
         </div>
 
@@ -348,7 +348,7 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
           {/* STEP 1 */}
           {step === 1 && (
             <>
-              <p style={{ fontSize: 16, fontWeight: 600, color: TEXT_PRIMARY }}>Infos du prospect</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: '#fff' }}>Infos du prospect</p>
 
               {/* Prospect search */}
               <div>
