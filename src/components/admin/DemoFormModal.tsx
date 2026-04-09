@@ -303,12 +303,12 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: 10,
-    border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.2)',
-    fontSize: 14, color: TEXT_PRIMARY, outline: 'none',
+    border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.25)',
+    fontSize: 14, color: '#fff', outline: 'none',
   };
 
   const labelStyle: React.CSSProperties = {
-    fontSize: 13, fontWeight: 600, color: TEXT_SECONDARY, marginBottom: 4, display: 'block',
+    fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.85)', marginBottom: 4, display: 'block',
   };
 
   const genBtnStyle: React.CSSProperties = {
@@ -390,6 +390,14 @@ const DemoFormModal = ({ demo, onClose, onSaved }: Props) => {
                 <div>
                   <label style={labelStyle}>Téléphone</label>
                   <input value={contactPhone} onChange={e => setContactPhone(e.target.value)} style={inputStyle} placeholder="+43 ..." />
+                </div>
+                <div>
+                  <label style={labelStyle}>Adresse</label>
+                  <input value={address} onChange={e => setAddress(e.target.value)} style={inputStyle} placeholder="Hauptstraße 12" />
+                </div>
+                <div>
+                  <label style={labelStyle}>Ville</label>
+                  <input value={city} onChange={e => setCity(e.target.value)} style={inputStyle} placeholder="Wien" />
                 </div>
               </div>
               <div>

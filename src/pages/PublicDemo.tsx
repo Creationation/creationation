@@ -405,8 +405,16 @@ const PublicDemo = () => {
             <Glass className="p-5 space-y-4">
               {demo.address && (
                 <>
-                  <div className="w-full h-32 rounded-2xl flex items-center justify-center" style={{ background: `${pc}08`, border: `1px solid ${pc}15` }}>
-                    <MapPin size={28} style={{ color: pc, opacity: 0.5 }} />
+                  <div className="w-full rounded-2xl overflow-hidden" style={{ height: 200, border: `2px solid rgba(255,255,255,0.4)` }}>
+                    <iframe
+                      title="Map"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent((demo.address || '') + ', ' + (demo.city || ''))}`}
+                    />
                   </div>
                   <div className="flex items-start gap-3 text-sm" style={{ color: '#2a2722' }}>
                     <MapPin size={16} style={{ color: pc, marginTop: 2, flexShrink: 0 }} />
